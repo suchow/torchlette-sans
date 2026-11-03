@@ -1,0 +1,17 @@
+{
+  "job": "hatch",
+  "pid": 1288,
+  "supervisor_pid": 1177,
+  "argv": [
+    "/Users/jsuchow/.cache/uv/archive-v0/SyxEyZ-dmEJQK0slm-hov/bin/python3",
+    "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/generate.py",
+    "--repo",
+    ".",
+    "--masters",
+    "fonts/ttf",
+    "--out",
+    "build/hatch-source-replay"
+  ],
+  "cwd": "/tmp/torchlette-a9052-v03-source-replay/tree",
+  "start": "2026-11-03T03:27:22.957068+00:00"
+}

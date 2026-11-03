@@ -1,0 +1,4539 @@
+{
+  "glyphs": [
+    "uniE931",
+    "uniE97B",
+    "uniE97C",
+    "uniE978",
+    "uniE979"
+  ],
+  "stems": [
+    50,
+    66,
+    79,
+    92,
+    119,
+    141,
+    163
+  ],
+  "source_sha256": {
+    "../../../variable.py": "4afaaf6a191b5883897da0d2034a8b4897f1e0976019ebaa0a412faeae357a8d",
+    "../../../modules/fleurons.py": "e787287dc22784d69cec056100e9b16ac729d9ae398ee594a049004ed5dff2cb"
+  },
+  "construction": "Ordered final source union operands; each Playfair curve-series subpath remains separate. Independent simplify/fillet; original native bounding rectangle; per-part shared quadratic subdivision.",
+  "records": [
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 300,
+      "ital": 0,
+      "stem": 50,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        95,
+        977,
+        609
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 59026.82920865403,
+          "bounded_area": 58996.01046282721,
+          "removed_area": 30.818745826822123
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 20474.343101301976,
+          "bounded_area": 20458.23198352692,
+          "removed_area": 16.11111777505721
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 16361.949217854853,
+          "bounded_area": 16361.949217854853,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 27845.060159447767,
+          "bounded_area": 27845.060051358512,
+          "removed_area": 0.00010808925435412675
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 12422.871421851869,
+          "bounded_area": 12422.871421851869,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1167.2341704338796,
+          "bounded_area": 1167.2341704338796,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 400,
+      "ital": 0,
+      "stem": 66,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        87,
+        991,
+        617
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 78404.88801669967,
+          "bounded_area": 78403.24309922507,
+          "removed_area": 1.6449174745939672
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 27697.320188391706,
+          "bounded_area": 27693.079501571643,
+          "removed_area": 4.240686820063274
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 22238.44479578681,
+          "bounded_area": 22238.44479578681,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 36650.867271159135,
+          "bounded_area": 36650.86710916953,
+          "removed_area": 0.00016198960656765848
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 17679.552266415114,
+          "bounded_area": 17679.552266415114,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1380.5544623057394,
+          "bounded_area": 1380.5544623057394,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 500,
+      "ital": 0,
+      "stem": 79,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        84,
+        996,
+        620
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 86049.55311848178,
+          "bounded_area": 86045.39157375354,
+          "removed_area": 4.161544728238368
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 30560.730969936478,
+          "bounded_area": 30556.02079967544,
+          "removed_area": 4.710170261038002
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 24602.192657281747,
+          "bounded_area": 24602.192657281747,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 40410.13418649067,
+          "bounded_area": 40410.1342657763,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 19886.445997033457,
+          "bounded_area": 19886.445997033457,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1468.1399856477965,
+          "bounded_area": 1468.1399856477965,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 600,
+      "ital": 0,
+      "stem": 92,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        82,
+        1001,
+        622
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 93120.25618528808,
+          "bounded_area": 93115.71630250895,
+          "removed_area": 4.539882779121399
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 33238.54356078778,
+          "bounded_area": 33233.40651044821,
+          "removed_area": 5.1370503395737614
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 26819.54572087693,
+          "bounded_area": 26819.54601300245,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 43452.98404611332,
+          "bounded_area": 43452.98402341462,
+          "removed_area": 2.2698703105561435e-05
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 22000.764901206923,
+          "bounded_area": 22000.764901206923,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1551.1567280487143,
+          "bounded_area": 1551.1567280487143,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 700,
+      "ital": 0,
+      "stem": 119,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        77,
+        1010,
+        627
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 106470.83545179445,
+          "bounded_area": 106457.81507065955,
+          "removed_area": 13.02038113490562
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 38361.0680613444,
+          "bounded_area": 38355.07007557123,
+          "removed_area": 5.997985773166874
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 31077.496248940995,
+          "bounded_area": 31077.496412602675,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 49555.77872147363,
+          "bounded_area": 49555.778788641794,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 26172.34588706111,
+          "bounded_area": 26172.34588706111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1712.712922253737,
+          "bounded_area": 1712.712922253737,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 800,
+      "ital": 0,
+      "stem": 141,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        74,
+        1017,
+        630
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 116345.56077769266,
+          "bounded_area": 116334.4572594145,
+          "removed_area": 11.103518278163392
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 42206.079334115326,
+          "bounded_area": 42199.4082494205,
+          "removed_area": 6.671084694826277
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 34287.58763950277,
+          "bounded_area": 34287.58763950277,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 54014.99333861141,
+          "bounded_area": 54014.99312010205,
+          "removed_area": 0.00021850936172995716
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 29407.36715206057,
+          "bounded_area": 29407.36715206057,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1836.2460149958715,
+          "bounded_area": 1836.2460149958715,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 900,
+      "ital": 0,
+      "stem": 163,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        70,
+        1024,
+        634
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 125565.05697234209,
+          "bounded_area": 125562.53272203449,
+          "removed_area": 2.524250307600596
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 45833.21465181849,
+          "bounded_area": 45825.886040630096,
+          "removed_area": 7.328611188393552
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 37322.02481179712,
+          "bounded_area": 37322.02481179712,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 58270.05691328234,
+          "bounded_area": 58270.05698249698,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 32531.290445841107,
+          "bounded_area": 32531.290445841107,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1954.2909966277875,
+          "bounded_area": 1954.2909966277875,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 300,
+      "ital": 1,
+      "stem": 50,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        86,
+        95,
+        992,
+        609
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 59026.82913254935,
+          "bounded_area": 58977.73989766603,
+          "removed_area": 49.08923488331493
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 20474.347465781186,
+          "bounded_area": 20439.93761022515,
+          "removed_area": 34.40985555603402
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 16361.949217854853,
+          "bounded_area": 16361.949217854853,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 27845.060131981943,
+          "bounded_area": 27845.06002389269,
+          "removed_area": 0.00010808925435412675
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 12422.871421851869,
+          "bounded_area": 12422.871421851869,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1167.2341704338796,
+          "bounded_area": 1167.2341704338796,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 400,
+      "ital": 1,
+      "stem": 66,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        86,
+        87,
+        1007,
+        617
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 78404.88739851241,
+          "bounded_area": 78403.24248103781,
+          "removed_area": 1.6449174745939672
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 27697.323447761322,
+          "bounded_area": 27693.08276094126,
+          "removed_area": 4.240686820063274
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 22238.44479578681,
+          "bounded_area": 22238.44479578681,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 36650.867663091165,
+          "bounded_area": 36650.86750110156,
+          "removed_area": 0.00016198960656765848
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 17679.552266415114,
+          "bounded_area": 17679.552266415114,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1380.5544623057394,
+          "bounded_area": 1380.5544623057394,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 500,
+      "ital": 1,
+      "stem": 79,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        86,
+        84,
+        1012,
+        620
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 86049.55315677458,
+          "bounded_area": 86045.39161204634,
+          "removed_area": 4.161544728238368
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 30560.730969936478,
+          "bounded_area": 30556.02079967544,
+          "removed_area": 4.710170261038002
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 24602.192657281747,
+          "bounded_area": 24602.192657281747,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 40410.13385642384,
+          "bounded_area": 40410.13393570947,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 19886.445997033457,
+          "bounded_area": 19886.445997033457,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1468.1399856477965,
+          "bounded_area": 1468.1399856477965,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 600,
+      "ital": 1,
+      "stem": 92,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        86,
+        82,
+        1017,
+        622
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 93120.25679605294,
+          "bounded_area": 93115.71691327382,
+          "removed_area": 4.539882779121399
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 33238.53736700485,
+          "bounded_area": 33233.400316665306,
+          "removed_area": 5.137050339544658
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 26819.54572087693,
+          "bounded_area": 26819.54601300245,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 43452.9823389607,
+          "bounded_area": 43452.982316261994,
+          "removed_area": 2.2698703105561435e-05
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 22000.764901206923,
+          "bounded_area": 22000.764901206923,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1551.1567280487143,
+          "bounded_area": 1551.1567280487143,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 700,
+      "ital": 1,
+      "stem": 119,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        86,
+        77,
+        1027,
+        627
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 106470.8398941309,
+          "bounded_area": 106469.53158908371,
+          "removed_area": 1.3083050471905153
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 38361.06806062914,
+          "bounded_area": 38355.070074855976,
+          "removed_area": 5.997985773166874
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 31077.4966256497,
+          "bounded_area": 31077.49678931138,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 49555.78141714069,
+          "bounded_area": 49555.781484308856,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 26172.34588706111,
+          "bounded_area": 26172.34588706111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1712.712922253737,
+          "bounded_area": 1712.712922253737,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 800,
+      "ital": 1,
+      "stem": 141,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        85,
+        74,
+        1034,
+        630
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 116345.56198549138,
+          "bounded_area": 116343.19213975444,
+          "removed_area": 2.369845736946445
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 42206.07852115611,
+          "bounded_area": 42199.40743646125,
+          "removed_area": 6.671084694855381
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 34287.58800378084,
+          "bounded_area": 34287.58800378084,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 54014.99603636515,
+          "bounded_area": 54014.99581785577,
+          "removed_area": 0.0002185093762818724
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 29407.36715206057,
+          "bounded_area": 29407.36715206057,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1836.2460149958715,
+          "bounded_area": 1836.2460149958715,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE931",
+      "design": "duck-rabbit",
+      "weight": 900,
+      "ital": 1,
+      "stem": 163,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        85,
+        70,
+        1039,
+        634
+      ],
+      "semantic_part_count": 6,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 125565.04943376657,
+          "bounded_area": 125562.52518345891,
+          "removed_area": 2.5242503076588036
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 45833.21464644121,
+          "bounded_area": 45825.88603525281,
+          "removed_area": 7.328611188393552
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 37322.02437692163,
+          "bounded_area": 37322.02437692163,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 58270.05670678008,
+          "bounded_area": 58270.05677599474,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 32531.290445841107,
+          "bounded_area": 32531.290445841107,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 1954.2909966277875,
+          "bounded_area": 1954.2909966277875,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 300,
+      "ital": 0,
+      "stem": 50,
+      "translation": [
+        0.0,
+        -20.57575750350952
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -3,
+        1420,
+        696
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 58884.02271486446,
+          "bounded_area": 58884.02271486446,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 58884.041337581606,
+          "bounded_area": 58884.041337581606,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 10177.69175532111,
+          "bounded_area": 10177.69175532111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 10177.69175532111,
+          "bounded_area": 10177.69175532111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 10177.69175532111,
+          "bounded_area": 10177.69175532111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 10177.691755320691,
+          "bounded_area": 10177.691755320691,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 18566.67772478168,
+          "bounded_area": 18566.67772478168,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 31774.108578462663,
+          "bounded_area": 31774.108578462663,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 18566.662103887833,
+          "bounded_area": 18566.662103887833,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 14003.13027702122,
+          "bounded_area": 14003.13027702122,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 400,
+      "ital": 0,
+      "stem": 66,
+      "translation": [
+        0.0,
+        -26.199999809265137
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -15,
+        1434,
+        705
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 78367.632147189,
+          "bounded_area": 78367.632147189,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 78367.61817627892,
+          "bounded_area": 78105.58607067927,
+          "removed_area": 262.03210559964646
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 13594.703805976955,
+          "bounded_area": 13594.703805976955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 13594.703805976955,
+          "bounded_area": 13594.703805976955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 13594.703805976955,
+          "bounded_area": 13594.703805976955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 13594.70380597685,
+          "bounded_area": 13594.70380597685,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 24935.144533734012,
+          "bounded_area": 24935.144533734012,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 41941.81665035877,
+          "bounded_area": 41941.81665035877,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 24935.142411056204,
+          "bounded_area": 24935.142411056204,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 18363.577894212853,
+          "bounded_area": 18363.577894212853,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 500,
+      "ital": 0,
+      "stem": 79,
+      "translation": [
+        0.0,
+        -28.382217407226562
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -20,
+        1439,
+        708
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 86010.94008032442,
+          "bounded_area": 86010.80068697408,
+          "removed_area": 0.1393933503422886
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 86010.93906375213,
+          "bounded_area": 85866.80591270592,
+          "removed_area": 144.13315104620415
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 14941.435372959706,
+          "bounded_area": 14941.435372959706,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 14941.436004212184,
+          "bounded_area": 14941.436004212184,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 14941.436004212184,
+          "bounded_area": 14941.436004212184,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 14941.435162541316,
+          "bounded_area": 14941.435162541316,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 26420.074140390167,
+          "bounded_area": 26420.074140390167,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 44266.19903234048,
+          "bounded_area": 44266.19903234048,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 26420.05862561157,
+          "bounded_area": 26420.05862561157,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 20039.667909544136,
+          "bounded_area": 19975.74818517118,
+          "removed_area": 63.91972437295772
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 600,
+      "ital": 0,
+      "stem": 92,
+      "translation": [
+        0.0,
+        -30.391128063201904
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -25,
+        1444,
+        712
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 93088.56114515767,
+          "bounded_area": 93088.3193770881,
+          "removed_area": 0.24176806956529617
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 93088.57834081154,
+          "bounded_area": 93088.33572049833,
+          "removed_area": 0.242620313205407
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 16191.528382098675,
+          "bounded_area": 16191.528382098675,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 16191.528609992145,
+          "bounded_area": 16191.528609992145,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 16191.528609992145,
+          "bounded_area": 16191.528609992145,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 16191.585813408345,
+          "bounded_area": 16191.585813408345,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 27751.620061312242,
+          "bounded_area": 27751.620061312242,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 46336.19348317851,
+          "bounded_area": 46336.19348317851,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 27751.63511387361,
+          "bounded_area": 27751.63511387361,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 21574.890988451996,
+          "bounded_area": 21574.890988451996,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 700,
+      "ital": 0,
+      "stem": 119,
+      "translation": [
+        0.0,
+        -34.15225553512573
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -33,
+        1453,
+        718
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 106446.01767374913,
+          "bounded_area": 106442.07887069718,
+          "removed_area": 3.938803051947616
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 106446.0465967551,
+          "bounded_area": 106320.90693497693,
+          "removed_area": 125.13966177817201
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 18558.648204368295,
+          "bounded_area": 18558.648204368295,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 18558.64794258595,
+          "bounded_area": 18558.64794258595,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 18558.64794258595,
+          "bounded_area": 18558.64794258595,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 18558.64897598241,
+          "bounded_area": 18558.64897598241,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 30165.37222548559,
+          "bounded_area": 30165.37222548559,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 50055.08101001375,
+          "bounded_area": 50055.08101001375,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 30165.383248118036,
+          "bounded_area": 30165.383248118036,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 24429.081607075597,
+          "bounded_area": 24429.081607075597,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 800,
+      "ital": 0,
+      "stem": 141,
+      "translation": [
+        0.0,
+        -36.909827709198
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -39,
+        1460,
+        722
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 116327.70374908415,
+          "bounded_area": 116324.87534565211,
+          "removed_area": 2.8284034320386127
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 116327.700105285,
+          "bounded_area": 115934.95427671792,
+          "removed_area": 392.74582856707275
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 20316.241791703367,
+          "bounded_area": 20316.241791703367,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 20316.25674928436,
+          "bounded_area": 20316.25674928436,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 20316.25674928436,
+          "bounded_area": 20316.25674928436,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 20316.19721097788,
+          "bounded_area": 20316.19721097788,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 31878.09988946052,
+          "bounded_area": 31878.09988946052,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 52668.35332022278,
+          "bounded_area": 52668.35332022278,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 31878.067782538616,
+          "bounded_area": 31878.067782538616,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 26505.105333979795,
+          "bounded_area": 26478.335200811358,
+          "removed_area": 26.770133168436587
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 900,
+      "ital": 0,
+      "stem": 163,
+      "translation": [
+        0.0,
+        -39.45942306518555
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -45,
+        1467,
+        726
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 125530.5513760416,
+          "bounded_area": 125530.5513760416,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 125530.5318469525,
+          "bounded_area": 125486.44017151115,
+          "removed_area": 44.09167544134834
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 21957.883887878055,
+          "bounded_area": 21957.883887878055,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 33424.3180309031,
+          "bounded_area": 33424.3180309031,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 55006.17788171955,
+          "bounded_area": 55006.17788171955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 33424.300388906595,
+          "bounded_area": 33424.300388906595,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 28412.04778529315,
+          "bounded_area": 28347.825341934906,
+          "removed_area": 64.22244335824507
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 300,
+      "ital": 1,
+      "stem": 50,
+      "translation": [
+        0.0,
+        -20.57575750350952
+      ],
+      "source_native_unscaled_bounds": [
+        85,
+        -3,
+        1435,
+        696
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 58884.02271486446,
+          "bounded_area": 58884.02271486446,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 58884.041337581606,
+          "bounded_area": 58884.041337581606,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 10177.69175532111,
+          "bounded_area": 10177.69175532111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 10177.69175532111,
+          "bounded_area": 10177.69175532111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 10177.69175532111,
+          "bounded_area": 10177.69175532111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 10177.691755320691,
+          "bounded_area": 10177.691755320691,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 18566.67772478168,
+          "bounded_area": 18566.67772478168,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 31774.108578462663,
+          "bounded_area": 31774.108578462663,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 18566.662103887833,
+          "bounded_area": 18566.662103887833,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 14003.13027702122,
+          "bounded_area": 14003.13027702122,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 400,
+      "ital": 1,
+      "stem": 66,
+      "translation": [
+        0.0,
+        -26.199999809265137
+      ],
+      "source_native_unscaled_bounds": [
+        84,
+        -15,
+        1448,
+        705
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 78367.632147189,
+          "bounded_area": 78367.632147189,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 78367.61817627892,
+          "bounded_area": 78105.58607067927,
+          "removed_area": 262.03210559964646
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 13594.703805976955,
+          "bounded_area": 13594.703805976955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 13594.703805976955,
+          "bounded_area": 13594.703805976955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 13594.703805976955,
+          "bounded_area": 13594.703805976955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 13594.70380597685,
+          "bounded_area": 13594.70380597685,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 24935.144533734012,
+          "bounded_area": 24935.144533734012,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 41941.81665035877,
+          "bounded_area": 41941.81665035877,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 24935.14226228301,
+          "bounded_area": 24935.14226228301,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 18363.577894212853,
+          "bounded_area": 18363.577894212853,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 500,
+      "ital": 1,
+      "stem": 79,
+      "translation": [
+        0.0,
+        -28.382217407226562
+      ],
+      "source_native_unscaled_bounds": [
+        85,
+        -20,
+        1454,
+        708
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 86010.94008032442,
+          "bounded_area": 86000.31149273599,
+          "removed_area": 10.628587588435039
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 86010.93906375213,
+          "bounded_area": 85856.3182234739,
+          "removed_area": 154.6208402782213
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 14941.435372959706,
+          "bounded_area": 14941.435372959706,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 14941.436004212184,
+          "bounded_area": 14941.436004212184,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 14941.436004212184,
+          "bounded_area": 14941.436004212184,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 14941.435162541316,
+          "bounded_area": 14941.435162541316,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 26420.074140390167,
+          "bounded_area": 26420.074140390167,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 44266.19903234048,
+          "bounded_area": 44266.19903234048,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 26420.05878354004,
+          "bounded_area": 26420.05878354004,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 20039.667909544136,
+          "bounded_area": 19975.74818517118,
+          "removed_area": 63.91972437295772
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 600,
+      "ital": 1,
+      "stem": 92,
+      "translation": [
+        0.0,
+        -30.391128063201904
+      ],
+      "source_native_unscaled_bounds": [
+        85,
+        -25,
+        1459,
+        712
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 93088.56114515767,
+          "bounded_area": 93077.51674196683,
+          "removed_area": 11.044403190840967
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 93088.57834081154,
+          "bounded_area": 93077.53326302089,
+          "removed_area": 11.045077790651703
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 16191.528382098675,
+          "bounded_area": 16191.528382098675,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 16191.528609992145,
+          "bounded_area": 16191.528609992145,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 16191.528609992145,
+          "bounded_area": 16191.528609992145,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 16191.585813408345,
+          "bounded_area": 16191.585813408345,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 27751.620061312242,
+          "bounded_area": 27751.620061312242,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 46336.19348317851,
+          "bounded_area": 46336.19348317851,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 27751.635278668535,
+          "bounded_area": 27751.635278668535,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 21574.890988451996,
+          "bounded_area": 21574.890988451996,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 700,
+      "ital": 1,
+      "stem": 119,
+      "translation": [
+        0.0,
+        -34.15225553512573
+      ],
+      "source_native_unscaled_bounds": [
+        84,
+        -33,
+        1468,
+        718
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 106446.01767374913,
+          "bounded_area": 106446.01767374913,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 106446.0465967551,
+          "bounded_area": 106324.84661518675,
+          "removed_area": 121.19998156835209
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 18558.648204368295,
+          "bounded_area": 18558.648204368295,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 18558.64794258595,
+          "bounded_area": 18558.64794258595,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 18558.64794258595,
+          "bounded_area": 18558.64794258595,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 18558.64897598241,
+          "bounded_area": 18558.64897598241,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 30165.37222548559,
+          "bounded_area": 30165.37222548559,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 50055.08101001375,
+          "bounded_area": 50055.08101001375,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 30165.384406147714,
+          "bounded_area": 30165.384406147714,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 24429.081607075597,
+          "bounded_area": 24429.081607075597,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 800,
+      "ital": 1,
+      "stem": 141,
+      "translation": [
+        0.0,
+        -36.909827709198
+      ],
+      "source_native_unscaled_bounds": [
+        84,
+        -39,
+        1475,
+        722
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 116327.70374908415,
+          "bounded_area": 116327.70374908415,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 116327.700105285,
+          "bounded_area": 115937.78403749182,
+          "removed_area": 389.91606779317954
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 20316.241791703367,
+          "bounded_area": 20316.241791703367,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 20316.25674928436,
+          "bounded_area": 20316.25674928436,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 20316.25674928436,
+          "bounded_area": 20316.25674928436,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 20316.19721097788,
+          "bounded_area": 20316.19721097788,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 31878.09988946052,
+          "bounded_area": 31878.09988946052,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 52668.35332022278,
+          "bounded_area": 52668.35332022278,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 31878.067782538616,
+          "bounded_area": 31878.067782538616,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 26505.105333979795,
+          "bounded_area": 26478.335200811358,
+          "removed_area": 26.770133168436587
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97B",
+      "design": "tape-340",
+      "weight": 900,
+      "ital": 1,
+      "stem": 163,
+      "translation": [
+        0.0,
+        -39.45942306518555
+      ],
+      "source_native_unscaled_bounds": [
+        84,
+        -45,
+        1481,
+        726
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 125530.5513760416,
+          "bounded_area": 125530.5513760416,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 125530.5318469525,
+          "bounded_area": 125486.44017151115,
+          "removed_area": 44.09167544134834
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 21957.883887878055,
+          "bounded_area": 21957.883887878055,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 33424.3180309031,
+          "bounded_area": 33424.3180309031,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 55006.17788171955,
+          "bounded_area": 55006.17788171955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 33424.29853696849,
+          "bounded_area": 33424.29853696849,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 28412.04778529315,
+          "bounded_area": 28347.825341934906,
+          "removed_area": 64.22244335824507
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 300,
+      "ital": 0,
+      "stem": 50,
+      "translation": [
+        0.0,
+        -20.57575750350952
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -3,
+        1804,
+        696
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 75756.77271486446,
+          "bounded_area": 75756.77271486446,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 75756.77302703474,
+          "bounded_area": 75756.77302703474,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 10177.69175532111,
+          "bounded_area": 10177.69175532111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 10177.69175532111,
+          "bounded_area": 10177.69175532111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 10177.634820902858,
+          "bounded_area": 10177.634820902858,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 10177.691755320691,
+          "bounded_area": 10177.691755320691,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 18566.670197416468,
+          "bounded_area": 18566.670197416468,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 31774.108578462663,
+          "bounded_area": 31774.108578462663,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 18566.663083823954,
+          "bounded_area": 18566.663083823954,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0078125,
+          "bounded_area": 19200.0078125,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 14003.134483566508,
+          "bounded_area": 14003.134483566508,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 400,
+      "ital": 0,
+      "stem": 66,
+      "translation": [
+        0.0,
+        -26.199999809265137
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -15,
+        1818,
+        705
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 100639.632147189,
+          "bounded_area": 100639.632147189,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 100639.61427002892,
+          "bounded_area": 100300.78138317927,
+          "removed_area": 338.83288684964646
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 13594.703805976955,
+          "bounded_area": 13594.703805976955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 13594.703805976955,
+          "bounded_area": 13594.703805976955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 13594.70380597685,
+          "bounded_area": 13594.70380597685,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 13594.70380597685,
+          "bounded_area": 13594.70380597685,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 24935.14272820646,
+          "bounded_area": 24935.14272820646,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 41941.81665035877,
+          "bounded_area": 41941.81665035877,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 24935.14306340138,
+          "bounded_area": 24935.14306340138,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0078125,
+          "bounded_area": 19200.0078125,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 18363.58228694499,
+          "bounded_area": 18363.58228694499,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 500,
+      "ital": 0,
+      "stem": 79,
+      "translation": [
+        0.0,
+        -28.382217407226562
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -20,
+        1823,
+        708
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 110377.94008032442,
+          "bounded_area": 110377.80068697408,
+          "removed_area": 0.1393933503422886
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 110377.86875125213,
+          "bounded_area": 110191.50122520592,
+          "removed_area": 186.36752604620415
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 14941.435162542086,
+          "bounded_area": 14941.435162542086,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 14941.436004212184,
+          "bounded_area": 14941.436004212184,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 14941.436004211799,
+          "bounded_area": 14941.436004211799,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 14941.435162541316,
+          "bounded_area": 14941.435162541316,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 26420.066523732108,
+          "bounded_area": 26420.066523732108,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 44266.195583143046,
+          "bounded_area": 44266.195583143046,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 26420.058771828284,
+          "bounded_area": 26420.058771828284,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0078125,
+          "bounded_area": 19200.0078125,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 20039.675493300325,
+          "bounded_area": 19975.75180602017,
+          "removed_area": 63.92368728015572
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 600,
+      "ital": 0,
+      "stem": 92,
+      "translation": [
+        0.0,
+        -30.391128063201904
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -25,
+        1828,
+        712
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 119384.06114515767,
+          "bounded_area": 119383.8193770881,
+          "removed_area": 0.24176806956529617
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 119384.05880956154,
+          "bounded_area": 119383.81618924833,
+          "removed_area": 0.242620313205407
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 16191.528609992145,
+          "bounded_area": 16191.528609992145,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 16191.528609992145,
+          "bounded_area": 16191.528609992145,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 16191.585813408345,
+          "bounded_area": 16191.585813408345,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 16191.585813408345,
+          "bounded_area": 16191.585813408345,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 27751.631008788336,
+          "bounded_area": 27751.631008788336,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 46336.19002284991,
+          "bounded_area": 46336.19002284991,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 27751.63386143651,
+          "bounded_area": 27751.63386143651,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 21574.894544554132,
+          "bounded_area": 21574.894544554132,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 700,
+      "ital": 0,
+      "stem": 119,
+      "translation": [
+        0.0,
+        -34.15225553512573
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -33,
+        1837,
+        718
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 136352.20517374913,
+          "bounded_area": 136348.26637069718,
+          "removed_area": 3.938803051947616
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 136352.2106592551,
+          "bounded_area": 136191.52021622693,
+          "removed_area": 160.690443028172
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 18558.64794258595,
+          "bounded_area": 18558.64794258595,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 18558.64794258595,
+          "bounded_area": 18558.64794258595,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 18558.64897598241,
+          "bounded_area": 18558.64897598241,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 18558.647942585565,
+          "bounded_area": 18558.647942585565,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 30165.383187824467,
+          "bounded_area": 30165.383187824467,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 50055.0732287287,
+          "bounded_area": 50055.0732287287,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 30165.3836268154,
+          "bounded_area": 30165.3836268154,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19199.9921875,
+          "bounded_area": 19199.9921875,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 24429.08126853351,
+          "bounded_area": 24429.08126853351,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 800,
+      "ital": 0,
+      "stem": 141,
+      "translation": [
+        0.0,
+        -36.909827709198
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -39,
+        1844,
+        722
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 148881.07874908415,
+          "bounded_area": 148878.2503456521,
+          "removed_area": 2.8284034320386127
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 148881.13369903498,
+          "bounded_area": 148374.2941204679,
+          "removed_area": 506.83957856707275
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 20316.255629002073,
+          "bounded_area": 20316.255629002073,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 20316.25674928436,
+          "bounded_area": 20316.25674928436,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 20316.198335837667,
+          "bounded_area": 20316.198335837667,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 20316.196086117812,
+          "bounded_area": 20316.196086117812,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 31878.09784604064,
+          "bounded_area": 31878.09784604064,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 52668.35332022278,
+          "bounded_area": 52668.35332022278,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 31878.067782538616,
+          "bounded_area": 31878.067782538616,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 26505.10469726211,
+          "bounded_area": 26478.33558016905,
+          "removed_area": 26.76911709306296
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 900,
+      "ital": 0,
+      "stem": 163,
+      "translation": [
+        0.0,
+        -39.45942306518555
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -45,
+        1851,
+        726
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 160531.5826260416,
+          "bounded_area": 160531.5826260416,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 160531.5748157025,
+          "bounded_area": 160474.54564026115,
+          "removed_area": 57.029175441362895
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 21957.897823809482,
+          "bounded_area": 21957.897823809482,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 33424.31081499551,
+          "bounded_area": 33424.31081499551,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 55006.17773979881,
+          "bounded_area": 55006.17773979881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 33424.296838208174,
+          "bounded_area": 33424.296838208174,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 28412.05498438982,
+          "bounded_area": 28347.836125865768,
+          "removed_area": 64.21885852405103
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 300,
+      "ital": 1,
+      "stem": 50,
+      "translation": [
+        0.0,
+        -20.57575750350952
+      ],
+      "source_native_unscaled_bounds": [
+        85,
+        -3,
+        1819,
+        696
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 75756.77271486446,
+          "bounded_area": 75756.77271486446,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 75756.77302703474,
+          "bounded_area": 75756.77302703474,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 10177.69175532111,
+          "bounded_area": 10177.69175532111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 10177.69175532111,
+          "bounded_area": 10177.69175532111,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 10177.634820902858,
+          "bounded_area": 10177.634820902858,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 10177.691755320691,
+          "bounded_area": 10177.691755320691,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 18566.662969289628,
+          "bounded_area": 18566.662969289628,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 31774.108578462663,
+          "bounded_area": 31774.108578462663,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 18566.663083823954,
+          "bounded_area": 18566.663083823954,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0078125,
+          "bounded_area": 19200.0078125,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 14003.134483566508,
+          "bounded_area": 14003.134483566508,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 400,
+      "ital": 1,
+      "stem": 66,
+      "translation": [
+        0.0,
+        -26.199999809265137
+      ],
+      "source_native_unscaled_bounds": [
+        84,
+        -15,
+        1832,
+        705
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 100639.632147189,
+          "bounded_area": 100639.632147189,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 100639.61427002892,
+          "bounded_area": 100300.78138317927,
+          "removed_area": 338.83288684964646
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 13594.703805976955,
+          "bounded_area": 13594.703805976955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 13594.703805976955,
+          "bounded_area": 13594.703805976955,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 13594.70380597685,
+          "bounded_area": 13594.70380597685,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 13594.70380597685,
+          "bounded_area": 13594.70380597685,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 24935.14292039278,
+          "bounded_area": 24935.14292039278,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 41941.81665035877,
+          "bounded_area": 41941.81665035877,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 24935.14306340138,
+          "bounded_area": 24935.14306340138,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0078125,
+          "bounded_area": 19200.0078125,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 18363.58228694499,
+          "bounded_area": 18363.58228694499,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 500,
+      "ital": 1,
+      "stem": 79,
+      "translation": [
+        0.0,
+        -28.382217407226562
+      ],
+      "source_native_unscaled_bounds": [
+        85,
+        -20,
+        1838,
+        708
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 110377.94008032442,
+          "bounded_area": 110367.31149273599,
+          "removed_area": 10.628587588435039
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 110377.86875125213,
+          "bounded_area": 110181.0135359739,
+          "removed_area": 196.8552152782213
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 14941.435162542086,
+          "bounded_area": 14941.435162542086,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 14941.436004212184,
+          "bounded_area": 14941.436004212184,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 14941.436004211799,
+          "bounded_area": 14941.436004211799,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 14941.435162541316,
+          "bounded_area": 14941.435162541316,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 26420.06104937394,
+          "bounded_area": 26420.06104937394,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 44266.195583143046,
+          "bounded_area": 44266.195583143046,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 26420.058771828284,
+          "bounded_area": 26420.058771828284,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0078125,
+          "bounded_area": 19200.0078125,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 20039.675493300325,
+          "bounded_area": 19975.75180602017,
+          "removed_area": 63.92368728015572
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 600,
+      "ital": 1,
+      "stem": 92,
+      "translation": [
+        0.0,
+        -30.391128063201904
+      ],
+      "source_native_unscaled_bounds": [
+        85,
+        -25,
+        1843,
+        712
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 119384.06114515767,
+          "bounded_area": 119373.01674196683,
+          "removed_area": 11.044403190840967
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 119384.05880956154,
+          "bounded_area": 119373.01373177089,
+          "removed_area": 11.045077790651703
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 16191.528609992145,
+          "bounded_area": 16191.528609992145,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 16191.528609992145,
+          "bounded_area": 16191.528609992145,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 16191.585813408345,
+          "bounded_area": 16191.585813408345,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 16191.585813408345,
+          "bounded_area": 16191.585813408345,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 27751.634778991152,
+          "bounded_area": 27751.634778991152,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 46336.187901611345,
+          "bounded_area": 46336.187901611345,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 27751.63386143651,
+          "bounded_area": 27751.63386143651,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 21574.894544554132,
+          "bounded_area": 21574.894544554132,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 700,
+      "ital": 1,
+      "stem": 119,
+      "translation": [
+        0.0,
+        -34.15225553512573
+      ],
+      "source_native_unscaled_bounds": [
+        84,
+        -33,
+        1852,
+        718
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 136352.20517374913,
+          "bounded_area": 136352.20517374913,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 136352.2106592551,
+          "bounded_area": 136195.45989643675,
+          "removed_area": 156.7507628183521
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 18558.64794258595,
+          "bounded_area": 18558.64794258595,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 18558.64794258595,
+          "bounded_area": 18558.64794258595,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 18558.64897598241,
+          "bounded_area": 18558.64897598241,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 18558.647942585565,
+          "bounded_area": 18558.647942585565,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 30165.383187824467,
+          "bounded_area": 30165.383187824467,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 50055.0732287287,
+          "bounded_area": 50055.0732287287,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 30165.3836268154,
+          "bounded_area": 30165.3836268154,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19199.9921875,
+          "bounded_area": 19199.9921875,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 24429.08126853351,
+          "bounded_area": 24429.08126853351,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 800,
+      "ital": 1,
+      "stem": 141,
+      "translation": [
+        0.0,
+        -36.909827709198
+      ],
+      "source_native_unscaled_bounds": [
+        84,
+        -39,
+        1859,
+        722
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 148881.07874908415,
+          "bounded_area": 148881.07874908415,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 148881.13369903498,
+          "bounded_area": 148377.12388124183,
+          "removed_area": 504.00981779315043
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 20316.255629002073,
+          "bounded_area": 20316.255629002073,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 20316.25674928436,
+          "bounded_area": 20316.25674928436,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 20316.198335837667,
+          "bounded_area": 20316.198335837667,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 20316.196086117812,
+          "bounded_area": 20316.196086117812,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 31878.09784604064,
+          "bounded_area": 31878.09784604064,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 52668.35332022278,
+          "bounded_area": 52668.35332022278,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 31878.067782538616,
+          "bounded_area": 31878.067782538616,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 26505.10469726211,
+          "bounded_area": 26478.33558016905,
+          "removed_area": 26.76911709306296
+        }
+      ]
+    },
+    {
+      "glyph": "uniE97C",
+      "design": "tape-440",
+      "weight": 900,
+      "ital": 1,
+      "stem": 163,
+      "translation": [
+        0.0,
+        -39.45942306518555
+      ],
+      "source_native_unscaled_bounds": [
+        84,
+        -45,
+        1865,
+        726
+      ],
+      "semantic_part_count": 11,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 160531.5826260416,
+          "bounded_area": 160531.5826260416,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 160531.5748157025,
+          "bounded_area": 160474.54564026115,
+          "removed_area": 57.029175441362895
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 21957.897823809482,
+          "bounded_area": 21957.897823809482,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 5,
+          "unclipped_area": 21957.83891865881,
+          "bounded_area": 21957.83891865881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 6,
+          "unclipped_area": 33424.304275018825,
+          "bounded_area": 33424.304275018825,
+          "removed_area": 0
+        },
+        {
+          "part_index": 7,
+          "unclipped_area": 55006.17773979881,
+          "bounded_area": 55006.17773979881,
+          "removed_area": 0
+        },
+        {
+          "part_index": 8,
+          "unclipped_area": 33424.296838208174,
+          "bounded_area": 33424.296838208174,
+          "removed_area": 0
+        },
+        {
+          "part_index": 9,
+          "unclipped_area": 19200.0,
+          "bounded_area": 19200.0,
+          "removed_area": 0
+        },
+        {
+          "part_index": 10,
+          "unclipped_area": 28412.05498438982,
+          "bounded_area": 28347.836125865768,
+          "removed_area": 64.21885852405103
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 300,
+      "ital": 0,
+      "stem": 50,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        20,
+        848,
+        698
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 61522.38173587633,
+          "bounded_area": 61520.62716782815,
+          "removed_area": 1.7545680481853196
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 31712.41848539746,
+          "bounded_area": 31712.41848539746,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 35392.66853547037,
+          "bounded_area": 35392.66853547037,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 34715.869384765625,
+          "bounded_area": 34715.869384765625,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 56663.66943359375,
+          "bounded_area": 56663.66943359375,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 400,
+      "ital": 0,
+      "stem": 66,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        13,
+        862,
+        705
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 81806.52602943793,
+          "bounded_area": 81803.94472922839,
+          "removed_area": 2.5813002095383126
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 42501.071112005426,
+          "bounded_area": 42501.071112005426,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 47359.015510973535,
+          "bounded_area": 47359.015510973535,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 30276.370849609375,
+          "bounded_area": 30276.370849609375,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 51416.26025390625,
+          "bounded_area": 51416.26025390625,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 500,
+      "ital": 0,
+      "stem": 79,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        11,
+        868,
+        708
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 89754.74257763884,
+          "bounded_area": 89512.02272702343,
+          "removed_area": 242.7198506154091
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 46770.73902994832,
+          "bounded_area": 46770.73902994832,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 52085.61720939161,
+          "bounded_area": 52085.61720939161,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 28679.64306640625,
+          "bounded_area": 28679.64306640625,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 49170.541015625,
+          "bounded_area": 49170.541015625,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 600,
+      "ital": 0,
+      "stem": 92,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        8,
+        873,
+        710
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 97110.26303082856,
+          "bounded_area": 97108.9691641459,
+          "removed_area": 1.2938666826521512
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 50742.65476801715,
+          "bounded_area": 50742.65476801715,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 56425.51781286151,
+          "bounded_area": 56425.51781286151,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 27054.250732421875,
+          "bounded_area": 27054.250732421875,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 47389.95361328125,
+          "bounded_area": 47389.95361328125,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 700,
+      "ital": 0,
+      "stem": 119,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        3,
+        882,
+        715
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 110980.72517017924,
+          "bounded_area": 110978.96356590248,
+          "removed_area": 1.7616042767622275
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 58285.5468251825,
+          "bounded_area": 58285.5468251825,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 64748.71391066391,
+          "bounded_area": 64748.71391066391,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 24455.12255859375,
+          "bounded_area": 24455.12255859375,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 44056.28125,
+          "bounded_area": 44056.28125,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 800,
+      "ital": 0,
+      "stem": 141,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        0,
+        889,
+        718
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 121232.45176241925,
+          "bounded_area": 121228.57185465666,
+          "removed_area": 3.879907762588118
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 63904.07579639371,
+          "bounded_area": 63904.07579639371,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 70939.35938995636,
+          "bounded_area": 70939.35938995636,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 22435.712646484375,
+          "bounded_area": 22435.712646484375,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 41430.010498046875,
+          "bounded_area": 41430.010498046875,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 900,
+      "ital": 0,
+      "stem": 163,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -3,
+        896,
+        722
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 130772.91884922578,
+          "bounded_area": 130643.99252116114,
+          "removed_area": 128.92632806464098
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 69165.27850883803,
+          "bounded_area": 69165.27850883803,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 76729.53883189613,
+          "bounded_area": 76729.53883189613,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 20777.454345703125,
+          "bounded_area": 20777.454345703125,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 39289.115966796875,
+          "bounded_area": 39289.115966796875,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 300,
+      "ital": 1,
+      "stem": 50,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        20,
+        865,
+        698
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 61522.38173587633,
+          "bounded_area": 61520.62716782815,
+          "removed_area": 1.7545680481853196
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 31712.41848539746,
+          "bounded_area": 31712.41848539746,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 35392.668388986,
+          "bounded_area": 35392.668388986,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 34715.869384765625,
+          "bounded_area": 34715.869384765625,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 56663.66943359375,
+          "bounded_area": 56663.66943359375,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 400,
+      "ital": 1,
+      "stem": 66,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        13,
+        880,
+        705
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 81806.52602943793,
+          "bounded_area": 81806.52602943793,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 42501.07196791619,
+          "bounded_area": 42501.07196791619,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 47359.01551097353,
+          "bounded_area": 47359.01551097353,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 30276.371337890625,
+          "bounded_area": 30276.371337890625,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 51416.26025390625,
+          "bounded_area": 51416.26025390625,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 500,
+      "ital": 1,
+      "stem": 79,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        11,
+        885,
+        708
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 89754.74257763884,
+          "bounded_area": 89512.02272702343,
+          "removed_area": 242.7198506154091
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 46770.73902994832,
+          "bounded_area": 46770.73902994832,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 52085.61720939161,
+          "bounded_area": 52085.61720939161,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 28679.64306640625,
+          "bounded_area": 28679.64306640625,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 49170.541015625,
+          "bounded_area": 49170.541015625,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 600,
+      "ital": 1,
+      "stem": 92,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        8,
+        889,
+        710
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 97110.26303082856,
+          "bounded_area": 97099.87758750425,
+          "removed_area": 10.385443324310472
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 50742.65562771264,
+          "bounded_area": 50742.65562771264,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 56425.51990091039,
+          "bounded_area": 56425.51990091039,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 27054.251220703125,
+          "bounded_area": 27054.251220703125,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 47389.95361328125,
+          "bounded_area": 47389.95361328125,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 700,
+      "ital": 1,
+      "stem": 119,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        3,
+        899,
+        715
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 110980.72517017924,
+          "bounded_area": 110978.96356590248,
+          "removed_area": 1.7616042767622275
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 58285.5468251825,
+          "bounded_area": 58285.5468251825,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 64748.71391066391,
+          "bounded_area": 64748.71391066391,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 24455.122802734375,
+          "bounded_area": 24455.122802734375,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 44056.28125,
+          "bounded_area": 44056.28125,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 800,
+      "ital": 1,
+      "stem": 141,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        0,
+        906,
+        718
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 121232.45176241925,
+          "bounded_area": 121228.57196891744,
+          "removed_area": 3.879793501808308
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 63904.07579639371,
+          "bounded_area": 63904.07579639371,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 70939.35807159699,
+          "bounded_area": 70939.35807159699,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 22435.712646484375,
+          "bounded_area": 22435.712646484375,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 41430.010498046875,
+          "bounded_area": 41430.010498046875,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE978",
+      "design": "playfair-fill",
+      "weight": 900,
+      "ital": 1,
+      "stem": 163,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        -3,
+        913,
+        722
+      ],
+      "semantic_part_count": 5,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 130772.91884922578,
+          "bounded_area": 130643.9926544034,
+          "removed_area": 128.9261948223866
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 69165.27937672238,
+          "bounded_area": 69165.27937672238,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 76729.53905291519,
+          "bounded_area": 76729.53905291519,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 20777.454345703125,
+          "bounded_area": 20777.454345703125,
+          "removed_area": 0
+        },
+        {
+          "part_index": 4,
+          "unclipped_area": 39289.115966796875,
+          "bounded_area": 39289.115966796875,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 300,
+      "ital": 0,
+      "stem": 50,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        20,
+        848,
+        698
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 61522.38173587633,
+          "bounded_area": 61520.62716782815,
+          "removed_area": 1.7545680481853196
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 31712.41848539746,
+          "bounded_area": 31712.41848539746,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 35392.66853547037,
+          "bounded_area": 35392.66853547037,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 56663.66943359375,
+          "bounded_area": 56663.66943359375,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 400,
+      "ital": 0,
+      "stem": 66,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        13,
+        862,
+        705
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 81806.52602943793,
+          "bounded_area": 81803.94472922839,
+          "removed_area": 2.5813002095383126
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 42501.071112005426,
+          "bounded_area": 42501.071112005426,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 47359.015510973535,
+          "bounded_area": 47359.015510973535,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 51416.26025390625,
+          "bounded_area": 51416.26025390625,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 500,
+      "ital": 0,
+      "stem": 79,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        11,
+        868,
+        708
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 89754.74257763884,
+          "bounded_area": 89512.02272702343,
+          "removed_area": 242.7198506154091
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 46770.73902994832,
+          "bounded_area": 46770.73902994832,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 52085.61720939161,
+          "bounded_area": 52085.61720939161,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 49170.541015625,
+          "bounded_area": 49170.541015625,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 600,
+      "ital": 0,
+      "stem": 92,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        8,
+        873,
+        710
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 97110.26303082856,
+          "bounded_area": 97108.9691641459,
+          "removed_area": 1.2938666826521512
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 50742.65476801715,
+          "bounded_area": 50742.65476801715,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 56425.51781286151,
+          "bounded_area": 56425.51781286151,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 47389.95361328125,
+          "bounded_area": 47389.95361328125,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 700,
+      "ital": 0,
+      "stem": 119,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        3,
+        882,
+        715
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 110980.72517017924,
+          "bounded_area": 110978.96356590248,
+          "removed_area": 1.7616042767622275
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 58285.5468251825,
+          "bounded_area": 58285.5468251825,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 64748.71391066391,
+          "bounded_area": 64748.71391066391,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 44056.28125,
+          "bounded_area": 44056.28125,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 800,
+      "ital": 0,
+      "stem": 141,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        0,
+        889,
+        718
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 121232.45176241925,
+          "bounded_area": 121228.57185465666,
+          "removed_area": 3.879907762588118
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 63904.07579639371,
+          "bounded_area": 63904.07579639371,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 70939.35938995636,
+          "bounded_area": 70939.35938995636,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 41430.010498046875,
+          "bounded_area": 41430.010498046875,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 900,
+      "ital": 0,
+      "stem": 163,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        70,
+        -3,
+        896,
+        722
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 130772.91884922578,
+          "bounded_area": 130643.99252116114,
+          "removed_area": 128.92632806464098
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 69165.27850883803,
+          "bounded_area": 69165.27850883803,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 76729.53883189613,
+          "bounded_area": 76729.53883189613,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 39289.115966796875,
+          "bounded_area": 39289.115966796875,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 300,
+      "ital": 1,
+      "stem": 50,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        20,
+        865,
+        698
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 61522.38173587633,
+          "bounded_area": 61520.62716782815,
+          "removed_area": 1.7545680481853196
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 31712.41848539746,
+          "bounded_area": 31712.41848539746,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 35392.668388986,
+          "bounded_area": 35392.668388986,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 56663.66943359375,
+          "bounded_area": 56663.66943359375,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 400,
+      "ital": 1,
+      "stem": 66,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        13,
+        880,
+        705
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 81806.52602943793,
+          "bounded_area": 81806.52602943793,
+          "removed_area": 0
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 42501.07196791619,
+          "bounded_area": 42501.07196791619,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 47359.01551097353,
+          "bounded_area": 47359.01551097353,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 51416.26025390625,
+          "bounded_area": 51416.26025390625,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 500,
+      "ital": 1,
+      "stem": 79,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        11,
+        885,
+        708
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 89754.74257763884,
+          "bounded_area": 89512.02272702343,
+          "removed_area": 242.7198506154091
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 46770.73902994832,
+          "bounded_area": 46770.73902994832,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 52085.61720939161,
+          "bounded_area": 52085.61720939161,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 49170.541015625,
+          "bounded_area": 49170.541015625,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 600,
+      "ital": 1,
+      "stem": 92,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        8,
+        889,
+        710
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 97110.26303082856,
+          "bounded_area": 97099.87758750425,
+          "removed_area": 10.385443324310472
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 50742.65562771264,
+          "bounded_area": 50742.65562771264,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 56425.51990091039,
+          "bounded_area": 56425.51990091039,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 47389.95361328125,
+          "bounded_area": 47389.95361328125,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 700,
+      "ital": 1,
+      "stem": 119,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        3,
+        899,
+        715
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 110980.72517017924,
+          "bounded_area": 110978.96356590248,
+          "removed_area": 1.7616042767622275
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 58285.5468251825,
+          "bounded_area": 58285.5468251825,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 64748.71391066391,
+          "bounded_area": 64748.71391066391,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 44056.28125,
+          "bounded_area": 44056.28125,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 800,
+      "ital": 1,
+      "stem": 141,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        0,
+        906,
+        718
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 121232.45176241925,
+          "bounded_area": 121228.57196891744,
+          "removed_area": 3.879793501808308
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 63904.07579639371,
+          "bounded_area": 63904.07579639371,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 70939.35807159699,
+          "bounded_area": 70939.35807159699,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 41430.010498046875,
+          "bounded_area": 41430.010498046875,
+          "removed_area": 0
+        }
+      ]
+    },
+    {
+      "glyph": "uniE979",
+      "design": "playfair-lobe",
+      "weight": 900,
+      "ital": 1,
+      "stem": 163,
+      "translation": [
+        0.0,
+        0.0
+      ],
+      "source_native_unscaled_bounds": [
+        87,
+        -3,
+        913,
+        722
+      ],
+      "semantic_part_count": 4,
+      "parts": [
+        {
+          "part_index": 0,
+          "unclipped_area": 130772.91884922578,
+          "bounded_area": 130643.9926544034,
+          "removed_area": 128.9261948223866
+        },
+        {
+          "part_index": 1,
+          "unclipped_area": 69165.27937672238,
+          "bounded_area": 69165.27937672238,
+          "removed_area": 0
+        },
+        {
+          "part_index": 2,
+          "unclipped_area": 76729.53905291519,
+          "bounded_area": 76729.53905291519,
+          "removed_area": 0
+        },
+        {
+          "part_index": 3,
+          "unclipped_area": 39289.115966796875,
+          "bounded_area": 39289.115966796875,
+          "removed_area": 0
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Independent polish approximates the source post-union polish.",
+    "Native source bbox is a fixed construction constraint, not a fitted scale.",
+    "Hatched Playfair forms excluded: their remaining counter check fails.",
+    "Full variable-family merge and release checks remain required."
+  ]
+}

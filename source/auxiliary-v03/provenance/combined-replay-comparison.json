@@ -1,0 +1,17 @@
+{
+  "geometry.json": true,
+  "auxiliaries/TorchletteSans-SemiBold.ttf": true,
+  "auxiliaries/TorchletteSans-Italic.ttf": true,
+  "auxiliaries/TorchletteSans-MediumItalic.ttf": true,
+  "auxiliaries/TorchletteSans-Black.ttf": true,
+  "auxiliaries/TorchletteSans-Regular.ttf": true,
+  "auxiliaries/TorchletteSans-ExtraBoldItalic.ttf": true,
+  "auxiliaries/TorchletteSans-SemiBoldItalic.ttf": true,
+  "auxiliaries/TorchletteSans-Light.ttf": true,
+  "auxiliaries/TorchletteSans-LightItalic.ttf": true,
+  "auxiliaries/TorchletteSans-ExtraBold.ttf": true,
+  "auxiliaries/TorchletteSans-BoldItalic.ttf": true,
+  "auxiliaries/TorchletteSans-BlackItalic.ttf": true,
+  "auxiliaries/TorchletteSans-Medium.ttf": true,
+  "auxiliaries/TorchletteSans-Bold.ttf": true
+}

@@ -1,0 +1,225 @@
+{
+  "scope": "Two source-identical main/retained hatch glyphs; each inherits actual minimal weight-VF source-gate proof through exact raw contour and metrics identity. Full family/discrete style/layout checks remain separate.",
+  "manifest": {
+    "path": "/tmp/torchlette-a20c8-raw-hatch-final/geometry.json",
+    "sha256": "22771bfc4bb74b3e910d6690739879f6a6a9f60e5cc43fa25e2021e6509e5e3b"
+  },
+  "files": {
+    "TorchletteSans-Black.ttf": "d938592e7085957423e8ad0fab4b4748edee04cdd9acbec9598d5e3bfd6c804e",
+    "TorchletteSans-BlackItalic.ttf": "d67e7eaa8e56054a720a3c6eb2a8fde0f43696c4041f157b20cee1516fc0752a",
+    "TorchletteSans-Bold.ttf": "8d973afe73c2b813f911bea5c8c8d178b83125bc6ed77dc1f2539ecb049325f9",
+    "TorchletteSans-BoldItalic.ttf": "6e0dfc60f64b46c993849afbeb85a0a0db2b3d2e77b188a04dd98b2572058f69",
+    "TorchletteSans-ExtraBold.ttf": "1bfc5df4ccceffcc8fc58f4fb442091e55637b1d3cbc1c358c45b15d320051b5",
+    "TorchletteSans-ExtraBoldItalic.ttf": "193fd1089a8bae0c24c4a1b6d7156e6f32b373f8437196eddb4d7d71c5bc11b6",
+    "TorchletteSans-Italic.ttf": "cbf4883fb09bdf71861e8534bdc13642e9a5a08f4214b23a62644b6c7fc77928",
+    "TorchletteSans-Light.ttf": "7bd2c529e807ee44c58695cda3eb3b40a8272396e504355b85b2484d182c4aaf",
+    "TorchletteSans-LightItalic.ttf": "1b23111cd00aca831066ac137613523a4872df42e27f5752535ec6d4d270a1bb",
+    "TorchletteSans-Medium.ttf": "5239b431c363da9209d7968af24accb4bd8adf65550c9ebb620c577af284e66d",
+    "TorchletteSans-MediumItalic.ttf": "bf845d011c5099381603cc081fb2f2e4b94a0a638f4c09618ce189634be09ed4",
+    "TorchletteSans-Regular.ttf": "2aef746dc2ccb6b907e79e3df5b7a197466e4578659dc82c84cdebfd135d9025",
+    "TorchletteSans-SemiBold.ttf": "68ed45eb9c9f04eb4455be6a53df76514ebad0309fbd5b204ef6df04d728cd14",
+    "TorchletteSans-SemiBoldItalic.ttf": "3cfb7ebbda1e0715d7c4a6e238121292ae826c5aa94eeaf7695a890684ff81d5",
+    "check_intake.py": "24dc28d709c40724a4470c842c530a0d84c9c8c35e804ce2b23d1ba6d19e3d2b",
+    "config.json": "40c9ae1d61ecfb852c81f409705571c585cf575dda3773fed4101f6dee209ee8",
+    "generate.py": "f126584b8afaa2e039d474104b899d47ecc12694a95457d2b3827f9036cc4204",
+    "geometry.json": "22771bfc4bb74b3e910d6690739879f6a6a9f60e5cc43fa25e2021e6509e5e3b",
+    "intake-proof.json": "2585cdd618744fd95d1d64af648ba8086dd148ed5b86123dfcd3a2de7241fea4"
+  },
+  "raw_equivalence_checks": [
+    {
+      "weight": 300,
+      "ital": 0,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 300,
+      "ital": 0,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "glyph": "uniE90E",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "glyph": "uniE97A",
+      "tested_source_geometry_and_auxiliary_metrics_identical": true
+    }
+  ],
+  "fourteen_fonts_byte_reproducible": true,
+  "minimal_vf_proof": {
+    "path": "/tmp/torchlette-a20c8-raw-hatch/minimal-vf-proof-final.json",
+    "sha256": "352713be346407deba664424f51a4c638a2289d9ace26c320bd4daa88b24ac6f",
+    "live_samples": 26,
+    "saved_samples": 26,
+    "all_pass": true
+  },
+  "minimal_vfs": [
+    {
+      "path": "/tmp/torchlette-a20c8-raw-hatch/raw-hatch-0-VF.ttf",
+      "sha256": "f5ecf8e34e870d5cf2f69a14261c27bb54a1ea84aec3b95646d877d79a7c3497"
+    },
+    {
+      "path": "/tmp/torchlette-a20c8-raw-hatch/raw-hatch-1-VF.ttf",
+      "sha256": "044623ce1068870b23fcf8d283388d3063b484c33eb049dd091605a5540a2f32"
+    }
+  ],
+  "source_oracle": {
+    "path": "/tmp/torchlette-a20c8-ornament-components/direct-source-hatch750-proof.json",
+    "sha256": "16cdb43633ad4d439f92b02026f5811c9a4bc5a2ebd43a8eedc3f91f695d8580"
+  },
+  "limits": [
+    "Raw source offset fitting/collective quadratic conversion approximates adaptive source fitting/post-union polish.",
+    "No PathOps union, normalization, per-weight contour matching, bounding-box clipping or gate relaxation is used.",
+    "Current ordinary hierarchical gvar suffices for these minimal source-gate checks."
+  ]
+}

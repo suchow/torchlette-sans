@@ -1,4 +1,4 @@
-"""Supported two-stage MATH-aware export from an immutable original full VF.
+"""Coordinate-aligned, two-stage MATH-aware export from an immutable full VF.
 
 This is a custom export path, not a change to generic fontTools instancing.
 Both pins run in one invocation; arbitrary external partials are not accepted.
@@ -18,7 +18,9 @@ from fractions import Fraction as Q
 from pathlib import Path
 from fontTools.ttLib import TTFont
 from fontTools.ttLib.tables import otTables, otBase
-from fontTools.varLib.instancer import instantiateVariableFont
+from fontTools.varLib.instancer import instantiateVariableFont, AxisLimits
+from fontTools.varLib.models import normalizeValue
+import uharfbuzz as hb
 from fontTools.varLib.varStore import OnlineVarStoreBuilder
 from fontTools.varLib.builder import buildVarDevTable
 
@@ -213,6 +215,7 @@ def require_runtime():
         version == REPACKER_PIN and otBase.have_uharfbuzz,
         "Pinned uharfbuzz 0.57.0 repacker required before export",
     )
+    require(hb.version_string() == "15.0.0", "Pinned HarfBuzz 15.0.0 required before export")
 
 
 def source_profile(font):
@@ -288,6 +291,65 @@ def source_profile(font):
         )
 
 
+
+# This profile guard deliberately limits the adapter to the reviewed family.
+WEIGHT_MAP = {-1.0:-1.0,0.0:0.0,0.199951171875:0.125,0.20001220703125:0.125,
+              0.39996337890625:0.25,0.4000244140625:0.25,0.5999755859375:0.5,
+              0.60003662109375:0.5,0.79998779296875:0.75,0.800048828125:0.75,1.0:1.0}
+
+def aligned_instantiate(font, pins, original, original_pins):
+    """Pin at immutable-source HB coordinates using public instancer APIs.
+
+    Never serialize the temporary avar map. Only pinned maps are adapted and
+    they must disappear; all surviving independent axis maps stay exact.
+    """
+    source_profile(original)
+    require(hb.version_string() == "15.0.0", "Pinned HarfBuzz normalization required")
+    require(original["avar"].segments["wght"] == WEIGHT_MAP,
+            "Unsupported canonical weight avar shape")
+    require(not any(t in original for t in ("VARC", "CFF2", "CFF ")),
+            "Unsupported outline/axis coupling")
+    require(set(original_pins) == {"wght", "ital"}, "Complete source pins required")
+    values = {t: coordinate(v,t) for t,v in original_pins.items()}
+    require(pins and set(pins) <= {a.axisTag for a in font["fvar"].axes}, "Bad scalar pin axes")
+    pins = {t: coordinate(v,t) for t,v in pins.items()}
+    require(all(v == values[t] for t,v in pins.items()), "Pin/source coordinate mismatch")
+    require("avar" in font and font["avar"].majorVersion == 1, "Independent avar1 required")
+    desired, trace = normalization(original, values)
+    native = hb.Font(hb.Face(serialize(original)))
+    native.set_variations({t:float(v) for t,v in values.items()})
+    require(tuple(float(desired[a.axisTag]) for a in original["fvar"].axes)
+            == tuple(native.get_var_coords_normalized()), "Source normalization disagrees with HB")
+    original_axes = {a.axisTag:a for a in original["fvar"].axes}
+    work = copy.deepcopy(font)
+    for axis in font["fvar"].axes:
+        tag=axis.axisTag; oa=original_axes[tag]
+        require((axis.minValue,axis.defaultValue,axis.maxValue)==(oa.minValue,oa.defaultValue,oa.maxValue),
+                "Remaining axis range/default changed")
+        require(font["avar"].segments[tag] == original["avar"].segments[tag],
+                "Remaining source map changed")
+        if tag not in pins: continue
+        x=normalizeValue(float(pins[tag]),(axis.minValue,axis.defaultValue,axis.maxValue))
+        y=float(desired[tag]); mapping={-1.:-1.,0.:0.,1.:1.}
+        require(x not in mapping or mapping[x]==y, "Required identity knot collision")
+        mapping[x]=y; ordered=sorted(mapping.items())
+        require(all(v<=w for (_,v),(_,w) in zip(ordered,ordered[1:])), "Nonmonotone temporary map")
+        work["avar"].segments[tag]=mapping
+    limits=AxisLimits({t:float(v) for t,v in pins.items()}).limitAxesAndPopulateDefaults(work).normalize(work)
+    require(all(limits[t].default==float(desired[t]) for t in pins), "Aligned coordinate mismatch")
+    out=instantiateVariableFont(work,{t:float(v) for t,v in pins.items()},inplace=True,
+                                optimize=False,updateFontNames=False)
+    kept={a.axisTag for a in out["fvar"].axes} if "fvar" in out else set()
+    require(not kept.intersection(pins), "Pinned axis survived")
+    require(set(out["avar"].segments) == kept if "avar" in out else not kept,
+            "Temporary map survived or remaining map lost")
+    for tag in kept:
+        require(out["avar"].segments[tag]==original["avar"].segments[tag], "Retained map changed")
+    out._alignment_trace={"source_pins":{t:str(v) for t,v in values.items()},
+                          "normalized":{t:str(v) for t,v in desired.items()},"trace":trace}
+    return out
+
+
 def values(font, pins):
     loc, traces = normalization(font, pins)
     return (
@@ -317,19 +379,14 @@ def discrete_branch_values(font, weight):
 
 def weight_partial(font, weight):
     branch = discrete_branch_values(font, weight)
-    out = instantiateVariableFont(
-        font,
-        {"wght": float(weight)},
-        inplace=False,
-        optimize=False,
-        updateFontNames=False,
-    )
+    out = aligned_instantiate(font, {"wght": weight}, font,
+                              {"wght": weight, "ital": Q(0)})
     require(
         [a.axisTag for a in out["fvar"].axes] == ["ital"],
         "Wrong remaining partial axis",
     )
     require(plain(out) == plain(font), "Partial MATH plain structure/coverage differs")
-    # Capture the ordinary *serialized* partial: glyf compilation refreshes
+    # Capture the aligned *serialized* partial: glyf compilation refreshes
     # loca offsets. Comparing a precompile loca table would conflate ordinary
     # instancer serialization with changes caused by the MATH repair.
     baseline = serialize(out)
@@ -390,9 +447,9 @@ def weight_partial(font, weight):
             == serial(new.VarRegionList.Region[: len(oldstore.VarRegionList.Region)]),
             "Partial repair changed existing store prefix",
         )
-    out._ordinary_partial_bytes = baseline
+    out._aligned_partial_bytes = baseline
     out._partial_preservation = {
-        "ordinary_partial_sha256": digest(baseline),
+        "aligned_partial_sha256": digest(baseline),
         "non_math_gdef_raw_tables_equal": True,
         "loca_included": True,
         "head_exception": "checksumAdjustment only",
@@ -483,21 +540,16 @@ class Exporter:
         out = (
             weight_partial(font, value)
             if axis == "wght"
-            else instantiateVariableFont(
-                font,
-                {axis: float(value)},
-                inplace=False,
-                optimize=False,
-                updateFontNames=False,
-            )
+            else aligned_instantiate(font, {axis: value}, font,
+                                     {"wght": Q(400), "ital": value})
         )
-        if hasattr(out, "_ordinary_partial_bytes"):
-            baseline_path = Path(path).with_name("ordinary-" + Path(path).name)
+        if hasattr(out, "_aligned_partial_bytes"):
+            baseline_path = Path(path).with_name("aligned-" + Path(path).name)
             require(
                 not baseline_path.exists() and not baseline_path.is_symlink(),
-                "Ordinary partial path already exists",
+                "Aligned partial path already exists",
             )
-            baseline_path.write_bytes(out._ordinary_partial_bytes)
+            baseline_path.write_bytes(out._aligned_partial_bytes)
             self.partial_audit.append(
                 {
                     "path": str(baseline_path.resolve()),
@@ -549,18 +601,12 @@ class Exporter:
         full = self.source()
         discrete_branch_values(full, pins["wght"])
         original, loc, traces = values(full, pins)
-        # Preserve the real chained ordinary target. MATH alone is repaired
+        # Preserve the real chained coordinate-aligned target. MATH alone is repaired
         # from the untouched full source, not from rounded partial records.
-        ordinary = instantiateVariableFont(
-            partial,
-            {second_axis: float(value)},
-            inplace=False,
-            optimize=False,
-            updateFontNames=False,
-        )
+        aligned = aligned_instantiate(partial, {second_axis: value}, full, pins)
         path = Path(path)
-        op = path.with_name("ordinary-" + path.name)
-        ob, out = write_new(ordinary, op)
+        op = path.with_name("aligned-" + path.name)
+        ob, out = write_new(aligned, op)
         require("fvar" not in out, "MATH repair requires a fully pinned target")
         require(plain(out) == plain(full), "MATH plain structure/coverage differs")
         target = dict(records(out["MATH"].table))
@@ -580,8 +626,8 @@ class Exporter:
                 "order": receipt.order,
                 "actual_partial": receipt.partial_path,
                 "partial_sha256": receipt.partial_sha256,
-                "ordinary_target": str(op),
-                "ordinary_sha256": digest(ob),
+                "aligned_target": str(op),
+                "aligned_sha256": digest(ob),
                 "repaired_target": str(path),
                 "repaired_sha256": digest(rb),
                 "canonical": {k: str(v) for k, v in loc.items()},
@@ -637,16 +683,17 @@ def main():
         "Partial changed during export",
     )
     proof = {
-        "scope": "Supported custom two-stage MATH export; generic fontTools chains unchanged. No source-family or glyph acceptance.",
+        "scope": "Coordinate-aligned two-stage MATH export. Baselines use immutable-source HB normalized coordinates, not ordinary fontTools float normalization. No source-family or glyph acceptance.",
         "source": str(source),
         "source_sha256": a.source_sha256,
         "source_unchanged": True,
         "receipt": data,
         "audit": runner.audit,
-        "ordinary_partial_baselines": runner.partial_audit,
+        "aligned_partial_baselines": runner.partial_audit,
         "tool_versions": {
             "fonttools": PIN,
             "uharfbuzz": REPACKER_PIN,
+            "harfbuzz": hb.version_string(),
             "python": sys.version,
         },
         "exporter_sha256": digest(Path(__file__).read_bytes()),

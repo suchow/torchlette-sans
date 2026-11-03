@@ -1,0 +1,84 @@
+{
+  "all14_exact": true,
+  "all26_live_and26_saved_native_source_checks_pass": true,
+  "rows": [
+    {
+      "weight": 300,
+      "ital": 0,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "exact_tested_raw_curves": true
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "exact_tested_raw_curves": true
+    }
+  ],
+  "files": {
+    "generate.py": "47aff0e1238c0572150d694836fceb4a8906136ed89c10085ca7b0e1b34a6ced",
+    "config.json": "49660b91e42d03b5ac53af654833e63dd744ac3edaf2493077252fcd26bf942b",
+    "geometry.json": "9d32969872ef6db0b6f0a0419fb6e6946eac09e4f7123868bd05dd6dcf1f95af",
+    "minimal-vf-proof-final.json": "787c1dbc03d417e6d55e5a5a26edd57477c0367762baadd74e6558472c36fc99",
+    "check.py": "2bf884610ba89c4c57ccd1fb766561681247176dbe39286fb53c2e5428e13c80",
+    "check_saved_instances.py": "d116491b8ea577c3667616b1a9a0d85de82deb2afcc38009a976489d1673cc03"
+  }
+}

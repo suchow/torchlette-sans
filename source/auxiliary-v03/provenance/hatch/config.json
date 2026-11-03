@@ -1,0 +1,96 @@
+{
+  "glyphs": [
+    "uniE90E",
+    "uniE97A"
+  ],
+  "stems": [
+    50,
+    66,
+    79,
+    92,
+    119,
+    141,
+    163
+  ],
+  "shared_source_cubic_split": 0.5,
+  "offset_fitter_terminal_depth": 7,
+  "collective_cu2qu_max_error": 0.35,
+  "source_sha256": {
+    "/Users/jsuchow/Dropbox/Projects/torchlette/fonts/torchlette-sans/variable.py": "4afaaf6a191b5883897da0d2034a8b4897f1e0976019ebaa0a412faeae357a8d",
+    "/Users/jsuchow/Dropbox/Projects/torchlette/fonts/torchlette-sans/modules/fleurons.py": "e787287dc22784d69cec056100e9b16ac729d9ae398ee594a049004ed5dff2cb"
+  },
+  "construction": "Seven source Playfair hatch strokes: axes, two series, four hatches. Original centerlines and offset fitter; each original cubic split at t=0.5 with two fits shared across all weights. Collective Cu2Qu max error0.35; source placement; consistent nonzero winding.",
+  "limitations": "Fixed shared fitting approximates source adaptive fitting and post-union polish. Original-source native endpoint/intermediate gates mandatory.",
+  "records": [
+    {
+      "weight": 300,
+      "ital": 0,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "quadratic_points": 330
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "quadratic_points": 330
+    }
+  ]
+}

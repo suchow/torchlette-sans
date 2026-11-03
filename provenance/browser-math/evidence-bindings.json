@@ -1,0 +1,23 @@
+{
+  "checked_saved_browser_bindings": {
+    "/tmp/torchlette-a9052-v03-full/TorchletteSansVariable.ttf": "0a4e6f9fa86dbdde41cc935441469681a930c5a591063d6497738cb5eecdf906",
+    "/tmp/torchlette-a9052-v03-full/TorchletteSansVariable.woff2": "b5a367f459ded2a99ba063cc3bab430f130e6da3fd10ebd1aa017270fadb2f20",
+    "/tmp/torchlette-a20c8-v03-variable-math-browser/export-900-1/final.ttf": "b78034cc5b3c6ca649a77dbd9a342fba8d08401840117bf481471c189e59a452",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-BlackItalic.ttf": "656601f257d5b9c497696bc16b80db58bafcbaf971e74658631946aa278fb274",
+    "/private/tmp/torchlette-a20c8-v03-variable-math-browser/saved-browser.cjs": "db05b7d34b96a7003172c185243d7e8c3db1e18a1521c6f2fc469ccf3ee962fe",
+    "/private/tmp/torchlette-a20c8-v03-variable-math-browser/fixtures.json": "dd1622e69e839e0962f0a55f808a891bda410b0f0442cac536d832c4e0dcf40d",
+    "/private/tmp/torchlette-a20c8-v03-variable-math-browser/saved-variable-ttf.html": "cce6b15248ce352933342f184c21aa66212cf95ce33fe2399f3c557bb6397b42",
+    "/private/tmp/torchlette-a20c8-v03-variable-math-browser/saved-variable-woff2.html": "cce6b15248ce352933342f184c21aa66212cf95ce33fe2399f3c557bb6397b42",
+    "/private/tmp/torchlette-a20c8-v03-variable-math-browser/saved-saved-static.html": "cce6b15248ce352933342f184c21aa66212cf95ce33fe2399f3c557bb6397b42",
+    "/private/tmp/torchlette-a20c8-v03-variable-math-browser/saved-original-static.html": "cce6b15248ce352933342f184c21aa66212cf95ce33fe2399f3c557bb6397b42"
+  },
+  "saved_result_sha256": "1d22cded444075439e7044d2d0292c2de75c3f511482f889174b25bb483ce306",
+  "export_proof_sha256": "45c63b06975aff95295bd3b5c25234003fb3e46a14ee008c44f3486f32ca3d27",
+  "exporter_matches_staged_source": true,
+  "browser_version": "148.0.7778.96",
+  "browser_version_source": {
+    "path": "/tmp/torchlette-a20c8-v03-variable-math-browser/result.json",
+    "sha256": "8ff46c82ce33ce726c0f0ebd61edbce33d57fe056b1f2a4b6d5d5e8b0155c5ef"
+  },
+  "version_scope": "Version recorded in companion browser result; saved diagnostic harness uses same Playwright Chromium import, but saved-browser-result itself omits browserVersion."
+}

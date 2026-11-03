@@ -1,0 +1,254 @@
+{
+  "schema": "torchlette-auxiliary-geometry",
+  "version": 1,
+  "source_mode": "Preference-or-equal source-parameter circular bands",
+  "generator": {
+    "source": {
+      "path": "generate.py",
+      "sha256": "faf3fe78274ce49f71a80f4fdf6d062926f317b8b75d30232b0ddd54917e41d1"
+    },
+    "config": {
+      "path": "config.json",
+      "sha256": "6458528b74ecadeceeb1fe4e5398263bd75c28ae047eea5351163c373c24b0ad"
+    },
+    "commit": "3d2ae2eb736645fd5c129f40188b056c662c445c"
+  },
+  "originals": [
+    {
+      "weight": 300,
+      "ital": 0,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-Light.ttf",
+        "sha256": "4cec6bec31dc05236a5c6313c137d7bc852c2bdd44449d19b1469028c39376df"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-Regular.ttf",
+        "sha256": "4f47ff30132e5154a05cd3f0e846b951dd038544d4b766f5f5a9da864ad2f4da"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-Medium.ttf",
+        "sha256": "c21bcbe5af7aa0e38a896f92456ced2af31f34cad95073bae95e0d9faf03615a"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-SemiBold.ttf",
+        "sha256": "a9bcdc09badce669f028b44e2b23f6f9c74292c8b485a7000c3f94902d9fafd4"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-Bold.ttf",
+        "sha256": "53a5d8bbf5b84fb48fb6941ae43e9d1307ef8bfb76b9b5aa21c842f1e68043a1"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-ExtraBold.ttf",
+        "sha256": "f4225a7f8a6410e59611e193b686b8442db3aa645b4e6c3f763909d293a4e7e3"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-Black.ttf",
+        "sha256": "f78ccfcf7957183d22776721b3864bec55ed7b9f68ad2b578bfe9cce9faa9e51"
+      }
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-LightItalic.ttf",
+        "sha256": "90d2a708ecb69692a8eb85c2e7fe6f5c4d9a761972d20ca848dd7cac1a486215"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-Italic.ttf",
+        "sha256": "dfe4763b0a18b6fa571417c06051a05a08544510f4cabd1a445713897d6dab01"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-MediumItalic.ttf",
+        "sha256": "7318318904ee48ededd018df50b503f78c6a2b3dc4805e6ba4d6c108da6ac1a8"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-SemiBoldItalic.ttf",
+        "sha256": "6c3392d8049b123feef7c25a54fd03688e7266b3cbd403ee1201fe1a1aff86c6"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-BoldItalic.ttf",
+        "sha256": "91f77f930573dd4dc8c83c5241c2649769b3fff74d19dd401d80b26bea12440c"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-ExtraBoldItalic.ttf",
+        "sha256": "82a01efec1fac762cc5daf18a62f4958e604ff6222fe14d9462f39c58f31eaa1"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "file": {
+        "path": "/private/tmp/torchlette-release-full22-normal/static/TorchletteSans-BlackItalic.ttf",
+        "sha256": "656601f257d5b9c497696bc16b80db58bafcbaf971e74658631946aa278fb274"
+      }
+    }
+  ],
+  "auxiliaries": [
+    {
+      "weight": 300,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Light.ttf",
+        "sha256": "ee0700dcb2dcb8edcb5fddf5ac1f126dc684b540052c53efeb4ae9a9c6773927"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Regular.ttf",
+        "sha256": "d94e4c3fcc743a6c437d371f0cc9921050242579d1d5c98e56d0259caa2cec13"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Medium.ttf",
+        "sha256": "07a656d1fa20b72dc78fc03fa64079701b0d14fd2bbbb217331e60ea314021d4"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-SemiBold.ttf",
+        "sha256": "995952ee0a4e6200fd4edf62cadc771db06979452eaecfd10cb4cfe190d244bb"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Bold.ttf",
+        "sha256": "3b216e93a6b3ea3ed5d41d8039e406a01008d6c1eb918c7fecd6b39fbb92e400"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-ExtraBold.ttf",
+        "sha256": "2c7dde08d6e7e8045d759e7e84bfe9c8ed83ee45aa5740422723a2f1d231f126"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Black.ttf",
+        "sha256": "4108ecf3f41171505b2cd0e4398b732ade5a2936083d0364df690b0e2b1fab3e"
+      }
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-LightItalic.ttf",
+        "sha256": "9192be085241af3e43f3f4e6f0fa16d0b6ee7fc707e618609f6c749e5431d635"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-Italic.ttf",
+        "sha256": "e10e32d424af60eaf0616cd24f5abdcb9476ba7f4d71def6a484cb410c972f9e"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-MediumItalic.ttf",
+        "sha256": "e81afd338ae7e97c94ebc70a0d3914f513d26444da98c782c9920138d0d1a903"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-SemiBoldItalic.ttf",
+        "sha256": "837b2527b52a338208ff874a83350e54eec9c9a65f225897e05f8ebb01fa6a7d"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-BoldItalic.ttf",
+        "sha256": "26983b189460c336c9a088071776ee96a2a2f10d7ac2cbd6e4af86bacec6ead7"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-ExtraBoldItalic.ttf",
+        "sha256": "ad51f581318380163868aad96028396381072518a0a11aa5b05d59fb816e821b"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-BlackItalic.ttf",
+        "sha256": "c6fc25587c65f49c5a7fdbfd38fdf5ea8124c22696636ff361c9cc0cd357f9c6"
+      }
+    }
+  ],
+  "replacements": [
+    {
+      "glyph": "uni227C",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Upper preference arm, lower preference arm, parallel lower band; shared semantic arc section indices across seven weights."
+    }
+  ]
+}

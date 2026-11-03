@@ -1,0 +1,24 @@
+{
+  "family": "analytic-prec",
+  "manifest_sha256": "3b0854862407b352cdb6a54ee9bf55e67a1125e2f6e2fd2c8716a35ad248fba3",
+  "package_proof_sha256": "8fe9234e0d72f501faa0b1d3d66933caf3c8eff1b07ac05f9751814630ac7e5a",
+  "native_source_proof_sha256": "46d5a9d7d9636b2a1e691aced5fbb6e2e3bfd9905ab1444f5e8d5477e7ebfd03",
+  "original14_unchanged": true,
+  "auxiliary14_match_manifest": true,
+  "live26_and_saved26_pass_unchanged_source_gates": true,
+  "freetype_version": [
+    2,
+    14,
+    1
+  ],
+  "freetype_library": "/private/tmp/torchlette-hinting-4075770/ft-install/lib/libfreetype.6.dylib",
+  "freetype_library_sha256": "dd66325db66da64721d3261afc8e99a2a607fc05958e7eafa11cfb458d1033c0",
+  "versions": {
+    "fonttools": "4.68.0",
+    "uharfbuzz": "0.57.0",
+    "freetype-py": "2.5.1",
+    "numpy": "2.3.4",
+    "scipy": "1.16.3",
+    "skia-pathops": "0.9.2"
+  }
+}

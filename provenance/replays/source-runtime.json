@@ -1,0 +1,22 @@
+{
+  "versions": {
+    "fonttools": "4.68.0",
+    "skia-pathops": "0.9.2",
+    "brotli": "1.2.1",
+    "freetype-py": "2.5.1"
+  },
+  "python": "3.12.10 (main, May 30 2025, 05:53:56) [Clang 20.1.4 ]",
+  "executable": "/Users/jsuchow/.cache/uv/archive-v0/SyxEyZ-dmEJQK0slm-hov/bin/python3",
+  "freetype_version": [
+    2,
+    14,
+    1
+  ],
+  "freetype_module": "/tmp/torchlette-variable-source15-gate-preparation-v2/ft2141/freetype/__init__.py",
+  "freetype_library_sha256": "dd66325db66da64721d3261afc8e99a2a607fc05958e7eafa11cfb458d1033c0",
+  "environment": {
+    "PYTHONPATH": "/tmp/torchlette-variable-source15-gate-preparation-v2/ft2141",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "UV_OFFLINE": "1"
+  }
+}

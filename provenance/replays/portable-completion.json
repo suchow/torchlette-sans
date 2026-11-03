@@ -1,0 +1,21 @@
+{
+  "end": "2026-11-03T03:31:53.885663+00:00",
+  "exit_code": 0,
+  "input_drift": [],
+  "original_proposal_drift": [],
+  "results": {
+    "TorchletteSansVariable.ttf": {
+      "exists": true,
+      "sha256": "0a4e6f9fa86dbdde41cc935441469681a930c5a591063d6497738cb5eecdf906",
+      "expected": "0a4e6f9fa86dbdde41cc935441469681a930c5a591063d6497738cb5eecdf906",
+      "exact_candidate_match": true
+    },
+    "TorchletteSansVariable.woff2": {
+      "exists": true,
+      "sha256": "b5a367f459ded2a99ba063cc3bab430f130e6da3fd10ebd1aa017270fadb2f20",
+      "expected": "b5a367f459ded2a99ba063cc3bab430f130e6da3fd10ebd1aa017270fadb2f20",
+      "exact_candidate_match": true
+    }
+  },
+  "passed": true
+}

@@ -1,0 +1,1515 @@
+{
+  "manifest_sha256": "33f3d4c725dedb077c8146460708ff38036f7b1d3f8380badd188c1c8cb098f8",
+  "rows": [
+    {
+      "location": [
+        300,
+        0
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "hmtx",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          1006,
+          3174
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Light.ttf",
+          "sha256": "f007e37cd2371b3af651bf9e11156f9f91552e3f85f4659361bb8799d0584b09",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 69,
+          "auxiliary_lsb": 70
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Light.ttf",
+          "sha256": "f007e37cd2371b3af651bf9e11156f9f91552e3f85f4659361bb8799d0584b09",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Light.ttf",
+          "sha256": "f007e37cd2371b3af651bf9e11156f9f91552e3f85f4659361bb8799d0584b09",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Light.ttf",
+          "sha256": "f007e37cd2371b3af651bf9e11156f9f91552e3f85f4659361bb8799d0584b09",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Light.ttf",
+          "sha256": "f007e37cd2371b3af651bf9e11156f9f91552e3f85f4659361bb8799d0584b09",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-Light.ttf",
+          "sha256": "ee0700dcb2dcb8edcb5fddf5ac1f126dc684b540052c53efeb4ae9a9c6773927",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 60,
+          "auxiliary_lsb": 61
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-Light.ttf",
+          "sha256": "66dc3ed60574cdaa30e0f0435a2b37e48bdbd6928372529a59fb9dfbe16e608a",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-Light.ttf",
+          "sha256": "3a714489d8c1e6e5ada9400099de7e41d62354429f17dbc35a960634d082aa5c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 50,
+          "auxiliary_lsb": 50
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Light.ttf",
+          "sha256": "7bd2c529e807ee44c58695cda3eb3b40a8272396e504355b85b2484d182c4aaf",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Light.ttf",
+          "sha256": "7bd2c529e807ee44c58695cda3eb3b40a8272396e504355b85b2484d182c4aaf",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        }
+      }
+    },
+    {
+      "location": [
+        300,
+        1
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "hmtx",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          1058,
+          3166
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-LightItalic.ttf",
+          "sha256": "5874b6408d6cc0dbb85082228bfec3f63b6e2faf59068be3c6199669c690772c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 86
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-LightItalic.ttf",
+          "sha256": "5874b6408d6cc0dbb85082228bfec3f63b6e2faf59068be3c6199669c690772c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 85,
+          "auxiliary_lsb": 85
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-LightItalic.ttf",
+          "sha256": "5874b6408d6cc0dbb85082228bfec3f63b6e2faf59068be3c6199669c690772c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 85,
+          "auxiliary_lsb": 85
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-LightItalic.ttf",
+          "sha256": "5874b6408d6cc0dbb85082228bfec3f63b6e2faf59068be3c6199669c690772c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-LightItalic.ttf",
+          "sha256": "5874b6408d6cc0dbb85082228bfec3f63b6e2faf59068be3c6199669c690772c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-LightItalic.ttf",
+          "sha256": "9192be085241af3e43f3f4e6f0fa16d0b6ee7fc707e618609f6c749e5431d635",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 52,
+          "auxiliary_lsb": 53
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-LightItalic.ttf",
+          "sha256": "58979faed81c1002e5beeb6062f188fbda8f7e8a4f3da0d5b0ec24c55ac149c4",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 79,
+          "auxiliary_lsb": 79
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-LightItalic.ttf",
+          "sha256": "c9f1c95e40e72f154f8a6e4966c749dc6f8536b3af06cdd1efd4924879a98939",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 66,
+          "auxiliary_lsb": 66
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-LightItalic.ttf",
+          "sha256": "1b23111cd00aca831066ac137613523a4872df42e27f5752535ec6d4d270a1bb",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-LightItalic.ttf",
+          "sha256": "1b23111cd00aca831066ac137613523a4872df42e27f5752535ec6d4d270a1bb",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        }
+      }
+    },
+    {
+      "location": [
+        400,
+        0
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "hmtx",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          959,
+          3174
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Regular.ttf",
+          "sha256": "f04c05093bb763063cc66a0dc23fe2f996512c36a643e96a152efc47d1d55159",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Regular.ttf",
+          "sha256": "f04c05093bb763063cc66a0dc23fe2f996512c36a643e96a152efc47d1d55159",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Regular.ttf",
+          "sha256": "f04c05093bb763063cc66a0dc23fe2f996512c36a643e96a152efc47d1d55159",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Regular.ttf",
+          "sha256": "f04c05093bb763063cc66a0dc23fe2f996512c36a643e96a152efc47d1d55159",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Regular.ttf",
+          "sha256": "f04c05093bb763063cc66a0dc23fe2f996512c36a643e96a152efc47d1d55159",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-Regular.ttf",
+          "sha256": "d94e4c3fcc743a6c437d371f0cc9921050242579d1d5c98e56d0259caa2cec13",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 63,
+          "auxiliary_lsb": 64
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-Regular.ttf",
+          "sha256": "3b226902740ec7d1c5b12679fd972aa4fbc9809bce8f821e4b30ed5cac98cb90",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-Regular.ttf",
+          "sha256": "8b2ea233a757136e4d325650942bd11400165fb30eb503c1593478fb012fb4a8",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 50,
+          "auxiliary_lsb": 50
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Regular.ttf",
+          "sha256": "2aef746dc2ccb6b907e79e3df5b7a197466e4578659dc82c84cdebfd135d9025",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Regular.ttf",
+          "sha256": "2aef746dc2ccb6b907e79e3df5b7a197466e4578659dc82c84cdebfd135d9025",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        }
+      }
+    },
+    {
+      "location": [
+        400,
+        1
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          978,
+          3166
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Italic.ttf",
+          "sha256": "da5b2f807de1e890b301f4889ab1e53b805517bfc8e3af9054131274269902f1",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 86,
+          "auxiliary_lsb": 86
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Italic.ttf",
+          "sha256": "da5b2f807de1e890b301f4889ab1e53b805517bfc8e3af9054131274269902f1",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 84
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Italic.ttf",
+          "sha256": "da5b2f807de1e890b301f4889ab1e53b805517bfc8e3af9054131274269902f1",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 84
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Italic.ttf",
+          "sha256": "da5b2f807de1e890b301f4889ab1e53b805517bfc8e3af9054131274269902f1",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Italic.ttf",
+          "sha256": "da5b2f807de1e890b301f4889ab1e53b805517bfc8e3af9054131274269902f1",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-Italic.ttf",
+          "sha256": "e10e32d424af60eaf0616cd24f5abdcb9476ba7f4d71def6a484cb410c972f9e",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 53,
+          "auxiliary_lsb": 53
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-Italic.ttf",
+          "sha256": "b58e111db0a3a45ed156fa1a6b41c32356013a6293fad15a341bb3505dc8381c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 81,
+          "auxiliary_lsb": 81
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-Italic.ttf",
+          "sha256": "8d772fe06fd1965076a4fd594835f199126adf90563b08756bc885f1242e6406",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 66,
+          "auxiliary_lsb": 66
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Italic.ttf",
+          "sha256": "cbf4883fb09bdf71861e8534bdc13642e9a5a08f4214b23a62644b6c7fc77928",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Italic.ttf",
+          "sha256": "cbf4883fb09bdf71861e8534bdc13642e9a5a08f4214b23a62644b6c7fc77928",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        }
+      }
+    },
+    {
+      "location": [
+        500,
+        0
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          1013,
+          3174
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Medium.ttf",
+          "sha256": "162aeda71dae2bc27825d27f20570e68273d7fa54bd66e82211dfcea9ad38fcb",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Medium.ttf",
+          "sha256": "162aeda71dae2bc27825d27f20570e68273d7fa54bd66e82211dfcea9ad38fcb",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Medium.ttf",
+          "sha256": "162aeda71dae2bc27825d27f20570e68273d7fa54bd66e82211dfcea9ad38fcb",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Medium.ttf",
+          "sha256": "162aeda71dae2bc27825d27f20570e68273d7fa54bd66e82211dfcea9ad38fcb",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Medium.ttf",
+          "sha256": "162aeda71dae2bc27825d27f20570e68273d7fa54bd66e82211dfcea9ad38fcb",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-Medium.ttf",
+          "sha256": "07a656d1fa20b72dc78fc03fa64079701b0d14fd2bbbb217331e60ea314021d4",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 65,
+          "auxiliary_lsb": 65
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-Medium.ttf",
+          "sha256": "2a54dd5b69625c7d41f76df7fe525ffbd573274bf607e1547ef435ed8c4af0f5",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-Medium.ttf",
+          "sha256": "9970e3c4c549634e65466cb2f35fc1e819cea9356801c907d8617011ceb3b68e",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 50,
+          "auxiliary_lsb": 50
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Medium.ttf",
+          "sha256": "5239b431c363da9209d7968af24accb4bd8adf65550c9ebb620c577af284e66d",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Medium.ttf",
+          "sha256": "5239b431c363da9209d7968af24accb4bd8adf65550c9ebb620c577af284e66d",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        }
+      }
+    },
+    {
+      "location": [
+        500,
+        1
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "hmtx",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          964,
+          3166
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-MediumItalic.ttf",
+          "sha256": "f3733c6f2050d0abc432ad106f0337ab9b1bffd8b87c37b0dd706d76d8314b91",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 86,
+          "auxiliary_lsb": 86
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-MediumItalic.ttf",
+          "sha256": "f3733c6f2050d0abc432ad106f0337ab9b1bffd8b87c37b0dd706d76d8314b91",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 85
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-MediumItalic.ttf",
+          "sha256": "f3733c6f2050d0abc432ad106f0337ab9b1bffd8b87c37b0dd706d76d8314b91",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 85
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-MediumItalic.ttf",
+          "sha256": "f3733c6f2050d0abc432ad106f0337ab9b1bffd8b87c37b0dd706d76d8314b91",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-MediumItalic.ttf",
+          "sha256": "f3733c6f2050d0abc432ad106f0337ab9b1bffd8b87c37b0dd706d76d8314b91",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-MediumItalic.ttf",
+          "sha256": "e81afd338ae7e97c94ebc70a0d3914f513d26444da98c782c9920138d0d1a903",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 54,
+          "auxiliary_lsb": 55
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-MediumItalic.ttf",
+          "sha256": "32118b5d8ef8c3fa1872677996df6299790f247bfe20e34b7eeadd5f7acd3c5b",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 81,
+          "auxiliary_lsb": 81
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-MediumItalic.ttf",
+          "sha256": "eb61e5b7a860851b248069c2e8b5d408244cb3b2428f86e5e656f34c66db64d3",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 66,
+          "auxiliary_lsb": 66
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-MediumItalic.ttf",
+          "sha256": "bf845d011c5099381603cc081fb2f2e4b94a0a638f4c09618ce189634be09ed4",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-MediumItalic.ttf",
+          "sha256": "bf845d011c5099381603cc081fb2f2e4b94a0a638f4c09618ce189634be09ed4",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        }
+      }
+    },
+    {
+      "location": [
+        600,
+        0
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "hmtx",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          996,
+          3174
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-SemiBold.ttf",
+          "sha256": "b04d89d25675d2d3967ed7d85301cf79ff4ff9eb178abd1ef73da9b11f2abed7",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-SemiBold.ttf",
+          "sha256": "b04d89d25675d2d3967ed7d85301cf79ff4ff9eb178abd1ef73da9b11f2abed7",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-SemiBold.ttf",
+          "sha256": "b04d89d25675d2d3967ed7d85301cf79ff4ff9eb178abd1ef73da9b11f2abed7",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-SemiBold.ttf",
+          "sha256": "b04d89d25675d2d3967ed7d85301cf79ff4ff9eb178abd1ef73da9b11f2abed7",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-SemiBold.ttf",
+          "sha256": "b04d89d25675d2d3967ed7d85301cf79ff4ff9eb178abd1ef73da9b11f2abed7",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-SemiBold.ttf",
+          "sha256": "995952ee0a4e6200fd4edf62cadc771db06979452eaecfd10cb4cfe190d244bb",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 66,
+          "auxiliary_lsb": 67
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-SemiBold.ttf",
+          "sha256": "bb1c1ad9c721c0c0363ba07c74abf657ce2180ff8fa0723f35dbb3d89f7c4a38",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-SemiBold.ttf",
+          "sha256": "a59c3b19fca2853a08ed58293cf4d0606d2a469e93d9f629110643ad37b55129",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 50,
+          "auxiliary_lsb": 50
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-SemiBold.ttf",
+          "sha256": "68ed45eb9c9f04eb4455be6a53df76514ebad0309fbd5b204ef6df04d728cd14",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-SemiBold.ttf",
+          "sha256": "68ed45eb9c9f04eb4455be6a53df76514ebad0309fbd5b204ef6df04d728cd14",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        }
+      }
+    },
+    {
+      "location": [
+        600,
+        1
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "hmtx",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          963,
+          3166
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-SemiBoldItalic.ttf",
+          "sha256": "9f971bb336cac25b2a8063e59ee8eef66f174519905190d27e6f2207432103af",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 86,
+          "auxiliary_lsb": 86
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-SemiBoldItalic.ttf",
+          "sha256": "9f971bb336cac25b2a8063e59ee8eef66f174519905190d27e6f2207432103af",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 85
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-SemiBoldItalic.ttf",
+          "sha256": "9f971bb336cac25b2a8063e59ee8eef66f174519905190d27e6f2207432103af",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 85
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-SemiBoldItalic.ttf",
+          "sha256": "9f971bb336cac25b2a8063e59ee8eef66f174519905190d27e6f2207432103af",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-SemiBoldItalic.ttf",
+          "sha256": "9f971bb336cac25b2a8063e59ee8eef66f174519905190d27e6f2207432103af",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-SemiBoldItalic.ttf",
+          "sha256": "837b2527b52a338208ff874a83350e54eec9c9a65f225897e05f8ebb01fa6a7d",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 55,
+          "auxiliary_lsb": 56
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-SemiBoldItalic.ttf",
+          "sha256": "c4f899d4f67cfe84bfb20b3555fc67328fab58d7df6aa89e67eaad73a8dab4de",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 82,
+          "auxiliary_lsb": 82
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-SemiBoldItalic.ttf",
+          "sha256": "3954ddb2a9676a37c9e7b1a112a88c951ad60ae36addb794d2c3ad3ae46b2d3b",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 66,
+          "auxiliary_lsb": 66
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-SemiBoldItalic.ttf",
+          "sha256": "3cfb7ebbda1e0715d7c4a6e238121292ae826c5aa94eeaf7695a890684ff81d5",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-SemiBoldItalic.ttf",
+          "sha256": "3cfb7ebbda1e0715d7c4a6e238121292ae826c5aa94eeaf7695a890684ff81d5",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        }
+      }
+    },
+    {
+      "location": [
+        700,
+        0
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "hmtx",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          991,
+          3174
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Bold.ttf",
+          "sha256": "6290fc248521c26086ed2c6bc5274b8e43fb1b0e113fe5a5645e2a1d16e0105c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Bold.ttf",
+          "sha256": "6290fc248521c26086ed2c6bc5274b8e43fb1b0e113fe5a5645e2a1d16e0105c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Bold.ttf",
+          "sha256": "6290fc248521c26086ed2c6bc5274b8e43fb1b0e113fe5a5645e2a1d16e0105c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Bold.ttf",
+          "sha256": "6290fc248521c26086ed2c6bc5274b8e43fb1b0e113fe5a5645e2a1d16e0105c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Bold.ttf",
+          "sha256": "6290fc248521c26086ed2c6bc5274b8e43fb1b0e113fe5a5645e2a1d16e0105c",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-Bold.ttf",
+          "sha256": "3b216e93a6b3ea3ed5d41d8039e406a01008d6c1eb918c7fecd6b39fbb92e400",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 71
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-Bold.ttf",
+          "sha256": "e7f167d6aa7f8f0fa92fddfaf66486bdec4ef59638f38c3a2bd45dd7facfb574",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-Bold.ttf",
+          "sha256": "6b86b3f48f5ccde68a1a265a954cc93db876654d075b324fc23040f3fdc0e9f4",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 50,
+          "auxiliary_lsb": 50
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Bold.ttf",
+          "sha256": "8d973afe73c2b813f911bea5c8c8d178b83125bc6ed77dc1f2539ecb049325f9",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Bold.ttf",
+          "sha256": "8d973afe73c2b813f911bea5c8c8d178b83125bc6ed77dc1f2539ecb049325f9",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        }
+      }
+    },
+    {
+      "location": [
+        700,
+        1
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "hmtx",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          957,
+          3166
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-BoldItalic.ttf",
+          "sha256": "a00fd407ed8093505f054c83f2105e172143797272e4b5e6d382623402e23d3b",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 86,
+          "auxiliary_lsb": 86
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-BoldItalic.ttf",
+          "sha256": "a00fd407ed8093505f054c83f2105e172143797272e4b5e6d382623402e23d3b",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 84
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-BoldItalic.ttf",
+          "sha256": "a00fd407ed8093505f054c83f2105e172143797272e4b5e6d382623402e23d3b",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 84
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-BoldItalic.ttf",
+          "sha256": "a00fd407ed8093505f054c83f2105e172143797272e4b5e6d382623402e23d3b",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-BoldItalic.ttf",
+          "sha256": "a00fd407ed8093505f054c83f2105e172143797272e4b5e6d382623402e23d3b",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-BoldItalic.ttf",
+          "sha256": "26983b189460c336c9a088071776ee96a2a2f10d7ac2cbd6e4af86bacec6ead7",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 57,
+          "auxiliary_lsb": 58
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-BoldItalic.ttf",
+          "sha256": "c3773e7ff0e6fbab3fdbe6dc84444afcb3775c1573103fb8b0be732510600d40",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 83,
+          "auxiliary_lsb": 83
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-BoldItalic.ttf",
+          "sha256": "2162ba0da04f4a24e7dfd193ce8f0e8aec20cf2202199ff8809a6e9571db6c86",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 66,
+          "auxiliary_lsb": 66
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-BoldItalic.ttf",
+          "sha256": "6e0dfc60f64b46c993849afbeb85a0a0db2b3d2e77b188a04dd98b2572058f69",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-BoldItalic.ttf",
+          "sha256": "6e0dfc60f64b46c993849afbeb85a0a0db2b3d2e77b188a04dd98b2572058f69",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        }
+      }
+    },
+    {
+      "location": [
+        800,
+        0
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "hmtx",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          934,
+          3174
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-ExtraBold.ttf",
+          "sha256": "9d0e191454b0a6dc7377cfc4e213247c14d36c6bfe0061a3913ad65b2797c9ee",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-ExtraBold.ttf",
+          "sha256": "9d0e191454b0a6dc7377cfc4e213247c14d36c6bfe0061a3913ad65b2797c9ee",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-ExtraBold.ttf",
+          "sha256": "9d0e191454b0a6dc7377cfc4e213247c14d36c6bfe0061a3913ad65b2797c9ee",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-ExtraBold.ttf",
+          "sha256": "9d0e191454b0a6dc7377cfc4e213247c14d36c6bfe0061a3913ad65b2797c9ee",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-ExtraBold.ttf",
+          "sha256": "9d0e191454b0a6dc7377cfc4e213247c14d36c6bfe0061a3913ad65b2797c9ee",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-ExtraBold.ttf",
+          "sha256": "2c7dde08d6e7e8045d759e7e84bfe9c8ed83ee45aa5740422723a2f1d231f126",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 73,
+          "auxiliary_lsb": 74
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-ExtraBold.ttf",
+          "sha256": "3e0c2bea2ebdf2e21616c84513408d5ef99aa593b9f3f9757f21a8fe07cc3408",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-ExtraBold.ttf",
+          "sha256": "71063a4014ec1d49fd56c9966525c2f51f05d1eaebc832ae958c990844070f2b",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 50,
+          "auxiliary_lsb": 50
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-ExtraBold.ttf",
+          "sha256": "1bfc5df4ccceffcc8fc58f4fb442091e55637b1d3cbc1c358c45b15d320051b5",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-ExtraBold.ttf",
+          "sha256": "1bfc5df4ccceffcc8fc58f4fb442091e55637b1d3cbc1c358c45b15d320051b5",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        }
+      }
+    },
+    {
+      "location": [
+        800,
+        1
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          958,
+          3166
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-ExtraBoldItalic.ttf",
+          "sha256": "04ec7184953646bfeb0ea2bae58a5a08d4d7a0feb83586594aad795273cf9cbf",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 85,
+          "auxiliary_lsb": 85
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-ExtraBoldItalic.ttf",
+          "sha256": "04ec7184953646bfeb0ea2bae58a5a08d4d7a0feb83586594aad795273cf9cbf",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 84
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-ExtraBoldItalic.ttf",
+          "sha256": "04ec7184953646bfeb0ea2bae58a5a08d4d7a0feb83586594aad795273cf9cbf",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 84
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-ExtraBoldItalic.ttf",
+          "sha256": "04ec7184953646bfeb0ea2bae58a5a08d4d7a0feb83586594aad795273cf9cbf",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-ExtraBoldItalic.ttf",
+          "sha256": "04ec7184953646bfeb0ea2bae58a5a08d4d7a0feb83586594aad795273cf9cbf",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-ExtraBoldItalic.ttf",
+          "sha256": "ad51f581318380163868aad96028396381072518a0a11aa5b05d59fb816e821b",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 59,
+          "auxiliary_lsb": 59
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-ExtraBoldItalic.ttf",
+          "sha256": "0a34440a046eb71ab72b3a7825a30465731725ef5192376325497e2120156b7e",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 84
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-ExtraBoldItalic.ttf",
+          "sha256": "42fb5dcaf30714212d81340caa1559c6815c96870109b8b881fc447944754c39",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 66,
+          "auxiliary_lsb": 66
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-ExtraBoldItalic.ttf",
+          "sha256": "193fd1089a8bae0c24c4a1b6d7156e6f32b373f8437196eddb4d7d71c5bc11b6",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-ExtraBoldItalic.ttf",
+          "sha256": "193fd1089a8bae0c24c4a1b6d7156e6f32b373f8437196eddb4d7d71c5bc11b6",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        }
+      }
+    },
+    {
+      "location": [
+        900,
+        0
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          936,
+          3174
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Black.ttf",
+          "sha256": "8112afa7975e45baf7b72e91df1547a8c45ad6480b9df1cbd245fba8db342f57",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Black.ttf",
+          "sha256": "8112afa7975e45baf7b72e91df1547a8c45ad6480b9df1cbd245fba8db342f57",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Black.ttf",
+          "sha256": "8112afa7975e45baf7b72e91df1547a8c45ad6480b9df1cbd245fba8db342f57",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Black.ttf",
+          "sha256": "8112afa7975e45baf7b72e91df1547a8c45ad6480b9df1cbd245fba8db342f57",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-Black.ttf",
+          "sha256": "8112afa7975e45baf7b72e91df1547a8c45ad6480b9df1cbd245fba8db342f57",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-Black.ttf",
+          "sha256": "4108ecf3f41171505b2cd0e4398b732ade5a2936083d0364df690b0e2b1fab3e",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 77,
+          "auxiliary_lsb": 77
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-Black.ttf",
+          "sha256": "b845762cb0b9d7485963846b1fd867eedaffca7e8be6dae6bc4ea15ac2520e7e",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-Black.ttf",
+          "sha256": "30eae73b7f56ad3c786a742c0a9302f5cc111b995deaffe8cdc223c3d98ecdb7",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 50,
+          "auxiliary_lsb": 50
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Black.ttf",
+          "sha256": "d938592e7085957423e8ad0fab4b4748edee04cdd9acbec9598d5e3bfd6c804e",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-Black.ttf",
+          "sha256": "d938592e7085957423e8ad0fab4b4748edee04cdd9acbec9598d5e3bfd6c804e",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 70,
+          "auxiliary_lsb": 70
+        }
+      }
+    },
+    {
+      "location": [
+        900,
+        1
+      ],
+      "selected_count": 10,
+      "nonselected_count": 3022,
+      "original_advances_and_nonselected_metrics_exact": true,
+      "selected_importer_frame_matches_package": true,
+      "target_metrics_retained_by_geometry_only_import": true,
+      "selected_points_flags_endpoints_instructions_exact": true,
+      "nonselected_raw_glyf_bytes_exact": true,
+      "table_changes": [
+        "glyf",
+        "head",
+        "hmtx",
+        "loca",
+        "maxp"
+      ],
+      "maxp_changes": {
+        "maxPoints": [
+          1004,
+          3166
+        ]
+      },
+      "source_packages": {
+        "uniE931": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-BlackItalic.ttf",
+          "sha256": "12d5a0034f8797d3f191a147eb8fc5fb459afd987e5838e5c16842f35eb8ecb0",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 85,
+          "auxiliary_lsb": 85
+        },
+        "uniE97B": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-BlackItalic.ttf",
+          "sha256": "12d5a0034f8797d3f191a147eb8fc5fb459afd987e5838e5c16842f35eb8ecb0",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 84
+        },
+        "uniE97C": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-BlackItalic.ttf",
+          "sha256": "12d5a0034f8797d3f191a147eb8fc5fb459afd987e5838e5c16842f35eb8ecb0",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 84,
+          "auxiliary_lsb": 84
+        },
+        "uniE978": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-BlackItalic.ttf",
+          "sha256": "12d5a0034f8797d3f191a147eb8fc5fb459afd987e5838e5c16842f35eb8ecb0",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE979": {
+          "file": "/tmp/torchlette-a20c8-component-aux/TorchletteSans-BlackItalic.ttf",
+          "sha256": "12d5a0034f8797d3f191a147eb8fc5fb459afd987e5838e5c16842f35eb8ecb0",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uni227C": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/TorchletteSans-BlackItalic.ttf",
+          "sha256": "c6fc25587c65f49c5a7fdbfd38fdf5ea8124c22696636ff361c9cc0cd357f9c6",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 60,
+          "auxiliary_lsb": 61
+        },
+        "uniE908": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/TorchletteSans-BlackItalic.ttf",
+          "sha256": "fa9d0877d72ba33d33bf1790e7f38555fdf4b516ed41e888738316c17464aaf3",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 85,
+          "auxiliary_lsb": 85
+        },
+        "uni238B": {
+          "file": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/TorchletteSans-BlackItalic.ttf",
+          "sha256": "de870d96106991441bae03ae8dfb8da1c45e3999a69a08f0869aceba7d6b8c1e",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 66,
+          "auxiliary_lsb": 66
+        },
+        "uniE90E": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-BlackItalic.ttf",
+          "sha256": "d67e7eaa8e56054a720a3c6eb2a8fde0f43696c4041f157b20cee1516fc0752a",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        },
+        "uniE97A": {
+          "file": "/tmp/torchlette-a20c8-raw-hatch-final/TorchletteSans-BlackItalic.ttf",
+          "sha256": "d67e7eaa8e56054a720a3c6eb2a8fde0f43696c4041f157b20cee1516fc0752a",
+          "combined_shift": 0,
+          "package_shift": 0,
+          "original_lsb": 87,
+          "auxiliary_lsb": 87
+        }
+      }
+    }
+  ],
+  "total_selected_checks": 140,
+  "passed": true
+}

@@ -1,0 +1,116 @@
+{
+  "scope": "Geometry-only combined auxiliary proposal; no font constructors, VF generation or release acceptance. Existing saved-VF receipt gaps remain. Selected auxiliary LSB is copied from each source package to preserve importer rebasing; original masters remain target metric authority.",
+  "builder": {
+    "path": "/Users/jsuchow/Dropbox/Projects/torchlette/fonts/torchlette-sans/variable.py",
+    "sha256": "4afaaf6a191b5883897da0d2034a8b4897f1e0976019ebaa0a412faeae357a8d"
+  },
+  "packages": [
+    {
+      "root": "/tmp/torchlette-a20c8-component-aux",
+      "manifest": "/tmp/torchlette-a20c8-component-aux/geometry.json",
+      "manifest_sha256": "84b5cf546ca98f12d9593586a5dd0201095964c0463950fe93d4e6750767a805",
+      "seal": "/tmp/torchlette-a20c8-component-aux/sealed-proof.json",
+      "seal_sha256": "60a3da96d04d6968ce53ed54cd7af62a0e618c44379b6abb293a5096dbdc77bc"
+    },
+    {
+      "root": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec",
+      "manifest": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/geometry.json",
+      "manifest_sha256": "3b0854862407b352cdb6a54ee9bf55e67a1125e2f6e2fd2c8716a35ad248fba3",
+      "seal": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec/sealed-receipt.json",
+      "seal_sha256": "1434606636c71e05f871d5bd7b0e80ea2a51dff01e05c658841370934465a43e"
+    },
+    {
+      "root": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton",
+      "manifest": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/geometry.json",
+      "manifest_sha256": "9d32969872ef6db0b6f0a0419fb6e6946eac09e4f7123868bd05dd6dcf1f95af",
+      "seal": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton/sealed-receipt.json",
+      "seal_sha256": "b6457fb16c01f24ea9607caa435cd2434636d743c534c4a58700700c4e5119bb"
+    },
+    {
+      "root": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape",
+      "manifest": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/geometry.json",
+      "manifest_sha256": "030ffa4fd2eea32c9501ab4dee9f9478951dab4b8f1b64c157097f03aa9b9461",
+      "seal": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape/sealed-receipt.json",
+      "seal_sha256": "a2e5b49b85125c9875d5d0e9787c3a7737e84c1ab8d44632c3ea012caf914815"
+    },
+    {
+      "root": "/tmp/torchlette-a20c8-raw-hatch-final",
+      "manifest": "/tmp/torchlette-a20c8-raw-hatch-final/geometry.json",
+      "manifest_sha256": "22771bfc4bb74b3e910d6690739879f6a6a9f60e5cc43fa25e2021e6509e5e3b",
+      "seal": "/tmp/torchlette-a20c8-raw-hatch-final/sealed-proof.json",
+      "seal_sha256": "57961def103a4a4375541748b9ab26052eefe9c033e2bb8f4f95abb65e45ffe7"
+    }
+  ],
+  "selections": {
+    "uniE931": {
+      "package": "/tmp/torchlette-a20c8-component-aux",
+      "ital": [
+        0,
+        1
+      ]
+    },
+    "uniE97B": {
+      "package": "/tmp/torchlette-a20c8-component-aux",
+      "ital": [
+        0,
+        1
+      ]
+    },
+    "uniE97C": {
+      "package": "/tmp/torchlette-a20c8-component-aux",
+      "ital": [
+        0,
+        1
+      ]
+    },
+    "uniE978": {
+      "package": "/tmp/torchlette-a20c8-component-aux",
+      "ital": [
+        0,
+        1
+      ]
+    },
+    "uniE979": {
+      "package": "/tmp/torchlette-a20c8-component-aux",
+      "ital": [
+        0,
+        1
+      ]
+    },
+    "uni227C": {
+      "package": "/tmp/torchlette-a20c8-vf-smallcases/analytic-prec",
+      "ital": [
+        0,
+        1
+      ]
+    },
+    "uniE908": {
+      "package": "/tmp/torchlette-a20c8-vf-smallcases/raw-galton",
+      "ital": [
+        0,
+        1
+      ]
+    },
+    "uni238B": {
+      "package": "/tmp/torchlette-a20c8-vf-smallcases/raw-escape",
+      "ital": [
+        0,
+        1
+      ]
+    },
+    "uniE90E": {
+      "package": "/tmp/torchlette-a20c8-raw-hatch-final",
+      "ital": [
+        0,
+        1
+      ]
+    },
+    "uniE97A": {
+      "package": "/tmp/torchlette-a20c8-raw-hatch-final",
+      "ital": [
+        0,
+        1
+      ]
+    }
+  }
+}

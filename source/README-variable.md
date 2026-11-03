@@ -56,12 +56,23 @@ reference anchor and subdivides existing quadratic curves at shared arc-length k
 Where corresponding hard corners exist in every master, subdivision preserves
 those corner boundaries rather than matching a corner to the middle of a curve.
 Matching point counts alone are not accepted as proof of correspondence.
+If every master already has exactly the same raw curves and compatible point
+signatures, the builder preserves those source outlines directly; unnecessary
+subdivision can otherwise round away narrow openings. Each master retains its own
+metrics. A matching signature with differing geometry still takes the normal path.
 Compatible composite graphs inherit these canonical leaf outlines and vary their
 placements, preserving fixed linear component transforms.
 Subdivision preserves the original curves apart from TrueType integer rounding;
 it does not approximate curves with polygons. Missing contours are represented by
 zero-area contours, with winding preserved. Opening counters can instead use
 exactly retraced boundary bridges, after testing actual geometric containment.
+For the bounded case of one outer boundary and at most one counter per master,
+spatial counter identities distinguish a counter closing into ink from an unrelated
+counter opening to the exterior. Closing counters keep independent zero-area slots
+when absent; opening counters use retraced bridges. Ambiguous containment or
+multiple outer boundaries fall back to the established path. This classification
+is a geometric heuristic, so the complete endpoint and intermediate gates remain
+mandatory.
 For a void that splits a glyph into separate components, complementary half-plane
 intersections are used only if both pieces have one filled boundary in every
 master. The report lists every such repair and its source-area preservation check;

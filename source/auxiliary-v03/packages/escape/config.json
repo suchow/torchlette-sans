@@ -1,0 +1,83 @@
+{
+  "glyph": "uni238B",
+  "source_sha256": {
+    "../../../variable.py": "4afaaf6a191b5883897da0d2034a8b4897f1e0976019ebaa0a412faeae357a8d",
+    "../../../build.py": "c42d6b204bb31072e3adf655109968c681c66d591a6d3e288d167d5581333ea4",
+    "../../../modules/codekeys.py": "f092d36d16a9bb042b49de2d7bfa7bc4aa8e963cd488228f60e565d32861978c",
+    "../../../modules/fleurons.py": "e787287dc22784d69cec056100e9b16ac729d9ae398ee594a049004ed5dff2cb"
+  },
+  "construction": "Exact source CP3 Escape constructor and H measurements, preserving three pre-union source paths (ring, chevron, shaft). Corresponding cubic curves converted jointly across all seven weights with Cu2Qu max error0.35; source placement and consistent nonzero winding.",
+  "limitations": "Keeps separate source components instead of original final union/rounding/tidy. Original-source native endpoint and intermediate gates mandatory.",
+  "records": [
+    {
+      "weight": 300,
+      "ital": 0,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "quadratic_points": 92
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "quadratic_points": 92
+    }
+  ]
+}

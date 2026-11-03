@@ -1,5 +1,3 @@
-# [Torchlette Sans](specimen/torchlette-sans-specimen.pdf)
-
 ![Alphabet and figures](specimen/hero-light.png)
 
 ![Sizes](specimen/sizes-light.png)

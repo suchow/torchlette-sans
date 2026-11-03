@@ -1,0 +1,81 @@
+{
+  "packages": [
+    {
+      "name": "component",
+      "manifest": "packages/component/geometry.json",
+      "sha256": "53a5707bfc05671096c0bb32197d1bda79a2e07f86f89f6e1ba8590d6d615db7"
+    },
+    {
+      "name": "prec",
+      "manifest": "packages/prec/geometry.json",
+      "sha256": "c051c6aafa13c251c41c1f5f1c9c2e2de546aaf3531c1a977185d093f4adcb4a"
+    },
+    {
+      "name": "galton",
+      "manifest": "packages/galton/geometry.json",
+      "sha256": "5084f9c5e70e0c5ce6b30653c2f892787a8cb58753879614716691f396e14c74"
+    },
+    {
+      "name": "escape",
+      "manifest": "packages/escape/geometry.json",
+      "sha256": "e802aad472a67746fb34f136b7e81d4ec2aa5788ca43cfcecd9fd9b2d0a073c5"
+    },
+    {
+      "name": "hatch",
+      "manifest": "packages/hatch/geometry.json",
+      "sha256": "7f21be593c94284de0a5ae2a99af0847a48042673d2f00830b1bc2d76a2d2d4f"
+    }
+  ],
+  "adaptations": [
+    {
+      "package": "component",
+      "original_generator_sha256": "4e2e7f84dddcf3328bad88737d52dfba1b33935502337a941f5200b592ad60ef",
+      "adapted_generator_sha256": "c112e5c1611bb386fdf437d50e6b68fe78b7a3553f1245bca42089183e635b09",
+      "changes": [
+        "--repo now resolves source/ in standalone tree",
+        "git HEAD query replaced by explicit SOURCE-REVISION.txt provenance"
+      ],
+      "generation_run": false
+    },
+    {
+      "package": "prec",
+      "original_generator_sha256": "faf3fe78274ce49f71a80f4fdf6d062926f317b8b75d30232b0ddd54917e41d1",
+      "adapted_generator_sha256": "24ec8353c15a8bbafdadd71704f7622956b602ad74493576293da1aadbd61a50",
+      "changes": [
+        "--repo now resolves source/ in standalone tree",
+        "git HEAD query replaced by explicit SOURCE-REVISION.txt provenance"
+      ],
+      "generation_run": false
+    },
+    {
+      "package": "galton",
+      "original_generator_sha256": "47aff0e1238c0572150d694836fceb4a8906136ed89c10085ca7b0e1b34a6ced",
+      "adapted_generator_sha256": "0471c505c26fed827947e4bf2f6d8c5da0b5daf4fb46ba7982fa35ca9c6a1d41",
+      "changes": [
+        "--repo now resolves source/ in standalone tree",
+        "git HEAD query replaced by explicit SOURCE-REVISION.txt provenance"
+      ],
+      "generation_run": false
+    },
+    {
+      "package": "escape",
+      "original_generator_sha256": "c3c7286d2d170f5cb716d39e5122c2f3f366b8285a32a335da4c4dad84b2e36e",
+      "adapted_generator_sha256": "0fe6c0af6bd4f75c0f889aff2d173e59b60e09c11afc4a138cc70756cf6c8f6f",
+      "changes": [
+        "--repo now resolves source/ in standalone tree",
+        "git HEAD query replaced by explicit SOURCE-REVISION.txt provenance"
+      ],
+      "generation_run": false
+    },
+    {
+      "package": "hatch",
+      "original_generator_sha256": "f126584b8afaa2e039d474104b899d47ecc12694a95457d2b3827f9036cc4204",
+      "adapted_generator_sha256": "792935d596e4a1d9676081922d98babac8369800d44e834087e9b2472135dcb8",
+      "changes": [
+        "--repo now resolves source/ in standalone tree",
+        "git HEAD query replaced by explicit SOURCE-REVISION.txt provenance"
+      ],
+      "generation_run": false
+    }
+  ]
+}

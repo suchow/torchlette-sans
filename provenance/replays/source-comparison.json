@@ -1,0 +1,1185 @@
+{
+  "scope": "Actual source auxiliary regeneration and combined-input replay; no VF build and no new continuous-domain geometry clearance.",
+  "all_six_exit_zero": true,
+  "input_drift": [],
+  "combined_fonts": [
+    {
+      "file": "TorchletteSans-Black.ttf",
+      "sha256": "2859f143c3458ec059fd932591520cc53917e917bb5c3a6ca52c9aa1d19c64ed",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-BlackItalic.ttf",
+      "sha256": "0e170a7453355cea6ddef6c44bd762f1df1d969f75e3471f8522366e1476c49c",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-Bold.ttf",
+      "sha256": "e8a22a48c6a1549fb5a0dca9533f749ab06d5c1a8b3f17170faabd36af6d06ff",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-BoldItalic.ttf",
+      "sha256": "99cc5d8997ab4492a8a386e1d40277c31ac3d082bdbd48c201223ad190264a37",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-ExtraBold.ttf",
+      "sha256": "e4ef3586d562a17b291d2bc401de3f6168a540e9bc5d61195bd74c2ec8c45c13",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-ExtraBoldItalic.ttf",
+      "sha256": "72452092494081c78e978de4b0fe3f056b0a6120f43c2654996af9d3bfc2ba59",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-Italic.ttf",
+      "sha256": "257a6a8e1be4efb5b6c3699dd972290d4841af74a866591ee482dd36049efde6",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-Light.ttf",
+      "sha256": "a302d4cf8676e7c8d6f40ae4a8e994d62a0034a37a563038951e2c548520de11",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-LightItalic.ttf",
+      "sha256": "a472b36aba9f233b71fe0f09429e6d43d86cdbe98a77f12f06c6de19746cbaa9",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-Medium.ttf",
+      "sha256": "947d6f8c52d07fb00ff78b93ae7345db478b8a4e76946ef5a6cf4f64e4323661",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-MediumItalic.ttf",
+      "sha256": "6a18bf58bd9418f5895fbe81cd1107a2c2ed4e675f019447316ddd4dc7eeb928",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-Regular.ttf",
+      "sha256": "4620da1b0a689bba97fee4856e42d2ef3d4e117f80680bd8278e2365033abba0",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-SemiBold.ttf",
+      "sha256": "a8a7e079b6ed703b1d43d44f5c72724e5c0d058f8bc0b19e89c26f337004a8c4",
+      "exact_bytes": true
+    },
+    {
+      "file": "TorchletteSans-SemiBoldItalic.ttf",
+      "sha256": "529e63e29d46b5139adc32c8e0e46a2ffa979717afa5516e687879a0b37a26f4",
+      "exact_bytes": true
+    }
+  ],
+  "source_fonts": [
+    {
+      "package": "component",
+      "weight": 300,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-Light.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-Light.ttf",
+      "generated_sha256": "f007e37cd2371b3af651bf9e11156f9f91552e3f85f4659361bb8799d0584b09",
+      "reference_sha256": "f007e37cd2371b3af651bf9e11156f9f91552e3f85f4659361bb8799d0584b09",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 300,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-LightItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-LightItalic.ttf",
+      "generated_sha256": "5874b6408d6cc0dbb85082228bfec3f63b6e2faf59068be3c6199669c690772c",
+      "reference_sha256": "5874b6408d6cc0dbb85082228bfec3f63b6e2faf59068be3c6199669c690772c",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 400,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-Regular.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-Regular.ttf",
+      "generated_sha256": "f04c05093bb763063cc66a0dc23fe2f996512c36a643e96a152efc47d1d55159",
+      "reference_sha256": "f04c05093bb763063cc66a0dc23fe2f996512c36a643e96a152efc47d1d55159",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 400,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-Italic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-Italic.ttf",
+      "generated_sha256": "da5b2f807de1e890b301f4889ab1e53b805517bfc8e3af9054131274269902f1",
+      "reference_sha256": "da5b2f807de1e890b301f4889ab1e53b805517bfc8e3af9054131274269902f1",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 500,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-Medium.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-Medium.ttf",
+      "generated_sha256": "162aeda71dae2bc27825d27f20570e68273d7fa54bd66e82211dfcea9ad38fcb",
+      "reference_sha256": "162aeda71dae2bc27825d27f20570e68273d7fa54bd66e82211dfcea9ad38fcb",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 500,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-MediumItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-MediumItalic.ttf",
+      "generated_sha256": "f3733c6f2050d0abc432ad106f0337ab9b1bffd8b87c37b0dd706d76d8314b91",
+      "reference_sha256": "f3733c6f2050d0abc432ad106f0337ab9b1bffd8b87c37b0dd706d76d8314b91",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 600,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-SemiBold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-SemiBold.ttf",
+      "generated_sha256": "b04d89d25675d2d3967ed7d85301cf79ff4ff9eb178abd1ef73da9b11f2abed7",
+      "reference_sha256": "b04d89d25675d2d3967ed7d85301cf79ff4ff9eb178abd1ef73da9b11f2abed7",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 600,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-SemiBoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-SemiBoldItalic.ttf",
+      "generated_sha256": "9f971bb336cac25b2a8063e59ee8eef66f174519905190d27e6f2207432103af",
+      "reference_sha256": "9f971bb336cac25b2a8063e59ee8eef66f174519905190d27e6f2207432103af",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 700,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-Bold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-Bold.ttf",
+      "generated_sha256": "6290fc248521c26086ed2c6bc5274b8e43fb1b0e113fe5a5645e2a1d16e0105c",
+      "reference_sha256": "6290fc248521c26086ed2c6bc5274b8e43fb1b0e113fe5a5645e2a1d16e0105c",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 700,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-BoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-BoldItalic.ttf",
+      "generated_sha256": "a00fd407ed8093505f054c83f2105e172143797272e4b5e6d382623402e23d3b",
+      "reference_sha256": "a00fd407ed8093505f054c83f2105e172143797272e4b5e6d382623402e23d3b",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 800,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-ExtraBold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-ExtraBold.ttf",
+      "generated_sha256": "9d0e191454b0a6dc7377cfc4e213247c14d36c6bfe0061a3913ad65b2797c9ee",
+      "reference_sha256": "9d0e191454b0a6dc7377cfc4e213247c14d36c6bfe0061a3913ad65b2797c9ee",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 800,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-ExtraBoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-ExtraBoldItalic.ttf",
+      "generated_sha256": "04ec7184953646bfeb0ea2bae58a5a08d4d7a0feb83586594aad795273cf9cbf",
+      "reference_sha256": "04ec7184953646bfeb0ea2bae58a5a08d4d7a0feb83586594aad795273cf9cbf",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 900,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-Black.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-Black.ttf",
+      "generated_sha256": "8112afa7975e45baf7b72e91df1547a8c45ad6480b9df1cbd245fba8db342f57",
+      "reference_sha256": "8112afa7975e45baf7b72e91df1547a8c45ad6480b9df1cbd245fba8db342f57",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "component",
+      "weight": 900,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/component-source-replay/TorchletteSans-BlackItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/component/TorchletteSans-BlackItalic.ttf",
+      "generated_sha256": "12d5a0034f8797d3f191a147eb8fc5fb459afd987e5838e5c16842f35eb8ecb0",
+      "reference_sha256": "12d5a0034f8797d3f191a147eb8fc5fb459afd987e5838e5c16842f35eb8ecb0",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE931": true,
+        "uniE97B": true,
+        "uniE97C": true,
+        "uniE978": true,
+        "uniE979": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 300,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-Light.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-Light.ttf",
+      "generated_sha256": "ee0700dcb2dcb8edcb5fddf5ac1f126dc684b540052c53efeb4ae9a9c6773927",
+      "reference_sha256": "ee0700dcb2dcb8edcb5fddf5ac1f126dc684b540052c53efeb4ae9a9c6773927",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 400,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-Regular.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-Regular.ttf",
+      "generated_sha256": "d94e4c3fcc743a6c437d371f0cc9921050242579d1d5c98e56d0259caa2cec13",
+      "reference_sha256": "d94e4c3fcc743a6c437d371f0cc9921050242579d1d5c98e56d0259caa2cec13",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 500,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-Medium.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-Medium.ttf",
+      "generated_sha256": "07a656d1fa20b72dc78fc03fa64079701b0d14fd2bbbb217331e60ea314021d4",
+      "reference_sha256": "07a656d1fa20b72dc78fc03fa64079701b0d14fd2bbbb217331e60ea314021d4",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 600,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-SemiBold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-SemiBold.ttf",
+      "generated_sha256": "995952ee0a4e6200fd4edf62cadc771db06979452eaecfd10cb4cfe190d244bb",
+      "reference_sha256": "995952ee0a4e6200fd4edf62cadc771db06979452eaecfd10cb4cfe190d244bb",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 700,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-Bold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-Bold.ttf",
+      "generated_sha256": "3b216e93a6b3ea3ed5d41d8039e406a01008d6c1eb918c7fecd6b39fbb92e400",
+      "reference_sha256": "3b216e93a6b3ea3ed5d41d8039e406a01008d6c1eb918c7fecd6b39fbb92e400",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 800,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-ExtraBold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-ExtraBold.ttf",
+      "generated_sha256": "2c7dde08d6e7e8045d759e7e84bfe9c8ed83ee45aa5740422723a2f1d231f126",
+      "reference_sha256": "2c7dde08d6e7e8045d759e7e84bfe9c8ed83ee45aa5740422723a2f1d231f126",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 900,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-Black.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-Black.ttf",
+      "generated_sha256": "4108ecf3f41171505b2cd0e4398b732ade5a2936083d0364df690b0e2b1fab3e",
+      "reference_sha256": "4108ecf3f41171505b2cd0e4398b732ade5a2936083d0364df690b0e2b1fab3e",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 300,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-LightItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-LightItalic.ttf",
+      "generated_sha256": "9192be085241af3e43f3f4e6f0fa16d0b6ee7fc707e618609f6c749e5431d635",
+      "reference_sha256": "9192be085241af3e43f3f4e6f0fa16d0b6ee7fc707e618609f6c749e5431d635",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 400,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-Italic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-Italic.ttf",
+      "generated_sha256": "e10e32d424af60eaf0616cd24f5abdcb9476ba7f4d71def6a484cb410c972f9e",
+      "reference_sha256": "e10e32d424af60eaf0616cd24f5abdcb9476ba7f4d71def6a484cb410c972f9e",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 500,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-MediumItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-MediumItalic.ttf",
+      "generated_sha256": "e81afd338ae7e97c94ebc70a0d3914f513d26444da98c782c9920138d0d1a903",
+      "reference_sha256": "e81afd338ae7e97c94ebc70a0d3914f513d26444da98c782c9920138d0d1a903",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 600,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-SemiBoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-SemiBoldItalic.ttf",
+      "generated_sha256": "837b2527b52a338208ff874a83350e54eec9c9a65f225897e05f8ebb01fa6a7d",
+      "reference_sha256": "837b2527b52a338208ff874a83350e54eec9c9a65f225897e05f8ebb01fa6a7d",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 700,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-BoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-BoldItalic.ttf",
+      "generated_sha256": "26983b189460c336c9a088071776ee96a2a2f10d7ac2cbd6e4af86bacec6ead7",
+      "reference_sha256": "26983b189460c336c9a088071776ee96a2a2f10d7ac2cbd6e4af86bacec6ead7",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 800,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-ExtraBoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-ExtraBoldItalic.ttf",
+      "generated_sha256": "ad51f581318380163868aad96028396381072518a0a11aa5b05d59fb816e821b",
+      "reference_sha256": "ad51f581318380163868aad96028396381072518a0a11aa5b05d59fb816e821b",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "prec",
+      "weight": 900,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/prec-source-replay/TorchletteSans-BlackItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/prec/TorchletteSans-BlackItalic.ttf",
+      "generated_sha256": "c6fc25587c65f49c5a7fdbfd38fdf5ea8124c22696636ff361c9cc0cd357f9c6",
+      "reference_sha256": "c6fc25587c65f49c5a7fdbfd38fdf5ea8124c22696636ff361c9cc0cd357f9c6",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni227C": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 300,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-Light.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-Light.ttf",
+      "generated_sha256": "66dc3ed60574cdaa30e0f0435a2b37e48bdbd6928372529a59fb9dfbe16e608a",
+      "reference_sha256": "66dc3ed60574cdaa30e0f0435a2b37e48bdbd6928372529a59fb9dfbe16e608a",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 400,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-Regular.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-Regular.ttf",
+      "generated_sha256": "3b226902740ec7d1c5b12679fd972aa4fbc9809bce8f821e4b30ed5cac98cb90",
+      "reference_sha256": "3b226902740ec7d1c5b12679fd972aa4fbc9809bce8f821e4b30ed5cac98cb90",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 500,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-Medium.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-Medium.ttf",
+      "generated_sha256": "2a54dd5b69625c7d41f76df7fe525ffbd573274bf607e1547ef435ed8c4af0f5",
+      "reference_sha256": "2a54dd5b69625c7d41f76df7fe525ffbd573274bf607e1547ef435ed8c4af0f5",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 600,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-SemiBold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-SemiBold.ttf",
+      "generated_sha256": "bb1c1ad9c721c0c0363ba07c74abf657ce2180ff8fa0723f35dbb3d89f7c4a38",
+      "reference_sha256": "bb1c1ad9c721c0c0363ba07c74abf657ce2180ff8fa0723f35dbb3d89f7c4a38",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 700,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-Bold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-Bold.ttf",
+      "generated_sha256": "e7f167d6aa7f8f0fa92fddfaf66486bdec4ef59638f38c3a2bd45dd7facfb574",
+      "reference_sha256": "e7f167d6aa7f8f0fa92fddfaf66486bdec4ef59638f38c3a2bd45dd7facfb574",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 800,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-ExtraBold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-ExtraBold.ttf",
+      "generated_sha256": "3e0c2bea2ebdf2e21616c84513408d5ef99aa593b9f3f9757f21a8fe07cc3408",
+      "reference_sha256": "3e0c2bea2ebdf2e21616c84513408d5ef99aa593b9f3f9757f21a8fe07cc3408",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 900,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-Black.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-Black.ttf",
+      "generated_sha256": "b845762cb0b9d7485963846b1fd867eedaffca7e8be6dae6bc4ea15ac2520e7e",
+      "reference_sha256": "b845762cb0b9d7485963846b1fd867eedaffca7e8be6dae6bc4ea15ac2520e7e",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 300,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-LightItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-LightItalic.ttf",
+      "generated_sha256": "58979faed81c1002e5beeb6062f188fbda8f7e8a4f3da0d5b0ec24c55ac149c4",
+      "reference_sha256": "58979faed81c1002e5beeb6062f188fbda8f7e8a4f3da0d5b0ec24c55ac149c4",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 400,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-Italic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-Italic.ttf",
+      "generated_sha256": "b58e111db0a3a45ed156fa1a6b41c32356013a6293fad15a341bb3505dc8381c",
+      "reference_sha256": "b58e111db0a3a45ed156fa1a6b41c32356013a6293fad15a341bb3505dc8381c",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 500,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-MediumItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-MediumItalic.ttf",
+      "generated_sha256": "32118b5d8ef8c3fa1872677996df6299790f247bfe20e34b7eeadd5f7acd3c5b",
+      "reference_sha256": "32118b5d8ef8c3fa1872677996df6299790f247bfe20e34b7eeadd5f7acd3c5b",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 600,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-SemiBoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-SemiBoldItalic.ttf",
+      "generated_sha256": "c4f899d4f67cfe84bfb20b3555fc67328fab58d7df6aa89e67eaad73a8dab4de",
+      "reference_sha256": "c4f899d4f67cfe84bfb20b3555fc67328fab58d7df6aa89e67eaad73a8dab4de",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 700,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-BoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-BoldItalic.ttf",
+      "generated_sha256": "c3773e7ff0e6fbab3fdbe6dc84444afcb3775c1573103fb8b0be732510600d40",
+      "reference_sha256": "c3773e7ff0e6fbab3fdbe6dc84444afcb3775c1573103fb8b0be732510600d40",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 800,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-ExtraBoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-ExtraBoldItalic.ttf",
+      "generated_sha256": "0a34440a046eb71ab72b3a7825a30465731725ef5192376325497e2120156b7e",
+      "reference_sha256": "0a34440a046eb71ab72b3a7825a30465731725ef5192376325497e2120156b7e",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "galton",
+      "weight": 900,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/galton-source-replay/TorchletteSans-BlackItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/galton/TorchletteSans-BlackItalic.ttf",
+      "generated_sha256": "fa9d0877d72ba33d33bf1790e7f38555fdf4b516ed41e888738316c17464aaf3",
+      "reference_sha256": "fa9d0877d72ba33d33bf1790e7f38555fdf4b516ed41e888738316c17464aaf3",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE908": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 300,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-Light.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-Light.ttf",
+      "generated_sha256": "3a714489d8c1e6e5ada9400099de7e41d62354429f17dbc35a960634d082aa5c",
+      "reference_sha256": "3a714489d8c1e6e5ada9400099de7e41d62354429f17dbc35a960634d082aa5c",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 400,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-Regular.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-Regular.ttf",
+      "generated_sha256": "8b2ea233a757136e4d325650942bd11400165fb30eb503c1593478fb012fb4a8",
+      "reference_sha256": "8b2ea233a757136e4d325650942bd11400165fb30eb503c1593478fb012fb4a8",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 500,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-Medium.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-Medium.ttf",
+      "generated_sha256": "9970e3c4c549634e65466cb2f35fc1e819cea9356801c907d8617011ceb3b68e",
+      "reference_sha256": "9970e3c4c549634e65466cb2f35fc1e819cea9356801c907d8617011ceb3b68e",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 600,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-SemiBold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-SemiBold.ttf",
+      "generated_sha256": "a59c3b19fca2853a08ed58293cf4d0606d2a469e93d9f629110643ad37b55129",
+      "reference_sha256": "a59c3b19fca2853a08ed58293cf4d0606d2a469e93d9f629110643ad37b55129",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 700,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-Bold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-Bold.ttf",
+      "generated_sha256": "6b86b3f48f5ccde68a1a265a954cc93db876654d075b324fc23040f3fdc0e9f4",
+      "reference_sha256": "6b86b3f48f5ccde68a1a265a954cc93db876654d075b324fc23040f3fdc0e9f4",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 800,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-ExtraBold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-ExtraBold.ttf",
+      "generated_sha256": "71063a4014ec1d49fd56c9966525c2f51f05d1eaebc832ae958c990844070f2b",
+      "reference_sha256": "71063a4014ec1d49fd56c9966525c2f51f05d1eaebc832ae958c990844070f2b",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 900,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-Black.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-Black.ttf",
+      "generated_sha256": "30eae73b7f56ad3c786a742c0a9302f5cc111b995deaffe8cdc223c3d98ecdb7",
+      "reference_sha256": "30eae73b7f56ad3c786a742c0a9302f5cc111b995deaffe8cdc223c3d98ecdb7",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 300,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-LightItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-LightItalic.ttf",
+      "generated_sha256": "c9f1c95e40e72f154f8a6e4966c749dc6f8536b3af06cdd1efd4924879a98939",
+      "reference_sha256": "c9f1c95e40e72f154f8a6e4966c749dc6f8536b3af06cdd1efd4924879a98939",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 400,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-Italic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-Italic.ttf",
+      "generated_sha256": "8d772fe06fd1965076a4fd594835f199126adf90563b08756bc885f1242e6406",
+      "reference_sha256": "8d772fe06fd1965076a4fd594835f199126adf90563b08756bc885f1242e6406",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 500,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-MediumItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-MediumItalic.ttf",
+      "generated_sha256": "eb61e5b7a860851b248069c2e8b5d408244cb3b2428f86e5e656f34c66db64d3",
+      "reference_sha256": "eb61e5b7a860851b248069c2e8b5d408244cb3b2428f86e5e656f34c66db64d3",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 600,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-SemiBoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-SemiBoldItalic.ttf",
+      "generated_sha256": "3954ddb2a9676a37c9e7b1a112a88c951ad60ae36addb794d2c3ad3ae46b2d3b",
+      "reference_sha256": "3954ddb2a9676a37c9e7b1a112a88c951ad60ae36addb794d2c3ad3ae46b2d3b",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 700,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-BoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-BoldItalic.ttf",
+      "generated_sha256": "2162ba0da04f4a24e7dfd193ce8f0e8aec20cf2202199ff8809a6e9571db6c86",
+      "reference_sha256": "2162ba0da04f4a24e7dfd193ce8f0e8aec20cf2202199ff8809a6e9571db6c86",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 800,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-ExtraBoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-ExtraBoldItalic.ttf",
+      "generated_sha256": "42fb5dcaf30714212d81340caa1559c6815c96870109b8b881fc447944754c39",
+      "reference_sha256": "42fb5dcaf30714212d81340caa1559c6815c96870109b8b881fc447944754c39",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "escape",
+      "weight": 900,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/escape-source-replay/TorchletteSans-BlackItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/escape/TorchletteSans-BlackItalic.ttf",
+      "generated_sha256": "de870d96106991441bae03ae8dfb8da1c45e3999a69a08f0869aceba7d6b8c1e",
+      "reference_sha256": "de870d96106991441bae03ae8dfb8da1c45e3999a69a08f0869aceba7d6b8c1e",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uni238B": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 300,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-Light.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-Light.ttf",
+      "generated_sha256": "7bd2c529e807ee44c58695cda3eb3b40a8272396e504355b85b2484d182c4aaf",
+      "reference_sha256": "7bd2c529e807ee44c58695cda3eb3b40a8272396e504355b85b2484d182c4aaf",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 400,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-Regular.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-Regular.ttf",
+      "generated_sha256": "2aef746dc2ccb6b907e79e3df5b7a197466e4578659dc82c84cdebfd135d9025",
+      "reference_sha256": "2aef746dc2ccb6b907e79e3df5b7a197466e4578659dc82c84cdebfd135d9025",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 500,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-Medium.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-Medium.ttf",
+      "generated_sha256": "5239b431c363da9209d7968af24accb4bd8adf65550c9ebb620c577af284e66d",
+      "reference_sha256": "5239b431c363da9209d7968af24accb4bd8adf65550c9ebb620c577af284e66d",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 600,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-SemiBold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-SemiBold.ttf",
+      "generated_sha256": "68ed45eb9c9f04eb4455be6a53df76514ebad0309fbd5b204ef6df04d728cd14",
+      "reference_sha256": "68ed45eb9c9f04eb4455be6a53df76514ebad0309fbd5b204ef6df04d728cd14",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 700,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-Bold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-Bold.ttf",
+      "generated_sha256": "8d973afe73c2b813f911bea5c8c8d178b83125bc6ed77dc1f2539ecb049325f9",
+      "reference_sha256": "8d973afe73c2b813f911bea5c8c8d178b83125bc6ed77dc1f2539ecb049325f9",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 800,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-ExtraBold.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-ExtraBold.ttf",
+      "generated_sha256": "1bfc5df4ccceffcc8fc58f4fb442091e55637b1d3cbc1c358c45b15d320051b5",
+      "reference_sha256": "1bfc5df4ccceffcc8fc58f4fb442091e55637b1d3cbc1c358c45b15d320051b5",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 900,
+      "ital": 0,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-Black.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-Black.ttf",
+      "generated_sha256": "d938592e7085957423e8ad0fab4b4748edee04cdd9acbec9598d5e3bfd6c804e",
+      "reference_sha256": "d938592e7085957423e8ad0fab4b4748edee04cdd9acbec9598d5e3bfd6c804e",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 300,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-LightItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-LightItalic.ttf",
+      "generated_sha256": "1b23111cd00aca831066ac137613523a4872df42e27f5752535ec6d4d270a1bb",
+      "reference_sha256": "1b23111cd00aca831066ac137613523a4872df42e27f5752535ec6d4d270a1bb",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 400,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-Italic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-Italic.ttf",
+      "generated_sha256": "cbf4883fb09bdf71861e8534bdc13642e9a5a08f4214b23a62644b6c7fc77928",
+      "reference_sha256": "cbf4883fb09bdf71861e8534bdc13642e9a5a08f4214b23a62644b6c7fc77928",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 500,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-MediumItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-MediumItalic.ttf",
+      "generated_sha256": "bf845d011c5099381603cc081fb2f2e4b94a0a638f4c09618ce189634be09ed4",
+      "reference_sha256": "bf845d011c5099381603cc081fb2f2e4b94a0a638f4c09618ce189634be09ed4",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 600,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-SemiBoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-SemiBoldItalic.ttf",
+      "generated_sha256": "3cfb7ebbda1e0715d7c4a6e238121292ae826c5aa94eeaf7695a890684ff81d5",
+      "reference_sha256": "3cfb7ebbda1e0715d7c4a6e238121292ae826c5aa94eeaf7695a890684ff81d5",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 700,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-BoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-BoldItalic.ttf",
+      "generated_sha256": "6e0dfc60f64b46c993849afbeb85a0a0db2b3d2e77b188a04dd98b2572058f69",
+      "reference_sha256": "6e0dfc60f64b46c993849afbeb85a0a0db2b3d2e77b188a04dd98b2572058f69",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 800,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-ExtraBoldItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-ExtraBoldItalic.ttf",
+      "generated_sha256": "193fd1089a8bae0c24c4a1b6d7156e6f32b373f8437196eddb4d7d71c5bc11b6",
+      "reference_sha256": "193fd1089a8bae0c24c4a1b6d7156e6f32b373f8437196eddb4d7d71c5bc11b6",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    },
+    {
+      "package": "hatch",
+      "weight": 900,
+      "ital": 1,
+      "generated": "/tmp/torchlette-a9052-v03-source-replay/tree/build/hatch-source-replay/TorchletteSans-BlackItalic.ttf",
+      "reference": "/tmp/torchlette-a9052-v03-source-replay/tree/source/auxiliary-v03/packages/hatch/TorchletteSans-BlackItalic.ttf",
+      "generated_sha256": "d67e7eaa8e56054a720a3c6eb2a8fde0f43696c4041f157b20cee1516fc0752a",
+      "reference_sha256": "d67e7eaa8e56054a720a3c6eb2a8fde0f43696c4041f157b20cee1516fc0752a",
+      "exact_bytes": true,
+      "selected_geometry_flags_endpoints_bbox_hmtx": {
+        "uniE90E": true,
+        "uniE97A": true
+      },
+      "different_tables": []
+    }
+  ],
+  "exact_source_font_count": 70,
+  "selected_checks": 140,
+  "all_selected_exact": true,
+  "metadata": [
+    {
+      "package": "component",
+      "manifest_byte_equal": false,
+      "config_byte_equal": false,
+      "reason": "Generated metadata records actual source/output paths and adapted generator provenance; shipped manifest is portable relative binding."
+    },
+    {
+      "package": "prec",
+      "manifest_byte_equal": false,
+      "config_byte_equal": false,
+      "reason": "Generated metadata records actual source/output paths and adapted generator provenance; shipped manifest is portable relative binding."
+    },
+    {
+      "package": "galton",
+      "manifest_byte_equal": false,
+      "config_byte_equal": false,
+      "reason": "Generated metadata records actual source/output paths and adapted generator provenance; shipped manifest is portable relative binding."
+    },
+    {
+      "package": "escape",
+      "manifest_byte_equal": false,
+      "config_byte_equal": false,
+      "reason": "Generated metadata records actual source/output paths and adapted generator provenance; shipped manifest is portable relative binding."
+    },
+    {
+      "package": "hatch",
+      "manifest_byte_equal": false,
+      "config_byte_equal": false,
+      "reason": "Generated metadata records actual source/output paths and adapted generator provenance; shipped manifest is portable relative binding."
+    }
+  ],
+  "bindings": {
+    "/tmp/torchlette-a9052-v03-source-replay/combine.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/torchlette-a9052-v03-source-replay/combine.stdout.log": "07057919ab32ff162b54c480bc6b8cc8f1ae1af64706af3d5ceb33790fa9836b",
+    "/tmp/torchlette-a9052-v03-source-replay/compare.py": "94ca83541f5239f8a896f86ed292126d964703d3b2fcac5c8f1cb0dd4f1f90f6",
+    "/tmp/torchlette-a9052-v03-source-replay/completion.json": "fde7baa0aa04eddfebb640e829495402ac50272cb7cdd6c89135bb7fb1676ec1",
+    "/tmp/torchlette-a9052-v03-source-replay/component.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/torchlette-a9052-v03-source-replay/component.stdout.log": "b18c5a84bb647f853db2a7482b63c981c78acc29f4bd7c4ac3562a7510dc1632",
+    "/tmp/torchlette-a9052-v03-source-replay/escape.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/torchlette-a9052-v03-source-replay/escape.stdout.log": "67d7f337efe359625cd682984c678c5dbab69e6a15a97b6b5ef0c039837ab847",
+    "/tmp/torchlette-a9052-v03-source-replay/galton.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/torchlette-a9052-v03-source-replay/galton.stdout.log": "0fe67c2ff0d0860d8a2182261140b0872508b6fd5f1a1794da9b54b900ea6c86",
+    "/tmp/torchlette-a9052-v03-source-replay/hatch.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/torchlette-a9052-v03-source-replay/hatch.stdout.log": "6d7b1f8fb4807f22852554660d7de3d2f3acbcf2d692b143cba23ce1e1681aba",
+    "/tmp/torchlette-a9052-v03-source-replay/jobs.json": "5cbc4bfe27f76308f2bfd53782a33274db7cc357c72ef60199f2cd10f5d0e776",
+    "/tmp/torchlette-a9052-v03-source-replay/launch.json": "528ffc723d6670597ebdc957a773c23e8d92e3f050dc0a1ca2ed8dc8d7baf010",
+    "/tmp/torchlette-a9052-v03-source-replay/prec.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/torchlette-a9052-v03-source-replay/prec.stdout.log": "34f4adfc751db853974bf3e589eb873075dfd38a758dfd933067ae13d35131b6",
+    "/tmp/torchlette-a9052-v03-source-replay/preflight.json": "9047744fa3914d8173a958a7e9fc581bbf4e063e9a682513b527e453ccf005f9",
+    "/tmp/torchlette-a9052-v03-source-replay/run.py": "4ac6ef4478fbf06f6d11a36324b76332d0933d09ca75f7d9637f574d8ecb25c8",
+    "/tmp/torchlette-a9052-v03-source-replay/runtime.json": "427727bb571ba3bf70794d74a29f9a6aa33dfda0947dac390666490e4e5115a6"
+  }
+}

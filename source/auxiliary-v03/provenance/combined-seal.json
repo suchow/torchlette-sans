@@ -1,0 +1,27 @@
+{
+  "scope": "Combined geometry packaging/intake/frame proof only",
+  "files": {
+    "generate.py": "b017da0fe55a9cd0272d929f4fb8d848656fb1a3c4b9a81f3c8645f70e32e5fd",
+    "verify.py": "7aedd45446d40ee4564df45c3258909eebd6b9bfc9f552fbb6ed2c3aff01f31c",
+    "config.json": "29af9de2171032fda75034cc89e4812063ce0f514d68c875bb930e59401c749f",
+    "geometry.json": "33f3d4c725dedb077c8146460708ff38036f7b1d3f8380badd188c1c8cb098f8",
+    "proof.json": "2cfc05559e8d8f053bdc68a8f17abfa88d74803ffb9ea6b6382717bc3b7add78",
+    "verification.json": "af32c642981aa5a59646c5b2e3ab17fb340b84dd9bd29d90202fc7add980e103",
+    "README.md": "2297b49b270114ec5dc4f695c352e8fca19df46b601435746f36ef476c497c0e",
+    "replay-comparison.json": "35db9af26c1ffe93fe169f14b09a5e66e7f6ba380e2291a617208849d89f7f62",
+    "auxiliaries/TorchletteSans-SemiBold.ttf": "a8a7e079b6ed703b1d43d44f5c72724e5c0d058f8bc0b19e89c26f337004a8c4",
+    "auxiliaries/TorchletteSans-Italic.ttf": "257a6a8e1be4efb5b6c3699dd972290d4841af74a866591ee482dd36049efde6",
+    "auxiliaries/TorchletteSans-MediumItalic.ttf": "6a18bf58bd9418f5895fbe81cd1107a2c2ed4e675f019447316ddd4dc7eeb928",
+    "auxiliaries/TorchletteSans-Black.ttf": "2859f143c3458ec059fd932591520cc53917e917bb5c3a6ca52c9aa1d19c64ed",
+    "auxiliaries/TorchletteSans-Regular.ttf": "4620da1b0a689bba97fee4856e42d2ef3d4e117f80680bd8278e2365033abba0",
+    "auxiliaries/TorchletteSans-ExtraBoldItalic.ttf": "72452092494081c78e978de4b0fe3f056b0a6120f43c2654996af9d3bfc2ba59",
+    "auxiliaries/TorchletteSans-SemiBoldItalic.ttf": "529e63e29d46b5139adc32c8e0e46a2ffa979717afa5516e687879a0b37a26f4",
+    "auxiliaries/TorchletteSans-Light.ttf": "a302d4cf8676e7c8d6f40ae4a8e994d62a0034a37a563038951e2c548520de11",
+    "auxiliaries/TorchletteSans-LightItalic.ttf": "a472b36aba9f233b71fe0f09429e6d43d86cdbe98a77f12f06c6de19746cbaa9",
+    "auxiliaries/TorchletteSans-ExtraBold.ttf": "e4ef3586d562a17b291d2bc401de3f6168a540e9bc5d61195bd74c2ec8c45c13",
+    "auxiliaries/TorchletteSans-BoldItalic.ttf": "99cc5d8997ab4492a8a386e1d40277c31ac3d082bdbd48c201223ad190264a37",
+    "auxiliaries/TorchletteSans-BlackItalic.ttf": "0e170a7453355cea6ddef6c44bd762f1df1d969f75e3471f8522366e1476c49c",
+    "auxiliaries/TorchletteSans-Medium.ttf": "947d6f8c52d07fb00ff78b93ae7345db478b8a4e76946ef5a6cf4f64e4323661",
+    "auxiliaries/TorchletteSans-Bold.ttf": "e8a22a48c6a1549fb5a0dca9533f749ab06d5c1a8b3f17170faabd36af6d06ff"
+  }
+}

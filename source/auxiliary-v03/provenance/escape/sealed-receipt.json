@@ -1,0 +1,24 @@
+{
+  "family": "raw-escape",
+  "manifest_sha256": "030ffa4fd2eea32c9501ab4dee9f9478951dab4b8f1b64c157097f03aa9b9461",
+  "package_proof_sha256": "1f386d159ecadd103334eaf325b4f53c38c58cc9382c7ef9a764909cd30cd05a",
+  "native_source_proof_sha256": "7f6dbbbb16bb6ac5e42f6fb699d057da8b3ff95d1530ebf3c2fa6cb4faecfdd8",
+  "original14_unchanged": true,
+  "auxiliary14_match_manifest": true,
+  "live26_and_saved26_pass_unchanged_source_gates": true,
+  "freetype_version": [
+    2,
+    14,
+    1
+  ],
+  "freetype_library": "/private/tmp/torchlette-hinting-4075770/ft-install/lib/libfreetype.6.dylib",
+  "freetype_library_sha256": "dd66325db66da64721d3261afc8e99a2a607fc05958e7eafa11cfb458d1033c0",
+  "versions": {
+    "fonttools": "4.68.0",
+    "uharfbuzz": "0.57.0",
+    "freetype-py": "2.5.1",
+    "numpy": "2.3.4",
+    "scipy": "1.16.3",
+    "skia-pathops": "0.9.2"
+  }
+}

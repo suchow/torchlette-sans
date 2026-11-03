@@ -1,0 +1,5231 @@
+{
+  "scope": "Five-glyph source-aware geometry auxiliary, exact original namespace/metrics remain authoritative. Complete family merge/discrete italic/layout gates outstanding.",
+  "manifest": {
+    "path": "/tmp/torchlette-a20c8-component-aux/geometry.json",
+    "sha256": "84b5cf546ca98f12d9593586a5dd0201095964c0463950fe93d4e6750767a805"
+  },
+  "files": {
+    "TorchletteSans-Black.ttf": "8112afa7975e45baf7b72e91df1547a8c45ad6480b9df1cbd245fba8db342f57",
+    "TorchletteSans-BlackItalic.ttf": "12d5a0034f8797d3f191a147eb8fc5fb459afd987e5838e5c16842f35eb8ecb0",
+    "TorchletteSans-Bold.ttf": "6290fc248521c26086ed2c6bc5274b8e43fb1b0e113fe5a5645e2a1d16e0105c",
+    "TorchletteSans-BoldItalic.ttf": "a00fd407ed8093505f054c83f2105e172143797272e4b5e6d382623402e23d3b",
+    "TorchletteSans-ExtraBold.ttf": "9d0e191454b0a6dc7377cfc4e213247c14d36c6bfe0061a3913ad65b2797c9ee",
+    "TorchletteSans-ExtraBoldItalic.ttf": "04ec7184953646bfeb0ea2bae58a5a08d4d7a0feb83586594aad795273cf9cbf",
+    "TorchletteSans-Italic.ttf": "da5b2f807de1e890b301f4889ab1e53b805517bfc8e3af9054131274269902f1",
+    "TorchletteSans-Light.ttf": "f007e37cd2371b3af651bf9e11156f9f91552e3f85f4659361bb8799d0584b09",
+    "TorchletteSans-LightItalic.ttf": "5874b6408d6cc0dbb85082228bfec3f63b6e2faf59068be3c6199669c690772c",
+    "TorchletteSans-Medium.ttf": "162aeda71dae2bc27825d27f20570e68273d7fa54bd66e82211dfcea9ad38fcb",
+    "TorchletteSans-MediumItalic.ttf": "f3733c6f2050d0abc432ad106f0337ab9b1bffd8b87c37b0dd706d76d8314b91",
+    "TorchletteSans-Regular.ttf": "f04c05093bb763063cc66a0dc23fe2f996512c36a643e96a152efc47d1d55159",
+    "TorchletteSans-SemiBold.ttf": "b04d89d25675d2d3967ed7d85301cf79ff4ff9eb178abd1ef73da9b11f2abed7",
+    "TorchletteSans-SemiBoldItalic.ttf": "9f971bb336cac25b2a8063e59ee8eef66f174519905190d27e6f2207432103af",
+    "check_intake.py": "24dc28d709c40724a4470c842c530a0d84c9c8c35e804ce2b23d1ba6d19e3d2b",
+    "config.json": "b0efa67ce5403a33adb3b002d740c21adc28827407b8a070d68d87d7b518d369",
+    "generate.py": "4e2e7f84dddcf3328bad88737d52dfba1b33935502337a941f5200b592ad60ef",
+    "geometry.json": "84b5cf546ca98f12d9593586a5dd0201095964c0463950fe93d4e6750767a805",
+    "intake-proof.json": "26f15f1ec80c1e91e861143ff94bdcd96945f43b6101c385f44b6607b2baf061"
+  },
+  "selected_glyphs": [
+    "uniE931",
+    "uniE97B",
+    "uniE97C",
+    "uniE978",
+    "uniE979"
+  ],
+  "raw_master_equivalence": [
+    {
+      "glyph": "uniE931",
+      "weight": 300,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-Light.ttf",
+      "proof_master_sha256": "2deb2ea61f2eddc51aebb92b4d240195e1223830eb8a9c684614b81626fa4ac4",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 300,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-300-0.ttf",
+      "proof_master_sha256": "6d0aa3f9f4aef22eae035b02ca09766b1efa419500b53e1a1c884c7f54cadcc6",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 300,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-300-0.ttf",
+      "proof_master_sha256": "28403b61746c1f88fedace18337a8dd44780dc49adc6fa42e858150e3e18f248",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 300,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-300-0.ttf",
+      "proof_master_sha256": "6cadc16314891b58190e51f9fd9e5185c3e53780b410e16330b197a1fd7f4537",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 300,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-300-0.ttf",
+      "proof_master_sha256": "0dc14ada7fac64d5a869a6b77f17e92015145e409de157b3044491e18230d428",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 300,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-LightItalic.ttf",
+      "proof_master_sha256": "6bf0523f42582eb3731b11426029e6ccf2d599f5cc43774c31f41005dc8b8caf",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 300,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-300-1.ttf",
+      "proof_master_sha256": "1f5fa77a9cf8542c34ec28238805228cd4f270a306ca209c44da0cc3b3e3c0b3",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 300,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-300-1.ttf",
+      "proof_master_sha256": "eb9bd7fccafc93c91011954cd1944e6086ce1c9a7dbb51e1af6066f5402b7a45",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 300,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-300-1.ttf",
+      "proof_master_sha256": "d700834bd7b7f7b47e1a769ec49001511106848ea1be82126e20d9c4e116efe0",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 300,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-300-1.ttf",
+      "proof_master_sha256": "314e4f32226f9377d7e6fd74db307509a5074a73d58f470b877c6f5f706670a3",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 400,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-Regular.ttf",
+      "proof_master_sha256": "09241fd1d47090f64d161f56df86c3abf0c2b89dc08dcceeafac8558c3d2510a",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 400,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-400-0.ttf",
+      "proof_master_sha256": "0cfe159194ddf7efbcc252dde9da6d731355fa4e354348d413bdd19e943c7195",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 400,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-400-0.ttf",
+      "proof_master_sha256": "2f731a636e3c91ad9b468e3b2fbda15a9df0652f143a25b2b52e7fc78f93b0d5",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 400,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-400-0.ttf",
+      "proof_master_sha256": "aa5a5042cd865a300f7cf18c78f66bc974a49636fe6da383f858dc3263681f95",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 400,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-400-0.ttf",
+      "proof_master_sha256": "a2ffff022ff92b33e87c06b8d08aefa5a4c7e6a3c32b883927fac700a470b7dd",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 400,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-Italic.ttf",
+      "proof_master_sha256": "60c1adf9e0f1a6deec99b33d54288b18589f963f3362fce6bf29bf723f0e877b",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 400,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-400-1.ttf",
+      "proof_master_sha256": "463c028bbbe8c4558692ebc880d6fb0c84221e7a4f907dc28030b8b2db7215db",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 400,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-400-1.ttf",
+      "proof_master_sha256": "85a3c22153aec8fb4589315eae63fac8bcef0bbfe30d5603d42ddfa194ab4ea2",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 400,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-400-1.ttf",
+      "proof_master_sha256": "bed9df4a9339774cadc87820a84bcb0eec81af5db05d76b8e47d148c987ef72e",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 400,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-400-1.ttf",
+      "proof_master_sha256": "fb4aa6788b38be649224333988475879f1d2e7427ea979fd3ba815977e5fd5ff",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 500,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-Medium.ttf",
+      "proof_master_sha256": "561eb08a219cfbd27f0bf2f44979cd839b105a8bb09838e804d617d4a6702c0e",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 500,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-500-0.ttf",
+      "proof_master_sha256": "56ed07275645b0be04330e65712826818cd5d604d981b4b3f3490f3a1825d405",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 500,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-500-0.ttf",
+      "proof_master_sha256": "d789d38dd6046fda624bc3c4422af48cf06313e01c50b092b22b0fcea57990f1",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 500,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-500-0.ttf",
+      "proof_master_sha256": "0ed1d3e8986504f561add0dbdf2bcbfbc17529118add2bb4fc47e712aee4604d",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 500,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-500-0.ttf",
+      "proof_master_sha256": "3f0d561566a357499f4787ede55d7f335c20dc32c6eb0d88aa8ad07cde0e4c7d",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 500,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-MediumItalic.ttf",
+      "proof_master_sha256": "806921e0f8d1d25077332749c190d6e90a4387d5c92682c2374b20f13caf53a6",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 500,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-500-1.ttf",
+      "proof_master_sha256": "78078bff008ac0f4aafc6f1dd9e1024250ea82a69783cdb34a95709de98b3c9b",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 500,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-500-1.ttf",
+      "proof_master_sha256": "2fe157aaf5a0939547893f6f5d9dfa1b44a573cae7844f59643f35ebcd1e9f43",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 500,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-500-1.ttf",
+      "proof_master_sha256": "8e77a8d07068ddccdb2dee95384f59654a4bc344febaf343fd960b689db7b3e2",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 500,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-500-1.ttf",
+      "proof_master_sha256": "c6b7650c949adf9cbbed55465448ec0ea481cd5e2d9b1b6bcbb61752e596b8a3",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 600,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-SemiBold.ttf",
+      "proof_master_sha256": "94df431d60a01ba14f313b0102fca633371f29868c0cfe50eb527fd5edb914c0",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 600,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-600-0.ttf",
+      "proof_master_sha256": "424874d2bb353ffaf0de0d1851f7bc757483bda9fcff5c480837f813664a30ee",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 600,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-600-0.ttf",
+      "proof_master_sha256": "c8379a754f9cdfe60a38fde3d59892be16c1d80d5929b23d0c66666586cdc65f",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 600,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-600-0.ttf",
+      "proof_master_sha256": "8d2144527bf5eee499d9b14820549fcf96f9ba82be96e66d2c79a7b0190b4c13",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 600,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-600-0.ttf",
+      "proof_master_sha256": "b31c48a406efe99074328edcfdfde020a2092d3707b1ba93507d5e3d4ced923b",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 600,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-SemiBoldItalic.ttf",
+      "proof_master_sha256": "0430408322332dc575d2a98698ddc3678268bf819c496ddeb97e199a005f7693",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 600,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-600-1.ttf",
+      "proof_master_sha256": "9bbc72fcd1311e161c0cba908a29459683344dd7834a5b06e620384b65882d98",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 600,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-600-1.ttf",
+      "proof_master_sha256": "503a021a4c317e4192b76e4286fde33a3ecb970cfc4269e5540f38c41854eb4d",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 600,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-600-1.ttf",
+      "proof_master_sha256": "3166ae2ed8918c2bc684bc27d5f68380771e41e3a12e6434cb3cd4f5441a3574",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 600,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-600-1.ttf",
+      "proof_master_sha256": "9037f4ec4c2c289518f1512fea737f916b8cb46dd3e5c188324cbafcf1ee363d",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 700,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-Bold.ttf",
+      "proof_master_sha256": "09c7e8e4a2e4e7969a5061db52baa6a924ce497e9038e843e1ef87ac56432093",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 700,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-700-0.ttf",
+      "proof_master_sha256": "4798b06fad16d132c2c21a0c8fedacb30f264a6e0c07d38466db4416f6a1c31d",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 700,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-700-0.ttf",
+      "proof_master_sha256": "dac76365d42ed8c056df2f116192eaf93719d67ac0a358b5c76337ced671a0ab",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 700,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-700-0.ttf",
+      "proof_master_sha256": "9b73a512ea405bdfd61913ecef574af3665694b22d9db2a3043d87be03c181ba",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 700,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-700-0.ttf",
+      "proof_master_sha256": "0aa89f6908412f4302811cf3d139bc54670076d1ffebedb7023013cd53d3f88f",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 700,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-BoldItalic.ttf",
+      "proof_master_sha256": "4adc098cc4374fea70ca62aeac844d32e65fa947b3bcb52cb9807e7fb03f660b",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 700,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-700-1.ttf",
+      "proof_master_sha256": "45231ed84e8977e280965fde8086ae2af789aea01ca3780707cee5f5c87a9c74",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 700,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-700-1.ttf",
+      "proof_master_sha256": "a1fea24e1df7b5dd7b1e3a677f04aa738268f618cbada79cb052b7eef3944874",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 700,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-700-1.ttf",
+      "proof_master_sha256": "2b762468432f840b4979a6b29fbb464504023617adb8e4023596ad7e521050e1",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 700,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-700-1.ttf",
+      "proof_master_sha256": "70a48bb0df71c5380526bd51b6c5fb7f33cce31963b011b5b2eb326b1611577b",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 800,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-ExtraBold.ttf",
+      "proof_master_sha256": "466ea76d17261ef7650dc345f1f59aeb66ed4a427f8bddd8d32908a09195feb0",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 800,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-800-0.ttf",
+      "proof_master_sha256": "1c5ef250fda43540dea2e7c6c221d27a447b46c086a326cfd6d1e40ec7b44604",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 800,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-800-0.ttf",
+      "proof_master_sha256": "3fe7573dd46253b7ca5771b1c220465d0fc5145da0118cd8bc9a3743027db43e",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 800,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-800-0.ttf",
+      "proof_master_sha256": "949d9fc1ae175d463c4c69a591944f01542e7b699e7f464212c17408dc16b0aa",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 800,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-800-0.ttf",
+      "proof_master_sha256": "7549caf07ac02d1328e280abc3baf8dbb3fdeaddf4c0459480dc3d785e1a2f6b",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 800,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-ExtraBoldItalic.ttf",
+      "proof_master_sha256": "62dc337cfbe26bd0a8a000327b6c058a830ee92cc8e37526eb2d3715289e5c02",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 800,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-800-1.ttf",
+      "proof_master_sha256": "4e9b79c4bff221cf07731d6c83dd2dbc54cb0d27cc177585488513a4f3c58116",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 800,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-800-1.ttf",
+      "proof_master_sha256": "e59b85446bb93941cc254bcbfc26e5dc7ebb8eb17b49f96c2da6ea6da0fadee9",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 800,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-800-1.ttf",
+      "proof_master_sha256": "28de92e03ed89704adaa918cc4af12dd3640b6b2d18ae87911a4206da2a396b6",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 800,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-800-1.ttf",
+      "proof_master_sha256": "05efdad185df3b24fdc3d16288117a808a671187b1895fa6cb4045aa248b86e3",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 900,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-Black.ttf",
+      "proof_master_sha256": "b1b689ba6d4aabbcab58ac3d47578370a165ac492670d106975b205f588973c6",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 900,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-900-0.ttf",
+      "proof_master_sha256": "b19fb6597f346d24923f0c90b66e0e9a1839ee3fd94e36b6ec9be91231858ca6",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 900,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-900-0.ttf",
+      "proof_master_sha256": "5c2538167a055c6dcb8600dcb7d182c78f09bbe0a4f2196f226dbcca567a1959",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 900,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-900-0.ttf",
+      "proof_master_sha256": "7ab14d1e85c803149150cef4d61ff1a869ca5f0a1c99807b0cacf912865f296e",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 900,
+      "ital": 0,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-900-0.ttf",
+      "proof_master_sha256": "8e7efe20eeb381b310ba2c508d19ca91a05b878f8a32d55e6c5ca4b43a93c7d6",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 900,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-duckrabbit-aux/TorchletteSans-BlackItalic.ttf",
+      "proof_master_sha256": "82a6e106786be6df01d0ca9884ae4b6ae12ebe95ebaa80ddd1ba2e434353e73a",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 900,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97B-900-1.ttf",
+      "proof_master_sha256": "36343d980cc58e1d6cf202b3d4f7f624acc29086913f8724aaa7ffd682e8df43",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 900,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE97C-900-1.ttf",
+      "proof_master_sha256": "cccf44276827750a5e871f242157bf369f013a1ba994b90283f600aeff6096ac",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 900,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE978-900-1.ttf",
+      "proof_master_sha256": "50eb254a523fb7e8e6866471d7bff988350d20aaba2f918604f1b9cfc4d79565",
+      "raw_geometry_identical": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 900,
+      "ital": 1,
+      "proof_master": "/tmp/torchlette-a20c8-ornament-components/uniE979-900-1.ttf",
+      "proof_master_sha256": "093c8fb930b5ab9faa77d6c5ceb900531f20c5b3414a04e59e884d0bcec370ab",
+      "raw_geometry_identical": true
+    }
+  ],
+  "minimal_vf_evidence": [
+    {
+      "path": "/tmp/torchlette-a20c8-duckrabbit-aux/minimal-vf-proof-final.json",
+      "sha256": "1124deaab94f2b69669f78077918eb532cee7d1efb73d6231098b13f6ebaa07e"
+    },
+    {
+      "path": "/tmp/torchlette-a20c8-ornament-components/minimal-vf-proof-final.json",
+      "sha256": "8473225ae312733b78ee90df688fa89b810c8a556cd14841f80be2e735cccdb7"
+    }
+  ],
+  "minimal_vfs": [
+    {
+      "glyph": "uniE931",
+      "ital": 0,
+      "path": "/tmp/torchlette-a20c8-duckrabbit-aux/duckrabbit-0-VF.ttf",
+      "sha256": "e9b9246585a46f492f8c6841a1d18a337ed7d2cbacfd9f951214df3670f4a104"
+    },
+    {
+      "glyph": "uniE931",
+      "ital": 1,
+      "path": "/tmp/torchlette-a20c8-duckrabbit-aux/duckrabbit-1-VF.ttf",
+      "sha256": "94a36bdd1190313963144e968b02474aaac6ee96e1bad0fc203d88ff7bcd55d7"
+    },
+    {
+      "glyph": "uniE97B",
+      "ital": 0,
+      "path": "/tmp/torchlette-a20c8-ornament-components/uniE97B-0-VF.ttf",
+      "sha256": "acdc0ce247de99294de98e51b17e269722f656fa623106539bbf5f2223f4e602"
+    },
+    {
+      "glyph": "uniE97B",
+      "ital": 1,
+      "path": "/tmp/torchlette-a20c8-ornament-components/uniE97B-1-VF.ttf",
+      "sha256": "2e3b777cce730738c01ada0ef527f681fc3d1e6add4b730dd63fa19bdfcdee6f"
+    },
+    {
+      "glyph": "uniE97C",
+      "ital": 0,
+      "path": "/tmp/torchlette-a20c8-ornament-components/uniE97C-0-VF.ttf",
+      "sha256": "54629b495e00806b4d0c28d510a071ff0577674aaab4f95c6826cdf5cf7c5ae4"
+    },
+    {
+      "glyph": "uniE97C",
+      "ital": 1,
+      "path": "/tmp/torchlette-a20c8-ornament-components/uniE97C-1-VF.ttf",
+      "sha256": "038af206a5de355892f2ec4befaad9181de34138a41491f9d5017d101d739d87"
+    },
+    {
+      "glyph": "uniE978",
+      "ital": 0,
+      "path": "/tmp/torchlette-a20c8-ornament-components/uniE978-0-VF.ttf",
+      "sha256": "539c16def737a1617faa01f6ee3e4b06e3ac214a7119ef8e26ffb2b9704dd0a7"
+    },
+    {
+      "glyph": "uniE978",
+      "ital": 1,
+      "path": "/tmp/torchlette-a20c8-ornament-components/uniE978-1-VF.ttf",
+      "sha256": "5d962fbe901260d3e23e69f2ff7cb9af324cfd26011da3c95f7de4c88bf0f630"
+    },
+    {
+      "glyph": "uniE979",
+      "ital": 0,
+      "path": "/tmp/torchlette-a20c8-ornament-components/uniE979-0-VF.ttf",
+      "sha256": "b306ea45d579fd6f97482112a013babe17fb7059f19769ca6501a58ff6c459b5"
+    },
+    {
+      "glyph": "uniE979",
+      "ital": 1,
+      "path": "/tmp/torchlette-a20c8-ornament-components/uniE979-1-VF.ttf",
+      "sha256": "3e0f35e8b9c4d6572e826107fb0e9ab27bd22efef3999542caeb134daabdc7fd"
+    }
+  ],
+  "live_original_gate_samples": 130,
+  "saved_original_gate_samples": 130,
+  "all_original_gates_pass": true,
+  "minimal_source_rows": [
+    {
+      "glyph": "uniE931",
+      "weight": 300,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 74.43529411764706,
+      "raster_limit": 217.30980392156863,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 74.43529411764706,
+        "raster_limit": 217.30980392156863,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 350,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 12.862745098039214,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 6.972313725490197,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 6.975803921568628,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 400,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 29.698039215686272,
+      "raster_limit": 201.0462745098039,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 29.698039215686272,
+        "raster_limit": 201.0462745098039,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 450,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 13.32941176470588,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 8.192333333333334,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 8.197529411764705,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 500,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 33.305882352941175,
+      "raster_limit": 195.45882352941177,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 33.305882352941175,
+        "raster_limit": 195.45882352941177,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 550,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 9.011764705882353,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 8.778450980392158,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 8.772176470588235,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 600,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 31.65098039215686,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 46.16470588235295,
+      "raster_limit": 188.94117647058823,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 34.88235294117647,
+        "raster_limit": 188.94117647058823,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 650,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 7.690196078431373,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 9.528960784313725,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 9.528509803921567,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 700,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 21.470588235294116,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 35.38823529411765,
+      "raster_limit": 190.95058823529413,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 26.70980392156863,
+        "raster_limit": 190.95058823529413,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 750,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 7.898039215686275,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 10.361921568627452,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 10.36043137254902,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 800,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 20.647058823529413,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 42.501960784313724,
+      "raster_limit": 192.47529411764705,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 33.384313725490195,
+        "raster_limit": 192.47529411764705,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 850,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 7.639215686274509,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 11.035235294117648,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 11.045039215686275,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 900,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 28.67058823529412,
+      "raster_limit": 191.68313725490196,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 28.67058823529412,
+        "raster_limit": 191.68313725490196,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 300,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 124.27058823529413,
+      "raster_limit": 217.06196078431375,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 124.27058823529413,
+        "raster_limit": 217.06196078431375,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 350,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 11.980392156862745,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 6.972843137254902,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 6.973254901960784,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 400,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 40.22745098039215,
+      "raster_limit": 200.99764705882353,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 40.22745098039215,
+        "raster_limit": 200.99764705882353,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 450,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 13.266666666666666,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 8.192843137254902,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 8.196823529411766,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 500,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 40.16470588235294,
+      "raster_limit": 195.51843137254903,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 40.16470588235294,
+        "raster_limit": 195.51843137254903,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 550,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 9.192156862745097,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 8.777607843137256,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 8.771686274509804,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 600,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 31.705882352941178,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 52.26274509803922,
+      "raster_limit": 188.92549019607844,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 41.31764705882353,
+        "raster_limit": 188.92549019607844,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 650,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 7.72156862745098,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 9.53013725490196,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 9.52756862745098,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 700,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 20.686274509803923,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 47.976470588235294,
+      "raster_limit": 191.21725490196076,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 40.411764705882355,
+        "raster_limit": 191.21725490196076,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 750,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 8.211764705882354,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 10.361960784313723,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 10.36321568627451,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 800,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 20.619607843137253,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 72.78823529411764,
+      "raster_limit": 192.5129411764706,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 68.15294117647059,
+        "raster_limit": 192.5129411764706,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 850,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 7.517647058823529,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 11.036529411764704,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 11.04772549019608,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE931",
+      "weight": 900,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 68.05098039215687,
+      "raster_limit": 191.71607843137252,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 68.05098039215687,
+        "raster_limit": 191.71607843137252,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 300,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 17.235294117647058,
+      "raster_limit": 427.27529411764704,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 17.235294117647058,
+        "raster_limit": 427.27529411764704,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 350,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 15.79607843137255,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 13.187392156862748,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 13.148607843137256,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 400,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 16.188235294117646,
+      "raster_limit": 428.3105882352941,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 16.188235294117646,
+        "raster_limit": 428.3105882352941,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 450,
+      "ital": 0,
+      "saved_instance_bounds_delta": 1,
+      "saved_instance_raster_delta": 23.250980392156865,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 15.414176470588236,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 15.339215686274509,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 500,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 16.549019607843135,
+      "raster_limit": 428.9035294117648,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 16.549019607843135,
+        "raster_limit": 428.9035294117648,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 550,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 35.784313725490186,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 16.604745098039214,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 16.73950980392157,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 600,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 75.78823529411764,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 82.50588235294117,
+      "raster_limit": 428.58196078431376,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 17.43921568627451,
+        "raster_limit": 428.58196078431376,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 650,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 25.156862745098046,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 18.140137254901962,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 18.132039215686277,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 700,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 85.8156862745098,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 95.13725490196079,
+      "raster_limit": 426.7874509803921,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 21.27450980392157,
+        "raster_limit": 426.7874509803921,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 750,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 22.45490196078432,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 19.66686274509804,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 19.666666666666668,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 800,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 62.807843137254906,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 72.05490196078432,
+      "raster_limit": 419.54196078431374,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 22.82352941176471,
+        "raster_limit": 419.54196078431374,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 850,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 23.443137254901963,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 21.04272549019608,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 21.02158823529412,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 900,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 28.729411764705887,
+      "raster_limit": 406.84549019607846,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 28.729411764705887,
+        "raster_limit": 406.84549019607846,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 300,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 79.13333333333334,
+      "raster_limit": 427.35686274509806,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 79.13333333333334,
+        "raster_limit": 427.35686274509806,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 350,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 20.168627450980388,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 13.18256862745098,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 13.221725490196079,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 400,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 131.62745098039215,
+      "raster_limit": 428.46901960784305,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 131.62745098039215,
+        "raster_limit": 428.46901960784305,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 450,
+      "ital": 1,
+      "saved_instance_bounds_delta": 1,
+      "saved_instance_raster_delta": 23.137254901960787,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 15.415235294117647,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 15.338725490196078,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 500,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 121.18823529411765,
+      "raster_limit": 428.6823529411765,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 121.18823529411765,
+        "raster_limit": 428.6823529411765,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 550,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 35.803921568627445,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 16.605627450980393,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 16.74150980392157,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 600,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 73.69019607843137,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 121.97254901960785,
+      "raster_limit": 428.76862745098043,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 104.91764705882352,
+        "raster_limit": 428.76862745098043,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 650,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 25.50196078431373,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 18.13780392156863,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 18.12845098039216,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 700,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 85.05098039215686,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 148.0392156862745,
+      "raster_limit": 427.61254901960785,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 79.08235294117647,
+        "raster_limit": 427.61254901960785,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 750,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 22.486274509803923,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 19.66643137254902,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 19.665686274509802,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 800,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 61.992156862745105,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 65.85490196078432,
+      "raster_limit": 419.272156862745,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 67.03921568627452,
+        "raster_limit": 419.272156862745,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 850,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 23.462745098039214,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 21.041000000000004,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 21.02086274509804,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97B",
+      "weight": 900,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 74.45098039215686,
+      "raster_limit": 407.72235294117644,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 74.45098039215686,
+        "raster_limit": 407.72235294117644,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 300,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 17.470588235294116,
+      "raster_limit": 476.3607843137255,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 17.470588235294116,
+        "raster_limit": 476.3607843137255,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 350,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 14.478431372549014,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 14.983039215686276,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 14.950686274509804,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 400,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 16.333333333333336,
+      "raster_limit": 477.2658823529412,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 16.333333333333336,
+        "raster_limit": 477.2658823529412,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 450,
+      "ital": 0,
+      "saved_instance_bounds_delta": 1,
+      "saved_instance_raster_delta": 26.86274509803922,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 17.553686274509804,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 17.459960784313726,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 500,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 16.67058823529412,
+      "raster_limit": 477.97490196078434,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 16.67058823529412,
+        "raster_limit": 477.97490196078434,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 550,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 42.95686274509803,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 18.94094117647059,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 19.110235294117647,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 600,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 80.73725490196077,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 87.61176470588234,
+      "raster_limit": 477.77098039215684,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 17.266666666666666,
+        "raster_limit": 477.77098039215684,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 650,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 30.082352941176474,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 20.737156862745096,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 20.716588235294118,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 700,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 98.1921568627451,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 107.21960784313725,
+      "raster_limit": 476.11764705882354,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 21.105882352941176,
+        "raster_limit": 476.11764705882354,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 750,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 24.431372549019613,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 22.52035294117647,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 22.5358431372549,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 800,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 66.56470588235294,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 75.54117647058824,
+      "raster_limit": 468.5866666666667,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 22.67058823529412,
+        "raster_limit": 468.5866666666667,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 850,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 27.49803921568627,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 24.132176470588238,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 24.100803921568627,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 900,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 32.113725490196074,
+      "raster_limit": 455.9482352941177,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 32.113725490196074,
+        "raster_limit": 455.9482352941177,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 300,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 79.75686274509803,
+      "raster_limit": 476.4533333333334,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 79.75686274509803,
+        "raster_limit": 476.4533333333334,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 350,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 19.819607843137252,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 14.982117647058821,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 15.022823529411767,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 400,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 130.82745098039217,
+      "raster_limit": 477.59686274509806,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 130.82745098039217,
+        "raster_limit": 477.59686274509806,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 450,
+      "ital": 1,
+      "saved_instance_bounds_delta": 1,
+      "saved_instance_raster_delta": 26.898039215686282,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 17.556686274509804,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 17.4618431372549,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 500,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 121.70980392156861,
+      "raster_limit": 477.9074509803922,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 121.70980392156861,
+        "raster_limit": 477.9074509803922,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 550,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 42.909803921568624,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 18.94541176470588,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 19.114039215686272,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 600,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 79.78039215686275,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 128.1529411764706,
+      "raster_limit": 477.9701960784314,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 105.36862745098038,
+        "raster_limit": 477.9701960784314,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 650,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 29.88235294117648,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          4,
+          4
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 20.738137254901964,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            4
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 20.71507843137255,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 700,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 95.79607843137255,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 159.54901960784315,
+      "raster_limit": 476.61647058823525,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 80.05882352941177,
+        "raster_limit": 476.61647058823525,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 750,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 25.058823529411764,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          4,
+          4
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 22.51776470588235,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            4,
+            4
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 22.534000000000002,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 800,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 65.79607843137255,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 68.70196078431371,
+      "raster_limit": 468.4517647058823,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 67.32941176470588,
+        "raster_limit": 468.4517647058823,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 850,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 27.658823529411766,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          7
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 24.13182352941177,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            2,
+            7
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 24.101450980392155,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE97C",
+      "weight": 900,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 74.21176470588236,
+      "raster_limit": 456.875294117647,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 74.21176470588236,
+        "raster_limit": 456.875294117647,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 300,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 18.878431372549024,
+      "raster_limit": 285.96862745098036,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 18.878431372549024,
+        "raster_limit": 285.96862745098036,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 350,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 18.305882352941175,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 10.780745098039217,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 10.777882352941177,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 400,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 26.72941176470588,
+      "raster_limit": 284.88000000000005,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 26.72941176470588,
+        "raster_limit": 284.88000000000005,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 450,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 19.33333333333333,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 11.790098039215687,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 11.827745098039218,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 500,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 30.27843137254902,
+      "raster_limit": 283.9247058823529,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 30.27843137254902,
+        "raster_limit": 283.9247058823529,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 550,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 15.921568627450977,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 12.328882352941179,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 12.306764705882351,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 600,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 46.062745098039215,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 60.98823529411764,
+      "raster_limit": 283.43529411764706,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 27.137254901960784,
+        "raster_limit": 283.43529411764706,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 650,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 13.44705882352941,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 13.127588235294118,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 13.117960784313727,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 700,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 29.560784313725488,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 40.666666666666664,
+      "raster_limit": 281.5592156862745,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 22.345098039215685,
+        "raster_limit": 281.5592156862745,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 750,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 14.286274509803912,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 14.045725490196078,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 14.059980392156863,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 800,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 25.68235294117647,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 37.0078431372549,
+      "raster_limit": 276.73882352941183,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 26.16470588235294,
+        "raster_limit": 276.7388235294118,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 850,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 15.050980392156863,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 14.757627450980392,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 14.76021568627451,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 900,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 23.901960784313722,
+      "raster_limit": 273.2533333333334,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 23.901960784313722,
+        "raster_limit": 273.2533333333334,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 300,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 27.776470588235295,
+      "raster_limit": 285.63137254901966,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 27.776470588235295,
+        "raster_limit": 285.63137254901966,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 350,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 18.094117647058823,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 10.777901960784314,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 10.775,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 400,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 36.50588235294117,
+      "raster_limit": 284.1850980392157,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 36.50588235294117,
+        "raster_limit": 284.1850980392157,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 450,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 19.843137254901954,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 11.788039215686274,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 11.823529411764708,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 500,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 40.48235294117647,
+      "raster_limit": 284.12862745098045,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 40.48235294117647,
+        "raster_limit": 284.12862745098045,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 550,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 15.109803921568624,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 12.331470588235293,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 12.300235294117646,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 600,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 46.992156862745084,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 68.59607843137253,
+      "raster_limit": 283.24078431372544,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 34.34117647058824,
+        "raster_limit": 283.24078431372544,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 650,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 14.149019607843137,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 13.12807843137255,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 13.114117647058825,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 700,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 29.101960784313725,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 48.16470588235295,
+      "raster_limit": 281.518431372549,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 31.862745098039216,
+        "raster_limit": 281.518431372549,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 750,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 15.58039215686274,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 14.045627450980392,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 14.056156862745098,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 800,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 25.34117647058823,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 45.74901960784314,
+      "raster_limit": 277.0227450980392,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 38.596078431372554,
+        "raster_limit": 277.0227450980392,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 850,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 15.149019607843137,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 14.755588235294118,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 14.759019607843138,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE978",
+      "weight": 900,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 35.274509803921575,
+      "raster_limit": 273.66274509803924,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 35.274509803921575,
+        "raster_limit": 273.66274509803924,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 300,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 17.71764705882353,
+      "raster_limit": 256.6164705882353,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 17.71764705882353,
+        "raster_limit": 256.6164705882353,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 350,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 16.15686274509804,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 9.286176470588236,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 9.287078431372548,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 400,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 25.599999999999998,
+      "raster_limit": 257.52156862745096,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 25.599999999999998,
+        "raster_limit": 257.52156862745096,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 450,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 17.49019607843137,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 10.434156862745098,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 10.471764705882352,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 500,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 29.270588235294117,
+      "raster_limit": 257.0776470588235,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 29.270588235294117,
+        "raster_limit": 257.0776470588235,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 550,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 14.949019607843136,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 11.04886274509804,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 11.030235294117647,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 600,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 38.337254901960776,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 53.50980392156862,
+      "raster_limit": 257.7364705882353,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 25.92549019607843,
+        "raster_limit": 257.7364705882353,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 650,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 11.921568627450977,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 11.944352941176472,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 11.936078431372549,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 700,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 27.08235294117647,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 37.86666666666667,
+      "raster_limit": 256.79058823529414,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 21.200000000000003,
+        "raster_limit": 256.79058823529414,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 750,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 12.87450980392156,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 12.965980392156862,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 12.9818431372549,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 800,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 23.63137254901961,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 34.674509803921566,
+      "raster_limit": 253.20470588235295,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 25.058823529411764,
+        "raster_limit": 253.20470588235295,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 850,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 13.737254901960785,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 13.758529411764707,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 13.764823529411766,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 900,
+      "ital": 0,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 22.898039215686275,
+      "raster_limit": 250.33098039215696,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 22.898039215686275,
+        "raster_limit": 250.33098039215696,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 300,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 25.811764705882354,
+      "raster_limit": 256.4250980392157,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 25.811764705882354,
+        "raster_limit": 256.4250980392157,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 350,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 15.96078431372549,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 9.283941176470588,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 9.285039215686275,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 400,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 1,
+      "raster_delta": 28.4078431372549,
+      "raster_limit": 256.79058823529414,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 1,
+        "raster_delta": 28.4078431372549,
+        "raster_limit": 256.79058823529414,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 450,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 17.560784313725485,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 10.430980392156862,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 10.468588235294117,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 500,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 38.72156862745098,
+      "raster_limit": 257.28000000000003,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 38.72156862745098,
+        "raster_limit": 257.28000000000003,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 550,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 13.745098039215684,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 11.050843137254903,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 11.02478431372549,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 600,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 39.35686274509803,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 60.79607843137253,
+      "raster_limit": 257.56862745098044,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 32.1843137254902,
+        "raster_limit": 257.56862745098044,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 650,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 12.71372549019608,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 11.944254901960786,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 11.931431372549019,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 700,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 26.75686274509804,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 44.85098039215686,
+      "raster_limit": 256.6729411764706,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 29.34901960784314,
+        "raster_limit": 256.6729411764706,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 750,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 14.003921568627444,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 12.965274509803924,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 12.977725490196079,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 800,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 23.298039215686273,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 43.13725490196078,
+      "raster_limit": 253.52470588235292,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 36.631372549019616,
+        "raster_limit": 253.52470588235292,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 850,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 13.733333333333334,
+      "saved_instance_metrics_match": true,
+      "endpoint": false,
+      "topology": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "topology_pass": true,
+      "outside": 0.0,
+      "limit": 13.756156862745097,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "topology": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "topology_pass": true,
+        "outside": 0.0,
+        "limit": 13.763176470588235,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": false
+    },
+    {
+      "glyph": "uniE979",
+      "weight": 900,
+      "ital": 1,
+      "saved_instance_bounds_delta": 0,
+      "saved_instance_raster_delta": 0.0,
+      "saved_instance_metrics_match": true,
+      "endpoint": true,
+      "advance_delta": 0,
+      "bounds_delta": 0,
+      "raster_delta": 31.16078431372549,
+      "raster_limit": 250.75294117647059,
+      "passed": true,
+      "saved_instance_passed": true,
+      "saved_instance_source_check": {
+        "advance_delta": 0,
+        "bounds_delta": 0,
+        "raster_delta": 31.16078431372549,
+        "raster_limit": 250.75294117647059,
+        "passed": true
+      },
+      "live_saved_raster_0.75_diagnostic": true
+    }
+  ],
+  "fourteen_auxiliary_fonts_byte_reproducible": true,
+  "limits": [
+    "Auxiliary independent component polish approximates source post-union polish; no exact curve identity claimed.",
+    "Bounding rectangle is exact native unscaled source bounds, with no fitted parameter.",
+    "Hatched Playfair variants fail live750upright topology and are not selected.",
+    "Full family gvar/layout/discrete italic acceptance remains required."
+  ]
+}

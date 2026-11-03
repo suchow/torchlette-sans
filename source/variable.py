@@ -315,12 +315,9 @@ def match_contours(all_contours: list[list[list[Quad]]], upem: int):
     matched = []
     degenerates = 0
     for cs in all_contours:
-        # Reversing every contour preserves fill; never reverse an isolated hole.
-        if cs and ref:
-            largest = max(cs, key=lambda c: abs(area(c)))
-            largest_ref = max(ref, key=lambda c: abs(area(c)))
-            if area(largest)*area(largest_ref)<0:
-                cs = [reverse(c) for c in cs]
+        # Masters already share a winding convention. The reference combines
+        # polarity groups from different masters, so its largest contour can
+        # be a hole; it cannot establish the outer winding a second time.
         ds = list(map(descriptor, cs))
         cost=[]
         for x,y,a,per in rd:
@@ -373,6 +370,101 @@ def contours_path(cs):
 def contour_bounds(contour):
     points=[p for q in contour for p in q]
     return tuple(min(p[k] for p in points) for k in (0,1))+tuple(max(p[k] for p in points) for k in (0,1))
+
+
+def mixed_counter_correspondence(all_contours, allow_single_closing=False):
+    """Separate closing counters from unrelated counters opening to the exterior.
+
+    A one-counter count is not an identity: a root counter may close before a
+    different counter appears elsewhere. Only handle the unambiguous mixed case
+    with one containing outer and at most one counter in each master. The optional
+    single-closing case also requires the missing counter center to lie inside
+    every corresponding outer. Otherwise leave the established topology path in charge. Never select by glyph name.
+    """
+    outers, holes, nodes = [], [], []
+    for master, cs in enumerate(all_contours):
+        outside = [c for c in cs if area(c) < -1]
+        inside = [c for c in cs if area(c) > 1]
+        if len(outside) != 1 or len(inside) > 1 or len(outside)+len(inside) != len(cs):
+            return None
+        outer = outside[0]
+        bounds = contour_bounds(outer)
+        if bounds[2] <= bounds[0] or bounds[3] <= bounds[1]:
+            return None
+        for hole in inside:
+            hp = contours_path([hole])
+            if pathops.op(hp, contours_path([outer]), pathops.PathOp.DIFFERENCE).area > max(.0001, hp.area*1e-7):
+                return None
+            hb = contour_bounds(hole)
+            relative = tuple((hb[k]-bounds[k%2])/(bounds[k%2+2]-bounds[k%2]) for k in range(4))
+            nodes.append((master, relative))
+        outers.append(outer)
+        holes.append(inside[0] if inside else None)
+    # Overlapping counter regions in their containing-outer frame establish
+    # candidate identity. A component containing two counters from one master
+    # would be ambiguous and is deliberately not handled here.
+    parents = list(range(len(nodes)))
+    def root(i):
+        while parents[i] != i:
+            i = parents[i]
+        return i
+    for a, (master, box) in enumerate(nodes):
+        for j, (other, bound) in enumerate(nodes[:a]):
+            if master != other and all(min(box[k+2],bound[k+2]) > max(box[k],bound[k]) for k in (0,1)):
+                parents[root(a)] = root(j)
+    grouped = {}
+    for i, (master, _) in enumerate(nodes):
+        grouped.setdefault(root(i), []).append(master)
+    groups = list(grouped.values())
+    if (len(groups) < 2 and not (allow_single_closing and len(groups) == 1)) or any(len(set(g)) != len(g) for g in groups):
+        return None
+    modes, missing_points = [], []
+    for group in groups:
+        points = {}
+        for master, outer in enumerate(outers):
+            if master in group:
+                continue
+            nearest = min(group, key=lambda i: abs(i-master))
+            hb = contour_bounds(holes[nearest])
+            sb, tb = contour_bounds(outers[nearest]), contour_bounds(outer)
+            center = tuple((hb[k]+hb[k+2])/2 for k in (0,1))
+            points[master] = tuple(tb[k]+(center[k]-sb[k])/(sb[k+2]-sb[k])*(tb[k+2]-tb[k]) for k in (0,1))
+        contained = [contours_path([outers[i]]).contains(p) for i,p in points.items()]
+        if not contained or any(contained) != all(contained):
+            return None
+        modes.append('closing' if all(contained) else 'opening')
+        missing_points.append(points)
+    if set(modes) != {'closing', 'opening'} and not (allow_single_closing and len(groups) == 1 and modes == ['closing']):
+        return None
+    # A counter that opens outside needs the same boundary traversal as its
+    # open source. A counter closing into ink retains its own locally collapsed
+    # slot. Exact retracing and zero-area slots preserve each source fill.
+    for group, mode in zip(groups, modes):
+        if mode != 'opening':
+            continue
+        for master in group:
+            outer, hole = outers[master], holes[master]
+            _, oi, hi = min((sum((x-y)**2 for x,y in zip(q[0],r[0])),i,j)
+                           for i,q in enumerate(outer) for j,r in enumerate(hole))
+            outer, hole = outer[oi:]+outer[:oi], hole[hi:]+hole[:hi]
+            a, z = outer[0][0], hole[0][0]
+            outers[master] = outer+[(a,lerp(a,z,.5),z)]+hole+[(z,lerp(z,a,.5),a)]
+    reference = outers[min(1,len(outers)-1)]
+    aligned = [[anchor(c,reference)] for c in outers]
+    degenerates = 0
+    for group, mode, points in zip(groups,modes,missing_points):
+        if mode != 'closing':
+            continue
+        ref = holes[min(group,key=lambda i:abs(i-1))]
+        for master in range(len(aligned)):
+            if master in group:
+                aligned[master].append(anchor(holes[master],ref))
+            else:
+                p = points[master]
+                aligned[master].append([(p,p,p)])
+                degenerates += 1
+    return aligned, degenerates, {'mode':'closing_spatial_counter_identity' if modes == ['closing'] else 'mixed_spatial_counter_identities',
+        'groups':[{'masters':g,'transition':m} for g,m in zip(groups,modes)]}
 
 
 def counter_transition_boundaries(all_contours):
@@ -623,13 +715,23 @@ def canonicalize(fonts: Sequence[TTFont], only=None):
         cs=[contours(f,name) for f in fonts]
         if not any(cs):
             continue
-        cs,repair=counter_transition_boundaries(cs)
+        # Sources already describe the very same curves with compatible points.
+        # Re-subdivision only adds rounding error and can close a narrow opening.
+        if len({signature(f,name) for f in fonts}) == 1:
+            raw = raw_contours(fonts[0], name)
+            if all(raw_contours(f, name) == raw for f in fonts[1:]):
+                continue
+        mixed=mixed_counter_correspondence(cs, allow_single_closing=True)
+        if mixed is not None:
+            aligned,n,repair=mixed
+        else:
+            cs,repair=counter_transition_boundaries(cs)
+            try:
+                aligned,n=match_contours(cs,fonts[0]['head'].unitsPerEm)
+            except ValueError as error:
+                raise ValueError(f'{name}: {error}') from error
         if repair:
             stats['topology_repairs'][name]=repair
-        try:
-            aligned,n=match_contours(cs,fonts[0]['head'].unitsPerEm)
-        except ValueError as error:
-            raise ValueError(f'{name}: {error}') from error
         stats['degenerate_contours']+=n
         final=[[] for _ in fonts]
         for i in range(len(aligned[0])):

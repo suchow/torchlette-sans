@@ -1,0 +1,24 @@
+{
+  "family": "raw-galton",
+  "manifest_sha256": "9d32969872ef6db0b6f0a0419fb6e6946eac09e4f7123868bd05dd6dcf1f95af",
+  "package_proof_sha256": "21b56d91d9f2d854f3cbbc834f7de08e3ee90a6f8a396e1ef5954c8436fb6cf9",
+  "native_source_proof_sha256": "787c1dbc03d417e6d55e5a5a26edd57477c0367762baadd74e6558472c36fc99",
+  "original14_unchanged": true,
+  "auxiliary14_match_manifest": true,
+  "live26_and_saved26_pass_unchanged_source_gates": true,
+  "freetype_version": [
+    2,
+    14,
+    1
+  ],
+  "freetype_library": "/private/tmp/torchlette-hinting-4075770/ft-install/lib/libfreetype.6.dylib",
+  "freetype_library_sha256": "dd66325db66da64721d3261afc8e99a2a607fc05958e7eafa11cfb458d1033c0",
+  "versions": {
+    "fonttools": "4.68.0",
+    "uharfbuzz": "0.57.0",
+    "freetype-py": "2.5.1",
+    "numpy": "2.3.4",
+    "scipy": "1.16.3",
+    "skia-pathops": "0.9.2"
+  }
+}
