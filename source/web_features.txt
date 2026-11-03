@@ -1,0 +1,35 @@
+# The OpenType features the web subset keeps (the Makefile's SUBSET_FLAGS), one per
+# line: what browsers apply by default, what the app's CSS turns on (ss01, ss02,
+# ss16, font-variant-numeric, small-caps and all-small-caps). The full .ttf keeps
+# every feature. verify.py, verify_ss16.py and modules/verify_*.py read this list
+# through webfeatures.py and, on the subset, skip checks of features not in it.
+kern
+liga
+clig
+calt
+rlig
+ccmp
+locl
+mark
+mkmk
+ss01
+ss02
+ss16
+tnum
+onum
+pnum
+lnum
+smcp
+c2sc
+# Named release opt-ins retained for explicit shaping; retention does not enable them.
+ss17
+ss18
+ss19
+ss20
+ornm
+dtls
+flac
+ss09
+subs
+sinf
+# cv82 remains full-only; cv96 and other laboratory cvNN tags are not selected.

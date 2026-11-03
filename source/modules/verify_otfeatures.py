@@ -1,0 +1,393 @@
+"""HarfBuzz check of the otfeatures module: case, cpsp, zero, mark attachment on
+build.py's glyphs, GDEF classes and carets, aalt and salt.
+
+    MULISH_STATIC=Mulish-<wght>.ttf verify_otfeatures.py FONT.ttf STYLE full|subset
+
+Every check shapes real text (or reads the table a shaper reads) and has a negative
+counterpart: with the feature off, text shapes as without the module. With
+TS_WEB_SUBSET=1 the features web_features.txt leaves out (case, cpsp, zero, aalt,
+salt, the stylistic sets but ss01, ss02 and ss16) are not checked.
+"""
+import os, sys
+import unicodedata
+import uharfbuzz as hb
+from fontTools.ttLib import TTFont
+from fontTools.pens.boundsPen import BoundsPen
+from fontTools.pens.pointInsidePen import PointInsidePen
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from webfeatures import kept   # noqa: E402
+
+PATH, STYLE, MODE = sys.argv[1], sys.argv[2], sys.argv[3]
+tt = TTFont(PATH)
+GO = tt.getGlyphOrder()
+GS = tt.getGlyphSet()
+HB = hb.Font(hb.Face(hb.Blob.from_file_path(PATH)))
+MUL = set(TTFont(os.environ['MULISH_STATIC'], lazy=True).getGlyphOrder()) if os.environ.get('MULISH_STATIC') else None
+SUF = '.otfeatures'
+fails, checks = [], 0
+
+
+def check(ok, what):
+    global checks
+    checks += 1
+    if not ok: fails.append(what)
+
+
+def shape(text, feats=None):
+    b = hb.Buffer(); b.add_str(text); b.guess_segment_properties(); hb.shape(HB, b, feats or {})
+    out, x = [], 0
+    for i, p in zip(b.glyph_infos, b.glyph_positions):
+        out.append(dict(g=GO[i.codepoint], x=x + p.x_offset, y=p.y_offset, adv=p.x_advance, dx=p.x_offset, cl=i.cluster))
+        x += p.x_advance
+    return out
+
+
+_bb = {}
+def bounds(g):
+    if g not in _bb:
+        p = BoundsPen(GS); GS[g].draw(p); _bb[g] = p.bounds
+    return _bb[g]
+
+
+def ink(r):
+    b = bounds(r['g'])
+    return None if b is None else (b[0] + r['x'], b[1] + r['y'], b[2] + r['x'], b[3] + r['y'])
+
+
+def names(text, feats=None): return [r['g'] for r in shape(text, feats)]
+
+
+# ---------------------------------------------------------------- case
+if kept('case'):
+    CASE = {'(': 'parenleft', ')': 'parenright', '[': 'bracketleft', ']': 'bracketright', '{': 'braceleft',
+            '}': 'braceright', '\u2013': 'endash', '\u2014': 'emdash', '\u00ab': 'guillemotleft', '\u00bb': 'guillemotright',
+            '\u2039': 'guilsinglleft', '\u203a': 'guilsinglright', '@': 'at', '\u00b7': 'periodcentered',
+            '\u00a1': 'exclamdown', '\u00bf': 'questiondown'}
+    for ch, src in CASE.items():
+        t = f'H{ch}H'
+        off, on = shape(t), shape(t, {'case': 1})
+        check(off[1]['g'] == src, f'case off: {ch!r} -> {off[1]["g"]}')
+        want = f'{src}.case{SUF}'
+        check(on[1]['g'] == want, f'case on: {ch!r} -> {on[1]["g"]}, want {want}')
+        if on[1]['g'] == want:
+            b = bounds(want)
+            check(abs((b[1] + b[3]) / 2 - 352.5) <= 1, f'case {want}: ink middle {(b[1] + b[3]) / 2} not on the cap middle')
+            check(on[1]['adv'] == off[1]['adv'], f'case {want}: advance {on[1]["adv"]} != {off[1]["adv"]}')
+    on = shape('A-Z', {'case': 1})
+    check(on[1]['g'] == 'hyphen.case', f'case: hyphen -> {on[1]["g"]}')
+    check(names('a-z (x)') == names('a-z (x)', {'case': 0}), 'case off changes text')
+    proof = '(ABC) [XYZ] \u00abNASA\u00bb \u00a1HOLA! A\u2013Z'
+    check(not any(SUF in g for g in names(proof)), 'default shaping uses a case form')
+    check(sum(SUF in g for g in names(proof, {'case': 1})) == 8, f'case proof: {names(proof, {"case": 1})}')
+    # ss16 still sees the plain punctuation (its shape tuples) with case on
+    check(names('(28, 28)', {'ss16': 1, 'case': 1})[2:4] == names('(28, 28)', {'ss16': 1})[2:4], 'case changes ss16 shape tuples')
+
+# ---------------------------------------------------------------- cpsp
+if kept('cpsp'):
+    off, on = shape('HAMBURG hamburg'), shape('HAMBURG hamburg', {'cpsp': 1})
+    for a, b in zip(off, on):
+        up = a['g'][0].isupper()
+        check(b['adv'] - a['adv'] == (20 if up else 0) and b['dx'] - a['dx'] == (10 if up else 0),
+              f'cpsp {a["g"]}: advance {a["adv"]}->{b["adv"]}, offset {a["dx"]}->{b["dx"]}')
+    check([r['adv'] for r in shape('ABC')] == [r['adv'] for r in shape('ABC', {'cpsp': 0})], 'cpsp on by default')
+
+# ---------------------------------------------------------------- zero
+if kept('zero'):
+    ZERO = [({}, 'zero'), ({'pnum': 1}, 'zero.pnum'), ({'onum': 1}, 'zero.osf'), ({'onum': 1, 'tnum': 1}, 'zero.tosf'),
+            ({'onum': 1, 'pnum': 1}, 'zero.osf'), ({'smcp': 1}, 'zero.sc'), ({'smcp': 1, 'tnum': 1}, 'zero.sc.tf'),
+            ({'sups': 1}, 'uni2070'), ({'subs': 1}, 'uni2080'), ({'sinf': 1}, 'uni2080'), ({'numr': 1}, 'zero.numr'),
+            ({'dnom': 1}, 'zero.dnom'), ({'ss01': 1, 'ss02': 1, 'ss16': 1, 'onum': 1, 'pnum': 1}, 'zero.osf')]
+    for feats, src in ZERO:
+        if not kept(*feats): continue
+        off = shape('101', feats); on = shape('101', dict(feats, zero=1))
+        check(off[1]['g'] == src, f'zero off {feats}: {off[1]["g"]}, want {src}')
+        want = f'{src}.zero{SUF}'
+        check(on[1]['g'] == want, f'zero on {feats}: {on[1]["g"]}, want {want}')
+        check([r['g'] for r in on[::2]] == [r['g'] for r in off[::2]], f'zero {feats} changed the 1s')
+        check(on[1]['adv'] == off[1]['adv'] and on[2]['x'] == off[2]['x'], f'zero {feats}: spacing changed')
+        if on[1]['g'] == want:
+            b = bounds(src); c = ((b[0] + b[2]) / 2, (b[1] + b[3]) / 2)
+            pa, pb = PointInsidePen(GS, c), PointInsidePen(GS, c)
+            GS[src].draw(pa); GS[want].draw(pb)
+            check(not pa.getResult() and pb.getResult(), f'zero {want}: no slash across the counter')
+            # within a unit: an italic ring's extremes lie between its points, and the slashed
+            # copy's re-approximated curves move them by a fraction
+            bw, bs = bounds(want), bounds(src)
+            check(all(abs(a - b) <= 1 for a, b in zip(bw, bs)), f'zero {want}: ink box {bw} != {bs} (slash outside the ring)')
+    fr = names('10/20', {'frac': 1, 'zero': 1})
+    if kept('frac'): check(fr[1].endswith('.zero' + SUF) and fr[-1].endswith('.zero' + SUF), f'zero in fractions: {fr}')
+    check(names('0O 1Il 00A0', {'zero': 1}).count(f'zero.zero{SUF}') == 4 and 'O' in names('0O', {'zero': 1}), 'zero proof')
+    check(not any(SUF in g for g in names('0O 1Il 00A0 0.5 \u2070')), 'default shaping uses a slashed zero')
+
+# ---------------------------------------------------------------- marks
+# (text, features, base glyph, kind of each mark). top: above the base's ink, not
+# floating, over its ink; bottom: below; over: centred on the base's ink.
+TOPM = '\u0300\u0301\u0302\u0303\u0304\u0306\u0307\u0308\u030a\u030c'
+MARKS = [('x\u0301', {'smcp': 1}, 'X.sc', 'top'), ('a\u0331', {'ss04': 1}, 'a.ss04', 'bottom'),
+         ('Q\u0307', {'ss05': 1}, 'Q.ss05', 'top'), ('t\u0338', {'ss07': 1}, 't.ss07', 'over'),
+         ('X\u0301', {'c2sc': 1}, 'X.sc', 'top'), ('x\u0323', {'smcp': 1}, 'X.sc', 'bottom'),
+         ('x\u0327', {'smcp': 1}, 'X.sc', 'bottom'), ('x\u0331', {'smcp': 1}, 'X.sc', 'bottom'),
+         ('x\u0338', {'smcp': 1}, 'X.sc', 'over'), ('v\u0331', {'smcp': 1}, 'V.sc', 'bottom'),
+         ('y\u0301', {'ss06': 1}, None, None), ('y\u0302\u0301', {'ss06': 1}, None, None),
+         ('t\u0324', {'ss07': 1}, 't.ss07', 'bottom'), ('t\u0301', {'ss07': 1}, 't.ss07', 'top'),
+         ('1\u0304', {}, 'one', 'top'), ('1\u0331', {}, 'one', 'bottom'), ('7\u0338', {}, 'seven', 'over'),
+         ('0\u0301', {'onum': 1, 'pnum': 1}, 'zero.osf', 'top'), ('3\u0323', {'onum': 1}, 'three.osf', 'bottom'),
+         ('5\u0302', {'smcp': 1}, 'five.sc', 'top'), ('0\u0301', {'zero': 1}, f'zero.zero{SUF}', 'top'),
+         ('2\u0303', {'pnum': 1}, 'two.pnum', 'top')]
+MARKS += [('x' + m, {'smcp': 1}, 'X.sc', 'top') for m in TOPM]
+MARKS += [('4' + m, {'onum': 1, 'pnum': 1}, 'four.osf', 'top') for m in TOPM]
+MARKS += [('8' + m, {}, 'eight', 'top') for m in TOPM]
+
+
+def placed(base, mark, kind, what):
+    b, m = ink(base), ink(mark)
+    if not b or not m: return check(False, f'{what}: no ink')
+    mx, my = (m[0] + m[2]) / 2, (m[1] + m[3]) / 2
+    check(mark['adv'] == 0, f'{what}: mark advance {mark["adv"]}')
+    if kind == 'top':
+        check(b[3] - 15 <= m[1] <= b[3] + 140, f'{what}: mark bottom {m[1]} vs base top {b[3]}')
+        check(b[0] <= mx + 40 and mx - 40 <= b[2], f'{what}: mark middle {mx} off the base {b[0]}..{b[2]}')
+    elif kind == 'bottom':
+        check(b[1] - 260 <= m[3] <= b[1] + 30, f'{what}: mark top {m[3]} vs base bottom {b[1]}')
+        check(b[0] <= mx <= b[2], f'{what}: mark middle {mx} off the base {b[0]}..{b[2]}')
+    else:
+        check(abs(mx - (b[0] + b[2]) / 2) <= 0.25 * (b[2] - b[0]) + 20 and abs(my - (b[1] + b[3]) / 2) <= 0.25 * (b[3] - b[1]),
+              f'{what}: overlay middle ({mx:.0f}, {my:.0f}) off the base middle')
+
+
+for text, feats, base, kind in MARKS:
+    if not kept(*feats): continue
+    r = shape(text, feats)
+    what = f'mark {text!r} {feats}: {[x["g"] for x in r]}'
+    if base is None or (len(r) == 1 and len(text) == 2 and base == 'X.sc'):   # composes (x dot above ...)
+        check(len(r) <= 2, what); continue
+    check(r[0]['g'] == base, f'{what}: base {r[0]["g"]}, want {base}')
+    if len(r) < 2: check(False, f"{what}: composed"); continue
+    placed(r[0], r[1], kind, what)
+# stacked marks on a small cap: the second above the first
+r = shape('x\u0301\u0304', {'smcp': 1})
+check(len(r) == 3 and ink(r[2])[1] >= ink(r[1])[3] - 10 and ink(r[1])[1] >= ink(r[0])[3] - 15, f'stack x.sc: {r}')
+r = shape('8\u0301\u0304')
+check(len(r) == 3 and ink(r[2])[1] >= ink(r[1])[3] - 10, f'stack eight: {r}')
+# lining figures take the capitals' .case marks; old-style and small-cap figures keep the lowercase ones
+check(names('1\u0301')[1] == 'acutecomb.case' and names('1\u0301', {'onum': 1})[1] == 'acutecomb'
+      and names('1\u0301', {'smcp': 1})[1] == 'acutecomb', 'figure marks: case forms')
+# a mark after a ligature sits over its last letter
+for text, feats, lig in (('ff\u0301', {}, 'f_f'), ('tt\u0324', {}, 't_t'), ('Th\u0301', {'ss01': 1}, 'T_h'), ('ft\u0324', {'ss16': 1}, 'f_t')):
+    r = shape(text, feats)
+    ok = r[0]['g'] == lig and len(r) == 2
+    check(ok, f'ligature {text!r}: {[x["g"] for x in r]}')
+    if ok:
+        b, m = ink(r[0]), ink(r[1]); mx = (m[0] + m[2]) / 2
+        check(mx > (b[0] + b[2]) / 2 and mx < b[2] + 20, f'ligature {lig} mark at {mx}, ink {b[0]}..{b[2]}')
+        check(m[1] >= b[3] - 40 if text[-1] in '\u0301' else m[3] <= 15, f'ligature {lig}: mark {m} vs ink {b}')
+# canonically equivalent: a precomposed small cap / alternate against base + mark, the
+# precomposed one built by build.py from the same mark. The anchors are derived from
+# the capitals' and the alternates' own, so the two should agree within a few units.
+gp = tt['GPOS'].table
+
+
+def base_anchor(glyph, cls_mark):
+    for lk in gp.LookupList.Lookup:
+        if lk.LookupType != 4: continue
+        for st in lk.SubTable:
+            if glyph in st.BaseCoverage.glyphs and cls_mark in st.MarkCoverage.glyphs:
+                mr = st.MarkArray.MarkRecord[st.MarkCoverage.glyphs.index(cls_mark)]
+                a = st.BaseArray.BaseRecord[st.BaseCoverage.glyphs.index(glyph)].BaseAnchor[mr.Class]
+                if a: return (a.XCoordinate - mr.MarkAnchor.XCoordinate, a.YCoordinate - mr.MarkAnchor.YCoordinate)
+    return None
+
+
+# build.py sets these four from the lowercase composite's mark offsets, not the capital's
+FROM_LOWER = {'uni01D4.sc', 'uni01E9.sc', 'uni021F.sc', 'uni1E97.sc'}
+gl = tt['glyf']; agree = 0
+for pre in [g for g in GO if (g.endswith('.sc') or g.endswith('.ss04') or g.endswith('.ss06') or g.endswith('.ss07'))
+            and gl[g].isComposite() and len(gl[g].components) == 2]:
+    base, mk = gl[pre].components
+    if base.glyphName not in GO or mk.glyphName.endswith('.case'): continue
+    if pre in FROM_LOWER or pre.startswith(('uni04', 'uni05')): continue   # Mulish sets its Cyrillic marks a few units off its Latin ones
+    a = base_anchor(base.glyphName, mk.glyphName)
+    if a is None: continue
+    agree += 1
+    check(abs(a[0] - mk.x) <= 8 and abs(a[1] - mk.y) <= 8, f'{pre}: {base.glyphName} + {mk.glyphName} at {a}, precomposed at ({mk.x}, {mk.y})')
+check(agree >= 150, f'only {agree} precomposed small caps and alternates compared')
+
+def subset_component_only(font):
+    """Conservative glyf-only dependencies, never encoded/layout/caret consumers.
+
+    Unknown glyph-addressing tables and unsupported profiles fail closed: they
+    receive no component-class exemption. Class absence is allowed separately,
+    only in the explicit normal static subset verification path.
+    """
+    if 'glyf' not in font or 'fvar' in font:
+        return set()
+    infrastructure = {'OS/2', 'STAT', 'cmap', 'cvt ', 'fpgm', 'gasp', 'glyf',
+                      'head', 'hhea', 'hmtx', 'loca', 'maxp', 'meta', 'name',
+                      'post', 'prep', 'DSIG'}
+    consumers = {'GSUB', 'GPOS', 'MATH', 'BASE', 'JSTF', 'kern', 'GDEF'}
+    if (set(font.keys()) - {'GlyphOrder'}) - infrastructure - consumers:
+        return set()
+    order = font.getGlyphOrder()
+    names = set(order)
+    def references(value):
+        if isinstance(value, str):
+            return {value} if value in names else set()
+        result = set()
+        if isinstance(value, dict):
+            for key, child in value.items():
+                result.update(references(key)); result.update(references(child))
+        elif isinstance(value, (list, tuple)):
+            for child in value:
+                result.update(references(child))
+        elif hasattr(value, '__dict__'):
+            for key, child in vars(value).items():
+                if key not in ('reader', 'font') and not key.startswith('_'):
+                    result.update(references(child))
+        return result
+    # Glyph zero is a standalone missing-character fallback even without cmap.
+    standalone = {order[0]}
+    for table in font['cmap'].tables:
+        standalone.update(getattr(table, 'cmap', {}).values())
+        standalone.update(references(getattr(table, 'uvsDict', {})))
+    for tag in consumers - {'GDEF'}:
+        if tag in font:
+            standalone.update(references(font[tag]))
+    if 'GDEF' in font:
+        gd = font['GDEF'].table
+        known = {'Version', 'GlyphClassDef', 'AttachList', 'LigCaretList',
+                 'MarkAttachClassDef', 'MarkGlyphSetsDef', 'VarStore'}
+        if {k for k in vars(gd) if not k.startswith('_')} - known:
+            return set()
+        # GlyphClassDef itself is classification, not standalone reachability.
+        for key in ('AttachList', 'LigCaretList', 'MarkAttachClassDef', 'MarkGlyphSetsDef'):
+            standalone.update(references(getattr(gd, key, None)))
+    dependencies = set()
+    visiting, visited = set(), set()
+    def descend(name):
+        if name in visiting or name not in names:
+            raise ValueError('Invalid composite dependency graph')
+        if name in visited:
+            return
+        visiting.add(name)
+        glyph = font['glyf'][name]
+        if glyph.isComposite():
+            for component in glyph.components:
+                dependencies.add(component.glyphName)
+                descend(component.glyphName)
+        visiting.remove(name); visited.add(name)
+    try:
+        for name in standalone:
+            descend(name)
+    except ValueError:
+        return set()
+    return dependencies - standalone
+
+
+# ---------------------------------------------------------------- GDEF
+gd = tt['GDEF'].table; cd = gd.GlyphClassDef.classDefs
+component_only = subset_component_only(tt) if MODE == 'subset' and os.environ.get('TS_WEB_SUBSET') == '1' else set()
+def omitted_component_class(g):
+    return g in component_only and cd.get(g) is None
+carets = {g: [c.Coordinate for c in lg.CaretValue] for g, lg in zip(gd.LigCaretList.Coverage.glyphs, gd.LigCaretList.LigGlyph)}
+ligs = {}
+for lk in tt['GSUB'].table.LookupList.Lookup:
+    for st in lk.SubTable:
+        if lk.LookupType == 7: st = st.ExtSubTable
+        if getattr(st, 'LookupType', lk.LookupType) == 4 and hasattr(st, 'ligatures'):
+            for first, ls in st.ligatures.items():
+                for l in ls: ligs.setdefault(l.LigGlyph, []).append([first] + l.Component)
+# Classify encoded combining marks from Unicode semantics, not glyph names.
+encoded_categories = {}
+for table in tt['cmap'].tables:
+    if table.isUnicode():
+        for cp, g in getattr(table, 'cmap', {}).items():
+            encoded_categories.setdefault(g, set()).add(unicodedata.category(chr(cp)))
+encoded_marks = {g for g, categories in encoded_categories.items() if categories <= {'Mn', 'Me'}}
+def expected_new_class(g):
+    return 2 if g in ligs else 3 if g in encoded_marks else 1
+if MUL is not None:
+    new = [g for g in GO if g not in MUL]
+    check(len(new) > 500, f'only {len(new)} glyphs beyond Mulish')
+    check(all(cd.get(g) == expected_new_class(g) or omitted_component_class(g) for g in new), f'incorrect new glyph classes: {[g for g in new if cd.get(g) != expected_new_class(g) and not omitted_component_class(g)][:10]}')
+    for g in new:
+        if g in ligs:
+            check(cd.get(g) == 2, f'GDEF {g}: class {cd.get(g)}, a ligature')
+            c = carets.get(g, [])
+            n = len(g.split('.')[0].split('_')) if '_' in g else None
+            check(len(c) >= 1 and (n is None or len(c) == n - 1), f'GDEF {g}: carets {c}')
+            check(c == sorted(set(c)) and all(0 < x < tt['hmtx'][g][0] for x in c), f'GDEF {g}: carets {c} not increasing inside the advance')
+        else:
+            check(cd.get(g) == expected_new_class(g) or omitted_component_class(g), f'GDEF {g}: class {cd.get(g)}, expected {expected_new_class(g)}')
+if os.environ.get('MULISH_STATIC'):            # Mulish's own carets (fi, fl) as Mulish has them
+    _ml = TTFont(os.environ['MULISH_STATIC'])['GDEF'].table.LigCaretList
+    for g, lg in zip(_ml.Coverage.glyphs, _ml.LigGlyph):
+        if g in GO: check(carets.get(g) == [c.Coordinate for c in lg.CaretValue], f'{g} carets {carets.get(g)} changed')
+check(all(cd.get(g) == 3 for g in ('acutecomb', 'uni0338', 'dotbelowcomb')), 'marks lost their class')
+# carets follow the letters: office's ffi has two, between the letters
+r = shape('office')
+check(r[1]['g'] == 'f_f_i' and len(carets.get('f_f_i', [])) == 2, f'office: {[x["g"] for x in r]}')
+
+# ---------------------------------------------------------------- aalt / salt
+if kept('aalt', 'salt'):
+    gsub = tt['GSUB'].table
+
+
+    def feat_lookups(tag):
+        return sorted({i for fr in gsub.FeatureList.FeatureRecord if fr.FeatureTag == tag for i in fr.Feature.LookupListIndex})
+
+
+    for tag in ('aalt', 'salt'):
+        li = feat_lookups(tag)
+        check(len(li) == 1 and gsub.LookupList.Lookup[li[0]].LookupType == 3, f'{tag}: lookups {li}')
+    alts = {}
+    for i in feat_lookups('aalt'):
+        for st in gsub.LookupList.Lookup[i].SubTable:
+            for k, v in (getattr(st, 'alternates', None) or {k: [v] for k, v in (getattr(st, 'mapping', None) or {}).items()}).items():
+                alts.setdefault(k, []).extend(v)
+    for g, must in (('a', ['ordfeminine', 'a.ss04', 'A.sc']), ('Q', ['Q.ss05', 'Q.sc']), ('seven', ['seven.ss08', 'seven.tosf', 'seven.sc', 'uni2077']),
+                    ('zero', [f'zero.zero{SUF}', 'zero.tosf', 'zero.sc']), ('parenleft', [f'parenleft.case{SUF}', 'parenleft.sc']),
+                    ('hyphen', ['hyphen.case']), ('y', ['y.ss06']), ('t', ['t.ss07']), ('one', ['uni00B9', 'one.pnum'])):
+        check(all(m in alts.get(g, []) for m in must), f'aalt {g}: {alts.get(g)}')
+    check(not any(x.endswith(('.keep', '.out', '.vec', '.rn')) or x.startswith(('spark', 'pbar')) for v in alts.values() for x in v), 'aalt lists internal glyphs')
+    check(names('a', {'aalt': 1}) == ['ordfeminine'], f'aalt=1 a: {names("a", {"aalt": 1})}')   # Mulish's first alternate stays first
+    i = alts['a'].index('a.ss04') + 1 if 'a.ss04' in alts.get('a', []) else 1
+    check(names('a', {'aalt': i}) == ['a.ss04'], f'aalt={i} a: {names("a", {"aalt": i})}')
+    for t in ('aQ7(0)', 'office'):                    # one substitution per glyph, never a chain
+        a1 = names(t, {'aalt': 1, 'liga': 0}); base = names(t, {'liga': 0})
+        check(all(x == y or x in alts.get(y, []) for x, y in zip(a1, base)), f'aalt chains: {t} -> {a1}')
+    s1 = names('a Q y t 7 b H', {'salt': 1})
+    check(s1 == ['a.ss04', 'space', 'Q.ss05', 'space', 'y.ss06', 'space', 't.ss07', 'space', 'seven.ss08', 'space', 'b', 'space', 'H'], f'salt: {s1}')
+    check(names('a Q y t 7') == ['a', 'space', 'Q', 'space', 'y', 'space', 't', 'space', 'seven'], 'salt or aalt on by default')
+
+# ---------------------------------------------------------------- defaults and line box
+cm = tt.getBestCmap()
+allc = ''.join(chr(u) for u in sorted(cm) if u > 32)
+for feats in ({}, {'ss01': 1, 'ss02': 1, 'ss16': 1, 'onum': 1, 'pnum': 1}):
+    r = shape(allc, feats)
+    check(not any(SUF in x['g'] for x in r), f'default shaping {feats} uses a module glyph')
+# The module's glyphs stay inside hhea, typo and win metrics. Mark stacks on the new
+# bases stay inside the win metrics (what Windows clips to) and, for single marks,
+# inside hhea/typo; a lining figure's two stacked marks reach as high as the same
+# stack on a capital (Mulish's own: H + acute + macron, and its precomposed glyphs).
+hh, os2 = tt['hhea'], tt['OS/2']
+lo, hi = max(hh.descent, -os2.usWinDescent, os2.sTypoDescender), min(hh.ascent, os2.usWinAscent, os2.sTypoAscender)
+wlo, whi = -os2.usWinDescent, os2.usWinAscent
+for g in GO:
+    if SUF in g:
+        b = bounds(g)
+        check(b and lo <= b[1] and b[3] <= hi, f'{g}: ink {b} outside the line metrics {lo}..{hi}')
+def top_of(text, feats=None): return max(ink(x)[3] for x in shape(text, feats) if ink(x))
+for text, feats in (('x\u0301', {'smcp': 1}), ('8\u0301', {}), ('4\u0302', {'onum': 1}), ('1\u0331', {}),
+                    ('Q\u0307', {'ss05': 1}), ('ff\u0301', {}), ('(\u00c9)', {'case': 1}), ('x\u0301\u0304', {'smcp': 1})):
+    if not kept(*feats): continue
+    for x in shape(text, feats):
+        b = ink(x)
+        check(not b or (lo <= b[1] and b[3] <= hi), f'{text!r} {feats}: {x["g"]} ink {b} outside {lo}..{hi}')
+for text, feats in (('8\u0301\u0304', {}), ('4\u0302\u0301', {'onum': 1}), ('a\u0304\u0301', {'ss04': 1})):
+    if not kept(*feats): continue
+    t = top_of(text, feats)
+    check(t <= whi and t <= max(top_of('H\u0301\u0304'), top_of('\u01fa')), f'{text!r} {feats}: top {t} above the capitals\' stacks / win ascent {whi}')
+
+print(f'otfeatures {STYLE} {MODE}: {checks - len(fails)}/{checks} checks passed')
+for f in fails[:40]: print('  FAIL', f)
+sys.exit(1 if fails else 0)

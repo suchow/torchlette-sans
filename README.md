@@ -1,13 +1,31 @@
 # Torchlette Sans
 
-![Torchlette Sans in its seven weights, Light to Black, with the alphabet and figures](specimen/hero-light.png)
+## v0.2.0
 
-![A waterfall of sizes from 72 to 14 pixels, with attributed lines by Turing, Miller, Lovelace, Rumelhart, Hinton and Williams, Dijkstra and Shannon](specimen/sizes-light.png)
+Seven weights, Light through Black, each with a genuine italic: 14 static styles. This release adds Greek, mathematical italic Latin and Greek, OpenType MATH, logic and technical symbols, Fraktur, fractions, keyboard forms, tensor diagrams and fleurons. The 29 script characters use Noto Sans Math-derived forms.
 
-![The seven weights, Light to Black, each in an attributed line by Licklider, Hamming, Samuel, Box, Wiener, Minsky and Kay](specimen/weights-light.png)
+Full fonts are in [fonts/ttf](fonts/ttf). The smaller [web fonts](fonts/webfonts) retain the selected repertoire and features listed in [source/web_features.txt](source/web_features.txt); they are not substitutes for every optional feature in the full fonts. Variable-font work is separate.
 
-![Attributed lines by Lovelace, the Dartmouth proposal, Newell and Simon, and Turing as text; old-style and lining figures in a line by Knuth; small capitals with a line from Sutton's The Bitter Lesson](specimen/text-light.png)
+Licensed under the [SIL Open Font License 1.1](OFL.txt), with derivation and upstream notices in [licenses](licenses) (10 notice files). Build sources and vendored inputs are in [source](source).
 
-![Technical lines set with the features on: kerned capitals; superiors and inferiors in a formula; logical and set symbols with double-struck ℝ and ℕ and floor and ceiling; arrows and relations; a sentence with the sigmoid, gradient, backward and network word marks; capitals with case forms; slashed zeros; accented small capitals; ordinals and fractions](specimen/features-light.png)
+### Build
 
-![A line by Shannon with the Th ligature, then the prose ligatures: the logotypes for Torchlette, network, gradient, gradients, softmax, Python, sigmoid, backward, forward, output, vector and residual; ordinals, fractions, a range, an arrow, dimensions, a tuple, the numero sign, spark bars and a progress bar](specimen/ligatures-light.png)
+With `uv` and `make` installed, from this repository:
+
+```sh
+make -C source ttf
+make -C source WEB_DIR=../fonts/webfonts
+```
+
+Full TTF output is written to `source/build`. The explicit `WEB_DIR` keeps web output inside this repository. Tools are version-pinned in the Makefile. `make -C source verify WEB_DIR=../fonts/webfonts` runs font checks; its optional lesson-prose check additionally requires the Torchlette lesson corpus, which is not bundled here. Without it, that corpus check is skipped. See [source/README.md](source/README.md) for the pipeline and feature details.
+
+### Historical specimen images
+
+These six images predate the November 2 integration and show the earlier font. They are retained as historical samples, not proof of the current repertoire or shapes. The old specimen PDF is omitted; an updated book is separate work.
+
+![Earlier alphabet and figures](specimen/hero-light.png)
+![Earlier size waterfall](specimen/sizes-light.png)
+![Earlier seven-weight sample](specimen/weights-light.png)
+![Earlier prose, figures and small capitals](specimen/text-light.png)
+![Earlier technical features](specimen/features-light.png)
+![Earlier prose ligatures](specimen/ligatures-light.png)
