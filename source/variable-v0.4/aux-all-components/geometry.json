@@ -1,0 +1,398 @@
+{
+  "schema": "torchlette-auxiliary-geometry",
+  "version": 1,
+  "source_mode": "preliminary source component geometry",
+  "generator": {
+    "source": {
+      "path": "../augment-aux.py",
+      "sha256": "886eaf8bc065ae75a64be4ef4a12a207be865b944e657eda36016896c03e5bc4"
+    },
+    "config": {
+      "path": "config.json",
+      "sha256": "ed8c13381732a78dba4c1d67fe89512b14d17479a1c6333f9f03b45113b841ac"
+    },
+    "commit": "scratch-v04-component-correspondence"
+  },
+  "originals": [
+    {
+      "weight": 300,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-Light.ttf",
+        "sha256": "d251d398b4d779ed73725e6ca329f23c5c5433f212044138641d4f12ed7c4f63"
+      }
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-LightItalic.ttf",
+        "sha256": "22df8fe122ef002c9322062283a426658cb961b22c42dd560bb41ec3517988bb"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-Regular.ttf",
+        "sha256": "3697a1f3c553b2043cc96f57264a6b45a8633beb419632fa62e3f0c9bd76209b"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-Italic.ttf",
+        "sha256": "1f0b60983e82ed4a334a8c6836c2eb5b9dd1a0704259bf68a866ac9a1bc76ace"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-Medium.ttf",
+        "sha256": "26a762bbb4e0ca82c75981bb29c61398538fec69c7e92a14182d2cfb3418772d"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-MediumItalic.ttf",
+        "sha256": "0bfe2942d3e3256702154493ac6c98dfa3a02735db24eaa52d9a873469d87590"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-SemiBold.ttf",
+        "sha256": "c83a138395d6f337d511cd4af59aeceddd9973c2df526d43dba502d9e880b1e3"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-SemiBoldItalic.ttf",
+        "sha256": "faac35a1d94d68ceef27ea229b2b68b65e87dd30d70dfd665e95f6e456420cbc"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-Bold.ttf",
+        "sha256": "bae37d48b8fc6ee8a4bfefb13b42c5408e185750026864fd68d71287a2d7db06"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-BoldItalic.ttf",
+        "sha256": "3cc6cd412e4c346075c623e458b50f29bcd08f972f5b46234c4fa1d4857c838b"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-ExtraBold.ttf",
+        "sha256": "70a84d84b08d9fff902fbe1cd78e8860383374c3818599d674a49e043ecc5413"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-ExtraBoldItalic.ttf",
+        "sha256": "6819eafd92e756593d99fd01822e2580b097c6ad0f9ee84e2d6a800d2e103847"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-Black.ttf",
+        "sha256": "6af38582fa7469aad0cd56df1b9a358a9e046640a2f85da70f4a1e70e1e654c2"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-BlackItalic.ttf",
+        "sha256": "578a0889ef69d28b50f33f8d404c157869e5cd36a8766fd3ec6602273d22f734"
+      }
+    }
+  ],
+  "auxiliaries": [
+    {
+      "weight": 300,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Light.ttf",
+        "sha256": "6271155960cb45ebaddd101ec9ae4cb413d1cded52621aacdb2fcfe3b8ef8dc4"
+      }
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-LightItalic.ttf",
+        "sha256": "685295d63462548f237f48b6588971d227bd24392dab8e7e6ced3ccf9e6fe808"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Regular.ttf",
+        "sha256": "c8d536ef0042c5a437cc3d33977bd7f325991bf079de109c7f87efa397fddea3"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-Italic.ttf",
+        "sha256": "2961b93b07fff76affa850e3ff73300b4945b77dfa073028d6dece08842e6ae3"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Medium.ttf",
+        "sha256": "db5bcd3e6e83132697a3461998a3d432cbfd1063f1d16b449ac4a7b720c0825c"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-MediumItalic.ttf",
+        "sha256": "875152ae7496137591ec7630cf7f12cae66c90cfc49fce1827156bd1c5298ec8"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-SemiBold.ttf",
+        "sha256": "fe5477383ad8bd1076ca9e8b61503b85c1512105fe97f53460ef1db3b57146ab"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-SemiBoldItalic.ttf",
+        "sha256": "87c93a988ccdecd46e0fe4f0976682fd9865215c14ceea12c352c6b8830d47e2"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Bold.ttf",
+        "sha256": "b28f7677e08eb0ae7b10ce614ebd2844aa842d9824ae5ccf7361eb02fe95b1ff"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-BoldItalic.ttf",
+        "sha256": "800ba106b4ead7eb4204784a2a45eccb7586facb3060ace156c2792d52b3a52c"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-ExtraBold.ttf",
+        "sha256": "e6284ce09ff2e5f39dfe935f4cdbd1e2b8fae0b1c4bbb42698c45a7d3c915545"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-ExtraBoldItalic.ttf",
+        "sha256": "19e240a704fe5b72ccae8480d4240e5a30e673f3af08ea187266e191c4bfdaef"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Black.ttf",
+        "sha256": "33a5c0ca7304c34f70a18b1360716814a5634e87ebe07f178a0cd07fb5f80ffb"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-BlackItalic.ttf",
+        "sha256": "4b058d00634dd2cb402011c74aaca64ca36113cd03bbac51488b163e867cfdf5"
+      }
+    }
+  ],
+  "replacements": [
+    {
+      "glyph": "uniE931",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "duck-rabbit: fixed source construction order; independent semantic-part correspondence across all seven weights."
+    },
+    {
+      "glyph": "uniE97B",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "tape-340: fixed source construction order; independent semantic-part correspondence across all seven weights."
+    },
+    {
+      "glyph": "uniE97C",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "tape-440: fixed source construction order; independent semantic-part correspondence across all seven weights."
+    },
+    {
+      "glyph": "uniE978",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "playfair-fill: fixed source construction order; independent semantic-part correspondence across all seven weights."
+    },
+    {
+      "glyph": "uniE979",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "playfair-lobe: fixed source construction order; independent semantic-part correspondence across all seven weights."
+    },
+    {
+      "glyph": "uni227C",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Upper preference arm, lower preference arm, parallel lower band; shared semantic arc section indices across seven weights."
+    },
+    {
+      "glyph": "uniE908",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Baseline, bell, five histogram bars: semantic source stroke order and shared centerline/offset half-span indices across all weights."
+    },
+    {
+      "glyph": "uni238B",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Ring, chevron, shaft in exact source constructor order; shared cubic section indices across all seven source weights."
+    },
+    {
+      "glyph": "uniE90E",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Axes, two series, four hatches: semantic source stroke order and shared centerline/offset half-span indices across all weights."
+    },
+    {
+      "glyph": "uniE97A",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Axes, two series, four hatches: semantic source stroke order and shared centerline/offset half-span indices across all weights."
+    },
+    {
+      "glyph": "uni222C",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "2 independently repeated raw integral contours at source-derived pitch; preserves overlapping nonzero winding"
+    },
+    {
+      "glyph": "uni222D",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "3 independently repeated raw integral contours at source-derived pitch; preserves overlapping nonzero winding"
+    },
+    {
+      "glyph": "second",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "2 independently repeated raw minute contours at source-derived pitch; preserves overlapping nonzero winding"
+    },
+    {
+      "glyph": "uni2034",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "3 independently repeated raw minute contours at source-derived pitch; preserves overlapping nonzero winding"
+    },
+    {
+      "glyph": "uni2057",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "4 independently repeated raw minute contours at source-derived pitch; preserves overlapping nonzero winding"
+    },
+    {
+      "glyph": "uni2036",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "2 independently repeated raw uni2035 contours at source-derived pitch; preserves overlapping nonzero winding"
+    },
+    {
+      "glyph": "uni2037",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "3 independently repeated raw uni2035 contours at source-derived pitch; preserves overlapping nonzero winding"
+    },
+    {
+      "glyph": "second.ssty.mathglyphs",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "2 independently repeated raw minute.ssty.mathglyphs contours at source-derived pitch; preserves overlapping nonzero winding"
+    },
+    {
+      "glyph": "uni2034.ssty.mathglyphs",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "3 independently repeated raw minute.ssty.mathglyphs contours at source-derived pitch; preserves overlapping nonzero winding"
+    }
+  ]
+}

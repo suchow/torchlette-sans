@@ -18,7 +18,7 @@
 6. SH4 calt + kern: in ⟨ψ|φ⟩ the bar is bar.braket.mathnotation, which lies within the angle
    brackets' height; ⟨q and k⟩ are kerned closer than unkerned, and the ink gap of ⟨q is within
    30 units of the gap of (q.
-7. Shapes: relations and operators sit in the 600-unit cell; ⊘ ⊛ ⊖ are as wide and tall as
+7. Shapes: relations and operators sit in the 600-unit cell, but ⊘ ⊛ ⊖ have ⊕'s advance (720) and are as wide and tall as
    ⊕ (within 12: the shipped ⊕ comes out 10 narrower in Black); ≺ mirrors ≻ (uprights); the 29 script characters, including ℒ, use fixed normal-script Noto Sans
    Math outlines at one H-cap/714 scale, with donor-scaled advances and base glyph class.
    Donor-affine versus saved bounds are diagnostics, not equality claims across the ordinary
@@ -201,9 +201,12 @@ if kept('kern'):
 # 7. shapes
 H = path('H'); Hb = H.bounds; CH = Hb[3]
 def g_of(u): return cmap.get(u)
-for u in (0x225C, 0x225D, 0x2250, 0x2259, 0x2AEB, 0x2298, 0x229B, 0x2296, 0x227A, 0x227B, 0x227C, 0x227D, 0x2AAF, 0x2AB0):
+for u in (0x225C, 0x225D, 0x2250, 0x2259, 0x2AEB, 0x227A, 0x227B, 0x227C, 0x227D, 0x2AAF, 0x2AB0):
     g = g_of(u)
     if g: check(hmtx[g][0] == 600, f'U+{u:04X} advance {hmtx[g][0]}, not 600')
+for u in (0x2298, 0x229B, 0x2296):                          # ⊘ ⊛ ⊖ share ⊕'s ring and advance
+    g = g_of(u)
+    if g and g_of(0x2295): check(hmtx[g][0] == hmtx[g_of(0x2295)][0], f'U+{u:04X} advance {hmtx[g][0]}, ⊕ {hmtx[g_of(0x2295)][0]}')
 if g_of(0x2295):
     ob = bounds(g_of(0x2295))
     for u in (0x2298, 0x229B, 0x2296):

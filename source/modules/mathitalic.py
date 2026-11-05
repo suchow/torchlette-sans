@@ -4,7 +4,8 @@ Geometry prototype: 112 explicit Unicode characters; no external font substituti
 new Greek design, MATH-table metrics or dtls/ssty ownership. A complete hash-bound
 MATHITALIC_REFERENCE_MANIFEST and matching MATHITALIC_SOURCE_EPOCH are required.
 References are built normally without this module. Only their selected outlines and
-advances enter the target; original target layout is never imported or replaced.
+advances enter the target (an advance widened only to clear scripts; see
+SCRIPT_GAP); original target layout is never imported or replaced.
 """
 import hashlib
 import io
@@ -25,6 +26,26 @@ for _cp in CODEPOINTS:
     if len(_decomp) != 2 or _decomp[0] != '<font>':
         raise ValueError(f'Unexpected Unicode math-italic decomposition: U+{_cp:04X}')
     MAPPING[_cp] = int(_decomp[1], 16)  # one level: retain Greek variant identity
+
+
+# Script clearance. Chrome's MathML ignores the MATH italic correction on letter
+# bases and sets a superscript or prime at the base's advance. Sheared from
+# upright, many italic letters reach past their advance at the top right (f's
+# hook by 87 units in Regular, T, V, Y, r, zeta, xi) or end within a hair of it
+# (x, y), so f^(n), f', x^(n-k), y^k and r^k touched. Every glyph's advance is at
+# least its ink's right edge plus SCRIPT_GAP, measured on the reslanted ink in
+# the italic styles. This is TeX's spacing: TeX follows a math-italic letter with
+# its italic correction, which reaches about that far. Glyphs whose ink already
+# ends SCRIPT_GAP short of the advance keep it, so xy and the like do not loosen.
+# math_table derives italic correction from the final advance.
+SCRIPT_GAP = 30
+
+
+def cleared_advance(advance, glyph, shear, centre):
+    """The italic styles hold outlines upright until build.py reslants them by
+    `shear` about `centre`, so the ink's right edge is measured reslanted."""
+    x_max = max(x + shear * (y - centre) for x, y in glyph.coordinates)
+    return max(advance, round(x_max) + SCRIPT_GAP)
 
 
 def glyph_name(cp):
@@ -126,7 +147,7 @@ def glyphs(ctx):
         name = glyph_name(cp)
         ctx.glyf[name] = glyph
         glyph.recalcBounds(ctx.glyf)
-        ctx.hmtx[name] = (advance, glyph.xMin)
+        ctx.hmtx[name] = (cleared_advance(advance, glyph, ctx.ITALIC_K, ctx.ITALIC_YC), glyph.xMin)
         if name not in ctx.font.getGlyphOrder():
             ctx.font.setGlyphOrder(ctx.font.getGlyphOrder() + [name])
         ctx.GDEF_CLASS[name] = 1

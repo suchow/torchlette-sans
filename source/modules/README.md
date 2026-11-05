@@ -224,9 +224,7 @@ default. `featureNames` in GPOS text is not supported.
 - Lookup names start with the module name in capitals: `KERN_PAIRS`,
   `GREEK_SC`, `SUPSUB_SUPS`. Class names too: `@GREEK_LC`.
 - Feature tags: register the tag you take (a new `ssNN` or `cvNN`) in your
-  module's docstring; ss01-ss08, ss15, ss16 and cv01-cv99 (ss16's) are taken, except the explicitly
-  reassigned `cv82` for graphnodes' three circle alternatives. The retired tensor
-  logotype and `cv48` remain forbidden.
+  module's docstring; ss01-ss08, ss15, ss16 and cv01-cv99 (ss16's) are taken.
   Existing tags can be extended: Mulish's GSUB aalt, calt, case, ccmp, dnom, frac,
   liga, locl, numr, onum, ordn, sinf, subs, sups and GPOS kern, mark, mkmk, and
   build.py's tnum, pnum, smcp, c2sc.
@@ -264,18 +262,17 @@ default. `featureNames` in GPOS text is not supported.
 
     make MODULES=kern,greek     # only these two
     make MODULES=none           # none: the font exactly as build.py alone makes it
-    make                        # the explicit 22-module MODULES_DEFAULT release set
+    make                        # every module file but those in MODULES_OFF
 
 `MODULES_OFF` in the Makefile holds a module back from the default set without
 deleting it: a module that is not ready to ship stays in `modules/`, out of the
 shipped fonts and out of `make verify`, until it leaves the list. Naming it in
 `MODULES` still builds it (`make ttf verify BUILD_DIR=/tmp/me/build MODULES=greek,kern`).
-`MODULES_OFF` is currently empty; Greek and mathitalic are in `MODULES_DEFAULT`.
-A new module file is not automatically added to that explicit release set.
+Greek is held back this way, pending design review.
 
 `build.py` reads the environment variable `MODULES` (a comma list, `none`, or
 empty for all) and stops on a name with no file. The Makefile passes it the
-selection it has worked out (`MODULES`, or `MODULES_DEFAULT` minus `MODULES_OFF`) and
+selection it has worked out (MODULES, or every module but MODULES_OFF) and
 records it in `$(BUILD_DIR)/modules.txt`, so changing it rebuilds the fonts;
 editing or adding a module file does too.
 
@@ -285,7 +282,7 @@ editing or adding a module file does too.
 `../../web/public/fonts`. When several people build at once, give each build
 its own directory and leave the web fonts alone:
 
-    make ttf    BUILD_DIR=/tmp/me/build MODULES=kern     # the fourteen .ttf only, no woff2
+    make ttf    BUILD_DIR=/tmp/me/build MODULES=kern     # the three .ttf only, no woff2
     make verify BUILD_DIR=/tmp/me/build MODULES=kern
     make        BUILD_DIR=/tmp/me/build WEB_DIR=/tmp/me/web MODULES=kern   # woff2 too, elsewhere
 
@@ -315,5 +312,5 @@ checked and exits nonzero on any failure, which stops `make verify`.
 ## Before handing a module over
 
     make ttf verify BUILD_DIR=<yours> MODULES=<name>
-    make ttf verify BUILD_DIR=<yours>                 # the explicit release default; include a new module explicitly if not yet selected
+    make ttf verify BUILD_DIR=<yours>                 # with every other module present
     uv run --no-project --with fonttools python outline_check.py <yours>/TorchletteSans-Bold.ttf <yours>/Mulish-675.ttf

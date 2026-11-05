@@ -1,0 +1,5 @@
+{
+  "source_manifest": "../aux/geometry.json",
+  "sha256": "0a220627506ea882a2b0429289b6332bb196eabc4c6f0dc5743a1345eb9d49ba",
+  "method": "retain component paths independently for overlapping repeated marks and integrals"
+}

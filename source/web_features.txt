@@ -19,6 +19,7 @@ tnum
 onum
 pnum
 lnum
+zero
 smcp
 c2sc
 # Named release opt-ins retained for explicit shaping; retention does not enable them.
@@ -30,6 +31,9 @@ ornm
 dtls
 flac
 ss09
+ss14
 subs
 sinf
+# mathglyphs: script primes; the app's CSS turns ssty on in MathML scripts.
+ssty
 # cv82 remains full-only; cv96 and other laboratory cvNN tags are not selected.

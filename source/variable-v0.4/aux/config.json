@@ -1,0 +1,5 @@
+{
+  "old_manifest": "../v03/source/auxiliary-v03/combined/geometry.json",
+  "sha256": "466218477f5167482e20b6fbfa59eb275f4239c1e4c71bf685e9dce29d1f9909",
+  "method": "transplant only selected raw outlines from old auxiliaries after verifying identical original outlines and metrics"
+}

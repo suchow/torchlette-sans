@@ -18,6 +18,8 @@ import unicodedata
 from fontTools.ttLib import TTFont
 import uharfbuzz as hb
 
+from mathitalic import SCRIPT_GAP
+
 
 def mapping():
     cps = [x for x in range(0x1D434, 0x1D468) if x != 0x1D455] + [0x210E, 0x1D6A4, 0x1D6A5] + list(range(0x1D6E2, 0x1D71C))
@@ -90,8 +92,14 @@ def verify(args):
             if sn is None or cp not in cmap:
                 continue
             old_gid, new_gid = src.getGlyphID(sn), font.getGlyphID(cmap[cp])
-            check(f'{name(cp)} actual source advance', sf.get_glyph_h_advance(old_gid) == vf.get_glyph_h_advance(new_gid))
+            # The advance is the source's, widened where needed to the ink's right
+            # edge plus SCRIPT_GAP: Chrome's MathML ignores the MATH italic
+            # correction on letter bases and sets scripts at the advance, so
+            # mathitalic gives each letter TeX's letter + italic correction instead.
             a, b = sf.get_glyph_extents(old_gid), vf.get_glyph_extents(new_gid)
+            src_adv, adv = sf.get_glyph_h_advance(old_gid), vf.get_glyph_h_advance(new_gid)
+            want = None if b is None else max(src_adv, b.x_bearing + b.width + SCRIPT_GAP)
+            check(f'{name(cp)} source advance cleared for scripts', want is not None and adv >= src_adv and abs(adv - want) <= 1)
             check(f'{name(cp)} source extent within integer unit', a is not None and b is not None and all(abs(x-y) <= 1 for x, y in zip(a, b)))
         check('source/manifest stable after use', Path(manifest_path).read_bytes() == raw and hashlib.sha256(Path(source_record['path']).read_bytes()).hexdigest() == source_record['sha256'])
     if args.original:

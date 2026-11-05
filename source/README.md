@@ -14,18 +14,18 @@ feature at the top. Every weight has an italic, built the same way from Mulish
 Italic (see "Italics" below).
 
 The modules in `modules/` add to that (`modules/README.md` explains how a module
-plugs into the build; each docstring lists what it changes). The Makefile selects
-an explicit 22-module release default, including `greek` and `mathitalic`:
-
+plugs into the build; each docstring lists what it changes):
 
 - `kern`: kerning for the glyphs Mulish's and `build.py`'s kerning leave out (the
   figure forms, the ligatures, the arrows and relations, the superiors and
   inferiors), and the small-cap pairs an earlier subtable hides.
+- `kern_apos`: tightens apostrophe pairs (’s, n’t, ’ll, …) for ’ ' ʼ against every letter to 0.90 of the n–n gap, capped; gives ʼ the spacing of ’.
 - `greek`: the Greek alphabet (U+0370-03FF), with small capitals and kerning. The
   letters are Commissioner's Greek, fitted to Torchlette's metrics and stems (see
   "Greek sources" below); the capitals that share a Latin shape are Torchlette's Latin
-  capitals. It is now included in the committed build default; final family validation
-  and distribution remain release gates.
+  capitals. It is held back from the default build (the Makefile's `MODULES_OFF`)
+  pending design review, so the shipped fonts have no Greek and browsers fall back to
+  a system font.
 - `lnum`: the lnum feature, which maps every old-style figure back to the lining
   figure of the same spacing after onum, tnum and pnum have run, so
   `font-variant-numeric: lining-nums` overrides `oldstyle-nums` and keeps the spacing
@@ -42,12 +42,8 @@ an explicit 22-module release default, including `greek` and `mathitalic`:
   ligature carets, and aalt and salt.
 - `sigmoid`: the first i of "sigmoid" drawn as a small sigmoid curve, in ss16.
 - `mathletters`: the letters and operators of ML notation beside the double-struck capitals: ℙ ℍ 𝔼 𝟙 in
-  `symbols`' thin doubled strokes, ℏ, ∥ ∖ ⟂ ⟦ ⟧ ⋆, and the format-12
+  `symbols`' thin doubled strokes, a script ℒ drawn with Torchlette's pen, ℏ, ∥ ∖ ⟂ ⟦ ⟧ ⋆, and the format-12
   cmap that 𝔼 and 𝟙 (outside the BMP) need.
-- `mathnotation`: math notation and 29 fixed Noto Sans Math script characters, including
-  ℒ, scaled uniformly by H-cap/714 before the ordinary finishing stages. The custom
-  script drafts are retired.
-- `mathitalic`: mathematical italic letters and their MATH support.
 - `ui`: the interface symbols ✓ ✗ ■ □ ▶ ● ○ ★, the circled numbers ①–⑳ with Torchlette's small-cap figures,
   and the keyboard symbols ⌘ ⌥ ⇧ ⏎ ⌫.
 - `meta`: the name table, OS/2 and STAT metadata, a drawn .notdef, feature names,
@@ -158,7 +154,6 @@ and the copyright notices above are the attribution it asks for.
 - `modules/`: the modules (see above) and their checks, `modules/verify_<name>.py`.
 - `commissioner/`, `notosans/`: the Greek module's source fonts and their licenses
   (see "Greek sources").
-- `notosansmath/`: the fixed Noto Sans Math script donor and its `OFL.txt`.
 - `web_features.txt`: the OpenType features the web font keeps; `webfeatures.py`
   reads it for the checks.
 - `Makefile`: runs the steps with pinned tool versions.
@@ -176,10 +171,8 @@ every feature and is hinted. The woff2 is unhinted and keeps only the code point
 in the Makefile's `UNICODES` and the features in `web_features.txt`: what browsers
 apply by default (kern, liga, clig, calt, rlig, ccmp, locl, mark, mkmk) and what
 the app's CSS turns on (ss01, ss02, ss16, the figure features, smcp and c2sc). The
-web font also retains the explicit opt-ins ss17–ss20, ornm, dtls, flac, ss09, subs
-and sinf. Retention does not turn them on. Unselected features, including cvNN
-(`cv82` graphnodes included), case, cpsp, zero, aalt, salt, sups and frac, remain
-in the .ttf only. The tool versions are pinned, so each woff2 is
+other stylistic sets, the cvNN, case, cpsp, zero, aalt, salt, sups, subs, frac and
+the rest are in the .ttf only. The tool versions are pinned, so each woff2 is
 byte-identical on every build; `make check` rebuilds all fourteen from scratch and
 compares.
 

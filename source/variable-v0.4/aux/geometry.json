@@ -1,0 +1,326 @@
+{
+  "schema": "torchlette-auxiliary-geometry",
+  "version": 1,
+  "source_mode": "preliminary transplant from verified v0.3 auxiliary geometry",
+  "generator": {
+    "source": {
+      "path": "../transplant.py",
+      "sha256": "455db36e4d0212b39caeb99a8631ccd1aabe06c30aa7a6da257a2bd374e2d9ca"
+    },
+    "config": {
+      "path": "config.json",
+      "sha256": "428155124bf5bc84e65093ab9f371590f881a641f034b136cd3427dfe25d388e"
+    },
+    "commit": "scratch-preflight-v04"
+  },
+  "originals": [
+    {
+      "weight": 300,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-Light.ttf",
+        "sha256": "d251d398b4d779ed73725e6ca329f23c5c5433f212044138641d4f12ed7c4f63"
+      }
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-LightItalic.ttf",
+        "sha256": "22df8fe122ef002c9322062283a426658cb961b22c42dd560bb41ec3517988bb"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-Regular.ttf",
+        "sha256": "3697a1f3c553b2043cc96f57264a6b45a8633beb419632fa62e3f0c9bd76209b"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-Italic.ttf",
+        "sha256": "1f0b60983e82ed4a334a8c6836c2eb5b9dd1a0704259bf68a866ac9a1bc76ace"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-Medium.ttf",
+        "sha256": "26a762bbb4e0ca82c75981bb29c61398538fec69c7e92a14182d2cfb3418772d"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-MediumItalic.ttf",
+        "sha256": "0bfe2942d3e3256702154493ac6c98dfa3a02735db24eaa52d9a873469d87590"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-SemiBold.ttf",
+        "sha256": "c83a138395d6f337d511cd4af59aeceddd9973c2df526d43dba502d9e880b1e3"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-SemiBoldItalic.ttf",
+        "sha256": "faac35a1d94d68ceef27ea229b2b68b65e87dd30d70dfd665e95f6e456420cbc"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-Bold.ttf",
+        "sha256": "bae37d48b8fc6ee8a4bfefb13b42c5408e185750026864fd68d71287a2d7db06"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-BoldItalic.ttf",
+        "sha256": "3cc6cd412e4c346075c623e458b50f29bcd08f972f5b46234c4fa1d4857c838b"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-ExtraBold.ttf",
+        "sha256": "70a84d84b08d9fff902fbe1cd78e8860383374c3818599d674a49e043ecc5413"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-ExtraBoldItalic.ttf",
+        "sha256": "6819eafd92e756593d99fd01822e2580b097c6ad0f9ee84e2d6a800d2e103847"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "file": {
+        "path": "../masters/TorchletteSans-Black.ttf",
+        "sha256": "6af38582fa7469aad0cd56df1b9a358a9e046640a2f85da70f4a1e70e1e654c2"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "file": {
+        "path": "../masters/TorchletteSans-BlackItalic.ttf",
+        "sha256": "578a0889ef69d28b50f33f8d404c157869e5cd36a8766fd3ec6602273d22f734"
+      }
+    }
+  ],
+  "auxiliaries": [
+    {
+      "weight": 300,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Light.ttf",
+        "sha256": "02adfc1d1bde86b3fa5dacf42041e6ad6f215bea2c15e763ec53b649f566a3a3"
+      }
+    },
+    {
+      "weight": 300,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-LightItalic.ttf",
+        "sha256": "9b5c05a8540cf1b17b403dd421543f4a973ca01e4bcd4cf871f9827a83c12355"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Regular.ttf",
+        "sha256": "4060be03de98e738ef138d31bbfd60f36b176266445853adc64988737d754573"
+      }
+    },
+    {
+      "weight": 400,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-Italic.ttf",
+        "sha256": "8c3ebd3b4f51c5339e417ee9ec99c69410112ac02008389ca999ffbc31dfd9dd"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Medium.ttf",
+        "sha256": "3bfd0b28705ca3258f6038a5b55510e7fb79e7439afe63b26f1b77be791cee8f"
+      }
+    },
+    {
+      "weight": 500,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-MediumItalic.ttf",
+        "sha256": "bf6f88c3b28ab84978849fdc14d547792b56ef09223e22ea3e9d1a1bd929e383"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-SemiBold.ttf",
+        "sha256": "d31d102528901a3eb4777164cb32ecb90badb3de8790190c7efbcf6eab0a1bc8"
+      }
+    },
+    {
+      "weight": 600,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-SemiBoldItalic.ttf",
+        "sha256": "ba96553f46a595a7dc3445ba251c50ea56222f4a7066958c5f2186055fa83986"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Bold.ttf",
+        "sha256": "513202343e60e7e010c9e51386a869c9cba87ea6c1b7faede866497a482f75ff"
+      }
+    },
+    {
+      "weight": 700,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-BoldItalic.ttf",
+        "sha256": "fe4eaf2760e70a0da1c5a6a9118fb42c093ba5f2199245877f33db09f1357703"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-ExtraBold.ttf",
+        "sha256": "553a565d1f7cfb7f0307c1d8b3631c8a4113282113dc966e55d356f3515bf05a"
+      }
+    },
+    {
+      "weight": 800,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-ExtraBoldItalic.ttf",
+        "sha256": "1db2923945c11b7b5da98c7860b169cc40b472d1cd4ff4315a25ebc84f06646b"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 0,
+      "file": {
+        "path": "TorchletteSans-Black.ttf",
+        "sha256": "497ef114b6edab0c3b58a334ec901905655cb1ff04bb14ca535546a9c8a863a1"
+      }
+    },
+    {
+      "weight": 900,
+      "ital": 1,
+      "file": {
+        "path": "TorchletteSans-BlackItalic.ttf",
+        "sha256": "4e61bf34cda285b7bce9fd1a0adccf485800d76a3b32807e03e8089f54584b6d"
+      }
+    }
+  ],
+  "replacements": [
+    {
+      "glyph": "uniE931",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "duck-rabbit: fixed source construction order; independent semantic-part correspondence across all seven weights."
+    },
+    {
+      "glyph": "uniE97B",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "tape-340: fixed source construction order; independent semantic-part correspondence across all seven weights."
+    },
+    {
+      "glyph": "uniE97C",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "tape-440: fixed source construction order; independent semantic-part correspondence across all seven weights."
+    },
+    {
+      "glyph": "uniE978",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "playfair-fill: fixed source construction order; independent semantic-part correspondence across all seven weights."
+    },
+    {
+      "glyph": "uniE979",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "playfair-lobe: fixed source construction order; independent semantic-part correspondence across all seven weights."
+    },
+    {
+      "glyph": "uni227C",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Upper preference arm, lower preference arm, parallel lower band; shared semantic arc section indices across seven weights."
+    },
+    {
+      "glyph": "uniE908",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Baseline, bell, five histogram bars: semantic source stroke order and shared centerline/offset half-span indices across all weights."
+    },
+    {
+      "glyph": "uni238B",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Ring, chevron, shaft in exact source constructor order; shared cubic section indices across all seven source weights."
+    },
+    {
+      "glyph": "uniE90E",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Axes, two series, four hatches: semantic source stroke order and shared centerline/offset half-span indices across all weights."
+    },
+    {
+      "glyph": "uniE97A",
+      "ital": [
+        0,
+        1
+      ],
+      "curve_provenance": "Axes, two series, four hatches: semantic source stroke order and shared centerline/offset half-span indices across all weights."
+    }
+  ]
+}

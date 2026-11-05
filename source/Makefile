@@ -41,8 +41,8 @@ WEB_DIR   := $(WEB_REF)
 # $(BUILD_DIR)/modules.txt, which changes only when the selection does.
 # Greek and mathitalic are explicitly included in the approved release default.
 MODULES_OFF  :=
-# Approved release default: the exact 22 modules exercised in the combined gate.
-MODULES_DEFAULT := codekeys cyrillic fleurons fraktur games graphnodes greek kern latin_gaps lnum logic math_table mathitalic mathletters mathnotation meta otfeatures sigmoid supsub symbols tensordiagram ui
+# Approved release default: the exact 24 modules exercised in the combined gate.
+MODULES_DEFAULT := codekeys cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures sigmoid supsub symbols tensordiagram ui
 comma        := ,
 empty        :=
 space        := $(empty) $(empty)
@@ -118,6 +118,8 @@ UNICODES := $(UNICODES),U+2609,U+263D,U+2641,U+2654-265F,U+2680-2689,U+26C0-26C3
 UNICODES := $(UNICODES),U+2460-2473
 # tensordiagram: 8 additional encoded characters from the selected source contract.
 UNICODES := $(UNICODES),U+EE00-EE07
+# mathglyphs: U+20D7, the combining right arrow above (KaTeX's \vec).
+UNICODES := $(UNICODES),U+20D7
 # fleurons: 33 additional encoded characters from the selected source contract.
 UNICODES := $(UNICODES),U+2619,U+261C,U+261E,U+2766-2767,U+E900-E915,U+E920-E925
 

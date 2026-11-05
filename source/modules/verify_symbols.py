@@ -16,7 +16,8 @@ space-control-*, prose-versus-literal-contexts), shaped under the app's settings
    characters share an outline (distinct semantic forms); the sum U+2211 is still
    `summation`, descending below the baseline; | and the divides sign differ.
 3. Geometry: binary operators and relations sit on the math axis (the minus's
-   centre) within 6 units; relations take the 600-unit cell of = < >; arrows of
+   centre) within 6 units; relations take the 600-unit cell of = < > (but ∪ ∩ ⊙ ⊗ ⊕,
+   which the mathglyphs module, when built, redraws at TeX's size); arrows of
    one direction family share the shaft weight (the minus's bar); no new glyph
    leaves the hhea, typo or win metrics or reaches past the font's tallest and
    deepest letters.
@@ -129,8 +130,9 @@ for ch in ON_AXIS:
     check(abs(c - AXIS) <= 6, f'{ch} off the math axis: centre {c:.1f} vs {AXIS:.1f}')
 REL = '=<>≤≥≠≈∼≃≅≡∝≪≫∈∉∋⊂⊃⊆⊇∪∩∧∨⊙⊗⊕⊤⊥∠∗'
 cell = hmtx[cmap[ord('=')]][0]
+MATHGLYPHS_SIZED = set('∪∩⊙⊗⊕') if 'uni22C3' in gs else set()   # mathglyphs redraws these larger (TeX's size)
 for ch in REL:
-    if ord(ch) not in cmap: continue
+    if ord(ch) not in cmap or ch in MATHGLYPHS_SIZED: continue
     check(hmtx[cmap[ord(ch)]][0] == cell, f'{ch} advance {hmtx[cmap[ord(ch)]][0]} != {cell}')
 # shaft weight: horizontal arrows' ink across the shaft at a third of their length
 from fontTools.pens.basePen import BasePen

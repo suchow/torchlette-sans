@@ -1,37 +1,123 @@
 # Coordinate-aligned MATH-aware saved-instance export
 
-`source/export_math_instance.py` exports a fully pinned font through two actual saved stages. It aligns pins with the immutable full source's HarfBuzz normalization and derives MATH values from that source. It does not change generic fontTools instancing or certify family, layout or browser acceptance.
+`export_math_instance.py` exports a fully pinned font through two real saved stages.
+It aligns pinned coordinates with the immutable original source's HarfBuzz
+normalization, then derives MATH values from that same source. This custom path
+does not change generic fontTools instancing or certify a finished font family.
 
-Use Python 3.12 (reviewed environment 3.12.10), fontTools 4.68.0 and uharfbuzz 0.57.0 with HarfBuzz 15.0.0. Package/repacker and HarfBuzz versions are checked before output creation. From this repository root:
+Use Python 3.12, fonttools 4.68.0 and uharfbuzz 0.57.0 with HarfBuzz 15.0.0. The
+repacker and HarfBuzz version are checked before output creation. Exact rational
+16.16/avar/F2Dot14 arithmetic supplies the source coordinates; native HarfBuzz
+must agree before instancing. From the repository root:
 
 ```sh
-uv run --no-project --python 3.12.10 \
+uv run --no-project --python 3.12 \
   --with fonttools==4.68.0 --with uharfbuzz==0.57.0 \
-  python source/export_math_instance.py \
-  --source fonts/variable/TorchletteSansVariable.ttf \
-  --source-sha256 0a4e6f9fa86dbdde41cc935441469681a930c5a591063d6497738cb5eecdf906 \
+  python fonts/torchlette-sans/export_math_instance.py \
+  --source /path/to/untouched-full-variable.ttf \
+  --source-sha256 ACTUAL_LOWERCASE_SHA256 \
   --wght 850 --ital 0 --order wght,ital \
   --out-dir /path/to/new-output
 ```
 
-The hash shown identifies the included full TTF, not its WOFF2. Both `wght,ital` and `ital,wght` orders are accepted. Coordinates accept finite decimal or rational text, not ranges. The output directory must be new. The API is `Exporter(raw_source_bytes, expected_sha256)`; both pins use the same exporter invocation/instance and its registered actual partial. External partials and saved receipt JSON are not a resumable replacement for the original source.
+Both `wght,ital` and `ital,wght` are supported. Coordinates accept finite decimal
+or rational text; range restrictions are not supported. Output must be a new
+directory. External partial fonts and resumable receipts cannot replace the
+original source.
 
-## Source profile and coordinate convention
+## Supported source profile
 
-The source must have `wght` minimum/default/maximum 300/400/900, `ital` 0/0/1, version-1 avar, the exact reviewed weight map in the code, and italic map `(-1,-1), (0,0), (8191/16384,0), (1/2,1), (1,1)`. The five reachable normalized italic states are 0, 1/4, 1/2, 3/4, 1. Every MATH record must retain its complete style branch at those states; selection follows normalized coordinates, not a nominal `ital >= .5` rule. MATH/GDEF variation data are required. Unsupported axes/maps/tables, variation references, remaining-axis changes, avar2, VARC/CFF outlines, ppem devices and a disabled repacker reject. Record paths and counts are discovered, not fixed glyph IDs.
+The source must have axes `wght` (minimum/default/maximum 300/400/900) and `ital`
+(0/0/1), version-1 avar, the exact reviewed weight mapping in `WEIGHT_MAP`, and
+the italic map `(-1,-1), (0,0), (8191/16384,0), (1/2,1), (1,1)`. This serialized
+profile has only five reachable normalized italic values for public 16.16 inputs:
+`0, 1/4, 1/2, 3/4, 1`. Every source MATH record must preserve its complete style
+branch at those values. The exporter follows the normalized branch rather than
+assuming that nominal public `ital >= .5` selects italic.
 
-Exact rational 16.16/avar/F2Dot14 arithmetic supplies source coordinates; native HarfBuzz must agree. Ordinary fontTools float normalization can differ: at reviewed weight 850 it gives 0.87493896484375 while the source coordinate is 0.875. Before each pin, a temporary in-memory avar map makes the instancer evaluate that verified source coordinate. The pinned map is removed; surviving axis ranges/maps stay unchanged. Alignment can therefore change outlines, advances and layout compared with ordinary float-normalized output. That ordinary output is not the preservation baseline.
+MATH/GDEF variation data must be present. Record paths, coverage, namespaces and
+counts are discovered from the source; no glyph IDs or record counts are fixed.
+Unknown axes/maps/layout versions, changed remaining-axis ranges or maps, avar2,
+VARC/CFF outlines, invalid variation references, unsupported ppem Device tables,
+and an explicitly disabled repacker reject. This interface is not for arbitrary
+variable-font profiles or other variation-store consumers needing custom repairs.
 
-## Saved stages and preservation
+## Coordinate alignment and saved stages
 
-Weight-first MATH uses rounded Roman base values and italic variation deltas equal to round(Italic) minus round(Roman). Its aligned partial is serialized and reopened before baseline capture, including compiled loca offsets. MATH rows/regions are appended to GDEF while existing variation indices/store prefixes are preserved. Italic-first uses its aligned first stage. Completion reopens the actual hash-bound partial and saves/reopens the aligned chained target; final MATH values come from the untouched original full source.
+FontTools' float normalization can disagree with the source's HarfBuzz coordinate.
+For the reviewed source at weight 850, these values are 0.87493896484375 and 0.875,
+respectively. This affects outlines, advances and layout together. The exporter
+uses the original source coordinate for each pin, including after reopening the
+saved partial; it does not patch individual glyphs or kerning pairs.
 
-Decoded plain MATH structures, coverage and record identities remain equal. After weight-partial MATH repair, all raw tables except MATH/GDEF match the aligned serialized baseline. After final MATH repair, every non-MATH table, including GDEF/GPOS, matches the aligned chained baseline. Only head.checkSumAdjustment is excepted. These are MATH-phase preservation checks; they neither assert equality with ordinary float output nor establish source-relative accuracy for unrelated tables.
+On a private in-memory copy, each pinned axis receives a temporary monotonic avar
+map that makes the public fontTools instancer evaluate the requested user-space
+pin at the verified source coordinate. Identity knots and normalized results are
+checked. This temporary map is never serialized: the instancer must remove the
+pinned axis/map, while surviving axis ranges and maps remain exactly unchanged.
+User-space pins and their metadata retain the requested values.
 
-Outputs are `aligned-partial.ttf` (weight-first only), `partial.ttf`, `receipt.json`, `aligned-final.ttf`, `final.ttf` and `proof.json`. The proof records source identity, pins/order, normalization, record counts, runtime versions and exporter hash and preservation checks. Source and partial hashes are rechecked; altered/unbound state, wrong order, aliases and reused output paths reject. Failed exports may retain diagnostics without a successful proof. Hash checks are not filesystem locks.
+For weight-first export, complete Roman/italic MATH values become `round(R)` plus
+`round(I) - round(R)`. The coordinate-aligned partial is serialized and reopened
+before capturing its preservation baseline, including compiled `loca` offsets.
+Only MATH rows/regions are appended to GDEF; existing variation indices and store
+prefixes remain intact. Italic-first uses the aligned first-stage result.
 
-## Separate limitations and evidence
+The actual saved partial is bound to the original source hash, partial hash,
+first pin and order. The aligned second-stage target is also saved and reopened.
+Final MATH values come from the original full source, avoiding independent
+rounding of already rounded intermediate MATH values.
 
-This standalone tool has no canonical mark-anchor correction or ON flag. Its weight 650 combining-mark rounding limitation remains: source and fontTools already agree at normalized 3/8, so coordinate alignment does not fix it. The separately proposed `source/canonical_export/` tool has its own explicit opt-in, policy, exact-source/native-runtime restrictions and proof contract; its ON evidence does not transfer to this default path. Consult that tool's adjacent README/POLICY if it is included.
+Plain MATH structures and record identities must remain equal. After weight-first
+MATH repair, every non-MATH/GDEF raw table must match its aligned serialized
+baseline. After final MATH repair, every non-MATH raw table, including GDEF and
+GPOS, must match the aligned chained target. Only `head.checkSumAdjustment` is
+excepted. These are preservation checks for the MATH repair stage; they do not
+claim equality with ordinary float-normalized fontTools output. Coordinate
+alignment deliberately can change non-MATH tables compared with that output.
 
-Existing alignment checks are finite, source-bound evidence; no complete current gate pass is claimed here. Layout/native-MATH acceptance and browser acceptance remain separate. See [compatibility observations](../docs/COMPATIBILITY.md) and [historical build/browser evidence](../BUILD-v0.3.md); this guide does not relabel those measurements as aligned-core or optional-ON results. Full static masters are in `fonts/ttf`, including `fonts/ttf/TorchletteSans-BlackItalic.ttf`; `fonts/webfonts` contains subsets. Preserve original evidence epochs and bind actual code/runtime/source before and after any new validation.
+The output directory contains:
+
+- `aligned-partial.ttf`: serialized pre-MATH-repair weight partial, weight-first only;
+- `partial.ttf` and `receipt.json`: actual first-stage bytes and their binding;
+- `aligned-final.ttf`: aligned second-stage output from that partial;
+- `final.ttf`: MATH-repaired final output;
+- `proof.json`: source identity, pins/order, normalized traces, record count,
+  hashes, tool versions and preservation checks against aligned baselines.
+
+Source and partial hashes are rechecked at completion. Changed bytes, altered or
+unbound receipts, wrong order, reused output paths and aliases reject. Failed
+exports may retain diagnostic intermediates but do not produce a successful
+proof. These hash checks are not locks against concurrent filesystem changes.
+
+## Validation scope
+
+The private reviewed integration passed five weight 850 readbacks: both sequential
+finals, both partials evaluated at 850 upright, and the weight partial at 850 italic.
+Each checked the existing 16025-case layout bank at the unchanged 1-unit per-field
+bound, 1737 source MATH records, and native MATH consumers. Both finals were byte
+identical. Source-relative outline and finite 16/19px native shaping controls were
+also checked. These results cover the bound private candidate and source; they
+are not a new full acceptance matrix for every future source or shared revision.
+Historical generic-export fixture results do not automatically transfer to the
+new coordinate convention.
+
+The separate weight 650 combining-mark chain rounding failure remains unresolved:
+FontTools and HarfBuzz already agree on its normalized coordinate 0.375, so this
+alignment does not fix it. No mark-anchor correction or tolerance relaxation is
+included. Full real-family, retained-axis, native-size and layout acceptance
+still require a frozen source-bound integration gate. Validation receipts should
+bind the actual driver and runtime implementation hashes before and after runs,
+not only their version numbers.
+
+Focused guards use a complete canonical source without constructing new fonts:
+
+```sh
+TORCHLETTE_TEST_VF=/path/to/untouched-full-variable.ttf \
+  uv run --no-project --python 3.12 \
+  --with fonttools==4.68.0 --with uharfbuzz==0.57.0 \
+  python -m unittest discover -s fonts/torchlette-sans \
+  -p test_math_export_alignment.py
+```
+
+Without `TORCHLETTE_TEST_VF`, these source-backed guards are explicitly skipped.

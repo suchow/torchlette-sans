@@ -1,25 +1,24 @@
-# v0.3.0 compatibility
+# Torchlette Sans v0.4.0 compatibility
 
-Jordan authorized publication of v0.3.0 with the validated explicit-ON scope and compatibility limits below.
+## Variable font checks
 
-## Saved-instance checks
+The variable TTF tested for this release has SHA-256 `7a2de49f520ecc17f716f7fdb3395f1eb893b84e900f9a6796ee8d11174218c7`; the corresponding WOFF2 has SHA-256 `e8119329d3b03787e58164e440fecaf49209678230753909f3082d51c13e3f95`. Its axes are `wght` 300–900, default 400, and `ital` 0–1, default 0. A source-bound verifier reported no failures for the tested 14 static endpoints and intermediate weight probes in both styles. Raster checks used FreeType 2.14.1 at 160 pixels per em. The verifier's supplied corpus contained 16,112 cases, but it is a partial corpus, not an exhaustive representation of the current modules. These finite tests do not establish every intermediate shape, text, renderer, or platform.
 
-The source-bound MATH/layout matrix completed with the optional canonical mark-position correction explicitly ON: 140 locations, both sequential axis orders, and 560 saved-stage observations, with no reported failures. It retained the existing one-unit per-coordinate layout bound and exact glyph-name/cluster checks. The larger layout set ran at selected locations; other locations used five explicit layout contexts. MATH and native HarfBuzz MATH checks covered every location. This is finite saved-instance evidence, not browser MathML or arbitrary-string acceptance.
+## Native browser mathematics
 
-Earlier matrix failures remain part of the evidence history. Coordinate alignment addresses the identified weight-850 normalization discrepancy. It does not address the weight-650 combining-mark discrepancy; the optional correction addresses that case for the exact source and effective normalized-weight cell. The standalone exporter and the optional wrapper with its flag omitted remain OFF and retain that limitation. The ON result must not be attributed to either default path or to generic fontTools instancing.
+Native MathML in Chrome 156.0.8078.81 displayed differences between the variable fonts and the included Black Italic static TTF in two tested equations at 20px, weight 900 and `ital` 1. The variable TTF and WOFF2 gave the same measurements:
 
-The optional exporter requires the exact source TTF, reviewed core bytes and native HarfBuzz extension. The reviewed runtime is Python 3.12.10, fontTools 4.68.0, uharfbuzz 0.57.0 and HarfBuzz 15.0.0, executed on macOS arm64. Its native-extension SHA-256 is `bb5f9abe6f722ff11df22fe9d462fff53dd08c017358ed547c8ea0413f2b7737`. The universal macOS wheel includes x86_64 code, but execution there has not been established; Linux and Windows binaries do not satisfy this guard. Follow the source repository’s optional-export guide for exact acquisition, source identity, commands and proof semantics. Version numbers alone are insufficient.
+| Fixture | Variable TTF / WOFF2 height | Black Italic static TTF height |
+| --- | ---: | ---: |
+| Indexed nested roots | 50.047px | 59.375px |
+| Nested fractions | 56.047px | 60.359px |
 
-The correction is curated rather than a general rounding algorithm. Earlier display-size controls found individual mark-position errors that worsened, including two tested strings at 16px and a selected synthetic chain at 19px. Passing the matrix does not establish that every string, size or renderer improves.
+For these fixed-style examples, the included static face avoids the observed variable-font difference. These measurements are limited to the two fixtures, browser version, size and axis settings tested; they do not establish behavior in other browsers or for arbitrary equations. Browser MathML acceptance of the variable fonts is not established by these checks.
 
-## Browser mathematics
+## Saved-instance experiment
 
-The variable TTF and WOFF2 have a measured native MathML limitation in Chromium 148.0.7778.96 and Chrome 156.0.8078.80. Both versions produced the same measurements for the tested fixtures. At weight 900, italic 1 and 20px, indexed nested roots measured 47px high with either variable format, versus 54.296875px with the original static and the historical saved static. Nested fractions measured 56.046875px with the variables, versus 60.359375px with those statics.
+For the same two Chrome fixtures, a saved static instance made from the TTF above at `wght=900`, `ital=1`, with weight pinned before italic, measured 59.375px and 60.359px respectively, matching the original Black Italic static in this experiment. The saved TTF's SHA-256 was `8762b36ffe5e90fb56e70d2dcf5ab39748a37382d418563bf52d9a115ef29899`. This one-coordinate, two-fixture observation is not a general exporter, browser or all-string acceptance. The exporter proof covers coordinate-aligned two-stage MATH export and explicitly does not establish source-family or glyph acceptance.
 
-For that fixed style, use the included `TorchletteSans-BlackItalic.ttf`. The historical saved-instance export also matched the static heights for these fixtures. That browser evidence belongs to its recorded exporter and output hashes; it is not a fresh browser test of the coordinate-aligned or optional-ON exporter. See the source repository’s build record and export guides for the historical evidence and current commands. Arbitrary generic partial-instancing chains are not covered.
+## Scope of evidence
 
-These observations do not establish behavior in all Chromium versions, other browsers or every equation. The completed ON saved-instance matrix does not resolve this browser limitation or constitute browser-MATH acceptance. The earlier blank-arrow observation was retracted.
-
-## Distribution
-
-The v0.3.0 font archive contains 14 static TTFs, 14 static WOFF2 subsets, the variable TTF and WOFF2, a 119-page PDF, the root OFL and ten donor notices, plus this compatibility note. The separate source repository supplies reconstruction files, exporter instructions and evidence. No proprietary reference font assets are included.
+The verifier used fontTools 4.68.0, uharfbuzz 0.57.0, freetype-py 2.5.1, NumPy 2.3.4, SciPy 1.16.3 and skia-pathops 0.9.2. The browser measurement used loaded fonts in isolated browser sessions and retained the tested input hashes, fixture definitions, screenshots and results. Consult the release repository's accompanying build and provenance records for the exact artifacts, commands and reports. Earlier v0.3.0 browser measurements and saved-instance matrix apply to their own source and output hashes and are not evidence of v0.4.0 behavior.

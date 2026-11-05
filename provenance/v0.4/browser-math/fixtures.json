@@ -1,0 +1,1043 @@
+{
+  "sources": {
+    "vertical": [
+      {
+        "source": "slash",
+        "italic_source": "slash.1",
+        "codepoint": 47,
+        "aliases": [
+          47
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "backslash",
+        "italic_source": "backslash.1",
+        "codepoint": 92,
+        "aliases": [
+          92
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "parenleft",
+        "italic_source": "parenleft.1",
+        "codepoint": 40,
+        "aliases": [
+          40
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "parenright",
+        "italic_source": "parenright.1",
+        "codepoint": 41,
+        "aliases": [
+          41
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "braceleft",
+        "italic_source": "braceleft.1",
+        "codepoint": 123,
+        "aliases": [
+          123
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "braceright",
+        "italic_source": "braceright.1",
+        "codepoint": 125,
+        "aliases": [
+          125
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "bracketleft",
+        "italic_source": "bracketleft.1",
+        "codepoint": 91,
+        "aliases": [
+          91
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "bracketright",
+        "italic_source": "bracketright.1",
+        "codepoint": 93,
+        "aliases": [
+          93
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "uni27E8",
+        "italic_source": "uni27E8.1",
+        "codepoint": 10216,
+        "aliases": [
+          10216
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "uni27E9",
+        "italic_source": "uni27E9.1",
+        "codepoint": 10217,
+        "aliases": [
+          10217
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "uni2215",
+        "italic_source": "uni2215.1",
+        "codepoint": 8725,
+        "aliases": [
+          8725
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "integral",
+        "italic_source": "integral.1",
+        "codepoint": 8747,
+        "aliases": [
+          8747
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "product",
+        "italic_source": "product.1",
+        "codepoint": 8719,
+        "aliases": [
+          8719
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 1.4
+      },
+      {
+        "source": "summation",
+        "italic_source": "summation.1",
+        "codepoint": 8721,
+        "aliases": [
+          8721
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 1.4
+      },
+      {
+        "source": "radical",
+        "italic_source": "radical.1",
+        "codepoint": 8730,
+        "aliases": [
+          8730
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "bar",
+        "italic_source": "bar.1",
+        "codepoint": 124,
+        "aliases": [
+          124
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "uni2225",
+        "italic_source": "uni2225.1",
+        "codepoint": 8741,
+        "aliases": [
+          8741
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "uni230A",
+        "italic_source": "uni230A.1",
+        "codepoint": 8970,
+        "aliases": [
+          8970
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "uni2308",
+        "italic_source": "uni2308.1",
+        "codepoint": 8968,
+        "aliases": [
+          8968
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "uni230B",
+        "italic_source": "uni230B.1",
+        "codepoint": 8971,
+        "aliases": [
+          8971
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "uni2309",
+        "italic_source": "uni2309.1",
+        "codepoint": 8969,
+        "aliases": [
+          8969
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "uni2223",
+        "italic_source": "uni2223.1",
+        "codepoint": 8739,
+        "aliases": [
+          8739
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      },
+      {
+        "source": "uni2016",
+        "italic_source": "uni2016.1",
+        "codepoint": 8214,
+        "aliases": [
+          8214
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 1.43
+      }
+    ],
+    "horizontal": [
+      {
+        "source": "asciitilde",
+        "italic_source": "asciitilde.1",
+        "codepoint": 126,
+        "aliases": [
+          126
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 3.46
+      },
+      {
+        "source": "asciicircum",
+        "italic_source": "asciicircum.1",
+        "codepoint": 94,
+        "aliases": [
+          94
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 3.44
+      },
+      {
+        "source": "uni0302",
+        "italic_source": "uni0302.1",
+        "codepoint": 770,
+        "aliases": [
+          770
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 3.44
+      },
+      {
+        "source": "tildecomb",
+        "italic_source": "tildecomb.1",
+        "codepoint": 771,
+        "aliases": [
+          771
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 3.46
+      },
+      {
+        "source": "uni0304",
+        "italic_source": "uni0304.1",
+        "codepoint": 772,
+        "aliases": [
+          772
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 3.46
+      },
+      {
+        "source": "circumflex",
+        "italic_source": "circumflex.1",
+        "codepoint": 710,
+        "aliases": [
+          710
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 3.44
+      },
+      {
+        "source": "tilde",
+        "italic_source": "tilde.1",
+        "codepoint": 732,
+        "aliases": [
+          732
+        ],
+        "expected_assembly": false,
+        "max_variant_em": 3.46
+      },
+      {
+        "source": "macron",
+        "italic_source": "macron.1",
+        "codepoint": 175,
+        "aliases": [
+          175
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 3.46
+      },
+      {
+        "source": "arrowright",
+        "italic_source": "arrowright.1",
+        "codepoint": 8594,
+        "aliases": [
+          8594
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 2.98
+      },
+      {
+        "source": "arrowleft",
+        "italic_source": "arrowleft.1",
+        "codepoint": 8592,
+        "aliases": [
+          8592
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 2.98
+      },
+      {
+        "source": "arrowboth",
+        "italic_source": "arrowboth.1",
+        "codepoint": 8596,
+        "aliases": [
+          8596
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 3.0
+      },
+      {
+        "source": "uni0305",
+        "italic_source": "uni0305.1",
+        "codepoint": 773,
+        "aliases": [
+          773
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 3.46
+      },
+      {
+        "source": "uni203E",
+        "italic_source": "uni203E.1",
+        "codepoint": 8254,
+        "aliases": [
+          8254
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 3.46
+      },
+      {
+        "source": "uni23DE",
+        "italic_source": "uni23DE.1",
+        "codepoint": 9182,
+        "aliases": [
+          9182
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 3.02
+      },
+      {
+        "source": "uni23DF",
+        "italic_source": "uni23DF.1",
+        "codepoint": 9183,
+        "aliases": [
+          9183
+        ],
+        "expected_assembly": true,
+        "max_variant_em": 3.02
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "vertical-slash",
+      "category": "vertical",
+      "source": "slash",
+      "italic_source": "slash.1",
+      "codepoint": 47,
+      "aliases": [
+        47
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "capped vertical variant",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">/</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-backslash",
+      "category": "vertical",
+      "source": "backslash",
+      "italic_source": "backslash.1",
+      "codepoint": 92,
+      "aliases": [
+        92
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "capped vertical variant",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\\</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-parenleft",
+      "category": "vertical",
+      "source": "parenleft",
+      "italic_source": "parenleft.1",
+      "codepoint": 40,
+      "aliases": [
+        40
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">(</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-parenright",
+      "category": "vertical",
+      "source": "parenright",
+      "italic_source": "parenright.1",
+      "codepoint": 41,
+      "aliases": [
+        41
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">)</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-braceleft",
+      "category": "vertical",
+      "source": "braceleft",
+      "italic_source": "braceleft.1",
+      "codepoint": 123,
+      "aliases": [
+        123
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">{</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-braceright",
+      "category": "vertical",
+      "source": "braceright",
+      "italic_source": "braceright.1",
+      "codepoint": 125,
+      "aliases": [
+        125
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">}</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-bracketleft",
+      "category": "vertical",
+      "source": "bracketleft",
+      "italic_source": "bracketleft.1",
+      "codepoint": 91,
+      "aliases": [
+        91
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">[</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-bracketright",
+      "category": "vertical",
+      "source": "bracketright",
+      "italic_source": "bracketright.1",
+      "codepoint": 93,
+      "aliases": [
+        93
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">]</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-uni27E8",
+      "category": "vertical",
+      "source": "uni27E8",
+      "italic_source": "uni27E8.1",
+      "codepoint": 10216,
+      "aliases": [
+        10216
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "capped vertical variant",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u27e8</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-uni27E9",
+      "category": "vertical",
+      "source": "uni27E9",
+      "italic_source": "uni27E9.1",
+      "codepoint": 10217,
+      "aliases": [
+        10217
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "capped vertical variant",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u27e9</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-uni2215",
+      "category": "vertical",
+      "source": "uni2215",
+      "italic_source": "uni2215.1",
+      "codepoint": 8725,
+      "aliases": [
+        8725
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "capped vertical variant",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u2215</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-integral",
+      "category": "vertical",
+      "source": "integral",
+      "italic_source": "integral.1",
+      "codepoint": 8747,
+      "aliases": [
+        8747
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u222b</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-product",
+      "category": "vertical",
+      "source": "product",
+      "italic_source": "product.1",
+      "codepoint": 8719,
+      "aliases": [
+        8719
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 1.4,
+      "request_em": 5,
+      "kind": "display operator variant and limits",
+      "markup": "<math display=\"block\"><munderover><mo class=\"target\" largeop=\"true\" movablelimits=\"false\">\u220f</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover></math>"
+    },
+    {
+      "id": "vertical-summation",
+      "category": "vertical",
+      "source": "summation",
+      "italic_source": "summation.1",
+      "codepoint": 8721,
+      "aliases": [
+        8721
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 1.4,
+      "request_em": 5,
+      "kind": "display operator variant and limits",
+      "markup": "<math display=\"block\"><munderover><mo class=\"target\" largeop=\"true\" movablelimits=\"false\">\u2211</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover></math>"
+    },
+    {
+      "id": "vertical-radical",
+      "category": "vertical",
+      "source": "radical",
+      "italic_source": "radical.1",
+      "codepoint": 8730,
+      "aliases": [
+        8730
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "radical assembly",
+      "markup": "<math display=\"block\"><msqrt class=\"target\"><mspace width=\"1em\" height=\"3em\" depth=\"2em\"/></msqrt></math>"
+    },
+    {
+      "id": "vertical-bar",
+      "category": "vertical",
+      "source": "bar",
+      "italic_source": "bar.1",
+      "codepoint": 124,
+      "aliases": [
+        124
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">|</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-uni2225",
+      "category": "vertical",
+      "source": "uni2225",
+      "italic_source": "uni2225.1",
+      "codepoint": 8741,
+      "aliases": [
+        8741
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u2225</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-uni230A",
+      "category": "vertical",
+      "source": "uni230A",
+      "italic_source": "uni230A.1",
+      "codepoint": 8970,
+      "aliases": [
+        8970
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u230a</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-uni2308",
+      "category": "vertical",
+      "source": "uni2308",
+      "italic_source": "uni2308.1",
+      "codepoint": 8968,
+      "aliases": [
+        8968
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u2308</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-uni230B",
+      "category": "vertical",
+      "source": "uni230B",
+      "italic_source": "uni230B.1",
+      "codepoint": 8971,
+      "aliases": [
+        8971
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u230b</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-uni2309",
+      "category": "vertical",
+      "source": "uni2309",
+      "italic_source": "uni2309.1",
+      "codepoint": 8969,
+      "aliases": [
+        8969
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u2309</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-uni2223",
+      "category": "vertical",
+      "source": "uni2223",
+      "italic_source": "uni2223.1",
+      "codepoint": 8739,
+      "aliases": [
+        8739
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u2223</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "vertical-uni2016",
+      "category": "vertical",
+      "source": "uni2016",
+      "italic_source": "uni2016.1",
+      "codepoint": 8214,
+      "aliases": [
+        8214
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 1.43,
+      "request_em": 5,
+      "kind": "tall delimiter assembly",
+      "markup": "<math display=\"block\"><mrow><mo class=\"target\" stretchy=\"true\" symmetric=\"true\" minsize=\"5em\">\u2016</mo><mspace width=\".5em\" height=\"3em\" depth=\"2em\"/></mrow></math>"
+    },
+    {
+      "id": "horizontal-asciitilde",
+      "category": "horizontal",
+      "source": "asciitilde",
+      "italic_source": "asciitilde.1",
+      "codepoint": 126,
+      "aliases": [
+        126
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 3.46,
+      "request_em": 6,
+      "kind": "wide variant",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">~</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-asciicircum",
+      "category": "horizontal",
+      "source": "asciicircum",
+      "italic_source": "asciicircum.1",
+      "codepoint": 94,
+      "aliases": [
+        94
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 3.44,
+      "request_em": 6,
+      "kind": "wide variant",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">^</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-uni0302",
+      "category": "horizontal",
+      "source": "uni0302",
+      "italic_source": "uni0302.1",
+      "codepoint": 770,
+      "aliases": [
+        770
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 3.44,
+      "request_em": 6,
+      "kind": "wide variant",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u0302</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-tildecomb",
+      "category": "horizontal",
+      "source": "tildecomb",
+      "italic_source": "tildecomb.1",
+      "codepoint": 771,
+      "aliases": [
+        771
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 3.46,
+      "request_em": 6,
+      "kind": "wide variant",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u0303</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-uni0304",
+      "category": "horizontal",
+      "source": "uni0304",
+      "italic_source": "uni0304.1",
+      "codepoint": 772,
+      "aliases": [
+        772
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 3.46,
+      "request_em": 6,
+      "kind": "wide assembly",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u0304</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-circumflex",
+      "category": "horizontal",
+      "source": "circumflex",
+      "italic_source": "circumflex.1",
+      "codepoint": 710,
+      "aliases": [
+        710
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 3.44,
+      "request_em": 6,
+      "kind": "wide variant",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u02c6</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-tilde",
+      "category": "horizontal",
+      "source": "tilde",
+      "italic_source": "tilde.1",
+      "codepoint": 732,
+      "aliases": [
+        732
+      ],
+      "expected_assembly": false,
+      "max_variant_em": 3.46,
+      "request_em": 6,
+      "kind": "wide variant",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u02dc</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-macron",
+      "category": "horizontal",
+      "source": "macron",
+      "italic_source": "macron.1",
+      "codepoint": 175,
+      "aliases": [
+        175
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 3.46,
+      "request_em": 6,
+      "kind": "wide assembly",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u00af</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-arrowright",
+      "category": "horizontal",
+      "source": "arrowright",
+      "italic_source": "arrowright.1",
+      "codepoint": 8594,
+      "aliases": [
+        8594
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 2.98,
+      "request_em": 6,
+      "kind": "wide assembly",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u2192</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-arrowleft",
+      "category": "horizontal",
+      "source": "arrowleft",
+      "italic_source": "arrowleft.1",
+      "codepoint": 8592,
+      "aliases": [
+        8592
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 2.98,
+      "request_em": 6,
+      "kind": "wide assembly",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u2190</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-arrowboth",
+      "category": "horizontal",
+      "source": "arrowboth",
+      "italic_source": "arrowboth.1",
+      "codepoint": 8596,
+      "aliases": [
+        8596
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 3.0,
+      "request_em": 6,
+      "kind": "wide assembly",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u2194</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-uni0305",
+      "category": "horizontal",
+      "source": "uni0305",
+      "italic_source": "uni0305.1",
+      "codepoint": 773,
+      "aliases": [
+        773
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 3.46,
+      "request_em": 6,
+      "kind": "wide assembly",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u0305</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-uni203E",
+      "category": "horizontal",
+      "source": "uni203E",
+      "italic_source": "uni203E.1",
+      "codepoint": 8254,
+      "aliases": [
+        8254
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 3.46,
+      "request_em": 6,
+      "kind": "wide assembly",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u203e</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-uni23DE",
+      "category": "horizontal",
+      "source": "uni23DE",
+      "italic_source": "uni23DE.1",
+      "codepoint": 9182,
+      "aliases": [
+        9182
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 3.02,
+      "request_em": 6,
+      "kind": "wide assembly",
+      "markup": "<math display=\"block\"><mover accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u23de</mo></mover></math>"
+    },
+    {
+      "id": "horizontal-uni23DF",
+      "category": "horizontal",
+      "source": "uni23DF",
+      "italic_source": "uni23DF.1",
+      "codepoint": 9183,
+      "aliases": [
+        9183
+      ],
+      "expected_assembly": true,
+      "max_variant_em": 3.02,
+      "request_em": 6,
+      "kind": "wide assembly",
+      "markup": "<math display=\"block\"><munder accent=\"true\" accentunder=\"true\"><mspace width=\"6em\" height=\".7em\"/><mo class=\"target\" stretchy=\"true\" minsize=\"6em\">\u23df</mo></munder></math>"
+    },
+    {
+      "id": "nested-fractions",
+      "category": "complex",
+      "source": null,
+      "markup": "<math display=\"block\"><mfrac><mrow><mi>a</mi><mo>+</mo><mfrac><mi>b</mi><mi>c</mi></mfrac></mrow><mrow><mi>d</mi><mo>+</mo><mfrac><mi>e</mi><mi>f</mi></mfrac></mrow></mfrac></math>"
+    },
+    {
+      "id": "scripts-and-kern",
+      "category": "complex",
+      "source": null,
+      "markup": "<math display=\"block\"><mrow><msubsup><mi>x</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>f</mi><mi>j</mi><mi>n</mi></msubsup><mo>+</mo><msup><mi>\ud835\udc47</mi><mi>x</mi></msup></mrow></math>"
+    },
+    {
+      "id": "multiscripts",
+      "category": "complex",
+      "source": null,
+      "markup": "<math display=\"block\"><mmultiscripts><mi>T</mi><mi>i</mi><mi>j</mi><mi>k</mi><mi>l</mi><mprescripts/><mi>a</mi><mi>b</mi></mmultiscripts></math>"
+    },
+    {
+      "id": "indexed-nested-roots",
+      "category": "complex",
+      "source": null,
+      "markup": "<math display=\"block\"><mroot><mrow><mi>x</mi><mo>+</mo><msqrt><mfrac><mi>a</mi><mi>b</mi></mfrac></msqrt></mrow><mn>3</mn></mroot></math>"
+    },
+    {
+      "id": "display-sum-product",
+      "category": "complex",
+      "source": null,
+      "markup": "<math display=\"block\"><mrow><munderover><mo movablelimits=\"false\">\u2211</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup><mo>+</mo><munderover><mo movablelimits=\"false\">\u220f</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>M</mi></munderover><msub><mi>y</mi><mi>j</mi></msub></mrow></math>"
+    },
+    {
+      "id": "integral-limits",
+      "category": "complex",
+      "source": null,
+      "markup": "<math display=\"block\"><mrow><munderover><mo movablelimits=\"false\">\u222b</mo><mn>0</mn><mn>1</mn></munderover><mfrac><msup><mi>x</mi><mn>2</mn></msup><mrow><mn>1</mn><mo>+</mo><mi>x</mi></mrow></mfrac><mi mathvariant=\"normal\">d</mi><mi>x</mi></mrow></math>"
+    },
+    {
+      "id": "wide-readable-accents",
+      "category": "complex",
+      "source": null,
+      "markup": "<math display=\"block\"><mrow><mover accent=\"true\"><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>+</mo><mi>z</mi></mrow><mo stretchy=\"true\">\u2192</mo></mover><mo>+</mo><mover accent=\"true\"><mrow><mi>A</mi><mi>B</mi></mrow><mo stretchy=\"true\">\u02c6</mo></mover></mrow></math>"
+    },
+    {
+      "id": "brace-and-fraction",
+      "category": "complex",
+      "source": null,
+      "markup": "<math display=\"block\"><mrow><munder accentunder=\"true\"><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>c</mi></mrow><mo stretchy=\"true\">\u23df</mo></munder><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac></mrow></math>"
+    }
+  ],
+  "font_input_sha256": {
+    "/tmp/torchlette-a9052-v03-full/TorchletteSansVariable.ttf": "0a4e6f9fa86dbdde41cc935441469681a930c5a591063d6497738cb5eecdf906",
+    "/tmp/torchlette-a9052-v03-full/TorchletteSansVariable.woff2": "b5a367f459ded2a99ba063cc3bab430f130e6da3fd10ebd1aa017270fadb2f20",
+    "/tmp/torchlette-a20c8-v03-variable-math-browser/prepare.py": "7cb1e09c102475b3ff9844e7a569f00df584a9af1f8295be44cf195fc4cc2a90",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-Black.ttf": "f78ccfcf7957183d22776721b3864bec55ed7b9f68ad2b578bfe9cce9faa9e51",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-BlackItalic.ttf": "656601f257d5b9c497696bc16b80db58bafcbaf971e74658631946aa278fb274",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-Bold.ttf": "53a5d8bbf5b84fb48fb6941ae43e9d1307ef8bfb76b9b5aa21c842f1e68043a1",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-BoldItalic.ttf": "91f77f930573dd4dc8c83c5241c2649769b3fff74d19dd401d80b26bea12440c",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-ExtraBold.ttf": "f4225a7f8a6410e59611e193b686b8442db3aa645b4e6c3f763909d293a4e7e3",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-ExtraBoldItalic.ttf": "82a01efec1fac762cc5daf18a62f4958e604ff6222fe14d9462f39c58f31eaa1",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-Italic.ttf": "dfe4763b0a18b6fa571417c06051a05a08544510f4cabd1a445713897d6dab01",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-Light.ttf": "4cec6bec31dc05236a5c6313c137d7bc852c2bdd44449d19b1469028c39376df",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-LightItalic.ttf": "90d2a708ecb69692a8eb85c2e7fe6f5c4d9a761972d20ca848dd7cac1a486215",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-Medium.ttf": "c21bcbe5af7aa0e38a896f92456ced2af31f34cad95073bae95e0d9faf03615a",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-MediumItalic.ttf": "7318318904ee48ededd018df50b503f78c6a2b3dc4805e6ba4d6c108da6ac1a8",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-Regular.ttf": "4f47ff30132e5154a05cd3f0e846b951dd038544d4b766f5f5a9da864ad2f4da",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-SemiBold.ttf": "a9bcdc09badce669f028b44e2b23f6f9c74292c8b485a7000c3f94902d9fafd4",
+    "/tmp/torchlette-release-full22-normal/static/TorchletteSans-SemiBoldItalic.ttf": "6c3392d8049b123feef7c25a54fd03688e7266b3cbd403ee1201fe1a1aff86c6"
+  },
+  "weights": [
+    300,
+    350,
+    400,
+    450,
+    500,
+    550,
+    600,
+    650,
+    700,
+    750,
+    800,
+    850,
+    900
+  ],
+  "italic_namespace_derivation": "Actual source order followed by equal-sized italic namespace; no suffix assumption."
+}

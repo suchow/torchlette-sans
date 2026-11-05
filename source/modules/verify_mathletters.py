@@ -17,9 +17,13 @@
    closed at its ends (ℙ's stem is one span at the baseline, ℍ's two stems two spans at both
    ends, 𝔼 closed by its arms, 𝟙 by its foot); none is narrower than its plain letter nor
    more than 1.45 times as wide; each has its design's contour count (ℙ 4, ℍ 3, 𝔼 2, 𝟙 2).
-4. ℏ is h plus a bar: the ink beyond h's is a bar at least 0.6 of h's ink width,
-   centred on the stem within 40, slanted (taller than two crossbars, shorter than half the
-   ascender). ℒ belongs to mathnotation's fixed Noto Sans Math script repertoire.
+4. ℏ is an h plus a bar: the ink beyond the h's is a bar at least 0.6 of h's ink width,
+   centred on the stem (where the bar crosses it) within 40, slanted (taller than two
+   crossbars, shorter than half the ascender). When the font has the math italic h (U+210E),
+   mathglyphs rebuilds ℏ on it, as math fonts draw ℏ (Latin Modern, STIX: an italic h with a
+   slanted bar), so that h is the reference, aligned on its foot; that ℏ has a left
+   sidebearing of at least 35 (iℏ collided) and an advance no narrower than ℎ's. Without
+   U+210E, ℏ is mathletters' upright h with the bar and h's advance. ℒ belongs to mathnotation's fixed Noto Sans Math script repertoire.
 5. Operators: ∥ is two bars of |'s width (within 2) and height; ∖ leans like the backslash;
    ⟂ has the up tack's bar on the baseline and its stem centred in 600; ⟦ has two stems and
    ⟧ mirrors it; ⋆ is one contour centred on the math axis within 6.
@@ -150,20 +154,31 @@ print(f'double-struck: hairlines against the stem {STEM:.1f}' + (f' and ℝ\'s {
 
 # ---- 4. ℏ (script ℒ is verified by mathnotation) -----------------------------------------------
 if 0x210F in present:
-    hb_ = path(present[0x210F]); h = path('h'); hbb = h.bounds
+    ref = cmap.get(0x210E) or 'h'
+    hb_ = path(present[0x210F]); h = path(ref)
+    if ref != 'h':                                            # align ℎ on ℏ by the stem's foot
+        dx = spans(hb_, y=8)[0][0] - spans(h, y=8)[0][0]
+        q = pathops.Path(); from fontTools.pens.transformPen import TransformPen
+        path(ref).draw(TransformPen(q.getPen(), (1, 0, 0, 1, dx, 0))); h = q
+    hbb = h.bounds
     fat = pathops.Path(h); fat.stroke(6, pathops.LineCap.ROUND_CAP, pathops.LineJoin.ROUND_JOIN, 4); fat.convertConicsToQuads(); fat.simplify()
     fat = pathops.op(h, fat, pathops.PathOp.UNION)                  # h grown by 3, so the italic's rounding slivers go
     bar = pathops.op(hb_, fat, pathops.PathOp.DIFFERENCE); bb = bar.bounds
     check(bb is not None, 'ℏ: no bar beyond h')
     if bb:
-        stem = spans(h, y=hbb[3] * 0.85)[0]
-        check(bb[2] - bb[0] >= 0.6 * (hbb[2] - hbb[0]), f'ℏ: bar {bb[2] - bb[0]:.0f} wide against h\'s {hbb[2] - hbb[0]:.0f}')
+        stem = spans(h, y=hbb[3] * 0.85 if ref == 'h' else mid((bb[1], bb[3])))[0]
+        hw = width(path('h').bounds[0::2])                       # the upright h's ink width
+        check(bb[2] - bb[0] >= 0.6 * hw, f'ℏ: bar {bb[2] - bb[0]:.0f} wide against h\'s {hw:.0f}')
         check(abs(mid((bb[0], bb[2])) - mid(stem)) <= 40 + (K * 300 if ITALIC else 0), f'ℏ: bar centred at {mid((bb[0], bb[2])):.0f}, stem at {mid(stem):.0f}')
         Hb_ = path('H').bounds; H_BAR = width(spans(path('H'), x=(Hb_[0] + Hb_[2]) / 2)[0])
         check(2 * H_BAR < bb[3] - bb[1] < 0.5 * hbb[3], f'ℏ: bar {bb[1]:.0f}..{bb[3]:.0f} not slanted as expected (crossbar {H_BAR:.0f})')
         check(bb[3] <= hbb[3] - 5, f'ℏ: bar reaches {bb[3]:.0f}, above the ascender {hbb[3]:.0f}')
-        check(hmtx[present[0x210F]][0] == hmtx['h'][0], 'ℏ: advance differs from h')
-    print('ℏ: h with a slanted bar')
+        if ref == 'h':
+            check(hmtx[present[0x210F]][0] == hmtx['h'][0], 'ℏ: advance differs from h')
+        else:
+            check(hmtx[present[0x210F]][1] >= 35, f'ℏ: left sidebearing {hmtx[present[0x210F]][1]}')
+            check(hmtx[present[0x210F]][0] >= hmtx[ref][0], f'ℏ: advance {hmtx[present[0x210F]][0]}, ℎ {hmtx[ref][0]}')
+    print(f'ℏ: {ref} with a slanted bar')
 
 # ---- 5. operators -----------------------------------------------------------------------------
 if 0x2225 in present:

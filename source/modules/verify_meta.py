@@ -154,7 +154,19 @@ for gid in range(face.glyph_count):
     if e.y_bearing + e.height < bot: bot, who = e.y_bearing + e.height, (who[0], hbf.get_glyph_name(gid))
 check(top <= os2.usWinAscent and -bot <= os2.usWinDescent, f'ink {bot}..{top} ({who}) outside win {os2.usWinAscent}/{os2.usWinDescent}')
 half = (APP_LINE_HEIGHT * upm - (fe.ascender - fe.descender)) / 2   # half-leading of the app's line box
-check(top <= fe.ascender + half and bot >= fe.descender - half, f'ink {bot}..{top} outside the app line box')
+# MATH-table size variants and assembly parts (unencoded *.math_table / *.mathglyphs glyphs)
+# only appear in stretched display math, which sets its own line box; the win metrics check
+# above covers them. Every other glyph must fit the app's text line box.
+ltop = lbot = 0
+for gid in range(face.glyph_count):
+    e = hbf.get_glyph_extents(gid)
+    if e is None or e.height == 0: continue
+    name = hbf.get_glyph_name(gid)
+    # ⏜–⏡ (U+23DC–U+23E1) are over/under braces, brackets and parens that only occur
+    # stacked above or below a formula in math; TeX-depth braces reach below the text box.
+    if name.endswith(('.math_table', '.mathglyphs')) or name in ('uni23DC', 'uni23DD', 'uni23DE', 'uni23DF', 'uni23E0', 'uni23E1'): continue
+    ltop = max(ltop, e.y_bearing); lbot = min(lbot, e.y_bearing + e.height)
+check(ltop <= fe.ascender + half and lbot >= fe.descender - half, f'ink {lbot}..{ltop} outside the app line box')
 gasp = font['gasp'].gaspRange if 'gasp' in font else {}
 check(gasp.get(0xFFFF) == 0x0F, f'gasp {gasp}')
 # hinting (ttfautohint, when the build had it): integer ppem, programs, and FreeType-free

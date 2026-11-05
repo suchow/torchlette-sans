@@ -16,9 +16,10 @@ Operators
 - ML4 ⫫ (U+2AEB) two up tacks on one bar, the stems 2.2 strokes apart; Unicode has no
   negated form, so ⫫ + U+0338 and ⊥ + U+0338 become precomposed slashed forms through
   ccmp (`uni2AEB.not.mathnotation`, `uni22A5.not.mathnotation`).
-- ML5 ⊘ ⊛ ⊖ (U+2298, U+229B, U+2296) on the symbols module's ring (radius 230, strokes
-  1.1 and 1.0 bars) with a slash, the asterisk operator scaled inside, the minus's bar;
-  the squared set ⊞ ⊟ ⊠ ⊡ (U+229E-22A1) on a square of the same strokes and size; the join
+- ML5 ⊘ ⊛ ⊖ (U+2298, U+229B, U+2296) on the ring of mathglyphs' ⊕ ⊗ ⊙ (radius 300,
+  advance 720, strokes 1.1 and 1.0 bars) with a slash, the asterisk operator scaled inside,
+  the minus's bar; the squared set ⊞ ⊟ ⊠ ⊡ (U+229E-22A1) on a square of the same strokes
+  (half side 218, advance 600); the join
   ⋈ (U+22C8) two triangles meeting at their tips, the bar's weight.
 - ML8 ≺ ≻ ≼ ≽ ⪯ ⪰ (U+227A-227D, U+2AAF-2AB0): < > with curved arms (each arm leaves the
   tip level and bends out to the end of the plain arm, as STIX Two's and Noto Sans Math's
@@ -197,15 +198,17 @@ def _operators(c, put):
     c.GDEF_CLASS[f'uni22A5.not.{SUF}'] = 2                   # ligatures of the sign and U+0338
 
     # ---- ML5 circled and squared operators -------------------------------------------------
-    RR = 230
-    ring = diff(ellipse(300, A, RR, RR), ellipse(300, A, RR - TV, RR - TH))
-    dg = (RR - 10) / math.sqrt(2)
-    put(0x2298, union(ring, band((300 - dg, A - dg), (300 + dg, A + dg), BAR)), 600)
-    put(0x2296, union(ring, rect(300 - RR + 5, A - BAR / 2, 300 + RR - 5, A + BAR / 2)), 600)
-    ast = path_of('asterisk'); ab = ast.bounds; s_a = 0.78 * 2 * (RR - TV) / (ab[2] - ab[0])
+    # the circled ones on mathglyphs' ring for ⊕ ⊗ ⊙ (radius 300, advance 720)
+    RC, CX = 300, 360
+    ring = diff(ellipse(CX, A, RC, RC), ellipse(CX, A, RC - TV, RC - TH))
+    dg = (RC - 10) / math.sqrt(2)
+    put(0x2298, union(ring, band((CX - dg, A - dg), (CX + dg, A + dg), BAR)), 720)
+    put(0x2296, union(ring, rect(CX - RC + 5, A - BAR / 2, CX + RC - 5, A + BAR / 2)), 720)
+    ast = path_of('asterisk'); ab = ast.bounds; s_a = 0.78 * 2 * (RC - TV) / (ab[2] - ab[0])
     a2 = transformed(ast, (s_a, 0, 0, s_a, 0, 0)); a2 = thicken(a2, (1 - s_a) * 18)
     a2b = a2.bounds
-    put(0x229B, union(ring, mv(a2, 300 - (a2b[0] + a2b[2]) / 2, A - (a2b[1] + a2b[3]) / 2)), 600)
+    put(0x229B, union(ring, mv(a2, CX - (a2b[0] + a2b[2]) / 2, A - (a2b[1] + a2b[3]) / 2)), 720)
+    RR = 230                                                  # the squared set keeps the old size
     S = RR - 12                                               # the square's half side: optically as big as the ring
     sq = diff(rect(300 - S, A - S, 300 + S, A + S), rect(300 - S + TV, A - S + TH, 300 + S - TV, A + S - TH))
     put(0x229E, union(sq, rect(300 - S, A - BAR / 2, 300 + S, A + BAR / 2), rect(300 - VB / 2, A - S, 300 + VB / 2, A + S)), 600)
