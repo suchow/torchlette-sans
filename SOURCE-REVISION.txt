@@ -1,4 +1,0 @@
-Torchlette static font source: ac9da96c31dd1bcec98cb8ad1094dd9c11b90db4
-Path: fonts/torchlette-sans/
-Distribution: Torchlette Sans v0.4.0
-The v0.3 source identity is preserved in SOURCE-REVISION-v0.3.txt and commit aa4794dec1688494a5b9781cce901dbb337c23d7.

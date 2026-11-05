@@ -1,6 +1,0 @@
-{
-  "mismatches": [],
-  "ttf_sha256": "7a2de49f520ecc17f716f7fdb3395f1eb893b84e900f9a6796ee8d11174218c7",
-  "woff2_sha256": "e8119329d3b03787e58164e440fecaf49209678230753909f3082d51c13e3f95",
-  "scope": "decoded table and head parity, with WOFF2 transform flag excluded"
-}
