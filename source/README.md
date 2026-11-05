@@ -1,5 +1,9 @@
 # Torchlette Sans
 
+## v0.5.0 status
+
+The v0.5.0 fonts were built from an r3 working-tree build of the torchlette repository, not from this directory, which is still the v0.4.0 source and does not reproduce them; the updated source will follow. The variable font has one known intermediate-weight flag: ⋠ (U+22E0) at weight 850 italic. Build inputs and verification are recorded in `provenance/v0.5/`.
+
 Torchlette Sans is the text face of the torchlette web app. It is a modified
 version of [Mulish](https://github.com/googlefonts/mulish) and, like Mulish, is
 licensed under the SIL Open Font License 1.1 (`OFL.txt`). Mulish's own license
@@ -13,8 +17,8 @@ Torchlette prose ligatures (54 kept from the two ligature labs, each up to lab i
 feature at the top. Every weight has an italic, built the same way from Mulish
 Italic (see "Italics" below).
 
-The modules in `modules/` add to that (`modules/README.md` explains how a module
-plugs into the build; each docstring lists what it changes):
+The modules in `modules/` add to that (each plugs into the build, and its
+docstring lists what it changes):
 
 - `kern`: kerning for the glyphs Mulish's and `build.py`'s kerning leave out (the
   figure forms, the ligatures, the arrows and relations, the superiors and

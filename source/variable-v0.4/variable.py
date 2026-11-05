@@ -4,7 +4,7 @@ Input fonts are read only. Weight is continuous from Light (300) through Black
 (900). Italic is the registered 0/1 style selector, implemented with required
 FeatureVariations, retaining the genuine italic outlines and their own layout.
 
-Run with the same fontTools version as Makefile; see README-variable.md.
+Run with the same fontTools version as Makefile; see source/README.md.
 """
 from __future__ import annotations
 
