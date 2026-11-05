@@ -4,7 +4,11 @@
 
 ![Weights](specimen/weights-light.png)
 
+![Roman and italic](specimen/styles-light.png)
+
 ![Text and small capitals](specimen/text-light.png)
+
+![Mathematics](specimen/math-light.png)
 
 ![Technical features](specimen/features-light.png)
 
