@@ -1,16 +1,18 @@
-![Torchlette Sans alphabet and figures](specimen/hero-light.png)
+![Alphabet and figures](specimen/hero-light.png)
 
-![Mathematical notation](specimen/readme-math.png)
+![Sizes](specimen/sizes-light.png)
 
 ![Weights](specimen/weights-light.png)
+
+![Roman and italic](specimen/styles-light.png)
+
+![Mathematics](specimen/math-light.png)
 
 ![Latin, Greek and Cyrillic](specimen/readme-languages.png)
 
 ![Figures, small capitals and fractions](specimen/readme-features.png)
 
 ![Ligatures and symbols](specimen/readme-code.png)
-
-![Sizes](specimen/sizes-light.png)
 
 ![Text and small capitals](specimen/text-light.png)
 
