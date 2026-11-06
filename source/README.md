@@ -1,16 +1,17 @@
 # Torchlette Sans
 
-## v0.5.1 source status
+## v0.5.2 source status
 
-The scripts reflect torchlette source commit `3809b10`. The released fonts were built from that source with additional intermediate augmentation and transplantation steps; this directory alone has not been verified to reproduce the release binaries. The release archive contains the finished static and variable fonts.
+The scripts reflect torchlette source commit `6e6d6ee`. The released fonts were built from that source with additional intermediate augmentation and transplantation steps; this directory alone has not been verified to reproduce the release binaries. The release archive contains the finished static and variable fonts.
 
 Torchlette Sans is the text face of the torchlette web app. It is a modified
 version of [Mulish](https://github.com/googlefonts/mulish) and, like Mulish, is
 licensed under the SIL Open Font License 1.1 (`OFL.txt`). Mulish's own license
 is in `mulish/OFL.txt`; it declares no Reserved Font Name.
 
-The font starts from Mulish and changes it: round dots, wider round letters, a
-lower x-height with longer ascenders and descenders, redrawn old-style figures,
+The font starts from Mulish and changes it: round dots, wider round letters, an e
+whose crossbar is at least 0.68 of the stem at every weight, a lower x-height
+with longer ascenders and descenders, redrawn old-style figures,
 true small capitals, and ligatures and stylistic sets, among them ss16, the
 Torchlette prose ligatures (54 kept from the two ligature labs, each up to lab id
 99 also on its own as cvNN; the spark line is ss15). `build.py` lists every

@@ -13,8 +13,8 @@ environment for experiments.
 
 What changes from Mulish:
 round tittles and dots; wider round letters, narrower v w y z s; a lower x-height
-with longer ascenders and descenders; redrawn old-style figures; true small caps
-(.sc) drawn from a heavier Mulish instance; and these features:
+with longer ascenders and descenders; an e crossbar at least 0.68 of the stem;
+redrawn old-style figures; true small caps (.sc) drawn from a heavier Mulish instance; and these features:
 
 liga  ff ffi ffl (Raleway-style staggered: the first f is shorter, its hook runs
       into the second stem) and tt (shared crossbar)
@@ -515,6 +515,59 @@ for lk in font['GPOS'].table.LookupList.Lookup:
                 for comp in rec.ComponentRecord:
                     for a in comp.LigatureAnchor: fix_anchor(a, gn)
             for gn, rec in zip(st.MarkCoverage.glyphs, st.MarkArray.MarkRecord): fix_anchor(rec.MarkAnchor, gn)
+
+def hspans(p, y):
+    """Ink of path p along the horizontal line at y, as sorted (x0, x1) intervals."""
+    return sorted((c.bounds[0], c.bounds[2]) for c in clip(p, (-3000, y - 0.5, 5000, y + 0.5)).contours)
+def vspans(p, x):
+    return sorted((c.bounds[1], c.bounds[3]) for c in clip(p, (x - 0.5, -3000, x + 0.5, 5000)).contours)
+
+# --- the e's crossbar: E_BAR of the stem, grown mostly down ------------------------
+# Mulish's e bar barely thickens with weight (40 units at Regular, 61 at ExtraBold, 0.61
+# and 0.43 of the stem), so at the heavy weights it was thinner than the e's own top
+# stroke and pale beside the t bar. It becomes E_BAR times this style's lowercase stem
+# (the t stem: 45 at Regular, 96 at ExtraBold, the ExtraBold e's top-stroke thickness),
+# never thinner than it was. E_BAR_UP of the added thickness goes up into the eye (its
+# floor is cut flat higher up), the rest down into the aperture (the bar's underside is
+# moved down, its end following the end's own line, so the italic's leaning end stays
+# straight). The accented e's are composites of e and follow; the ss16 ligatures and
+# modules draw from e after this. ae, oe and schwa get the same bar on their e (schwa
+# turned a half turn, so its bar grows mostly up). Jordan's variant E, 2026-11-06.
+E_BAR, E_BAR_UP = P('E_BAR', 0.68), P('E_BAR_UP', 0.3)
+LC_STEM = M['t_r'] - M['t_l']
+E_BAR_T = round(E_BAR * LC_STEM)
+def thicken_ebar(name, turned=False):
+    """Bring the bar under the e-eye (the rightmost counter) of name to E_BAR_T units."""
+    p = path_of(name); p.simplify()
+    b = p.bounds; cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+    turn = (-1, 0, 0, -1, 2 * cx, 2 * cy)        # a half turn about the ink centre, its own inverse
+    if turned: p = transformed(p, turn)
+    cs = list(p.contours)
+    inside = lambda u, v: u is not v and v.bounds[0] <= u.bounds[0] and u.bounds[2] <= v.bounds[2] and v.bounds[1] <= u.bounds[1] and u.bounds[3] <= v.bounds[3]
+    holes = [c for c in cs if any(inside(c, o) for o in cs)]
+    eye = max(holes, key=lambda c: c.bounds[2])
+    ex0, ey0, ex1, _ = eye.bounds
+    bar = [s for s in vspans(p, (ex0 + ex1) / 2) if abs(s[1] - ey0) < 1.5]
+    assert len(bar) == 1, (name, bar)
+    lo, hi = bar[0]; cur = round(hi - lo)
+    d = max(0, E_BAR_T - cur); up = round(d * E_BAR_UP); down = d - up
+    if d:
+        assert down < cur, (name, cur, down)
+        x0 = ex0 - 20 * SV                       # into the bowl (or the a's or o's side) left of the eye
+        r1, r2 = hspans(p, lo + 1)[-1][1], hspans(p, lo + min(15, cur - 2))[-1][1]
+        k = (r2 - r1) / (min(15, cur - 2) - 1)   # the bar end's lean, dx per unit of height
+        add_ = [poly([(x0, lo + 1), (r1, lo + 1), (r1 - k * (down + 1), lo - down), (x0, lo - down)])]
+        if up:
+            eyef = pathops.Path(); eye.draw(eyef.getPen()); eyef.simplify()
+            add_.append(clip(eyef, (ex0 - 50, ey0 - 5, ex1 + 50, ey0 + up)))
+        p = union(p, *add_)
+        if turned: p = transformed(p, turn)
+        add(name, p, W(name))
+    E_BAR_LOG[name] = (cur, cur + d, up, down)
+E_BAR_LOG = {}
+for n in ('e', 'ae', 'oe'): thicken_ebar(n)
+thicken_ebar('uni0259', turned=True)
+print(f'e bars (stem {LC_STEM}, target {E_BAR_T}): ' + ', '.join(f'{n} {a} -> {b} (+{u} up, +{d_} down)' for n, (a, b, u, d_) in E_BAR_LOG.items()))
 
 # --- figures: 2, 6, 7, 8, 9 in the old-style sets, 2 in lining --------------------
 SIDE, CAP = 67 * SV, 56 * SH            # the rings' sides and caps (Mulish's o at 324: 67 and 55)
@@ -1269,11 +1322,6 @@ def s16_raw(id_, name, draw, width):
     glyf[name] = g; hmtx[name] = (int(round(width)), getattr(g, 'xMin', 0))
     if name not in font.getGlyphOrder(): font.setGlyphOrder(font.getGlyphOrder() + [name])
     S16.setdefault(id_, []).append(name)
-def hspans(p, y):
-    """Ink of path p along the horizontal line at y, as sorted (x0, x1) intervals."""
-    return sorted((c.bounds[0], c.bounds[2]) for c in clip(p, (-3000, y - 0.5, 5000, y + 0.5)).contours)
-def vspans(p, x):
-    return sorted((c.bounds[1], c.bounds[3]) for c in clip(p, (x - 0.5, -3000, x + 0.5, 5000)).contours)
 def mid(s): return (s[0] + s[1]) / 2
 def mv(p, dx, dy=0): return transformed(p, (1, 0, 0, 1, dx, dy))
 def mirror(p, axis): return transformed(p, (-1, 0, 0, 1, 2 * axis, 0))
