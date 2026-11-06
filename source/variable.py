@@ -1839,7 +1839,7 @@ def build(masters: Path, output: Path, work: Path, woff2: Path | None = None,
     report['discrete_shared_style']=discrete_style_profiles(vf,shared)
     buildStatTable(vf,[{'tag':'wght','name':'Weight','ordering':0,'values':[{'value':w,'name':s,'flags':2 if w==400 else 0} for w,s in WEIGHTS]},
                        {'tag':'ital','name':'Italic','ordering':1,'values':[{'value':0,'name':'Roman','flags':2,'linkedValue':1},{'value':1,'name':'Italic'}]}])
-    names={1:'Torchlette Sans Variable',2:'Regular',3:'1.000;TSAN;TorchletteSansVariable',4:'Torchlette Sans Variable',6:'TorchletteSansVariable',16:'Torchlette Sans Variable',17:'Regular',25:'TorchletteSansVariable'}
+    names={1:'Torchlette Sans Variable',2:'Regular',3:f"{fonts[400,0]['head'].fontRevision:.3f};TSAN;TorchletteSansVariable",4:'Torchlette Sans Variable',6:'TorchletteSansVariable',16:'Torchlette Sans Variable',17:'Regular',25:'TorchletteSansVariable'}
     for nid,value in names.items():
         vf['name'].removeNames(nameID=nid);vf['name'].setName(value,nid,3,1,0x409)
     vf['head'].created=vf['head'].modified=TIMESTAMP;vf['head'].macStyle=0;vf['head'].flags |= 2

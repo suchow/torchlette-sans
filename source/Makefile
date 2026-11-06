@@ -12,6 +12,9 @@
 #   BUILD_DIR=dir        where the .ttf, the Mulish instances and the check files go (default: build)
 #   WEB_DIR=dir          where `make` writes the woff2 (default: the committed ../../web/public/fonts)
 #
+# The font version (name ID 5, head.fontRevision) is the one line in VERSION, such as
+# 0.504 for release v0.5.4; set it there once per release.
+#
 # Tool versions are pinned so that a rebuild is byte-identical.
 
 .DEFAULT_GOAL := all
@@ -183,7 +186,7 @@ $(MODULE_STAMP): FORCE
 	@mkdir -p $(BUILD_DIR)
 	@echo '$(MODULES_ON)' | cmp -s - $@ || echo '$(MODULES_ON)' > $@
 
-$(BUILD_DIR)/TorchletteSans-%.ttf: build.py $$(call STATIC,$$*) $(VF_DEP) $(REF_DEP) $(MODULE_FILES) $(NORMAL_HELPER_DEPS) $(MODULE_STAMP)
+$(BUILD_DIR)/TorchletteSans-%.ttf: build.py VERSION $$(call STATIC,$$*) $(VF_DEP) $(REF_DEP) $(MODULE_FILES) $(NORMAL_HELPER_DEPS) $(MODULE_STAMP)
 	$(if $(MATHITALIC_ON),$(PY) mathitalic_references.py guard --inputs '$(MATHITALIC_INPUTS)' --manifest '$(MATHITALIC_MANIFEST)' --style '$*',:)
 	$(MATHITALIC_ENV) MODULES='$(MODULES_ARG)' $(PY) build.py $(call STATIC,$*) $@ $(WGHT_$*) $*
 

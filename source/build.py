@@ -2254,7 +2254,11 @@ if _word_new:
 # --- name: a modified font never ships under the original name -----------------
 # Mulish's OFL.txt declares no Reserved Font Name; the new name is required anyway
 # by good practice and keeps the two fonts apart in a user's font menu.
-VERSION = '1.000'
+# The font version: the one line in VERSION beside this file, such as 0.504 for
+# release v0.5.4 (name ID 5 'Version 0.504', head.fontRevision 0.504, the form
+# fontbakery checks). Set it there once per release; the Makefile rebuilds on a change.
+VERSION = open(os.path.join(HERE, 'VERSION')).read().strip()
+assert len(VERSION) == 5 and VERSION[1] == '.' and VERSION.replace('.', '', 1).isdigit(), f'VERSION file: {VERSION!r} is not like 0.504'
 COPYRIGHT = ('Copyright 2016 The Mulish Project Authors (https://github.com/googlefonts/mulish). '
              'Copyright 2026 The Torchlette Authors.')
 LICENSE = ('This Font Software is licensed under the SIL Open Font License, Version 1.1. '

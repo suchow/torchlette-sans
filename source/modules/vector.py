@@ -397,7 +397,9 @@ def v18(S, Wd):
     it = Wd.idx('t'); s0, s1 = S.t_stem; xb0, xb1 = S.xb
     t = S.path('t')
     t = diff(t, rect(-100, xb0 - 0.5, s0 + 0.5, xb1 + 0.5)); t = diff(t, rect(s1 - 0.5, xb0 - 0.5, 1000, xb1 + 0.5))
-    hw = S.XBW; c = (s0 + s1) / 2
+    # past Regular the chevron is lighter still than the other heads (HK squared): its barbs
+    # leave a stem as wide as they are long, and must read as strokes, not as a wedge
+    hw = S.XBW * S.HK ** 2; c = (s0 + s1) / 2
     half = max(c - S.t_bar[0], S.t_bar[1] - c) - hw * 0.3
     L = 0.85 * half / math.sin(ANG)
     h = head((c, 0), (0, 1), hw, L)
@@ -428,7 +430,7 @@ def v20(S, Wd):
     m = ((p[0] + q[0]) / 2, (p[1] + q[1]) / 2)
     hw = S.XBW * 0.95 * S.HK
     n = nrm(d); sgn = 1 if dot((p[0] - m[0], p[1] - m[1]), n) > 0 else -1
-    body = S.path('c'); gmin = 0.55 * w
+    body = S.path('c'); gmin = 0.55 * w * S.HK   # past Regular a closer barb still reads, and keeps the c-t gap down
     def draw(ln, L):
         # each edge leaves its own end of the cut along its own tangent and runs into a
         # straight shaft along d, so the c's edges carry on without a corner
@@ -457,7 +459,7 @@ def v20(S, Wd):
     if pick is None: raise SystemExit('vector: v20 found no head that fits')
     ext, shaft, h = draw(*pick)
     Wd.repl[ic] = union(body, ext, shaft, h)
-    Wd.clear(ic)
+    Wd.clear(ic, share=S.HK)
 
 
 @variant('v23')
@@ -469,8 +471,18 @@ def v23(S, Wd):
     # the arm's lower edge leaves the stem's right side where the old shoulder met it
     y_out = r[4][1] - 40
     p0 = (s1 - w / 2 / d[1] - 5, y_out - (w / 2) * d[0])
+    if S.HK < 1:
+        # past Regular the arm is heavy enough that its upper edge would leave the stem below
+        # the stem's top corner, leaving a step: lift it to run out of that corner
+        C = r[5]; n = nrm(d); e = add(p0, n, w / 2)
+        lift = C[1] - (e[1] + (C[0] - e[0]) * d[1] / d[0])
+        if lift > 0: p0 = (p0[0], p0[1] + lift)
     tip = add(p0, d, (650 - p0[1]) / d[1] - tip_for(d, w) * 0.9)
-    Wd.repl[ir] = union(stem, clip(band(add(p0, d, -30), add(tip, d, -notch(w * S.HK)), w), (s0 + 2, -100, 2000, 2000)), head(tip, d, w * S.HK, L))
+    # the shaft keeps the arm's weight where it leaves the stem and narrows to the head's
+    # stroke where it meets the head (the same width at Regular and lighter)
+    hw = w * S.HK ** 1.5; a, b = add(p0, d, -30), add(tip, d, -notch(hw)); n = nrm(d)
+    shaft = poly([add(a, n, w / 2), add(b, n, hw / 2), add(b, n, -hw / 2), add(a, n, -w / 2)])
+    Wd.repl[ir] = union(stem, clip(shaft, (s0 + 2, -100, 2000, 2000)), head(tip, d, hw, L))
     if Wd.plural: Wd.clear(ir)
 
 
