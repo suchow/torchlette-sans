@@ -41,8 +41,8 @@ WEB_DIR   := $(WEB_REF)
 # $(BUILD_DIR)/modules.txt, which changes only when the selection does.
 # Greek and mathitalic are explicitly included in the approved release default.
 MODULES_OFF  :=
-# Approved release default: the exact 24 modules exercised in the combined gate.
-MODULES_DEFAULT := codekeys cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures sigmoid supsub symbols tensordiagram ui
+# Approved release default: the exact 25 modules exercised in the combined gate.
+MODULES_DEFAULT := codekeys cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures sigmoid supsub symbols tensordiagram ui vector
 comma        := ,
 empty        :=
 space        := $(empty) $(empty)

@@ -1,8 +1,8 @@
 # Torchlette Sans
 
-## v0.5.2 source status
+## v0.5.3 source status
 
-The scripts reflect torchlette source commit `6e6d6ee`. The released fonts were built from that source with additional intermediate augmentation and transplantation steps; this directory alone has not been verified to reproduce the release binaries. The release archive contains the finished static and variable fonts.
+The scripts reflect torchlette source commit `91682cc`. The released fonts were built from that source with additional intermediate augmentation and transplantation steps; this directory alone has not been verified to reproduce the release binaries. The release archive contains the finished static and variable fonts.
 
 Torchlette Sans is the text face of the torchlette web app. It is a modified
 version of [Mulish](https://github.com/googlefonts/mulish) and, like Mulish, is
@@ -46,6 +46,11 @@ docstring lists what it changes):
   slashed zero (zero), mark attachment on `build.py`'s glyphs, GDEF classes and
   ligature carets, and aalt and salt.
 - `sigmoid`: the first i of "sigmoid" drawn as a small sigmoid curve, in ss16.
+- `vector`: ten more forms of ss16's "vector"/"vectors" word mark, in each of which a stroke
+  of the word grows into the arrow (Jordan's picks from the vector-ligature lab: v01 v02 v06
+  v13 v15 v16 v18 v20 v23 v25). The `rand` feature, which browsers that shape with HarfBuzz
+  apply by default, picks the default mark or one of the ten for each occurrence;
+  `"rand" N` selects form N. Safari ignores rand and shows the default.
 - `mathletters`: the letters and operators of ML notation beside the double-struck capitals: ℙ ℍ 𝔼 𝟙 in
   `symbols`' thin doubled strokes, a script ℒ drawn with Torchlette's pen, ℏ, ∥ ∖ ⟂ ⟦ ⟧ ⋆, and the format-12
   cmap that 𝔼 and 𝟙 (outside the BMP) need.
@@ -175,7 +180,8 @@ upright and italic) and the subset web fonts
 every feature and is hinted. The woff2 is unhinted and keeps only the code points
 in the Makefile's `UNICODES` and the features in `web_features.txt`: what browsers
 apply by default (kern, liga, clig, calt, rlig, ccmp, locl, mark, mkmk) and what
-the app's CSS turns on (ss01, ss02, ss16, the figure features, smcp and c2sc). The
+the app's CSS turns on (ss01, ss02, ss16, the figure features, smcp and c2sc), and rand
+(the vector module's random word marks). The
 other stylistic sets, the cvNN, case, cpsp, zero, aalt, salt, sups, subs, frac and
 the rest are in the .ttf only. The tool versions are pinned, so each woff2 is
 byte-identical on every build; `make check` rebuilds all fourteen from scratch and

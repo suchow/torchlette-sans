@@ -25,7 +25,9 @@ import uharfbuzz as hb
 from fontTools.ttLib import TTFont
 
 path, style, mode = sys.argv[1], sys.argv[2], sys.argv[3]
-APP = {'ss01': True, 'ss02': True, 'ss16': True, 'onum': True, 'pnum': True}
+# rand off: with it (HarfBuzz's default) ss16's vector mark may take one of the vector module's
+# random whole-word forms, which verify_vector.py checks (their left side kerns like the v)
+APP = {'ss01': True, 'ss02': True, 'ss16': True, 'onum': True, 'pnum': True, 'rand': False}
 DIG = 'zero one two three four five six seven eight nine'.split()
 TABULAR = (DIG + [d + '.tosf' for d in DIG] + [d + '.sc.tf' for d in DIG]
            + ['seven.ss08', 'seven.tosf.ss08', 'seven.sc.tf.ss08'])

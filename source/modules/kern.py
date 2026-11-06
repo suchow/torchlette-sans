@@ -55,10 +55,12 @@ does not change any result.
 Extending: a new glyph that should kern like an existing one goes in INHERIT
 (glyph -> (left-side base, right-side base); None for a side that is built in);
 INHERIT_BY_CODEPOINT does the same by code point for glyphs other modules add
-(for example Greek capitals that share Latin shapes). An entry applies only when
-the glyph exists, has no kerning yet, and no other module's GPOS text names it.
+(for example Greek capitals that share Latin shapes), and INHERIT_BY_PATTERN by glyph-name
+pattern (the vector module's word forms). An entry applies only when the glyph exists, has
+no kerning yet, and no other module's GPOS text names it.
 """
 import math
+import re
 import unicodedata
 from collections import defaultdict
 
@@ -108,6 +110,11 @@ INHERIT = {
     'uni021F.sc': ('H.sc', 'H.sc'), 'uni1E97.sc': ('T.sc', 'T.sc'), 'uni01E5.sc': ('G.sc', 'G.sc'),
 }
 ALT_SUFFIXES = ('.ss04', '.ss05', '.ss06', '.ss07')   # X.ss0N kerns like X (when X has kerning)
+# glyph-name patterns -> (left-side base, right-side base), for families of glyphs other modules
+# add: the vector module's random forms of 171 (v_e_c_t_o_r.v01 ... and the plural) kern like the
+# v on the left and their last letter on the right; its v.vec.vNN placeholders like v.vec
+INHERIT_BY_PATTERN = ((r'v_e_c_t_o_r\.v\d\d', ('v', 'r')), (r'v_e_c_t_o_r_s\.v\d\d', ('v', 's')),
+                      (r'v\.vec\.v\d\d', ('v', None)))
 # code point -> base glyph, for glyphs other modules add (Greek capitals drawn as Latin)
 INHERIT_BY_CODEPOINT = {
     0x0391: 'A', 0x0392: 'B', 0x0395: 'E', 0x0396: 'Z', 0x0397: 'H', 0x0399: 'I', 0x039A: 'K',
@@ -437,6 +444,9 @@ def features(ctx):
             if g.endswith(suf) and g not in inherit:
                 b = g[:-len(suf)]
                 if b in have: inherit[g] = (b, b)
+    for pat, sides in INHERIT_BY_PATTERN:
+        for g in sorted(have):
+            if re.fullmatch(pat, g): inherit.setdefault(g, sides)
     cmap = font.getBestCmap()
     for u, b in INHERIT_BY_CODEPOINT.items():
         if u in cmap and cmap[u] != b and b in have: inherit.setdefault(cmap[u], (b, b))

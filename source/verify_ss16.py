@@ -27,7 +27,7 @@ Proposals that font modules add to ss16 come from <PostScript name>.ss16.json be
 FONT (see modules/README.md); their glyphs count as kept proposals' glyphs.
 
 Prose runs with the app's features (onum, pnum, ss01, ss02) unless a case says
-otherwise. Prints failures and exits nonzero if there are any. With TS_WEB_SUBSET=1
+otherwise, and every check with rand off (see PROSE below). Prints failures and exits nonzero if there are any. With TS_WEB_SUBSET=1
 (the web subset) the features web_features.txt leaves out (cvNN, ss15) are not checked.
 """
 import collections, glob, json, os, re, sys, unicodedata
@@ -39,9 +39,12 @@ FONT = sys.argv[1]
 LEVELS = sys.argv[2] if len(sys.argv) > 2 else None
 tt = TTFont(FONT); ORDER = tt.getGlyphOrder()
 HBF = hb.Font(hb.Face(hb.Blob.from_file_path(FONT)))
-PROSE = {'onum': True, 'pnum': True, 'ss01': True, 'ss02': True}
-LINING = {'ss01': True, 'ss02': True}
-DEFAULT = {}
+# rand is off throughout: HarfBuzz applies it by default, and with ss16 it swaps the vector
+# word mark for one of its random forms (the vector module, checked by verify_vector.py);
+# these checks are of ss16 itself.
+PROSE = {'onum': True, 'pnum': True, 'ss01': True, 'ss02': True, 'rand': False}
+LINING = {'ss01': True, 'ss02': True, 'rand': False}
+DEFAULT = {'rand': False}
 
 def shape(text, feats):
     b = hb.Buffer(); b.add_str(text); b.guess_segment_properties(); hb.shape(HBF, b, feats)
