@@ -1444,10 +1444,13 @@ tip = xt + W('t') + 130
 head = stroke_line([(tip - 125, XBM + 125), (tip, XBM), (tip - 125, XBM - 125)], XBW, limit=4)
 s16_add(85, 'g_r_a_d_i_e_n_t.ss11', union(word_paths(items), rect(xt + TBAR_R - 19, XB0, tip - 20, XB1), head),
         tip + XBW * math.sqrt(0.5) + 33)
-# 85 gradients: the t's crossbar runs on over the s as its top and ends in the singular's
-# chevron past the s, so the s and the arrow are one stroke; the s loses its upper
-# terminal, and its shoulder is eased down (quadratically from S_EASE, so the curve stays
-# smooth) until the top of its counter lies on the bar's underside
+# 85 gradients: the t's foot runs level along the baseline into the bottom of the s, and
+# the arrow, the singular's chevron in the s's top stroke's weight, leaves the top of the
+# s level and stands as far past the s as the singular's stands past its t. The s loses
+# both terminals; the t keeps its crossbar. Each cut is made at an on-curve extreme, where
+# the edge is level, so the joins stay smooth, and the foot's top is eased down
+# (quadratically, from where the stem's inner edge stops being straight) to the s's counter
+# bottom, so the run has one weight. The s eased under a crossbar (_s) is outputs' (169).
 items, _ = setting('g r a d i e n t s'.split()); xt, xs = items[-2][1], items[-1][1]
 _sp, _son = path_of('s'), oncurve('s')[0]
 S_TX = min(x for x, y in _son if y == max(q[1] for q in _son))                  # the s's top: 245 at Regular
@@ -1457,11 +1460,50 @@ S_CUT = (_tg[-2][1] + _tg[-1][0]) / 2                                           
 S_EASE = S_CUT - 40                                                             # the easing starts a little below the terminal
 _k = (S_T0 - XB0) / (S_T0 - S_EASE) ** 2
 _sp = path_of('s', fn=lambda q: (q[0], q[1] - _k * (q[1] - S_EASE) ** 2) if q[1] > S_EASE else q)
-tip = xs + W('s') + 110
-head = stroke_line([(tip - 125, XBM + 125), (tip, XBM), (tip - 125, XBM - 125)], XBW, limit=4)
 _s = clip(diff(_sp, rect(S_TX, S_CUT, 2000, 2000)), (-100, -400, 2000, XB1))
-s16_add(85, 'g_r_a_d_i_e_n_t_s.ss11', union(word_paths(items[:-1]), mv(_s, xs), rect(xt + TBAR_R - 19, XB0, tip - 20, XB1), head),
-        tip + XBW * math.sqrt(0.5) + 33)
+def _ext(on, pick, keep): return pick([q for q in on if keep(q)], key=lambda q: q[1])
+_ton, _sp0 = oncurve('t')[0], path_of('s')
+TF_OUT = _ext(_ton, min, lambda q: q[0] > T_STEM[1])                                          # the t's foot, underside: 248, -9
+TF_IN = _ext(_ton, min, lambda q: T_STEM[1] + 20 < q[0] < _tp.bounds[2] - 20 and q[1] > TF_OUT[1] + 20)   # its top: 256, 48
+TF_LIM = max(q[1] for q in _ton if q[0] > T_STEM[1] + 20 and q[1] < 300) + 60            # above the foot's terminal: 121
+TF_YI = max(q[1] for q in _ton if abs(q[0] - T_STEM[1]) < 2 and TF_IN[1] < q[1] < 300)    # the stem's inner edge, straight above: 163
+SB_OUT = _ext(_son, min, lambda q: True)                                                     # the s's bottom: 235, -9
+SB_IN = _ext(_son, min, lambda q: abs(q[0] - SB_OUT[0]) < 60 and q[1] > SB_OUT[1] + 20)      # its counter's bottom: 237, 45
+ST_OUT = _ext(_son, max, lambda q: True)                                                     # the s's top: 245, 480
+ST_IN = _ext(_son, max, lambda q: abs(q[0] - ST_OUT[0]) < 60 and q[1] < ST_OUT[1] - 20)      # its counter's top: 246, 427
+_bg, _bm = vspans(_sp0, _sp0.bounds[0] + 30), vspans(_sp0, SB_IN[0])
+SB_CUT = min((_bg[0][1] + _bg[1][0]) / 2, (_bm[0][1] + _bm[1][0]) / 2)                       # above the lower terminal: 127
+WT = ST_OUT[1] - ST_IN[1]                                                                    # the top stroke's weight: 53
+_dd = TF_IN[1] - SB_IN[1]
+def _lower(q, y0=TF_IN[1]):       # the foot's top eased down to the s's counter bottom, from where the stem's edge stops being straight
+    if q[0] < T_STEM[1] - 1 or q[1] >= TF_YI or q[1] < TF_OUT[1] + 20: return q
+    return (q[0], q[1] - _dd * min(1, (TF_YI - q[1]) / (TF_YI - y0)) ** 2)
+TF_IN = (TF_IN[0], SB_IN[1])                                                                 # the foot's top, eased
+def _main(q):                     # without the crumbs a cut leaves of a terminal (Black's lower one)
+    cs = list(q.contours); big = max(abs(c.area) for c in cs)
+    return union(*[c for c in cs if abs(c.area) > 0.05 * big])
+# Each letter is cut along a slant from just outside its stroke's outer extreme to just outside
+# its inner one, and the run and the shaft reach 3 units past the cut into the letter, so no
+# edge of a join lies on an edge of the letter it meets but the level ones.
+_tkeep = poly([(-500, -500), (TF_OUT[0] + 1, -500), (TF_OUT[0] + 1, TF_OUT[1] - 1), (TF_IN[0] + 1, TF_IN[1] + 1),
+               (TF_IN[0] + 1, TF_LIM), (3000, TF_LIM), (3000, 3000), (-500, 3000)])
+_skeep = pathops.op(poly([(SB_OUT[0] - 1, -500), (3000, -500), (3000, 3000), (-500, 3000), (-500, SB_CUT), (SB_IN[0] - 1, SB_CUT),
+                          (SB_IN[0] - 1, SB_IN[1] + 1), (SB_OUT[0] - 1, SB_OUT[1] - 1)]),
+                    poly([(-500, -500), (3000, -500), (3000, S_CUT), (ST_IN[0] + 1, S_CUT), (ST_IN[0] + 1, ST_IN[1] - 1),
+                          (ST_OUT[0] + 1, ST_OUT[1] + 1), (ST_OUT[0] + 1, 3000), (-500, 3000)]), pathops.PathOp.INTERSECTION)
+_tf = mv(_main(pathops.op(path_of('t', fn=_lower), _tkeep, pathops.PathOp.INTERSECTION)), xt)
+_sf = mv(_main(pathops.op(_sp0, _skeep, pathops.PathOp.INTERSECTION)), xs)
+_o0, _i0, _o1, _i1 = (xt + TF_OUT[0], TF_OUT[1]), (xt + TF_IN[0], TF_IN[1]), (xs + SB_OUT[0], SB_OUT[1]), (xs + SB_IN[0], SB_IN[1])
+_run = pathops.Path(); _pen = _run.getPen(); _xo, _xi = (_o0[0] + _o1[0]) / 2, (_i0[0] + _i1[0]) / 2   # each edge level at both ends
+_pen.moveTo((_o0[0] - 2, _o0[1])); _pen.curveTo((_xo, _o0[1]), (_xo, _o1[1]), (_o1[0] + 2, _o1[1])); _pen.lineTo((_i1[0] + 2, _i1[1]))
+_pen.curveTo((_xi, _i1[1]), (_xi, _i0[1]), (_i0[0] - 2, _i0[1])); _pen.closePath()
+tip = xs + _sp0.bounds[2] + W('t') + 130 - _tp.bounds[2]          # past the s as the singular's tip is past its t: 151 at Regular
+_shaft = poly([(xs + ST_OUT[0] - 2, ST_OUT[1]), (tip - 20, ST_OUT[1]), (tip - 20, ST_IN[1]), (xs + ST_IN[0] - 2, ST_IN[1])])
+head = stroke_line([(tip - 125, (ST_OUT[1] + ST_IN[1]) / 2 + 125), (tip, (ST_OUT[1] + ST_IN[1]) / 2), (tip - 125, (ST_OUT[1] + ST_IN[1]) / 2 - 125)], WT, limit=4)
+_ts = union(_sf, _run, _tf, _shaft, head)
+_area = lambda q: sum(abs(c.area) for c in q.contours)
+assert _area(_ts) > _area(_sf) + _area(_tf), 'gradients: the t-s union lost a part'
+s16_add(85, 'g_r_a_d_i_e_n_t_s.ss11', union(word_paths(items[:-2]), _ts), tip + WT * math.sqrt(0.5) + 33)
 # 86 softmax: the t's crossbar runs into the top of the m's first stem
 items, adv = setting('s o f t m a x'.split()); d = dict(items)
 s16_add(86, 's_o_f_t_m_a_x.ss11', union(word_paths(items), rect(d['t'] + TBAR_R - 19, XB0, d['m'] + mid(hspans(path_of('m'), 300)[0]), XB1)), adv)
@@ -1725,7 +1767,7 @@ for id_, n, d, nm, r, L, k, prev, nxt in ((166, 'b', -1, 'b.backc', 140, 185, 11
     kk = k * (XBW / 52) ** 0.6
     p, w = curl(n, d, r, L + kk - k, kk); s16_add(id_, nm, *in_word(p, w, prev, n, nxt))
 # 169 output(s): the last t's crossbar runs on as the gradient's arrow; in outputs it runs
-# over the s, the s eased under it, exactly as in gradients
+# over the s, the s eased under it (_s, from 85 gradients)
 tip = W('t') + 130
 s16_add(169, 't.out', *in_word(union(path_of('t'), rect(TBAR_R - 19, XB0, tip - 20, XB1), chevron(tip, XBM)), tip + XBW * math.sqrt(0.5) + 33, 'u', 't', None))
 xs = kerned('t', 's'); tip = xs + W('s') + 110

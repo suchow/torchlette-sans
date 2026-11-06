@@ -27,6 +27,11 @@
    somewhere between 0.4 and 0.9 x-heights, and below the baseline one upright stroke
    (its centre moves under 25) that thickens from a neck toward its end.
 8. ℏ (when present) has a left sidebearing of at least 35; ∏'s stems are heavier than n's.
+9. A relation + U+0338 shapes to symbols' precomposed negation, which ss14 grows where it
+   grows the base; ss14's → ↦ ↔ are 1000, 1000, 1100 wide; U+0338's ink is left of 0.
+10. ⨀ ⨁ ⨂ ⨄ ⨆ ∐ ⋀ ⋁ span most of ∑'s height and (where MATH is kept) have a 1430 display
+   variant; → ↔ ⟶ ⇌ ↦ ⇒ ⟹ ↓ ⇕ have stretchy constructions with at most 20 variants
+   (Chrome reads no more).
 """
 import os
 import sys
@@ -203,6 +208,41 @@ if 'uni210F' in order:
     ok(hmtx['uni210F'][1] >= 35, f'ℏ left sidebearing {hmtx["uni210F"][1]}')
 n_st = spans(unslant(P('n')), 250)[0]; p_st = spans(unslant(P('product')), 300)[0]
 ok(p_st[1] - p_st[0] > 1.04 * (n_st[1] - n_st[0]), f'∏ stem {p_st[1] - p_st[0]:.0f}, n {n_st[1] - n_st[0]:.0f}')
+
+# 9. negated relations: base + U+0338 reaches symbols' precomposed glyph (HarfBuzz recomposes),
+# which ss14 grows where its base grows; U+0338 itself sits left of its origin, over the glyph
+# before it; ss14's arrows are about TeX's 1 em
+if 0x2270 in cmap:
+    for base, neg in (('≤', '≰'), ('≡', '≢'), ('⊆', '⊈'), ('≺', '⊀'), ('∣', '∤'), ('∼', '≁'), ('→', '↛')):
+        ok(shape(base + '̸') == [cmap[ord(neg)]], f'{base}+U+0338 shapes to {shape(base + chr(0x338))}')
+    if kept('ss14'):
+        for ch in '≰≱≢⊈⊀':
+            ok(shape(ch, {'ss14': True}) == [cmap[ord(ch)] + '.ss14.mathglyphs'], f'ss14 {ch}: {shape(ch, {"ss14": True})}')
+        for ch, w in (('→', 1000), ('↦', 1000), ('↔', 1100)):
+            got = shape(ch, {'ss14': True})
+            ok(got == [cmap[ord(ch)] + '.ss14.mathglyphs'] and hmtx[got[0]][0] == w, f'ss14 {ch}: {got}')
+if 'uni0338' in order:
+    b = P('uni0338').bounds
+    ok(b[2] < 0 and b[0] > -650, f'U+0338 ink {b[0]:.0f}..{b[2]:.0f}, not over the glyph before it')
+
+# 10. the n-ary operators drawn here span ∑'s height, and MATH (where kept) gives each a display form
+for cp in (0x2A00, 0x2A01, 0x2A02, 0x2A04, 0x2A06, 0x2210, 0x22C0, 0x22C1):
+    n = cmap.get(cp)
+    ok(n is not None, f'U+{cp:04X} missing')
+    if not n: continue
+    b = P(n).bounds
+    ok(b[1] >= sb[1] - 2 and b[3] <= sb[3] + 2 and b[3] - b[1] >= 0.78 * (sb[3] - sb[1]), f'{n} ink {b[1]:.0f}..{b[3]:.0f}')
+if 'MATH' in tt:
+    mvar = tt['MATH'].table.MathVariants
+    vc = dict(zip(mvar.VertGlyphCoverage.glyphs, mvar.VertGlyphConstruction))
+    hc = dict(zip(mvar.HorizGlyphCoverage.glyphs, mvar.HorizGlyphConstruction))
+    for cp in (0x2A00, 0x2A01, 0x2A02, 0x2A04, 0x2A06, 0x2210, 0x22C0, 0x22C1):
+        n = cmap.get(cp); recs = vc[n].MathGlyphVariantRecord if n in vc else []
+        ok([r.AdvanceMeasurement for r in recs] == [885, 1430], f'{n} display variants {[r.AdvanceMeasurement for r in recs]}')
+    for cp, table in ((0x2192, hc), (0x2194, hc), (0x27F6, hc), (0x21CC, hc), (0x21A6, hc), (0x21D2, hc), (0x27F9, hc), (0x2193, vc), (0x21D5, vc)):
+        n = cmap.get(cp); c_ = table.get(n)
+        ok(c_ is not None and c_.GlyphAssembly is not None and 1 < c_.VariantCount <= 20,
+           f'U+{cp:04X} {n}: no stretchy construction')
 
 print(f'verify_mathglyphs {style} {mode}: {checks - len(fails)} of {checks} checks passed')
 for f in fails: print('FAIL', f)

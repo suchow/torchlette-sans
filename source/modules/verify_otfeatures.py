@@ -117,7 +117,51 @@ if kept('zero'):
     fr = names('10/20', {'frac': 1, 'zero': 1})
     if kept('frac'): check(fr[1].endswith('.zero' + SUF) and fr[-1].endswith('.zero' + SUF), f'zero in fractions: {fr}')
     check(names('0O 1Il 00A0', {'zero': 1}).count(f'zero.zero{SUF}') == 4 and 'O' in names('0O', {'zero': 1}), 'zero proof')
-    check(not any(SUF in g for g in names('0O 1Il 00A0 0.5 \u2070')), 'default shaping uses a slashed zero')
+    check(not any(SUF in g for g in names('0O 1Il 00A0 0.5 \u2070', {'calt': 0})), 'shaping with calt off uses a slashed zero')
+
+# ---------------------------------------------------------------- calt: the lone zero
+# A zero is slashed by default only when it is the only digit of its number: no figure
+# (of any form) touches it, and no . , U+2009 U+202F joins it to one. Each case is the
+# text and the same text with Ø for every zero that must be slashed.
+CALT = [('0 x0 (0) 0, 0.05 10 2026 100 0', 'Ø xØ (Ø) Ø, 0.05 10 2026 100 Ø'),
+        ('row 0, x[0], 0x, O0, a0b, "0", 0.', 'row Ø, x[Ø], Øx, OØ, aØb, "Ø", Ø.'),
+        ('0.5 5.0 1,000 0,5 1.0e-3 10\u2009000 0\u202f5 0.0 00', '0.5 5.0 1,000 0,5 1.0e-3 10\u2009000 0\u202f5 0.0 00'),
+        ('(0, 0) 0-1 1-10 0th 0/1 10/20 0\u0301', '(Ø, Ø) Ø-1 1-10 Øth Ø/1 10/20 Ø\u0301'),
+        ('x\u2070 10\u2070 x\u2080 1\u2080\u2080 \u2070', 'xØ 10\u2070 xØ 1\u2080\u2080 Ø')]
+CALT_FEATS = [({}, 'zero'), ({'onum': 1}, 'zero.osf'), ({'onum': 1, 'tnum': 1}, 'zero.tosf'), ({'tnum': 1}, 'zero'),
+              ({'pnum': 1}, 'zero.pnum'), ({'smcp': 1}, 'zero.sc'), ({'smcp': 1, 'tnum': 1}, 'zero.sc.tf'),
+              ({'sups': 1}, 'uni2070'), ({'subs': 1}, 'uni2080'), ({'numr': 1}, 'zero.numr'), ({'dnom': 1}, 'zero.dnom'),
+              ({'lnum': 1, 'onum': 1}, 'zero.pnum'), ({'lnum': 1, 'onum': 1, 'tnum': 1}, 'zero'), ({'ss01': 1, 'ss02': 1, 'ss16': 1, 'onum': 1, 'pnum': 1}, 'zero.osf')]
+
+
+def zeros_of(text, feats):
+    """The text with each zero (any form) that shaped to a slashed zero written Ø."""
+    b = hb.Buffer(); b.add_str(text); b.guess_segment_properties(); hb.shape(HB, b, feats)
+    by = {}
+    for i in b.glyph_infos: by.setdefault(i.cluster, []).append(GO[i.codepoint])
+    return ''.join('Ø' if ch in '0\u2070\u2080' and any(g.endswith('.zero' + SUF) for g in by.get(k, ())) else ch
+                   for k, ch in enumerate(text)), by
+
+
+if kept('calt'):
+    for feats, form in CALT_FEATS:
+        if not kept(*feats): continue
+        for text, want in CALT:
+            if feats and ('\u2070' in text or '\u2080' in text or '/' in text): continue  # the encoded ones are their own forms
+            got, by = zeros_of(text, feats)
+            check(got == want, f'calt {feats}: {text!r} -> {got!r}, want {want!r}')
+        got, by = zeros_of('0 10', feats)
+        check(by[0][0] == f'{form}.zero{SUF}' and by[3][0] == form, f'calt {feats}: lone zero {by[0]}, in 10 {by[3]}, want {form}(.zero{SUF})')
+        check(zeros_of('0 10', dict(feats, calt=0))[0] == '0 10', f'calt off {feats}: a slashed zero')
+        if kept('zero'):
+            for text, want in CALT[:4]:
+                got, _ = zeros_of(text, dict(feats, zero=1))
+                check(got == text.replace('0', 'Ø'), f'calt + zero {feats}: {text!r} -> {got!r}')
+    # every figure form counts as a digit: a zero beside a superior, an old-style or a small-cap figure stays plain
+    check(zeros_of('0\u00b9', {})[0] == '0\u00b9' and zeros_of('\u20810', {})[0] == '\u20810', 'calt: superior/inferior neighbours')
+    # spacing: the slashed zero keeps the plain zero's advance and kerning
+    a, b = shape('(0)'), shape('(0)', {'calt': 0})
+    check([r['adv'] for r in a] == [r['adv'] for r in b] and [r['x'] for r in a] == [r['x'] for r in b], f'calt: (0) spacing {a} vs {b}')
 
 # ---------------------------------------------------------------- marks
 # (text, features, base glyph, kind of each mark). top: above the base's ink, not
@@ -131,7 +175,7 @@ MARKS = [('x\u0301', {'smcp': 1}, 'X.sc', 'top'), ('a\u0331', {'ss04': 1}, 'a.ss
          ('y\u0301', {'ss06': 1}, None, None), ('y\u0302\u0301', {'ss06': 1}, None, None),
          ('t\u0324', {'ss07': 1}, 't.ss07', 'bottom'), ('t\u0301', {'ss07': 1}, 't.ss07', 'top'),
          ('1\u0304', {}, 'one', 'top'), ('1\u0331', {}, 'one', 'bottom'), ('7\u0338', {}, 'seven', 'over'),
-         ('0\u0301', {'onum': 1, 'pnum': 1}, 'zero.osf', 'top'), ('3\u0323', {'onum': 1}, 'three.osf', 'bottom'),
+         ('0\u0301', {'onum': 1, 'pnum': 1, 'calt': 0}, 'zero.osf', 'top'), ('0\u0301', {'onum': 1, 'pnum': 1}, f'zero.osf.zero{SUF}', 'top'), ('3\u0323', {'onum': 1}, 'three.osf', 'bottom'),
          ('5\u0302', {'smcp': 1}, 'five.sc', 'top'), ('0\u0301', {'zero': 1}, f'zero.zero{SUF}', 'top'),
          ('2\u0303', {'pnum': 1}, 'two.pnum', 'top')]
 MARKS += [('x' + m, {'smcp': 1}, 'X.sc', 'top') for m in TOPM]
@@ -363,8 +407,10 @@ if kept('aalt', 'salt'):
 cm = tt.getBestCmap()
 allc = ''.join(chr(u) for u in sorted(cm) if u > 32)
 for feats in ({}, {'ss01': 1, 'ss02': 1, 'ss16': 1, 'onum': 1, 'pnum': 1}):
-    r = shape(allc, feats)
-    check(not any(SUF in x['g'] for x in r), f'default shaping {feats} uses a module glyph')
+    r = shape(allc, feats)                         # (calt's lone zeros are the only ones)
+    check(not any(SUF in x['g'] and not x['g'].endswith('.zero' + SUF) for x in r), f'default shaping {feats} uses a module glyph')
+    r = shape(allc, dict(feats, calt=0))
+    check(not any(SUF in x['g'] for x in r), f'shaping {feats} with calt off uses a module glyph')
 # The module's glyphs stay inside hhea, typo and win metrics. Mark stacks on the new
 # bases stay inside the win metrics (what Windows clips to) and, for single marks,
 # inside hhea/typo; a lining figure's two stacked marks reach as high as the same

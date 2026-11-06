@@ -98,6 +98,29 @@ class IdentityTests(unittest.TestCase):
         self.assertNotEqual(b.contours(fonts[0], 'probe'), b.contours(fonts[1], 'probe'))
 
 
+class InklessContour(unittest.TestCase):
+    def test_canonicalized_glyph_keeps_two_point_spacing_contour(self):
+        # mathglyphs/math_table give accents a two-point contour under their ink;
+        # it carries their bounds for math accent placement and has no area, so
+        # Boolean normalization drops it. Canonical masters must restore it.
+        fonts = [source_font() for _ in range(2)]
+        x, y = fonts[1]['glyf']['probe'].coordinates[0]
+        fonts[1]['glyf']['probe'].coordinates[0] = (x + 7, y)
+        for f, spot in zip(fonts, ((40, -90), (44, -95))):
+            pen = TTGlyphPen(None)
+            f['glyf']['probe'].draw(pen, f['glyf'])
+            pen.moveTo(spot); pen.lineTo((spot[0] + 1, spot[1])); pen.closePath()
+            f['glyf']['probe'] = pen.glyph(dropImpliedOnCurves=False)
+        stats = b.canonicalize(fonts, only={'probe'})
+        self.assertIn('probe', stats['changed_glyphs'])
+        for f, spot in zip(fonts, ((40, -90), (44, -95))):
+            g = f['glyf']['probe']
+            coords, ends, _ = g.getCoordinates(f['glyf'])
+            self.assertEqual(list(coords[ends[-2] + 1:]), [spot, (spot[0] + 1, spot[1])])
+            g.recalcBounds(f['glyf'])
+            self.assertEqual(g.yMin, spot[1])
+
+
 class Closing(unittest.TestCase):
     def test_closing_retains_independent_counter_and_exact_endpoint_fill(self):
         sources = [[rect(0, 0, 100, 100), rect(30, 30, 20, 20, True)],

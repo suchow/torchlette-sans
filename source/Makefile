@@ -120,6 +120,8 @@ UNICODES := $(UNICODES),U+2460-2473
 UNICODES := $(UNICODES),U+EE00-EE07
 # mathglyphs: U+20D7, the combining right arrow above (KaTeX's \vec).
 UNICODES := $(UNICODES),U+20D7
+# mathglyphs: the n-ary circled operators and ⨄ ⨆ (U+2A00-2A02, U+2A04, U+2A06).
+UNICODES := $(UNICODES),U+2A00-2A06
 # fleurons: 33 additional encoded characters from the selected source contract.
 UNICODES := $(UNICODES),U+2619,U+261C,U+261E,U+2766-2767,U+E900-E915,U+E920-E925
 

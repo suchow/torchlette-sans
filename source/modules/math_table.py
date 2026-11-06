@@ -7,21 +7,24 @@ monoline valley matching its size variants) and, in post, lengthening the long a
 adding four standard horizontal math code points (U+0305 combining overline, U+203E
 overline, U+23DE top curly bracket, U+23DF bottom curly bracket).
 
-Every glyph but the tall radicals and display integrals stays inside -320..1120; the
-radicals.size6..size20 (1545..4540) need meta.py's usWinAscent/Descent 2540/2060. Every assembly part stands on
+Every glyph but the fences past 1430, the tall radicals and display integrals stays inside -320..1120; the
+radicals.size6..size18 (1545..6000) need meta.py's usWinAscent/Descent 3260/2780. Every assembly part stands on
 y = 0 (as Latin Modern's and STIX's do).
 
 glyphs    Encoded additions (uni0305, uni203E, uni23DE, uni23DF), monoline flat-cut `radical`
           override, and unencoded size variants and GlyphAssembly parts (all named *.math_table,
           with identical contour counts, point counts and starting-point order across all 14
           styles for variable-font interpolation):
-          - Vertical delimiters: ( ) [ ] { } | ∣ ‖ ⌊ ⌋ ⌈ ⌉ ⟨ ⟩ / \\ (size0..size5, 965..1430),
-            with side bearings that grow with the size, plus assemblies whose long connectors
-            make every height above the largest variant. ( ) [ ] { } | ∣ ‖ ⌊ ⌋ ⌈ ⌉ ⟨ ⟩
-            declare height / 0.85 (TeX's \\delimiterfactor rule). The grown braces are drawn
-            (curled ends thinning to a terminal, a pointed cusp); the text brace is Mulish's.
-          - Radicals: base `radical` (800) + radical.size0..size20 (938..4540), leaning further
-            out as they grow (fully slanted, as TeX's), and radical.{bot,ext,top} past 4540:
+          - Vertical delimiters: ( ) [ ] { } | ∣ ‖ ⌊ ⌋ ⌈ ⌉ (size0..size10, FENCE_H 965..3000),
+            ⟨ ⟩ (size0..size11, 885..3000), / \\ (size0..size5, 930..1430), with side bearings
+            that grow with the size, plus assemblies whose long connectors make every height
+            above the largest variant (⟨ ⟩ / \\ have none). ( ) [ ] { } | ∣ ‖ ⌊ ⌋ ⌈ ⌉ ⟨ ⟩
+            declare height / 0.85 (TeX's \\delimiterfactor rule), on a ladder with no height
+            just short of \\big ... \\Bigg (1.2, 1.8, 2.4, 3.0 em), so each gets its own size.
+            The grown braces are drawn (curled ends thinning to a terminal, a pointed cusp); the
+            text brace is Mulish's. ⌊ ⌋ ⌈ ⌉ have longer arms than [ ] and parts of their own.
+          - Radicals: base `radical` (800) + radical.size0..size18 (938..6000), leaning further
+            out as they grow (fully slanted, as TeX's), and radical.{bot,ext,top} past 6000:
             a 1115 check slanted to 900 under a vertical pole.
           - Display operators: summation.dsp, product.dsp, bigcup.dsp, bigcap.dsp (1430, the
             whole envelope, 0.67 as wide as tall, strokes 1.3-1.5 rule thicknesses), and the
@@ -296,59 +299,111 @@ def _integral_sculpt_from_mulish(coords, flags, xc_out, bar, y0, y1, fh, fv):
 # --- parametric shapes ------------------------------------------------------------
 
 
-def _integral_smooth_cw(xc, y0, y1, w_mid, w_end, slope=0.18, hook_r=None, sweep=200.0, n=72):
-    """A display integral drawn whole, as TeX's is: one slanted stroke from a bottom hook
-    curling left to a top hook curling right (point-symmetric about its middle), swelling to
-    w_mid at the middle and tapering to w_end at the flat-cut terminals. Each side is a
-    quadratic B-spline (consecutive off-curve points), so the outline has no corners but
-    the four at the terminals and no straight connector anywhere."""
-    H = y1 - y0
-    ym = 0.5 * (y0 + y1)
-    r = hook_r if hook_r is not None else 0.055 * H
-    a = 2.0 * r                                   # vertical room above the stem for the hook
-    dy = 0.5 * H - a
-    dx = slope * dy
-    ln = math.hypot(dx, dy)
-    ux, uy = dx / ln, dy / ln                      # stem direction, upward
-    nx, ny = uy, -ux                               # its right normal
-    # top half of the centre line: stem from the middle to P_t, then the hook arc
-    pts = []
-    m = 24
-    for i in range(m + 1):
-        t = i / m
-        pts.append((xc + t * dx, ym + t * dy))
-    cx, cy = xc + dx + r * nx, ym + dy + r * ny    # hook centre, right of the stem's top
-    th0 = math.atan2(-ny, -nx)                     # angle of P_t seen from the centre
-    k = 30
-    for i in range(1, k + 1):
-        th = th0 - math.radians(sweep) * i / k     # clockwise: over the top and down the right
-        pts.append((cx + r * math.cos(th), cy + r * math.sin(th)))
-    bottom = [(2 * xc - x, 2 * ym - y) for x, y in reversed(pts[1:])]
-    line = bottom + pts
-    # arclength parameter
-    L = [0.0]
-    for (xa, ya), (xb, yb) in zip(line, line[1:]):
-        L.append(L[-1] + math.hypot(xb - xa, yb - ya))
-    tot = L[-1]
-    N = len(line)
-    right, left = [], []
-    for i, (x, y) in enumerate(line):
-        xa, ya = line[max(0, i - 1)]
-        xb, yb = line[min(N - 1, i + 1)]
-        tx, ty = xb - xa, yb - ya
-        tl = math.hypot(tx, ty)
-        tx, ty = tx / tl, ty / tl
-        u = L[i] / tot
-        w = w_end + (w_mid - w_end) * (1.0 - abs(2.0 * u - 1.0) ** 2.4)
-        right.append((x + 0.5 * w * ty, y - 0.5 * w * tx))
-        left.append((x - 0.5 * w * ty, y + 0.5 * w * tx))
-    cw = ([(left[0][0], left[0][1], 1)] + [(x, y, 0) for x, y in left[1:-1]] + [(left[-1][0], left[-1][1], 1)]
-          + [(right[-1][0], right[-1][1], 1)] + [(x, y, 0) for x, y in reversed(right[1:-1])]
-          + [(right[0][0], right[0][1], 1)])
+def _integral_centreline(slope, bend, turn, p, u0, ease, n):
+    """Top half of a display integral's centre line, from its middle (0, 0), arclength 1.
+    The direction leans `slope` (dx/dy) at the middle and bends clockwise by `bend` degrees
+    over the stem, its curvature growing from zero at the inflection; the hook then turns a
+    further `turn` degrees, its curvature rising from zero at u0 as t^p and easing off by
+    `ease` toward the end. There is no straight-to-arc joint anywhere."""
+    def smooth(t):
+        t = min(1.0, max(0.0, t))
+        return t * t * (3.0 - 2.0 * t)
+
+    def hook(u):
+        t = max(0.0, (u - u0) / (1.0 - u0))
+        return t ** p * (1.0 - ease * smooth((t - 0.6) / 0.4))
+
+    us = [i / n for i in range(n + 1)]
+    f = [hook(u) for u in us]
+    G = [0.0]
+    for i in range(1, n + 1):
+        G.append(G[-1] + 0.5 * (f[i] + f[i - 1]) / n)
+    th0 = math.atan2(1.0, slope)
+    T, B = math.radians(turn), math.radians(bend)
+    pts = [(0.0, 0.0)]
+    x = y = 0.0
+    for i in range(1, n + 1):
+        um = (i - 0.5) / n
+        th = th0 - B * um * um - T * 0.5 * (G[i] + G[i - 1]) / G[-1]
+        x += math.cos(th) / n
+        y += math.sin(th) / n
+        pts.append((x, y))
+    return us, pts
+
+
+def _integral_smooth_cw(x_left, yc, ink_h, w_mid, w_end, slope=0.13, bend=8.0, turn=120.0, p=1.0,
+                        u0=0.485, ease=0.3, q=2.0, n=72):
+    """A display integral drawn whole, as TeX's is: one stroke from a bottom hook curling
+    left to a top hook curling right, point-symmetric about its middle, on the centre line
+    of _integral_centreline. It swells to w_mid at the middle and narrows to w_end at the
+    flat-cut terminals (w = w_end + (w_mid - w_end)(1 - u^q), u the arclength from the
+    middle). It is scaled so that its ink is ink_h tall, centred on yc, with its ink's left
+    edge at x_left. Each side is a quadratic B-spline (consecutive off-curve points), so the
+    outline's only corners are the four at the terminals; n is fixed, so every weight has
+    the same 4n + 2 points. Returns (contour, ink bounds)."""
+    us, top = _integral_centreline(slope, bend, turn, p, u0, ease, n)
+    uu = list(reversed(us[1:])) + us
+
+    def outline(scale):
+        half = [(scale * x, scale * y) for x, y in top]
+        line = [(-x, -y) for x, y in reversed(half[1:])] + half
+        N = len(line)
+        right, left = [], []
+        for i, (x, y) in enumerate(line):
+            xa, ya = line[max(0, i - 1)]
+            xb, yb = line[min(N - 1, i + 1)]
+            tx, ty = xb - xa, yb - ya
+            tl = math.hypot(tx, ty)
+            tx, ty = tx / tl, ty / tl
+            w = w_end + (w_mid - w_end) * (1.0 - uu[i] ** q)
+            right.append((x + 0.5 * w * ty, y - 0.5 * w * tx))
+            left.append((x - 0.5 * w * ty, y + 0.5 * w * tx))
+        cw = ([(left[0][0], left[0][1], 1)] + [(x, y, 0) for x, y in left[1:-1]] + [(left[-1][0], left[-1][1], 1)]
+              + [(right[-1][0], right[-1][1], 1)] + [(x, y, 0) for x, y in reversed(right[1:-1])]
+              + [(right[0][0], right[0][1], 1)])
+        bp = BoundsPen(None)
+        _draw_contour(bp, cw)
+        return cw, bp.bounds
+
+    scale = 0.5 * ink_h
+    for _ in range(8):
+        cw, b = outline(scale)
+        scale *= (ink_h - 60.0) / (b[3] - b[1] - 60.0)
+    cw, b = outline(scale)
+    dx, dy = x_left - b[0], yc - 0.5 * (b[1] + b[3])
+    cw = [(x + dx, y + dy, on) for x, y, on in cw]
+    # On-curve points at the lowest and highest points of the hooks, their neighbours level
+    # with them (horizontal tangents there; the outline moves under a unit): the extremes are
+    # then integer points of the outline, not a quarter unit inside an off-curve point, and
+    # the variable font, whose masters split these curves at other weights' knots, keeps the
+    # glyph's bounds exact at every weight.
+    for i in (min(range(len(cw)), key=lambda k: cw[k][1]), max(range(len(cw)), key=lambda k: cw[k][1])):
+        if not cw[i][2] and not cw[i - 1][2] and not cw[(i + 1) % len(cw)][2]:
+            y = cw[i][1]
+            cw[i] = (cw[i][0], y, 1)
+            for j in (i - 1, (i + 1) % len(cw)):
+                cw[j] = (cw[j][0], y, 0)
     area = sum(xa * yb - xb * ya for (xa, ya, _), (xb, yb, _) in zip(cw, cw[1:] + cw[:1]))
     if area > 0:                                   # make it clockwise
         cw = [cw[0]] + list(reversed(cw[1:]))
-    return cw
+    return cw, (b[0] + dx, b[1] + dy, b[2] + dx, b[3] + dy)
+
+
+def _draw_contour(pen, contour):
+    """Draw one closed [(x, y, on), ...] TrueType contour that starts on-curve."""
+    pen.moveTo(contour[0][:2])
+    offs = []
+    for x, y, on in contour[1:] + contour[:1]:
+        if on:
+            if offs:
+                pen.qCurveTo(*offs, (x, y))
+            else:
+                pen.lineTo((x, y))
+            offs = []
+        else:
+            offs.append((x, y))
+    pen.closePath()
+
 
 def _paren_left_cw(x_out, w_mid, x_tip_L, w_tip, y0, y1):
     """Continuous full-height bowed left parenthesis matching Mulish's 16-point Bezier profile."""
@@ -461,7 +516,7 @@ def _rad_top_x(H):
     so a grown surd reads as a larger check rather than a steeper one."""
     x = 562.0 + 0.04 * (H - 938.0) + 0.16 * max(0.0, min(H, RAD_LEAN_H) - 938.0)
     return (x + RAD_TALL_LEAN * max(0.0, min(H, 3090.0) - RAD_LEAN_H)
-            + RAD_TALL_LEAN2 * max(0.0, H - 3090.0))
+            + RAD_TALL_LEAN2 * max(0.0, min(H, RAD_LEAN_MAX) - 3090.0))
 
 
 # Past 1430 the surd leans 0.108 more per unit of height up to 3090 (180 more: an upstroke
@@ -476,12 +531,21 @@ RAD_TALL_LEAN2 = 0.05
 RAD_TALL_HANG = 1.0
 
 
+RAD_TOP_RUN = 38.0   # the flat top runs this far past the advance, under the vinculum
+RAD_FILL = 60.0      # and its elbow is filled this far below the rule
+
+
 def _radical_monoline_cw(y0, y1, r_th, overhang=38.0):
     """9-point clockwise monoline sans-serif radical surd from y0 to y1:
     - parallel-sided upstroke (1.05 R) and downstroke (0.96 R) matching Mulish / Noto Sans Math;
     - compact flat foot (0.98 R) with inner valley apex ~1.2 R above y0 even in Black;
     - flat horizontal top cut at y1 (no hanging elbow) with advance 38u inside x_top_R so
-      Chrome's centre-on-top vinculum rule joins cleanly with zero white sliver and zero tooth."""
+      Chrome's centre-on-top vinculum rule joins cleanly with zero white sliver and zero tooth;
+    - the flat top carried on to RAD_TOP_RUN past the advance, and a fillet under it sloping
+      into the upstroke RAD_FILL below the rule: Chrome snaps the vinculum to whole pixels
+      (0.90 px rounds to 1.00 px; its top and left edges move by up to half a pixel) but
+      places the surd at fractional positions, so a bare elbow showed a white sliver
+      between rule and upstroke on 3 of the 6 surds of T13 at 8x."""
     H = y1 - y0
     w_up = max(46.0, 1.05 * r_th)
     w_down = max(42.0, 0.96 * r_th)
@@ -511,7 +575,9 @@ def _radical_monoline_cw(y0, y1, r_th, overhang=38.0):
         (x_ledge_R, y_ledge, 1),
         (x_val_in, y_val_in, 1),
         (x_top_L, y1, 1),
-        (x_top_R, y1, 1),
+        (max(x_top_R, adv + RAD_TOP_RUN), y1, 1),
+        (max(x_top_R, adv + RAD_TOP_RUN), y1 - r_th, 1),
+        (x_top_R - s_up * (r_th + RAD_FILL), y1 - r_th - RAD_FILL, 1),
         (x_foot_R, y0, 1),
         (x_foot_L, y0, 1),
         (x_ledge_in_bot, y_ledge - ledge_h, 1),
@@ -960,24 +1026,46 @@ def _arrow_both_cw(x_L, x_R, ym, bar, sm):
 
 # --- Phase 1: glyphs --------------------------------------------------------------
 
-# Six vertical discrete steps strictly > base (885..899) and strictly inside [-315, 1115]
-VERT_SIZES = [
-    (0, -205.0, 760.0),    # H = 965
-    (1, -230.0, 830.0),    # H = 1060
-    (2, -252.0, 903.0),    # H = 1155
-    (3, -274.0, 976.0),    # H = 1250
-    (4, -295.0, 1045.0),   # H = 1340
-    (5, -315.0, 1115.0),   # H = 1430
-]
+# The vertical fences' heights. Their AdvanceMeasurement is height / 0.85 (std_sizes: TeX's
+# \delimiterfactor for \left/\right), and Chrome takes the first variant whose measurement
+# covers the target. Chrome cannot tell \big from \left, so KaTeX's \big \Big \bigg \Bigg
+# (1.2, 1.8, 2.4, 3.0 em) get the shortfall too: a variant whose height lies in (0.85 S, S) of
+# one of those sizes S would be chosen for it and fall short (\big got 1060 of ink, Latin
+# Modern 1440: X17). So no height lies in (1020, 1200), (1530, 1800), (2040, 2400) or
+# (2550, 3000), and each of the four sizes is a height of its own: \big ... \Bigg get
+# exactly their size, and a \left fence in one of the gaps gets between 0.85 and 1.0 of its
+# content, as TeX allows. The ladder reaches 3000 (Latin Modern's largest is 2991) before the
+# assemblies take over, so tall parentheses and braces stay curved (T08 T09 T18 M007) and
+# \Bigg\langle (no assembly) is 3 em, not 1.43.
+FENCE_H = (965, 1200, 1290, 1390, 1500, 1800, 1900, 2000, 2400, 2500, 3000)
 
-ANG_SIZES = [
-    (0, -180.0, 705.0),    # H = 885  (base uni27E8/27E9 is 705)
-    (1, -215.0, 780.0),    # H = 995
-    (2, -245.0, 860.0),    # H = 1105
-    (3, -270.0, 945.0),    # H = 1215
-    (4, -295.0, 1030.0),   # H = 1325
-    (5, -315.0, 1115.0),   # H = 1430
-]
+
+def _fence_y(H):
+    """y0, y1 of a fence H tall: centred at 277.5 for 965 (as before), rising to 400 at 1430
+    and staying there, so every fence to 1430 stays inside -315..1115."""
+    c = 277.5 + 122.5 * min(1.0, max(0.0, (H - 965.0) / 465.0))
+    return (round(c - H / 2.0, 1), round(c + H / 2.0, 1))
+
+
+def _fence_e(H):
+    """The size index the side bearings, the brace width and the bracket arms grow by: 0 at
+    965, 5 at 1430 (the old size5), then one step per 175 units (14 at 3000)."""
+    return (H - 965.0) / 93.0 if H <= 1430.0 else 5.0 + (H - 1430.0) / 175.0
+
+
+VERT_SIZES = [(i, *_fence_y(h)) for i, h in enumerate(FENCE_H)]
+# Parentheses and braces take the same ladder; their bow grows as Latin Modern's does, the
+# paren's ink width as H^0.8 past 1430, and the braces' curls up to BRC_*_MAX.
+PAREN_SIZES = VERT_SIZES
+BRACE_SIZES = VERT_SIZES
+
+# ⟨ ⟩: the same heights, from an 885 step above the 705 text form.
+ANG_H = (885,) + FENCE_H
+ANG_SIZES = [(0, -180.0, 705.0)] + [(i + 1, *_fence_y(h)) for i, h in enumerate(FENCE_H)]
+# ⌊ ⌋ ⌈ ⌉: the bracket's arm runs FLOOR_ARM further, and the inner bearing FLOOR_SB more, so
+# an adjacent ⌊⌈ reads as two one-armed brackets, not one [ (X17; Latin Modern's floor is
+# 0.24 em wide at 1 em, its bracket 0.14).
+FLOOR_ARM, FLOOR_SB = 70.0, 24.0
 
 SLASH_SIZES = [
     (0, -195.0, 735.0),    # H = 930  (base slash/backslash is 800)
@@ -1004,16 +1092,28 @@ RAD_SIZES = [
     (5, -315.0, 1115.0),   # H = 1430
 ]
 # Tall surds stay slanted, as TeX's do (its largest is a 3 em check leaning 1 em), instead of a
-# check under a vertical pole: 8% steps from 1430 to 4540 (lean: RAD_TALL_LEAN), centred near the
+# check under a vertical pole: 12% steps from 1430 to 6000 (lean: RAD_TALL_LEAN), centred near the
 # math axis (a radical in a script-size fraction around a \dfrac, M068, needs 3900), which needs
-# usWinAscent/Descent 2540/2060 (meta.py; USE_TYPO_METRICS keeps line spacing on typo/hhea).
+# usWinAscent/Descent 3260/2780 (meta.py; USE_TYPO_METRICS keeps line spacing on typo/hhea).
 # The pole assembly is left for anything taller.
-RAD_TALL_H = (1545, 1670, 1800, 1945, 2100, 2270, 2450, 2645, 2860, 3090, 3335, 3600, 3890, 4200, 4540)
+# Chrome reads at most 20 MathGlyphVariantRecords per glyph: of the 22 that radical had
+# (base, size0..5, 15 tall), the 4200 and 4540 surds were never chosen, and anything past
+# 3890 took the pole assembly, whose upstroke bends where it turns vertical (X14). So base +
+# six steps + thirteen tall surds, 12% apart, up to 6000; past RAD_LEAN_MAX they keep its
+# lean and grow steeper, so the upstroke stays one straight line. 6000 centred on
+# RAD_TALL_MID needs usWinAscent/Descent 3260/2780 (meta.py).
+RAD_TALL_H = (1545, 1730, 1937, 2168, 2428, 2718, 3043, 3407, 3815, 4271, 4782, 5354, 6000)
+RAD_LEAN_MAX = 4540.0
+assert 1 + 6 + len(RAD_TALL_H) <= 20, 'Chrome ignores MATH variant records past the 20th'
 RAD_TALL_MID = 240.0
 RAD_SIZES += [(6 + i, RAD_TALL_MID - h / 2.0, RAD_TALL_MID + h / 2.0) for i, h in enumerate(RAD_TALL_H)]
 
-BRC_HOOK_PART = 560.0   # brace assembly end part: 260 of hook, 300 of straight stem
-BRC_MID_PART = 1100.0   # brace assembly middle part: 520 of cusp, 290 of stem each side
+BRC_HOOK_PART = 900.0   # brace assembly end part: 600 of hook, 300 of straight stem
+BRC_MID_PART = 1500.0   # brace assembly middle part: 920 of cusp, 290 of stem each side
+# The curl and the cusp grow with the brace up to these (300 and 330 before, so a cases
+# brace of 4300 was 85% straight stem: T18). Latin Modern's end and middle parts are 750 and
+# 1500 tall and curved throughout.
+BRC_HOOK_MAX, BRC_CUSP_MAX = 600.0, 460.0
 BRC_CONN = 290.0        # long connectors: assemblies of every height from 1640 up
 
 # display integrals (assembly only; the parts are shared by ∫ ∬ ∭ ∮ ∯)
@@ -1037,8 +1137,19 @@ HB_MID_PART = 860.0   # 460 of cusp, 200 of rule each side     # stem spacing of
 ACCENT_GAP = 90         # the wide hats' and tildes' inkless contour sits this far under their ink
 OVERLINE_GAP = 70       # and the overline bars'
 DISPLAY_OP_MIN = 2300
-INT_DSP2_IC = 205     # its italic correction, the assembly's (INT_LEAN + 90)
-INT_SM_Y0 = 240.0 - 0.5 * DISPLAY_OP_MIN   # the whole display integrals, centred near the math axis   # TeX's display integral is 2.2 em at an x-height of 0.43 (2.4 em at Torchlette's 0.47); ∑ ∏ ⋃ ⋂ stop at their 1430 variant
+# The whole display integrals (∫ ∬ ∭ ∮ ∯ at DisplayOperatorMinHeight): Chrome takes the first
+# vertical variant whose INK is at least DisplayOperatorMinHeight tall, so the ink is a little
+# taller (INT_SM_H), centred on INT_SM_YC near the math axis. TeX's display integral is 2.2 em
+# at an x-height of 0.43 (2.4 em at Torchlette's 0.47); ∑ ∏ ⋃ ⋂ stop at their 1430 variant.
+INT_SM_H = 2320.0
+INT_SM_YC = 240.0
+INT_SM_X0 = 10.0      # left side bearing
+INT_SM_RSB = 60.0     # right side bearing: superscripts clear the top hook
+INT_SM_SEP = 500.0    # stem spacing of the whole ∬ ∭ ∯ (the assembly's is INT_SEP)
+# Italic correction of the whole forms, the same in every style (MATH is fixed across
+# masters): the advance less (the stem's right edge at 20% of the height + 300), 412 in
+# Regular (Light 416, Black 363); it is the 205 of before plus 60 of right bearing more.
+INT_DSP2_IC = 412
 
 HBAR_ADV = (440, 720, 1080, 1540, 2080, 2720, 3460)
 # Horizontal stretchy glyphs grow by a dense ladder of size variants (4% steps), not by
@@ -1159,23 +1270,29 @@ def glyphs(ctx):
     # Side bearings of the grown delimiters. The text ( [ { keep Mulish's spacing, but a size
     # variant would otherwise keep their 29-unit (paren) and 7-unit (bracket) inner bearing
     # and touch the operand; TeX's (Latin Modern's) grown fences keep 57..120 inside and
-    # 100..280 outside. pad_o is added outside and pad_i inside, both growing with the size.
-    def pad_o(idx):
-        return 8.0 + 6.0 * idx
+    # 100..280 outside. pad_o is added outside and pad_i inside, both growing with the size
+    # index e (_fence_e: 0 at 965, 5 at 1430, 14 at 3000); past 1430 the outer bearing grows
+    # faster (128 at 3000), so \Bigl( \Bigl[ stand apart as Latin Modern's do (X17).
+    def pad_o(e):
+        return 8.0 + 6.0 * e + 4.0 * max(0.0, e - 5.0)
 
-    def pad_i(idx):
-        return 14.0 + 6.0 * idx
+    def pad_i(e):
+        return 14.0 + 6.0 * e
 
-    # 1. Parentheses ( ) — continuous Mulish-profile bow on .size0..size5, plus deep
-    # 800-unit curved caps on .bot/.top so assembled parens (> 1430) stay gracefully bowed.
-    par_dx_sizes = (142.0, 168.0, 194.0, 218.0, 242.0, 266.0)
-    for idx, y0, y1 in VERT_SIZES:
-        s = (y1 - y0) / 885.0
-        dx_o = par_dx_sizes[idx] + 10.0 * (sv - 1.0)
+    # 1. Parentheses ( ) — continuous Mulish-profile bow on .size0..size10, plus deep
+    # 800-unit curved caps on .bot/.top so assembled parens (> 3000) stay gracefully bowed.
+    # The bow depth: 142 at 965 rising 0.267 a unit to 266 at 1430 (the old size0..size5),
+    # then as H^0.8 (481 at 3000; Latin Modern's 2991 paren is 546 wide).
+    for idx, y0, y1 in PAREN_SIZES:
+        H = y1 - y0
+        s = H / 885.0
+        e = _fence_e(H)
+        dx_k = 142.0 + 124.0 * (H - 965.0) / 465.0 if H <= 1430.0 else 266.0 * (H / 1430.0) ** 0.8
+        dx_o = dx_k + 10.0 * (sv - 1.0)
         w_mid_k = par_w_mid * (1.0 + 0.05 * (s - 1.0))
         w_tip_k = max(44.0, 0.80 * w_mid_k)
-        adv_k = par_adv0 + round(par_dx_sizes[idx] - 116.0) + round(pad_o(idx) + pad_i(idx))
-        cw_l = _paren_left_cw(par_x_out + pad_o(idx), w_mid_k, par_x_out + pad_o(idx) + dx_o, w_tip_k, y0, y1)
+        adv_k = par_adv0 + round(dx_k - 116.0) + round(pad_o(e) + pad_i(e))
+        cw_l = _paren_left_cw(par_x_out + pad_o(e), w_mid_k, par_x_out + pad_o(e) + dx_o, w_tip_k, y0, y1)
         emit(f'parenleft.size{idx}', [cw_l], adv_k)
         emit(f'parenright.size{idx}', _mirror_x([cw_l], 0.5 * adv_k), adv_k)
 
@@ -1186,7 +1303,7 @@ def glyphs(ctx):
     par_adv_asm = par_adv0 + 162 + round(par_pad_o + par_pad_i)
     par_xo_asm = par_x_out + par_pad_o
     # caps 1000 tall: 600 of curve on 400 of straight stem, so the assembly's connectors
-    # (380) let it make every height from 1620 up, just past the largest variant
+    # (380) let it make every height from 1620 up; Chrome uses it only past the 3000 variant
     par_top_cw = _paren_top_cw(par_xo_asm, par_w_mid_asm, par_xo_asm + par_dx_asm, par_w_tip_asm, 0.0, 400.0, 1000.0)
     par_bot_cw = _mirror_y([par_top_cw], 500.0)[0]
     par_ext_cw = _rect_cw(par_xo_asm, 0.0, par_xo_asm + par_w_mid_asm, 500.0)
@@ -1200,19 +1317,21 @@ def glyphs(ctx):
     # 2. Square brackets [ ] and Floor / Ceiling ⌊ ⌋ ⌈ ⌉
     for idx, y0, y1 in VERT_SIZES:
         s = (y1 - y0) / 885.0
+        e = _fence_e(y1 - y0)
         arm_dx = round(18.0 * (s - 1.0))
-        po, pi = round(pad_o(idx) * 0.6), round(pad_i(idx) + 10.0)
+        po, pi = round(pad_o(e) * 0.6), round(pad_i(e) + 10.0)
         adv_k = brk_adv0 + arm_dx + po + pi
+        adv_f = round(adv_k + FLOOR_ARM + FLOOR_SB)
         x_arm_k = brk_x_arm + arm_dx + po
         bl_cw = _bracket_left_cw(brk_x0 + po, brk_x1 + po, x_arm_k, y0, y1, brk_arm_th)
-        lc_cw = _lceil_cw(brk_x0 + po, brk_x1 + po, x_arm_k, y0, y1, brk_arm_th)
-        lf_cw = _lfloor_cw(brk_x0 + po, brk_x1 + po, x_arm_k, y0, y1, brk_arm_th)
+        lc_cw = _lceil_cw(brk_x0 + po, brk_x1 + po, x_arm_k + FLOOR_ARM, y0, y1, brk_arm_th)
+        lf_cw = _lfloor_cw(brk_x0 + po, brk_x1 + po, x_arm_k + FLOOR_ARM, y0, y1, brk_arm_th)
         emit(f'bracketleft.size{idx}', [bl_cw], adv_k)
         emit(f'bracketright.size{idx}', _mirror_x([bl_cw], 0.5 * adv_k), adv_k)
-        emit(f'lceil.size{idx}', [lc_cw], adv_k)
-        emit(f'rceil.size{idx}', _mirror_x([lc_cw], 0.5 * adv_k), adv_k)
-        emit(f'lfloor.size{idx}', [lf_cw], adv_k)
-        emit(f'rfloor.size{idx}', _mirror_x([lf_cw], 0.5 * adv_k), adv_k)
+        emit(f'lceil.size{idx}', [lc_cw], adv_f)
+        emit(f'rceil.size{idx}', _mirror_x([lc_cw], 0.5 * adv_f), adv_f)
+        emit(f'lfloor.size{idx}', [lf_cw], adv_f)
+        emit(f'rfloor.size{idx}', _mirror_x([lf_cw], 0.5 * adv_f), adv_f)
 
     bpo, bpi = round(pad_o(6) * 0.6), round(pad_i(6) + 10.0)
     brk_adv_asm = brk_adv0 + 10 + bpo + bpi
@@ -1225,6 +1344,15 @@ def glyphs(ctx):
     emit('bracketright.bot', _mirror_x([brk_bot_cw], 0.5 * brk_adv_asm), brk_adv_asm)
     emit('bracketright.ext', _mirror_x([brk_ext_cw], 0.5 * brk_adv_asm), brk_adv_asm)
     emit('bracketright.top', _mirror_x([brk_top_cw], 0.5 * brk_adv_asm), brk_adv_asm)
+    # floor and ceiling assemblies: their own parts, with the variants' long arm
+    flr_adv_asm = round(brk_adv_asm + FLOOR_ARM + FLOOR_SB)
+    flr_x_arm = brk_x_arm + 10.0 + bpo + FLOOR_ARM
+    lceil_top_cw = _lceil_cw(brk_x0 + bpo, brk_x1 + bpo, flr_x_arm, 0.0, 600.0, brk_arm_th)
+    lfloor_bot_cw = _lfloor_cw(brk_x0 + bpo, brk_x1 + bpo, flr_x_arm, 0.0, 600.0, brk_arm_th)
+    for nm, part, cw in (('lfloor', 'bot', lfloor_bot_cw), ('lfloor', 'ext', brk_ext_cw),
+                         ('lceil', 'ext', brk_ext_cw), ('lceil', 'top', lceil_top_cw)):
+        emit(f'{nm}.{part}', [cw], flr_adv_asm)
+        emit(f'r{nm[1:]}.{part}', _mirror_x([cw], 0.5 * flr_adv_asm), flr_adv_asm)
 
     # 3. Curly braces { }: drawn, not cut from Mulish. Mulish's text brace has small hooks and
     # a small cusp; cut and extended to 1.4 em and beyond (cases, \left\{) it read as a
@@ -1241,16 +1369,17 @@ def glyphs(ctx):
 
     def brace_cw(y0, y1, extra=0.0):
         H = y1 - y0
-        hh = min(300.0, 0.20 * H)
-        ch = min(330.0, 0.22 * H)
+        hh = min(BRC_HOOK_MAX, 0.20 * H)
+        ch = min(BRC_CUSP_MAX, 0.22 * H)
         hdx = brc_hdx + extra
         cdx = brc_cdx + extra
         return _brace_full_cw(brc_xs + extra, brc_w, brc_wt, hdx, hh, cdx, ch, brc_tipw, y0, y1)
 
-    for idx, y0, y1 in VERT_SIZES:
-        ex = 6.0 * idx
-        adv_b = brc_adv0 + round(2 * ex + pad_o(idx) * 0.5 + pad_i(idx) * 0.5)
-        cw_b = [(x + pad_o(idx) * 0.5, y, on) for x, y, on in brace_cw(y0, y1, ex)]
+    for idx, y0, y1 in BRACE_SIZES:
+        e = _fence_e(y1 - y0)
+        ex = 6.0 * e
+        adv_b = brc_adv0 + round(2 * ex + pad_o(e) * 0.5 + pad_i(e) * 0.5)
+        cw_b = [(x + pad_o(e) * 0.5, y, on) for x, y, on in brace_cw(y0, y1, ex)]
         emit(f'braceleft.size{idx}', [cw_b], adv_b)
         emit(f'braceright.size{idx}', _mirror_x([cw_b], 0.5 * adv_b), adv_b)
 
@@ -1259,9 +1388,9 @@ def glyphs(ctx):
     ex6 = 6.0 * 6
     bxs = brc_xs + ex6 + pad_o(6) * 0.5
     adv_ba = brc_adv0 + round(2 * ex6 + pad_o(6) * 0.5 + pad_i(6) * 0.5)
-    b_bot = _brace_hook_cw(bxs, brc_w, brc_wt, brc_hdx + ex6, 260.0, 0.0, BRC_HOOK_PART)
+    b_bot = _brace_hook_cw(bxs, brc_w, brc_wt, brc_hdx + ex6, BRC_HOOK_MAX, 0.0, BRC_HOOK_PART)
     b_top = _mirror_y([b_bot], 0.5 * BRC_HOOK_PART)[0]
-    b_mid = _brace_cusp_cw(bxs, brc_w, brc_cdx + ex6, 260.0, brc_tipw, 0.5 * BRC_MID_PART, 0.0, BRC_MID_PART)
+    b_mid = _brace_cusp_cw(bxs, brc_w, brc_cdx + ex6, BRC_CUSP_MAX, brc_tipw, 0.5 * BRC_MID_PART, 0.0, BRC_MID_PART)
     b_ext = _rect_cw(bxs - 0.5 * brc_w, 0.0, bxs + 0.5 * brc_w, 500.0)
     emit('braceleft.bot', [b_bot], adv_ba)
     emit('braceleft.ext', [b_ext], adv_ba)
@@ -1300,6 +1429,7 @@ def glyphs(ctx):
     # gaps on both sides of an assembled fence come out equal.
     for fam in (('parenleft', 'bot', 'ext', 'top'), ('parenright', 'bot', 'ext', 'top'),
                 ('bracketleft', 'bot', 'ext', 'top'), ('bracketright', 'bot', 'ext', 'top'),
+                ('lfloor', 'bot', 'ext'), ('rfloor', 'bot', 'ext'), ('lceil', 'ext', 'top'), ('rceil', 'ext', 'top'),
                 ('braceleft', 'bot', 'ext', 'mid', 'top'), ('braceright', 'bot', 'ext', 'mid', 'top'),
                 ('bar', 'bot', 'ext'), ('divides', 'bot', 'ext'), ('dblbar', 'bot', 'ext')):
         names = [f'{fam[0]}.{p}.math_table' for p in fam[1:]]
@@ -1316,7 +1446,8 @@ def glyphs(ctx):
     ang_w = max(44.0, bar * 1.05)
     for idx, y0, y1 in ANG_SIZES:
         H = y1 - y0
-        span = 185.0 + 0.14 * (H - 885.0)
+        # past 1430 the arms open further (575 at 3000; Latin Modern's 3001 ⟨ is 648 wide)
+        span = 185.0 + 0.14 * (H - 885.0) + 0.06 * max(0.0, H - 1430.0)
         x_ap = 64.0
         cw_la = _langle_cw(x_ap, x_ap + span, y0, y1, ang_w)
         adv_la = round(max(p[0] for p in cw_la) + 56.0)
@@ -1387,16 +1518,28 @@ def glyphs(ctx):
     emit('integral.bot', [int_bot], INT_ADV)
     emit('integral.ext', [int_ext], INT_ADV)
     emit('integral.top', [int_top], INT_ADV)
-    # Display integrals drawn whole at DisplayOperatorMinHeight (2300), smooth and swelling as
-    # TeX's are, so a display ∫ ∬ ∭ never shows the assembly's straight connector; the
-    # assembly is left for taller stretches and for ∮ ∯ (their ring cannot cross a curve
-    # without overlaps the build would redraw differently per weight).
+    # Display integrals drawn whole at DisplayOperatorMinHeight, smooth and swelling as TeX's
+    # are, so a display ∫ ∬ ∭ ∮ ∯ never shows the assembly's straight connector; the assembly
+    # is left for taller stretches. The widths follow the text integral's stem w_int (60.5 in
+    # Regular: 92 at the middle, 87 at the ends, 1.40 and 1.32 times Regular's stem).
     w_int = 0.42 * (float(int_coords[24][0]) - float(int_coords[10][0])) + 0.62 * bar
-    int_sm = _integral_smooth_cw(INT_ADV / 2.0, INT_SM_Y0, INT_SM_Y0 + DISPLAY_OP_MIN, 1.30 * w_int, 0.80 * w_int)
-    emit('integral.dsp2', [int_sm], INT_ADV)
+    int_sm, int_sm_b = _integral_smooth_cw(INT_SM_X0, INT_SM_YC, INT_SM_H, 1.527 * w_int, 1.44 * w_int)
+    adv_sm = int_sm_b[2] + INT_SM_RSB
+    emit('integral.dsp2', [int_sm], adv_sm)
     for n_st, nm in ((2, 'dblint'), (3, 'tplint')):
-        emit(f'{nm}.dsp2', [[(x + i * INT_SEP, y, on) for x, y, on in int_sm] for i in range(n_st)],
-             INT_ADV + (n_st - 1) * INT_SEP)
+        emit(f'{nm}.dsp2', [[(x + i * INT_SM_SEP, y, on) for x, y, on in int_sm] for i in range(n_st)],
+             adv_sm + (n_st - 1) * INT_SM_SEP)
+    # ∮ ∯ whole: the stroke(s) and a ring as heavy as ∮'s assembly ring, on the stroke's middle
+    # (∯'s spans both stems). They overlap; the build's overlap removal merges them.
+    xm_sm = 0.5 * (int_sm_b[0] + int_sm_b[2])
+    th_sm = 0.95 * bar
+    for n_st, nm in ((1, 'oint'), (2, 'oiint')):
+        sep = (n_st - 1) * INT_SM_SEP
+        cx, rx = xm_sm + 0.5 * sep, INT_RING_RX + 0.5 * sep
+        emit(f'{nm}.dsp2', [[(x + i * INT_SM_SEP, y, on) for x, y, on in int_sm] for i in range(n_st)]
+             + [_ellipse_cw(cx, INT_SM_YC, rx + 0.5 * th_sm, INT_RING_RY + 0.5 * th_sm),
+                _ellipse_cw(cx, INT_SM_YC, rx - 0.5 * th_sm, INT_RING_RY - 0.5 * th_sm, ccw=True)],
+             adv_sm + sep)
 
     # ∮'s middle: the stem through a ring; the ring is as heavy as the stem's thinner rule
     x0e, x1e = int_ext[0][0], int_ext[2][0]
@@ -1642,6 +1785,65 @@ def _lengthen_long_arrows(font, cmap, log):
     log(f'lengthened {len(done)} long arrows by {LONG_ARROW_EXTRA}')
 
 
+# --- Constructions drawn by mathglyphs ------------------------------------------------
+# mathglyphs (whose features phase runs after this module's glyphs phase) draws the display
+# forms of ⨀ ⨁ ⨂ ⨄ ⨆ ∐ ⋀ ⋁ and the variants and assembly parts of the stretchy arrows
+# ⇒ ⇐ ⇔ ⇌ ⇋ ⇄ ⇆ ↦ ↤ ↪ ↩ ⇀ ⇁ ↼ ↽ (horizontal) and ↓ ↑ ↕ ⇓ ⇑ ⇕ (vertical), and lists them,
+# with fixed AdvanceMeasurements and connector lengths, in build.py's MATH_CONSTRUCTIONS:
+# {'vert'|'horiz': {glyph: {'variants': [(glyph, measurement)], 'parts': [(glyph,
+# start connector, end connector, full advance, flags)] or None}}}. The long arrows
+# ⟵ ⟶ ⟷ ⟸ ⟹ ⟺ ⟼ take their short form's construction, the long glyph first, as Latin
+# Modern's do (Chrome reads at most 20 variants, so the list stops there).
+LONG_ARROW_SHORT = {0x27F5: 0x2190, 0x27F6: 0x2192, 0x27F7: 0x2194, 0x27F8: 0x21D0, 0x27F9: 0x21D2,
+                    0x27FA: 0x21D4, 0x27FC: 0x21A6}
+MAX_VARIANTS = 20
+
+
+def _mathglyphs_constructions(ctx, cmap, order_set, vert_specs, horiz_specs):
+    import copy
+    made = ctx.globals.get('MATH_CONSTRUCTIONS', {})
+
+    def asm(parts):
+        if not parts: return None
+        a = ot.GlyphAssembly()
+        a.ItalicsCorrection = _mvr(0)
+        a.PartRecords = [_prec(*p) for p in parts]
+        a.PartCount = len(a.PartRecords)
+        return a
+    for kind, specs in (('vert', vert_specs), ('horiz', horiz_specs)):
+        for g, spec in made.get(kind, {}).items():
+            names = [v for v, _ in spec['variants']] + [p[0] for p in spec['parts'] or ()]
+            if g in specs or not all(n in order_set for n in names):
+                continue
+            specs[g] = ([_vrec(v, m) for v, m in spec['variants']], asm(spec['parts']))
+    # → ← ↔: their 4% ladders (57 and 51 variants) thinned to MAX_VARIANTS, evenly through the
+    # ladder and keeping its largest, so Chrome reads them all; the assembly takes over past it.
+    for cp in (0x2192, 0x2190, 0x2194):
+        g = cmap.get(cp)
+        if g not in horiz_specs: continue
+        recs, a = horiz_specs[g]
+        if len(recs) > MAX_VARIANTS:
+            rest, k = recs[1:], MAX_VARIANTS - 1
+            horiz_specs[g] = ([recs[0]] + [rest[round(i * (len(rest) - 1) / (k - 1))] for i in range(k)], a)
+    hmtx = ctx.font['hmtx']
+    touched = [cmap.get(cp) for cp in (0x2192, 0x2190, 0x2194)] + list(made.get('horiz', {}))
+    for long_cp, short_cp in LONG_ARROW_SHORT.items():
+        g, s = cmap.get(long_cp), cmap.get(short_cp)
+        if not g or g in horiz_specs or s not in horiz_specs:
+            continue
+        recs, a = horiz_specs[s]
+        w = hmtx[g][0]
+        longer = [r for r in recs if r.AdvanceMeasurement > w][:MAX_VARIANTS - 1]
+        horiz_specs[g] = ([_vrec(g, w)] + [_vrec(r.VariantGlyph, r.AdvanceMeasurement) for r in longer], copy.deepcopy(a))
+        touched.append(g)
+    for g in touched:
+        if g in horiz_specs:
+            assert len(horiz_specs[g][0]) <= MAX_VARIANTS, f'{g}: {len(horiz_specs[g][0])} horizontal variants'
+    for g, spec in made.get('vert', {}).items():
+        if g in vert_specs:
+            assert len(vert_specs[g][0]) <= MAX_VARIANTS, f'{g}: {len(vert_specs[g][0])} vertical variants'
+
+
 def post(ctx):
     font = ctx.font
     glyf, hmtx = font['glyf'], font['hmtx']
@@ -1765,8 +1967,8 @@ def post(ctx):
 
     # 2. MathVariants (VertGlyphConstruction & HorizGlyphConstruction)
     # Every AdvanceMeasurement and connector length is a plain style-invariant uint16.
-    STD_ADV = (965, 1060, 1155, 1250, 1340, 1430)
-    ANG_ADV = (885, 995, 1105, 1215, 1325, 1430)
+    STD_ADV = FENCE_H
+    ANG_ADV = ANG_H
     SLASH_ADV = (930, 1030, 1130, 1230, 1330, 1430)
     RAD_STEP_ADV = (938, 1035, 1135, 1235, 1335, 1430) + RAD_TALL_H
 
@@ -1866,19 +2068,19 @@ def post(ctx):
     rad_vars = [_vrec('radical', rad_h)] + [_vrec(f'radical.size{i}.math_table', RAD_STEP_ADV[i]) for i in range(len(RAD_STEP_ADV))]
 
     vert_specs = {
-        'parenleft': (std_sizes('parenleft', 'parenleft'), asm3('parenleft', bot_end=380, bot_full=1000, ext_full=500, top_start=380, top_full=1000)),
-        'parenright': (std_sizes('parenright', 'parenright'), asm3('parenright', bot_end=380, bot_full=1000, ext_full=500, top_start=380, top_full=1000)),
+        'parenleft': (std_sizes('parenleft', 'parenleft', advs=STD_ADV), asm3('parenleft', bot_end=380, bot_full=1000, ext_full=500, top_start=380, top_full=1000)),
+        'parenright': (std_sizes('parenright', 'parenright', advs=STD_ADV), asm3('parenright', bot_end=380, bot_full=1000, ext_full=500, top_start=380, top_full=1000)),
         'bracketleft': (std_sizes('bracketleft', 'bracketleft'), asm3('bracketleft')),
         'bracketright': (std_sizes('bracketright', 'bracketright'), asm3('bracketright')),
-        'braceleft': (std_sizes('braceleft', 'braceleft'), asm_brace('braceleft')),
-        'braceright': (std_sizes('braceright', 'braceright'), asm_brace('braceright')),
+        'braceleft': (std_sizes('braceleft', 'braceleft', advs=STD_ADV), asm_brace('braceleft')),
+        'braceright': (std_sizes('braceright', 'braceright', advs=STD_ADV), asm_brace('braceright')),
         'bar': (std_sizes('bar', 'bar', base_adv=899), asm_bar('bar')),
         'uni2223': (std_sizes('uni2223', 'divides', base_adv=899), asm_bar('divides')),
         'uni2016': (std_sizes('uni2016', 'dblbar', base_adv=899), asm_bar('dblbar')),
-        'uni2308': (std_sizes('uni2308', 'lceil'), asm_ceil('bracketleft')),
-        'uni2309': (std_sizes('uni2309', 'rceil'), asm_ceil('bracketright')),
-        'uni230A': (std_sizes('uni230A', 'lfloor'), asm_floor('bracketleft')),
-        'uni230B': (std_sizes('uni230B', 'rfloor'), asm_floor('bracketright')),
+        'uni2308': (std_sizes('uni2308', 'lceil'), asm_ceil('lceil')),
+        'uni2309': (std_sizes('uni2309', 'rceil'), asm_ceil('rceil')),
+        'uni230A': (std_sizes('uni230A', 'lfloor'), asm_floor('lfloor')),
+        'uni230B': (std_sizes('uni230B', 'rfloor'), asm_floor('rfloor')),
         'uni27E8': (std_sizes('uni27E8', 'langle', base_adv=705, advs=ANG_ADV), None),
         'uni27E9': (std_sizes('uni27E9', 'rangle', base_adv=705, advs=ANG_ADV), None),
         'slash': (std_sizes('slash', 'slash', base_adv=800, advs=SLASH_ADV, shortfall=False), None),
@@ -1899,7 +2101,8 @@ def post(ctx):
                          (0x222E, 'integral', True), (0x222F, 'dblint', True)):
         g = cmap.get(cp)
         if g and g in order_set and g not in vert_specs:
-            whole = [] if ring else [_vrec(f'{nm}.dsp2.math_table', DISPLAY_OP_MIN)]
+            whole = [_vrec(f"{'oiint' if nm == 'dblint' else 'oint'}.dsp2.math_table" if ring
+                           else f'{nm}.dsp2.math_table', DISPLAY_OP_MIN)]
             # 905 as for ∫ (their ink is ∫'s height): a fixed MATH field, the same in every
             # style, since the variable builder needs MATH identical across masters
             vert_specs[g] = ([_vrec(g, 905)] + whole, int_asm(nm, ring))
@@ -1911,6 +2114,8 @@ def post(ctx):
         vert_specs[cmap[0x2225]] = (std_sizes(cmap[0x2225], 'dblbar', base_adv=899), asm_bar('dblbar'))
     if cmap.get(0x2215) and cmap[0x2215] not in vert_specs:
         vert_specs[cmap[0x2215]] = ([_vrec(cmap[0x2215], 800)] + [_vrec(f'slash.size{i}.math_table', SLASH_ADV[i]) for i in range(len(SLASH_ADV))], None)
+    for g, (recs, _) in vert_specs.items():
+        assert len(recs) <= 20, f'{g}: {len(recs)} vertical variants; Chrome ignores MATH variant records past the 20th'
 
     HAT_ADV = (340, 680, 1060, 1520, 2060, 2700, 3440)
     TILDE_ADV = (380, 700, 1080, 1540, 2080, 2720, 3460)
@@ -1970,6 +2175,8 @@ def post(ctx):
         'uni23DE': (ov_vars, asm_horiz_brace('overbrace')),
         'uni23DF': (un_vars, asm_horiz_brace('underbrace')),
     }
+
+    _mathglyphs_constructions(ctx, cmap, order_set, vert_specs, horiz_specs)
 
     v_keys = sorted((g for g in vert_specs if g in order_set), key=gid)
     h_keys = sorted((g for g in horiz_specs if g in order_set), key=gid)
@@ -2035,6 +2242,8 @@ def post(ctx):
         ('integral.dsp2.math_table', INT_DSP2_IC, INT_DSP2_IC),
         ('dblint.dsp2.math_table', INT_DSP2_IC, INT_DSP2_IC),
         ('tplint.dsp2.math_table', INT_DSP2_IC, INT_DSP2_IC),
+        ('oint.dsp2.math_table', INT_DSP2_IC, INT_DSP2_IC),
+        ('oiint.dsp2.math_table', INT_DSP2_IC, INT_DSP2_IC),
     ]:
         if g in order_set:
             ic_map[g] = base_ic_it if ctx.ITALIC else base_ic_up

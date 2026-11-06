@@ -4,7 +4,7 @@ Input fonts are read only. Weight is continuous from Light (300) through Black
 (900). Italic is the registered 0/1 style selector, implemented with required
 FeatureVariations, retaining the genuine italic outlines and their own layout.
 
-Run with the same fontTools version as Makefile; see source/README.md.
+Run with the same fontTools version as Makefile; see README-variable.md.
 """
 from __future__ import annotations
 
@@ -747,6 +747,15 @@ def canonicalize(fonts: Sequence[TTFont], only=None):
                 for _,control,end in c:
                     pen.qCurveTo(control,end)
                 pen.closePath()
+            # Preserve source's deliberate, inkless two-point spacing contours.
+            # They carry browser accent clearance through glyph bounds.
+            if not old.isComposite() and old.numberOfContours > 0:
+                coords, ends, flags = old.getCoordinates(f['glyf'])
+                start = 0
+                for end in ends:
+                    pts = list(coords[start:end+1]); fl = list(flags[start:end+1]); start = end+1
+                    if len(pts) == 2 and all(int(v)&1 for v in fl) and pts[0][1] == pts[1][1] and abs(pts[0][0]-pts[1][0]) <= 1:
+                        pen.moveTo(pts[0]); pen.lineTo(pts[1]); pen.closePath()
             g=pen.glyph(dropImpliedOnCurves=False)
             for k,v in zip(('xMin','yMin','xMax','yMax'),bounds):
                 setattr(g,k,v)

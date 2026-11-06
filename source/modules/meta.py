@@ -47,9 +47,9 @@ DESCRIPTION = ('Torchlette Sans is the text face of torchlette, a modified versi
 # caron and dot) reaches 1044 in Regular, 1059 in Bold, 1065 in ExtraBold; the deepest
 # (cedilla and comma-below capitals) -270, -277, -282. The headroom is for Greek with
 # tonos and dialytika, superiors, arrows and Black. math_table's tall slanted radicals
-# (up to 4540, centred at 240: -2030..2510) set the values now. USE_TYPO_METRICS is on, so
+# (up to 6000, centred at 240: -2760..3240) set the values now. USE_TYPO_METRICS is on, so
 # browsers and apps space lines by the typo/hhea metrics, which this does not change.
-WIN_ASCENT, WIN_DESCENT = 2540, 2060
+WIN_ASCENT, WIN_DESCENT = 3260, 2780
 # ttfautohint, when build.py's interpreter has the pinned ttfautohint-py (the Makefile's
 # PY line); without it the font stays unhinted, as before. The epoch keeps head.modified.
 HINT_OPTIONS = dict(no_info=True, windows_compatibility=True, fallback_script='latn', epoch=1793404800)

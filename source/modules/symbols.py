@@ -19,6 +19,10 @@ Everything here is drawn from Torchlette Sans's own parts, at each weight:
 - Double-struck capitals ℝ ℕ ℤ ℚ ℂ after Noto Sans Math's design, drawn from R N Z Q C
   (see `doublestruck` at the end of this file, which draws the whole double-struck set:
   mathletters and mathnotation take their letters and figures from it).
+- Negated relations (see `negations`): ≮ ≯ ≰ ≱ ≢ ≁ ≄ ≆ ≇ ≉ ⊀ ⊁ ⋠ ⋡ ⊄ ⊅ ⊈ ⊉ ∌ ⊊ ⊋ ∤ ∦ ⋢ ⋣
+  ⋪ ⋫ ⋬ ⋭ ⊮ ⊯ ↚ ↛ ↮ ⇍ ⇏ ⇎, each its base with ∉'s slash, so that KaTeX's \\not and \\n...
+  commands (precomposed, or base + U+0338, which HarfBuzz recomposes) reach one glyph; and
+  the bases the font lacked, ⊏ ⊐ ⊑ ⊒ ⊲ ⊳ ⊴ ⊵ ⊩ ⊫.
 - Spaces: narrow no-break (the thin space's width), en and em; the word joiner is
   an empty zero-width glyph; the non-breaking hyphen is a copy of the hyphen (a
   copy, so ss16's hyphen rules, which make minus signs and arrows, leave it alone).
@@ -363,7 +367,11 @@ def glyphs(ctx):
     # ring operator and dot operator: narrower, between operands
     r2 = 95
     put(0x2218, diff(ellipse(205, A, r2, r2), ellipse(205, A, r2 - TV * 0.9, r2 - TH * 0.9)), 410)
-    put(0x22C5, dot(165, A), 330)
+    # the dot operator (\cdot): 1.1 times the period's dot, so that ss14's math form (mathglyphs,
+    # 1.22 times this) is about 128 units across, TeX's \cdotp to the x-height; the period stays
+    DOTOP = 1.1
+    put(0x22C5, transformed(dot(165 + (DOTOP - 1) * dot_r, A), (DOTOP, 0, 0, DOTOP, (1 - DOTOP) * (165 + (DOTOP - 1) * dot_r), (1 - DOTOP) * A)),
+        330 + 2 * (DOTOP - 1) * dot_r)
     # asterisk operator: the asterisk on the axis
     ast = path_of('asterisk'); asb = ast.bounds
     put(0x2217, centre(mv(ast, 0, A - (asb[1] + asb[3]) / 2), 600), 600)
@@ -414,6 +422,8 @@ def glyphs(ctx):
     put(0x2036, union(*[mv(rv, k * ppitch) for k in range(2)]), W('second'))
     put(0x2037, union(*[mv(rv, k * ppitch) for k in range(3)]), W('second') + ppitch)
 
+    negations(c, put)
+
     # ---- double-struck capitals (see doublestruck below) ------------------------------
     ds = doublestruck(c, ['R', 'N', 'Z', 'C', 'Q'])
     for cp, name, base in ((0x211D, 'uni211D', 'R'), (0x2115, 'uni2115', 'N'), (0x2124, 'uni2124', 'Z'), (0x2102, 'uni2102', 'C'), (0x211A, 'uni211A', 'Q')):
@@ -427,6 +437,226 @@ def glyphs(ctx):
     put(0x2060, empty, 0)                     # word joiner
     put(0x2011, path_of('hyphen'), W('hyphen'))   # non-breaking hyphen: the hyphen, outside its GSUB rules
     ctx.log(f'{len(made)} glyphs; U+2192 -> arrowright; paired arrows {ctx.paired_gap} off the axis')
+
+
+# ---- negated relations and their missing bases ----------------------------------------
+# KaTeX writes \not\le, \nleq, \nsubseteq, \nprec ... as precomposed code points (≰ U+2270)
+# or as the base followed by U+0338. A font that has the base and U+0338 but not the
+# precomposed glyph gets the pair from HarfBuzz's decomposition, and Mulish's U+0338 was
+# drawn for letters, so the slash landed on the next character. HarfBuzz recomposes base +
+# U+0338 into any of these glyphs the font has, so both spellings now reach them.
+#
+# Each is its base with the slash of ∉ (the bar's weight, rising two units for one across),
+# reaching NEG_OVER past the base's ink above and below and at least as far as ≠'s slash;
+# ∤ ∦ and the negated arrows take a short slash across the middle, ⊊ ⊋ a short one across
+# the lower bar only, ≆ one across its two bars, ⊮ ⊯ the slash of the logic module's ⊬ ⊭.
+# The bases the font lacked are drawn here first, on the set signs' conventions: ⊏ ⊐ ⊑ ⊒
+# (the subset signs squared), ⊲ ⊳ ⊴ ⊵ (a triangle outline of the bar's weight), ⊩ ⊫ (⊢ ⊨
+# with a second stem).
+NEG_OVER = 70
+NEG_CLEAR = 0.15     # ≆: the least gap between its slash and its wave, in bars
+# ↚ ↛ ⇎ ⋠: where the slash crosses an arrowhead or ≼'s curved arms it leaves slivers of
+# counter, a few units across, that open in some weights and not in others (↚: a pinhole in
+# Bold, another elsewhere in ExtraBold; ⇎: one in Light, two in Regular). The variable font
+# cannot interpolate a hole that comes and goes, so these fill every hole under a bar's
+# square that the base itself does not have.
+NEG_FILL = {0x219A, 0x219B, 0x21CE, 0x22E0}
+# ⋠: past the slash, ≼'s lower arm and the bar under it run on to their right ends, where
+# they all but meet: between them is a sliver of white, closed by the slash at its left and
+# open at its right through a mouth 18 units wide in Bold Italic, 9 in ExtraBold Italic and
+# 2.5 in Black Italic. Tapering through a pixel's width at text sizes, it rasterizes as a
+# counter or two depending on the weight, which the variable font cannot interpolate (its
+# ExtraBold-Black intermediates broke the sliver into two counters). Where an italic's mouth
+# is narrower than NEG_CHANNEL units, the sliver's right two thirds and its mouth are opened
+# to that width along their centre line: a channel like the lighter weights', open at both
+# rasterized ends, in ExtraBold Italic and Black Italic alike. (Sealing the mouth instead
+# changes the outline's structure from Bold Italic's, and its intermediates fall apart.)
+# The uprights' intermediates keep one counter; they stay as drawn.
+NEG_CHANNEL = {0x22E0: 16}
+NEGATIONS = (    # code point, base, kind
+    (0x226E, 'less', 'tall'), (0x226F, 'greater', 'tall'), (0x2270, 'lessequal', 'tall'),
+    (0x2271, 'greaterequal', 'tall'), (0x2262, 'uni2261', 'tall'), (0x2241, 'uni223C', 'tall'),
+    (0x2244, 'uni2243', 'tall'), (0x2247, 'uni2245', 'tall'), (0x2249, 'approxequal', 'tall'),
+    (0x2246, 'uni2245', 'bars'), (0x2280, 'uni227A', 'tall'), (0x2281, 'uni227B', 'tall'),
+    (0x22E0, 'uni227C', 'tall'), (0x22E1, 'uni227D', 'tall'), (0x2284, 'uni2282', 'tall'),
+    (0x2285, 'uni2283', 'tall'), (0x2288, 'uni2286', 'tall'), (0x2289, 'uni2287', 'tall'),
+    (0x220C, 'uni220B', 'tall'), (0x228A, 'uni2286', 'low'), (0x228B, 'uni2287', 'low'),
+    (0x2224, 'uni2223', 'short'), (0x2226, 'uni2225', 'short'),
+    (0x22E2, 'uni2291', 'tall'), (0x22E3, 'uni2292', 'tall'),
+    (0x22EA, 'uni22B2', 'tall'), (0x22EB, 'uni22B3', 'tall'), (0x22EC, 'uni22B4', 'tall'), (0x22ED, 'uni22B5', 'tall'),
+    (0x22AE, 'uni22A9', 'tack'), (0x22AF, 'uni22AB', 'tack'),
+    (0x219A, 'arrowleft', 'short'), (0x219B, 'arrowright', 'short'), (0x21AE, 'arrowboth', 'short'),
+    (0x21CD, 'uni21D0', 'short'), (0x21CF, 'arrowdblright', 'short'), (0x21CE, 'arrowdblboth', 'short'),
+)
+
+
+def negations(c, put):
+    A, BAR = c.LIN_AXIS, c.BAR
+    rect, poly, union, diff, band, mirror, path_of = c.rect, c.poly, c.union, c.diff, c.band, c.mirror, c.path_of
+    VB, TH, TV = BAR * 1.15, BAR, BAR * 1.1
+    have = lambda n: n in c.font.getGlyphOrder()
+
+    # ⊏ ⊐ ⊑ ⊒: the subset signs' frame (X0..X1, half height 228, the stack of ⊆) squared
+    def sq(x0, x1, yc, h):
+        return union(rect(x0, yc - h, x0 + TV, yc + h), rect(x0, yc + h - TH, x1, yc + h), rect(x0, yc - h, x1, yc - h + TH))
+    X0, X1, H, gap = 70, 530, 228, 70
+    hq = (535 - BAR - gap) / 2
+    put(0x228F, sq(X0, X1, A, H), 600); put(0x2290, mirror(sq(X0, X1, A, H), 300), 600)
+    sqe = union(sq(X0, X1, BAR + gap + hq, hq), rect(X0, 0, X1, BAR))
+    put(0x2291, sqe, 600); put(0x2292, mirror(sqe, 300), 600)
+
+    # ⊲ ⊳ ⊴ ⊵: a triangle outline, the stroke t measured square to each side (its inner
+    # triangle is the outer one shrunk about the incentre by the inradius less t)
+    def triangle(pts, t):
+        (ax, ay), (bx, by), (cx, cy) = pts
+        la, lb, lc = math.dist(pts[1], pts[2]), math.dist(pts[0], pts[2]), math.dist(pts[0], pts[1])
+        s = la + lb + lc
+        ix, iy = (la * ax + lb * bx + lc * cx) / s, (la * ay + lb * by + lc * cy) / s
+        area = abs((bx - ax) * (cy - ay) - (cx - ax) * (by - ay)) / 2
+        k = (2 * area / s - t) / (2 * area / s)
+        return diff(poly(pts), poly([(ix + k * (x - ix), iy + k * (y - iy)) for x, y in pts]))
+    TT = min(BAR, 70 + 0.4 * (BAR - 70))      # heavy weights' triangles keep a counter
+    def tri(yc, h): return triangle([(X1, yc + h), (X0 + 10, yc), (X1, yc - h)], TT)
+    put(0x22B2, tri(A, H), 600); put(0x22B3, mirror(tri(A, H), 300), 600)
+    trie = union(tri(BAR + gap + hq, hq), rect(X0, 0, X1, BAR))
+    put(0x22B4, trie, 600); put(0x22B5, mirror(trie, 300), 600)
+
+    # ⊩ ⊫: ⊢ ⊨ (the logic module's: stem 70..70+VB on 0..2A, bars to 530) with a second stem
+    yt, g2 = 2 * A, 0.9 * VB
+    s2 = 70 + VB + g2
+    stems = union(rect(70, 0, 70 + VB, yt), rect(s2, 0, s2 + VB, yt))
+    put(0x22A9, union(stems, rect(s2, A - BAR / 2, 530, A + BAR / 2)), 600)
+    put(0x22AB, union(stems, *[rect(s2, A + d - c.EQ_T / 2, 530, A + d + c.EQ_T / 2) for d in (c.EQ_D, -c.EQ_D)]), 600)
+
+    ne = path_of('notequal').bounds
+    made = []
+    for cp, base, kind in NEGATIONS:
+        if not have(base) or cp in c.font.getBestCmap():
+            continue
+        p = path_of(base); b = p.bounds; cx = (b[0] + b[2]) / 2
+        if kind == 'tall':          # past the ink by NEG_OVER, and at least ≠'s slash
+            y0, y1 = min(b[1] - NEG_OVER, ne[1]), max(b[3] + NEG_OVER, ne[3])
+        elif kind == 'short':       # across the middle, past the ink by 50 each side
+            dxh = max(100, (b[2] - b[0]) / 2 + 50) if base in ('uni2223', 'uni2225') else 100
+            y0, y1 = A - max(200, 1.2 * dxh), A + max(200, 1.2 * dxh)
+        elif kind == 'low':         # ⊊ ⊋: the lower bar only
+            y0, y1 = -75, BAR + 75; cx += 25 if base == 'uni2286' else -25
+        elif kind == 'bars':        # ≆: the two bars under the wave, clear of the wave
+            # The bars come within 85 units of the wave in Light and 32 in Black, so a
+            # NEG_OVER overshoot would join the slash to the wave from Medium on. Shorten both
+            # ends alike until the slash clears the wave by NEG_CLEAR bars at every weight:
+            # one topology in every weight, which the variable font can interpolate.
+            v = c.vspans(p, cx)
+            wave = c.transformed(c.clip(p, (-1000, (v[1][1] + v[2][0]) / 2, 2000, 3000)),
+                                 (1, 0, 0, 1, 0, -NEG_CLEAR * BAR))
+            over = NEG_OVER
+            while over > 0 and pathops.op(band((cx - (v[1][1] - v[0][0] + 2 * over) / 4, v[0][0] - over),
+                                               (cx + (v[1][1] - v[0][0] + 2 * over) / 4, v[1][1] + over), BAR),
+                                          wave, pathops.PathOp.INTERSECTION).area > 0:
+                over -= 1
+            y0, y1 = v[0][0] - over, v[1][1] + over
+        if kind == 'tack':          # ⊮ ⊯: the slash of ⊬ ⊭, right of the stems, across the bars
+            sw, slope = min(BAR * 0.86, 80.0), 212.0 / yt
+            xc = (s2 + VB + 530) / 2 + 10
+            s = band((xc - slope * A, 0), (xc + slope * A, yt), sw)
+        else:
+            d = dxh if kind == 'short' else (y1 - y0) / 4
+            s = band((cx - d, y0), (cx + d, y1), BAR)
+        u = union(p, s)
+        if cp in NEG_FILL:
+            u = _fill_slivers(u, p, BAR * BAR)
+        if cp in NEG_CHANNEL and c.ITALIC:
+            u = _open_channel(u, NEG_CHANNEL[cp], c.log)
+        made.append(put(cp, u, c.W(base)))
+    c.log(f'negations: {len(made)} precomposed, bases ⊏ ⊐ ⊑ ⊒ ⊲ ⊳ ⊴ ⊵ ⊩ ⊫')
+
+
+def _fill_slivers(path, base, limit):
+    """path less its holes smaller than limit (square units) that are not base's counters."""
+    def holes(p):
+        cs = list(p.contours)
+        if len(cs) < 2:
+            return []
+        outer = max(cs, key=lambda q: abs(q.area)).clockwise
+        return [q for q in cs if q.clockwise != outer]
+    counters = pathops.Path()
+    for q in holes(base):
+        counters.addPath(q)
+    small = [(q.bounds, q.area) for q in holes(path) if abs(q.area) < limit
+             and pathops.op(q, counters, pathops.PathOp.INTERSECTION).area < 0.5 * abs(q.area)]
+    if not small:
+        return path
+    out = pathops.Path()
+    for q in path.contours:
+        if (q.bounds, q.area) not in small:
+            out.addPath(q)
+    return out
+
+
+def _holes(p):
+    cs = list(p.contours)
+    if len(cs) < 2:
+        return []
+    outer = max(cs, key=lambda q: abs(q.area)).clockwise
+    return [q for q in cs if q.clockwise != outer]
+
+
+def _offset(p, g):
+    """p grown by g (g > 0) or shrunk by -g, with round joins."""
+    s = pathops.Path(); p.draw(s.getPen())
+    s.stroke(2 * abs(g), pathops.LineCap.BUTT_CAP, pathops.LineJoin.ROUND_JOIN, 4)
+    s.convertConicsToQuads()
+    return pathops.op(p, s, pathops.PathOp.UNION if g > 0 else pathops.PathOp.DIFFERENCE)
+
+
+def _open_channel(path, width, log):
+    """path with a pocket of white whose mouth is narrower than width opened into a channel
+    width units wide: a band of that width is cut along the pocket's centre line from a
+    third of the way in, out through the mouth and 40 units past it. Where the pocket is
+    already wider the band cuts nothing."""
+    h0, g = len(_holes(path)), 0.25
+    while g < width / 2 and len(_holes(_offset(path, g))) == h0:
+        g += 0.25
+    if g >= width / 2:
+        return path
+    mouth, g = 2 * g, g + 0.5
+    extra = pathops.op(_offset(_offset(path, g), -g), path, pathops.PathOp.DIFFERENCE)
+    for q in extra.contours:
+        seal = pathops.Path(); seal.addPath(q)
+        sealed = pathops.op(path, seal, pathops.PathOp.UNION)
+        if len(_holes(sealed)) == h0 + 1:
+            break
+    else:
+        return path
+    pocket = None
+    for q in _holes(sealed):
+        h = pathops.Path(); h.addPath(q)
+        if pathops.op(_offset(h, 1), seal, pathops.PathOp.INTERSECTION).area > 0:
+            pocket = h
+    if pocket is None:
+        return path
+    x0, y0, x1, y1 = pocket.bounds
+    mids = []
+    for i in range(41):
+        x = x0 + (x1 - x0) * i / 40
+        r = pathops.Path(); pen = r.getPen()
+        pen.moveTo((x, y0 - 1)); pen.lineTo((x + 0.1, y0 - 1)); pen.lineTo((x + 0.1, y1 + 1)); pen.lineTo((x, y1 + 1)); pen.closePath()
+        cut = pathops.op(r, pocket, pathops.PathOp.INTERSECTION)
+        if cut.area > 0:
+            mids.append((x, (cut.bounds[1] + cut.bounds[3]) / 2))
+    (ax, ay), (bx, by) = mids[-4], mids[-1]
+    run = math.hypot(bx - ax, by - ay)
+    mids.append((bx + (bx - ax) / run * 40, by + (by - ay) / run * 40))
+    line = pathops.Path(); pen = line.getPen()
+    pen.moveTo(mids[len(mids) // 3])
+    for m in mids[len(mids) // 3 + 1:]:
+        pen.lineTo(m)
+    pen.endPath()
+    line.stroke(width, pathops.LineCap.BUTT_CAP, pathops.LineJoin.ROUND_JOIN, 4)
+    line.convertConicsToQuads()
+    out = pathops.op(path, line, pathops.PathOp.DIFFERENCE)
+    log(f'negations: opened a {mouth:g}-unit mouth into a {width}-unit channel')
+    return out
 
 
 # ---- double-struck letters and figures ----------------------------------------------

@@ -1,11 +1,12 @@
 """otfeatures: case forms and capital spacing, the slashed zero, mark attachment for
 build.py's glyphs, their GDEF classes and ligature carets, and aalt / salt.
 
-Feature tags: extends GSUB case, ccmp and aalt and GPOS mark; adds GSUB zero and salt
-and GPOS cpsp. The new ones and case and aalt are off by default. The default-on
-additions (mark, and ccmp's one lookup) touch only a combining mark after a glyph that
+Feature tags: extends GSUB case, ccmp, calt and aalt and GPOS mark; adds GSUB zero and
+salt and GPOS cpsp. The new ones and case and aalt are off by default. Of the default-on
+additions, calt's one lookup slashes a zero that is the only digit of its number (see
+below); mark and ccmp's one lookup touch only a combining mark after a glyph that
 had no anchors (a small cap, an alternate, a figure, a ligature), which was left
-unpositioned before; text without such a sequence shapes exactly as before.
+unpositioned before; other text shapes exactly as before.
 
 - case: ( ) [ ] { } - – — « » ‹ › @ · ¡ ¿ centred on the capitals (their ink box's
   middle on the cap height's, 352.5). The hyphen takes build.py's hyphen.case (ss16's
@@ -16,9 +17,18 @@ unpositioned before; text without such a sequence shapes exactly as before.
 - zero: a slashed zero for every zero form (lining, pnum, onum, tabular onum, small
   cap, tabular small cap, superior, inferior, numerator, denominator):
   `<zero form>.zero.otfeatures`. The slash is a straight stroke in the zero's own
-  side thickness (0.8 of it) at the solidus's slant (less in a narrow counter),
-  ending inside the ring. Runs
-  last, after every figure feature.
+  side thickness (0.8 of it) at SLASH_ANGLE from vertical, ending inside the ring.
+  Runs last, after every figure feature.
+- calt: the slashed zero where a zero is the only digit of its number, so it cannot
+  be read as part of one (Jordan, 2026-11-05: "0.N is obvious; it's only where 0 is
+  alone that it's a problem, like where we use it as an index"). A zero stays plain
+  when a digit touches it, or when a decimal point or group separator (. , U+2009
+  U+202F) joins it to a digit on the other side: 10, 2026, 0.05, 5.0, 1,000, 0,5 keep
+  the plain zero; 0, x[0], (0), "0,", x0, 0x get the slash. Every figure form counts
+  as a digit (a lining zero beside an old-style 5, a superior 0 after a 1). Its
+  lookup runs after the zero feature's (both last, after every figure feature and
+  ss16, so ss16's fractions, ordinals, ranges and tags see plain zeros), and it calls
+  the zero feature's lookup, so with zero on every zero is slashed as before.
 - mark: one mark-to-base and one mark-to-ligature lookup (before Mulish's own, so
   mark-to-base comes before mkmk) with Mulish's mark classes and mark anchors, for
   the bases Mulish has no anchors for: the small caps, the ss04-ss07 alternates and
@@ -55,7 +65,22 @@ ZERO_SRC = ['zero', 'zero.pnum', 'zero.osf', 'zero.tosf', 'zero.sc', 'zero.sc.tf
             'uni2070', 'uni2080', 'zero.numr', 'zero.dnom']
 CPSP = 10
 SLASH_K = 0.8
+# The slashed zero's slash, in degrees from vertical (Jordan's pick F, 2026-11-05; 18 was
+# the solidus's slant before). At or below the solidus's slant, a narrow counter
+# lowers it to the counter's diagonal; steeper slashes keep the angle in every form.
+SLASH_ANGLE = 38
+# what joins a zero to a digit on its other side: decimal point, group separators
+ZERO_SEP = (0x2E, 0x2C, 0x2009, 0x202F)
+FIG_STEMS = {'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
+             'uni00B2', 'uni00B3', 'uni00B9', 'uni2070'} | {f'uni{u:04X}' for u in range(0x2074, 0x207A)} \
+            | {f'uni{u:04X}' for u in range(0x2080, 0x208A)}
 SUF = 'otfeatures'
+
+
+def _rev(cmap):
+    out = {}
+    for u, g in sorted(cmap.items()): out.setdefault(g, u)
+    return out
 
 
 def case_name(n): return f'{n}.case.{SUF}'
@@ -73,7 +98,7 @@ def _slant(ctx):
 
 def _slashed(ctx, z):
     """The zero with a straight stroke across its counter, 0.8 of its side's thickness,
-    at the solidus's slant, ending in the ring."""
+    at SLASH_ANGLE from vertical, ending in the ring."""
     p = ctx.path_of(z)
     contours = []
     for c in p.contours:
@@ -86,12 +111,15 @@ def _slashed(ctx, z):
     side = ctx.hspans(p, cy)[0]
     hb = hole.bounds; hx, hy = (hb[0] + hb[2]) / 2, (hb[1] + hb[3]) / 2
     cw, ch = hb[2] - hb[0], hb[3] - hb[1]
-    # In a narrow counter (the small, superior and inferior zeros of the heavy styles)
-    # the slash is no steeper than the counter's diagonal allows, so it ends in the
-    # counter's top and bottom curves rather than running along its sides, and no
-    # thicker than half the counter, so it leaves no slivers.
+    # No thicker than half the counter, so it leaves no slivers. At an angle no wider
+    # than the solidus's, a narrow counter (the small, superior and inferior zeros of
+    # the heavy styles) caps the slant at the counter's diagonal, so the slash ends in
+    # the counter's top and bottom curves rather than running along its sides; a wider
+    # angle already crosses the counter steeply enough and keeps SLASH_ANGLE.
     t = min(SLASH_K * (side[1] - side[0]), 0.5 * cw)
-    k, dy = min(_slant(ctx), 0.85 * cw / ch), h / 2 + 40
+    k = math.tan(math.radians(SLASH_ANGLE))
+    if k <= _slant(ctx) + 1e-9: k = min(k, 0.85 * cw / ch)
+    dy = h / 2 + 40
     bar = ctx.band((cx - k * dy, cy - dy), (cx + k * dy, cy + dy), t)
     # cut at the counter grown a little into the ring, so the slash's ends are hidden in
     # the ring and its sides meet the counter's edge at a clean, steep corner
@@ -418,8 +446,20 @@ def features(ctx):
     J = ' '.join
     ctx.gsub(f"lookup OTFEATURES_CASE {{ sub [{J(a for a, _ in ctx.case_pairs)}] by [{J(b for _, b in ctx.case_pairs)}]; }} OTFEATURES_CASE;\n"
              f"feature case {{ lookup OTFEATURES_CASE; }} case;")
-    ctx.gsub(f"lookup OTFEATURES_ZERO {{ sub [{J(a for a, _ in ctx.zero_pairs)}] by [{J(b for _, b in ctx.zero_pairs)}]; }} OTFEATURES_ZERO;\n"
-             f"feature zero {{ lookup OTFEATURES_ZERO; }} zero;")
+    zs = J(a for a, _ in ctx.zero_pairs)
+    cmap = ctx.font.getBestCmap(); rc = _rev(cmap)
+    figs = [g for g in ctx.font.getGlyphOrder() if g.split('.')[0] in FIG_STEMS
+            or unicodedata.category(chr(rc.get(g, 0x20))) == 'Nd']
+    seps = sorted({cmap[u] for u in ZERO_SEP if u in cmap})
+    ctx.zero_digits, ctx.zero_seps = figs, seps
+    ctx.gsub(f"lookup OTFEATURES_ZERO {{ sub [{zs}] by [{J(b for _, b in ctx.zero_pairs)}]; }} OTFEATURES_ZERO;\n"
+             f"feature zero {{ lookup OTFEATURES_ZERO; }} zero;\n"
+             f"@OTFEATURES_FIG = [{J(figs)}];\n@OTFEATURES_ZSEP = [{J(seps)}];\n"
+             f"lookup OTFEATURES_ZERO_CALT {{\n"
+             f"  ignore sub @OTFEATURES_FIG [{zs}]';\n  ignore sub [{zs}]' @OTFEATURES_FIG;\n"
+             f"  ignore sub @OTFEATURES_FIG @OTFEATURES_ZSEP [{zs}]';\n  ignore sub [{zs}]' @OTFEATURES_ZSEP @OTFEATURES_FIG;\n"
+             f"  sub [{zs}]' lookup OTFEATURES_ZERO;\n}} OTFEATURES_ZERO_CALT;\n"
+             f"feature calt {{ lookup OTFEATURES_ZERO_CALT; }} calt;")
     # lining figures take the capitals' .case marks (Mulish's ccmp gives them to the
     # capitals only): a top mark right after one becomes its .case form. Runs last, on
     # the figures' final forms (old-style and small-cap figures keep the lowercase marks).

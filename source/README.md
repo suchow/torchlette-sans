@@ -1,8 +1,8 @@
 # Torchlette Sans
 
-## v0.5.0 status
+## v0.5.1 source status
 
-The v0.5.0 fonts were built from an r3 working-tree build of the torchlette repository, not from this directory, which is still the v0.4.0 source and does not reproduce them; the updated source will follow. The variable font has one known intermediate-weight flag: ⋠ (U+22E0) at weight 850 italic. The build and verification reports are in the v0.5.0 tag, under `provenance/v0.5/`.
+The scripts reflect torchlette source commit `3809b10`. The released fonts were built from that source with additional intermediate augmentation and transplantation steps; this directory alone has not been verified to reproduce the release binaries. The release archive contains the finished static and variable fonts.
 
 Torchlette Sans is the text face of the torchlette web app. It is a modified
 version of [Mulish](https://github.com/googlefonts/mulish) and, like Mulish, is
