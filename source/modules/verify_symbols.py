@@ -52,6 +52,15 @@ space-control-*, prose-versus-literal-contexts), shaped under the app's settings
    a scan across the head finds the two wings apart from the shaft (three spans), so no
    head fills in solid (the first pair did in Black, its 0.6-reach head shorter than the
    notch is deep).
+9. Circle arrows ↻ ↺ and semicircle arrows ↶ ↷: each is one contour, ↺ is ↻ mirrored and ↷
+   is ↶ mirrored. The open circle of ↻ ↺ is centred: across its advance (within 2 units,
+   unslanted about 252 in an italic) and on half the cap height (within 3), where a scan
+   finds the ring's two sides, each a bar wide (within 3). Each head is centred on the
+   stroke: turned to some direction, scans across it find three spans (wing, shaft, wing)
+   over at least 0.3 of the bar's width, the middle one a bar wide (within 4) and centred
+   between the wings' outer edges (within 4). (The first circle arrows pointed the head along
+   the tangent at the arc's end and let the arc curve on under it: the inner wing lay along
+   the stroke and the outer one stood off it, so no direction gave a centred shaft.)
 """
 import sys
 import uharfbuzz as hb
@@ -393,6 +402,61 @@ for u, arrows in PAIRS.items():
             check(three, f'{ch} ({deg} deg): the head never opens into two wings beside the shaft (filled in)')
         check(heads == 1, f'{ch}: an arrow with {heads} heads found (one tail of bare shaft, one head)')
 print(f'paired arrows: {len(PAIRS)} glyphs, apart and with open heads')
+
+# ---- 9. circle and semicircle arrows -------------------------------------------------
+def tip_flats(g, k=0):
+    """The short straight segments of g's outline (unslanted by k): the flat tips of its heads."""
+    rp = RecordingPen(); gs[g].draw(rp); out = []; cur = start = None
+    for op, args in rp.value:
+        pts = [(x - k * y, y) for x, y in args]
+        if op == 'moveTo': cur = start = pts[0]
+        elif op == 'lineTo':
+            if 10 <= math.dist(cur, pts[0]) <= 4 * BAR: out.append((cur, pts[0]))
+            cur = pts[0]
+        elif op == 'closePath':
+            if cur != start and 10 <= math.dist(cur, start) <= 4 * BAR: out.append((cur, start))
+        elif pts: cur = pts[-1]
+    return out
+def centred_head(g, P, run):
+    """Whether some flat tip of g, scanned across behind it, gives `run` units of scans that
+    find a wing, a bar-wide shaft and a wing, the shaft centred between the wings' outer edges."""
+    for p, q in tip_flats(g, K_IT):
+        m = ((p[0] + q[0]) / 2, (p[1] + q[1]) / 2)
+        for sgn in (1, -1):
+            deg = math.atan2(sgn * (p[0] - q[0]), -sgn * (p[1] - q[1])); co, si = math.cos(-deg), math.sin(-deg)
+            Q = [[(x * co - y * si, x * si + y * co) for x, y in poly] for poly in P]
+            tip, yt = m[0] * co - m[1] * si, m[0] * si + m[1] * co; good = 0
+            for k in range(20, 500, 2):
+                sp = [s_ for s_ in scan(Q, tip - k, False) if abs((s_[0] + s_[1]) / 2 - yt) < 300]   # the head's, not the far side of the arc
+                ok = (len(sp) == 3 and abs((sp[1][1] - sp[1][0]) - BAR) <= 4
+                      and abs((sp[1][0] + sp[1][1]) / 2 - (sp[0][0] + sp[2][1]) / 2) <= 4)
+                good = good + 2 if ok else 0
+                if good >= run: return True
+    return False
+H_CAP = bounds('H')[3]
+for cw, acw in ((0x21BB, 0x21BA), (0x21B6, 0x21B7)):
+    if cw not in cmap or acw not in cmap: check(False, f'U+{cw:04X}/U+{acw:04X} unmapped'); continue
+    ga, gb = cmap[cw], cmap[acw]; adv = hmtx[ga][0]
+    ba, bb = bounds(ga), bounds(gb)
+    check(K_IT or hmtx[gb][0] == adv and all(abs(p - q) <= 1 for p, q in zip(ba, (adv - bb[2], bb[1], adv - bb[0], bb[3]))),
+          f'{chr(acw)} is not {chr(cw)} mirrored: {bb} vs {ba} (advance {adv})')
+    for u in (cw, acw):
+        ch = chr(u); fp = Flat(K_IT); gs[cmap[u]].draw(fp)
+        check(len(fp.polys) == 1, f'{ch}: {len(fp.polys)} contours, want one')
+        check(centred_head(cmap[u], fp.polys, round(0.3 * BAR)), f'{ch}: no direction finds the shaft centred between the head\'s wings')
+        if u in (0x21B6, 0x21B7): continue
+        # a chord 100 below the centre, clear of the head: the ring's two sides
+        low = min(y for poly in fp.polys for _, y in poly); yc = H_CAP / 2 - 100
+        ring = scan(fp.polys, yc, True)
+        mid = hmtx[cmap[u]][0] / 2 - K_IT * 252                  # the advance's middle, unslanted like the outline
+        if len(ring) != 2: check(False, f'{ch}: 100 under half the cap height the ring is {ring}, not two sides'); continue
+        cx = (ring[0][0] + ring[1][1]) / 2
+        check(abs(cx - mid) <= 2, f'{ch}: the circle\'s centre {cx:.1f} is off the advance\'s middle {mid:.1f}')
+        bot = [q for q in scan(fp.polys, cx, False) if q[1] < yc]
+        check(len(bot) == 1 and abs((bot[0][1] - bot[0][0]) - BAR) <= 3, f'{ch}: the ring\'s foot {bot} is not one bar ({BAR}) wide')
+        ro = ((ring[1][1] - ring[0][0]) ** 2 / 4 + (yc - low) ** 2) / (2 * (yc - low))   # outer radius from the chord and the foot
+        check(abs(low + ro - H_CAP / 2) <= 3, f'{ch}: the circle\'s centre at {low + ro:.1f}, not half the cap height {H_CAP / 2:.1f}')
+print('circle arrows: centred circles, heads centred on the stroke')
 
 print(f'verify_symbols {STYLE} {MODE}: {checks} checks, {fails} failures')
 sys.exit(1 if fails else 0)

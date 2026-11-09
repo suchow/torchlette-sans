@@ -1589,7 +1589,12 @@ ax = mv(ax, 45 - b[0], OSF_AXIS - acy)
 s16_add(93, 'approxequal.osf', ax, ax.bounds[2] + 45)
 def times(cx, cy, h, t=BAR):
     return union(band((cx - h, cy - h), (cx + h, cy + h), t), band((cx - h, cy + h), (cx + h, cy - h), t))
-s16_add(114, 'multiply.osf', times(232, OSF_AXIS, 172), 464)
+# its arms end in points that meet the figures only at their tips, so it takes more room
+# than minus.osf's flat ends (45): TIMES_SB at every weight, as Source Sans and IBM Plex
+# give their times signs about 1.4 times their plus's sidebearings
+TIMES_SB = P('TIMES_SB', 62)
+_mo = times(0, OSF_AXIS, 172); _mob = _mo.bounds
+s16_add(114, 'multiply.osf', mv(_mo, TIMES_SB - _mob[0]), _mob[2] - _mob[0] + 2 * TIMES_SB)
 # 115 a times sign centred on the capitals
 _mb = path_of('multiply').bounds
 s16_add(115, 'multiply.case', mv(path_of('multiply'), 0, 352 - (_mb[1] + _mb[3]) / 2), W('multiply'))

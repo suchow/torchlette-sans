@@ -1,8 +1,8 @@
 # Torchlette Sans
 
-## v0.5.4 source status
+## v0.5.6 source status
 
-The scripts reflect torchlette source commit `c06d5ec`. The released fonts were built from that source with additional intermediate augmentation and transplantation steps; this directory alone has not been verified to reproduce the release binaries. The release archive contains the finished static and variable fonts.
+The scripts reflect torchlette source commit `e13e469`. The released fonts were built from that source with additional intermediate augmentation and transplantation steps; this directory alone has not been verified to reproduce the release binaries. The release archive contains the finished static and variable fonts.
 
 Torchlette Sans is the text face of the torchlette web app. It is a modified
 version of [Mulish](https://github.com/googlefonts/mulish) and, like Mulish, is

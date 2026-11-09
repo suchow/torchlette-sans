@@ -153,14 +153,27 @@ def glyphs(ctx):
         p.stroke(w or BAR, pathops.LineCap.BUTT_CAP, pathops.LineJoin.MITER_JOIN, 4); p.simplify(); return p
 
     def arc_arrow(cx, cy, r, a0, a1, s=0.7):
-        """An arc of the shaft's weight from a0 to a1 with the head at a1, along the tangent."""
+        """An arc of the shaft's weight from a0 round to a1 (degrees), run on straight along its
+        tangent at a1 into the head.
+
+        The arc ends where the head's wings end, so the stroke leaves the head between the
+        wings, centred, and turns only behind them; under the head it is a straight shaft
+        that stops at the notch, as a straight arrow's does. (The old arc ran on under the
+        head to its notch and the head pointed along the tangent there: the arc curved away
+        under the inner wing, which lay along it, while the outer wing stood off the
+        stroke.)"""
         sgn = 1 if a1 > a0 else -1; t = math.radians(a1)
-        tan = (-math.sin(t) * sgn, math.cos(t) * sgn)
-        # the arc stops where the shaft meets the head's notch; the tip runs on along the tangent
-        stop = a1 - sgn * math.degrees(20 * SM / r)
-        end = (cx + r * math.cos(math.radians(stop)), cy + r * math.sin(math.radians(stop)))
-        tip = (end[0] + tan[0] * 80 * SM, end[1] + tan[1] * 80 * SM)
-        return union(stroked(arc(cx, cy, r, a0, stop)), head(tip, math.degrees(math.atan2(tan[1], tan[0])), s))
+        end = (cx + r * math.cos(t), cy + r * math.sin(t))
+        u = (-math.sin(t) * sgn, math.cos(t) * sgn)
+        L = 220 * reach(s) + 35 * SM                    # tip to the ends of the wings
+        tip = (end[0] + u[0] * L, end[1] + u[1] * L)
+        notch = (tip[0] - u[0] * 80 * SM, tip[1] - u[1] * 80 * SM)
+        shaft = union(stroked(arc(cx, cy, r, a0, a1)), band(end, notch, BAR))
+        return union(shaft, head(tip, math.degrees(math.atan2(u[1], u[0])), s))
+
+    def head_back(r, s=0.7):
+        """The angle (degrees) on a circle of radius r that the straight run under a head at s takes up."""
+        return math.degrees((220 * reach(s) + 35 * SM - 80 * SM) / r)
 
     ctx.map(0x2192, 'arrowright')                                   # it had a glyph and no cmap entry
     AR = path_of('arrowright')                                     # ink 60..600, adv 660
@@ -239,13 +252,20 @@ def glyphs(ctx):
     HD = c.EQ_D
     put(0x21CC, union(harpoon((60, A + HD), (600, A + HD), 1), harpoon((600, A - HD), (60, A - HD), 1)), 660)
     put(0x21CB, union(harpoon((600, A + HD), (60, A + HD), -1), harpoon((60, A - HD), (600, A - HD), -1)), 660)
-    # circle arrows: an open circle of the shaft's weight, the head at the top
-    R0 = 225
-    q = arc_arrow(330, A, R0, 40, -265)            # clockwise from the upper right round to the top
-    put(0x21BB, *fit(q))
-    put(0x21BA, *fit(mirror(q, 330)))
-    # semicircle arrows over the top: anticlockwise ends at the left pointing down
-    q = arc_arrow(330, A - 120, 240, 0, 180)
+    # circle arrows: an open circle of the shaft's weight, open at the top; the clockwise
+    # arrow's stroke ends at the upper left and runs on into the head, pointing up and to the
+    # right (the anticlockwise arrow is its mirror), as Noto Sans Math and Apple Symbols draw
+    # them. The circle, not the ink, is centred: across the advance, and on the middle of the
+    # capitals' height, a little under the middle of the line box, so it sits centred in a button.
+    R0, AE, GAP = 225, 170, 110       # radius; where the clockwise stroke ends; the open angle from there round to its start
+    CY = path_of('H').bounds[3] / 2
+    q = arc_arrow(0, CY, R0, AE - GAP, AE - 360)                # clockwise from the gap's right edge round to AE
+    b = q.bounds; half = max(-b[0], b[2]) + 60
+    put(0x21BB, mv(q, half), 2 * half)
+    put(0x21BA, mv(mirror(q, 0), half), 2 * half)
+    # semicircle arrows over the top: anticlockwise ends at the left pointing down, the arc cut
+    # short by the head's straight run so the tip stays where the half circle would end
+    q = arc_arrow(330, A - 120, 240, 0, 180 - head_back(240))
     put(0x21B6, *fit(q))
     put(0x21B7, *fit(mirror(q, 330)))
     # right then curving up / down
