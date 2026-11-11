@@ -96,7 +96,7 @@ def outline(g):
 
 # ---- 1. coverage ------------------------------------------------------------------
 ROWS = {
-    'ArrowCore': '←↑→↓↔↕↖↗↘↙↦↤↩↪↶↷↺↻⇒⇐⇑⇓⇔⇕⇄⇆⇋⇌⟵⟶⟷⟸⟹⟺⤴⤵',
+    'ArrowCore': '←↑→↓↔↕↖↗↘↙↦↤↩↪↶↷↺↻⇒⇐⇑⇓⇔⇕⇄⇆⇋⇌⟵⟶⟷⟸⟹⟺⤴⤵⬑',
     'ScopeArrows': '⟼',
     'Harpoons': '↼↽↾↿⇀⇁⇂⇃⇅⇵',
     'CommonMath': '∈∉∀∃∄∇∂⋅∘∗⊙⊗⊕‖∣∼≃≅≡∝≪≫⊂⊆⊃⊇∪∩∧∨¬⊤⊥⌊⌋⌈⌉⋯⋮⋱≔≕∓±×÷−·∑∏∫√∞≈≠≤≥∅∆⟨⟩∠∴∵',
@@ -179,6 +179,10 @@ for ch in '→←↔⟵⟶⟷↦↤⟼↪↩':
     g = cmap[ord(ch)]; b = bounds(g); x = b[0] + (b[2] - b[0]) * 0.5
     sp = [s for s in vspan(g, x) if s[0] <= AXIS <= s[1]]
     check(len(sp) == 1 and abs((sp[0][1] - sp[0][0]) - BAR) <= 2, f'{ch} shaft {sp} vs bar {BAR}')
+if 0x2B11 in cmap:                                   # ⬑: the run along its foot is a bar, under the cap height
+    g = cmap[0x2B11]; b = bounds(g); sp = vspan(g, b[2] - 40)
+    check(len(sp) == 1 and abs((sp[0][1] - sp[0][0]) - BAR) <= 2 and b[1] > 0 and b[3] < 705,
+          f'⬑ run {sp} vs bar {BAR}, bounds {b}')
 # vertical extents
 hh, os2 = f['hhea'], f['OS/2']
 top_lim = min(hh.ascent, os2.sTypoAscender, os2.usWinAscent)

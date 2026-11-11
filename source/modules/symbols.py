@@ -11,6 +11,8 @@ Everything here is drawn from Torchlette Sans's own parts, at each weight:
   one half of that head, unmoved, with the shaft run on to the tip and cut along the
   barb's outer edge (see `harpoon`); the paired arrows ⇄ ⇆ (and ⇅ ⇵, the pair turned)
   stand far enough apart that the heads, which grow with the weight, stay clear.
+  ⬑ (U+2B11) stands ↑'s head and shaft on the left end of a run just above the baseline,
+  in IBM Plex Sans's proportions (see `tip_up`).
 - Operators sit on the math axis (`LIN_AXIS`, the minus's centre, 286.5) with the
   minus's bar (`BAR`) as their stroke; relations and the binary operators that
   stand between operands take the 600-unit cell of + = < (ink about 60..540).
@@ -207,6 +209,18 @@ def glyphs(ctx):
         return union(hook, arrow((xh - 1, A), (640, A)))
     put(0x21AA, hooked(), 700)
     put(0x21A9, mirror(path_of('uni21AA'), 350), 700)
+    # leftwards arrow with tip upwards (the app's reply link): ↑'s head and shaft on a
+    # stem that rises from the left end of a run of the same bar. IBM Plex Sans's ⬑ sets the
+    # proportions, measured and redrawn (no outline taken): the run's centre line 167 above
+    # the baseline, the tip at 634 (0.9 of the cap height), the run ending 508 to the right
+    # of the stem's centre, a sharp corner. The head is the -> head at full reach, as deep as
+    # Plex's (255 from tip to wing ends) and narrower by the font's own wing angle.
+    def tip_up(yc=167, tip=634, run=508):
+        xs = 60 + 176.5                                  # the left wing's outer point at the lsb
+        stem = rect(xs - BAR / 2, yc - BAR / 2, xs + BAR / 2, tip - 80 * SM)
+        foot = rect(xs - BAR / 2, yc - BAR / 2, xs + run, yc + BAR / 2)
+        return union(stem, foot, head((xs, tip), 90)), xs + run + 60
+    put(0x2B11, *tip_up())
     # long arrows: the 1000-unit cell of U+27F5/27F6
     put(0x27F7, arrow((60, A), (940, A), both=True), 1000)
     put(0x27F9, union(c.dbl_shafts(60, 813), c.dbl_head(953)), 1000)
