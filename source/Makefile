@@ -1,16 +1,19 @@
 # Torchlette Sans: build from Mulish and Mulish Italic and write the web fonts.
 #
-#   make          build/TorchletteSans-<style>.ttf for each of STYLES (seven weights, upright and italic) and their subset woff2 in web/public/fonts/
+#   make release  the release files in ../fonts: ttf/ (the fourteen .ttf), webfonts/ (the same fonts as
+#                 woff2) and variable/ (the wght/ital variable font, .ttf and .woff2, under both names)
+#   make check    clean rebuild of the release in BUILD_DIR, compared with ../fonts (release.py compare)
+#   make          build/TorchletteSans-<style>.ttf for each of STYLES (seven weights, upright and italic) and the app's subset woff2 in WEB_DIR
 #   make ttf      the .ttf only (no woff2 written)
 #   make verify   HarfBuzz feature check (verify.py, verify_ss16.py, modules/verify_*.py) of each built font and of its web subset, and make fontbakery
 #   make fontbakery  fontbakery check-universal on every built .ttf; fails on an error, an incomplete report or a FAIL outside fontbakery_gate.py's ALLOWED
-#   make check    clean rebuild of every style, compared with the committed woff2 files byte for byte
 #   make clean
 #
 # Variables (see modules/README.md):
 #   MODULES=a,b | none   build with only these modules/*.py (default: all of them but MODULES_OFF)
 #   BUILD_DIR=dir        where the .ttf, the Mulish instances and the check files go (default: build)
-#   WEB_DIR=dir          where `make` writes the woff2 (default: the committed ../../web/public/fonts)
+#   WEB_DIR=dir          where `make` writes the app's subset woff2 (default: BUILD_DIR/web)
+#   RELEASE_DIR=dir      where `make release` writes and `make check` compares (default: ../fonts)
 #
 # The font version (name ID 5, head.fontRevision) is the one line in VERSION, such as
 # 0.504 for release v0.5.4; set it there once per release.
@@ -35,8 +38,10 @@ REF_DEP := $(wildcard commissioner/*.ttf notosans/*.ttf notosansmath/*.ttf notos
 NORMAL_HELPER_DEPS := $(sort $(wildcard modules/_*.py mathitalic_references.py))
 
 BUILD_DIR := build
-WEB_REF   := ../../web/public/fonts
-WEB_DIR   := $(WEB_REF)
+WEB_DIR   := $(BUILD_DIR)/web
+RELEASE_DIR := ../fonts
+# the torchlette app's lesson prose, which verify_ss16.py also shapes when it is there
+LEVELS    := $(wildcard ../../web/levels)
 
 # Modules: every modules/*.py but verify_*.py and _*.py, in sorted order, less
 # MODULES_OFF; MODULES picks a subset (a comma list, or none) and may name a module
@@ -171,7 +176,7 @@ endif
 SUBSET_FLAGS = --unicodes='$(UNICODES)' --layout-features='$(WEB_FEATURES)' --name-IDs='*' --name-languages='*' \
 	--notdef-outline --recalc-average-width --no-hinting --flavor=woff2
 
-.PHONY: all ttf verify fontbakery check clean FORCE
+.PHONY: all ttf verify fontbakery release check clean FORCE
 all: $(WEBS)
 ttf: $(TTFS)
 
@@ -211,7 +216,7 @@ verify: fontbakery verify.py verify_ss16.py webfeatures.py web_features.txt $(TT
 	  MULISH_STATIC=$$st $(PYHB) verify.py $(BUILD_DIR)/TorchletteSans-$$s.ttf ss04 ss05 ss06 ss07; \
 	  $(SUBSET) $(BUILD_DIR)/TorchletteSans-$$s.ttf $(subst --flavor=woff2,--glyph-names,$(SUBSET_FLAGS)) --output-file=$(BUILD_DIR)/web-subset-$$s.ttf; \
 	  TS_WEB_SUBSET=1 MULISH_STATIC=$$st $(PYHB) verify.py $(BUILD_DIR)/web-subset-$$s.ttf ss04 ss05 ss06 ss07; \
-	  $(PYHB) verify_ss16.py $(BUILD_DIR)/TorchletteSans-$$s.ttf ../../web/levels; \
+	  $(PYHB) verify_ss16.py $(BUILD_DIR)/TorchletteSans-$$s.ttf $(LEVELS); \
 	  TS_WEB_SUBSET=1 $(PYHB) verify_ss16.py $(BUILD_DIR)/web-subset-$$s.ttf; \
 	  for m in $(MODULES_ON); do \
 	    if [ -f modules/verify_$$m.py ]; then \
@@ -237,14 +242,35 @@ fontbakery: fontbakery_gate.py verify_fontbakery_gate.py $(TTFS)
 	$(PY) fontbakery_gate.py $$status $(BUILD_DIR)/fontbakery.json $(TTFS) --markdown $(BUILD_DIR)/fontbakery.md
 	$(PY) verify_fontbakery_gate.py $(BUILD_DIR)/fontbakery.json $(TTFS)
 
-# A clean rebuild of every style must match the committed woff2 files byte for byte.
+# The release, as published: each .ttf as built; the same font, whole, as woff2
+# (release.py woff2, which keeps the .ttf's timestamp, so the bytes repeat); and the
+# variable font that variable.py makes from the fourteen .ttf (about 9 minutes), under
+# both of the names the releases have used. All fourteen styles are needed.
+VAR_DIR := $(BUILD_DIR)/variable
+$(VAR_DIR)/TorchletteSans-Variable.ttf: variable.py $(TTFS)
+	@test "$(sort $(STYLES))" = "$(sort $(UPRIGHTS) $(ITALICS))" || { echo 'the variable font needs all fourteen STYLES'; exit 1; }
+	@rm -rf $(VAR_DIR) $(BUILD_DIR)/variable-work; mkdir -p $(VAR_DIR)
+	$(PY) variable.py --masters $(BUILD_DIR) --output $@ --woff2 $(VAR_DIR)/TorchletteSans-Variable.woff2 \
+	  --work-dir $(BUILD_DIR)/variable-work --report $(VAR_DIR)/report.json
+release: release.py $(TTFS) $(VAR_DIR)/TorchletteSans-Variable.ttf
+	@mkdir -p $(RELEASE_DIR)/ttf $(RELEASE_DIR)/webfonts $(RELEASE_DIR)/variable
+	@set -e; for s in $(STYLES); do \
+	  cp $(BUILD_DIR)/TorchletteSans-$$s.ttf $(RELEASE_DIR)/ttf/; \
+	  $(PY) release.py woff2 $(BUILD_DIR)/TorchletteSans-$$s.ttf $(RELEASE_DIR)/webfonts/TorchletteSans-$$s.woff2; \
+	done
+	@set -e; for n in TorchletteSans-Variable TorchletteSansVariable; do \
+	  cp $(VAR_DIR)/TorchletteSans-Variable.ttf $(RELEASE_DIR)/variable/$$n.ttf; \
+	  cp $(VAR_DIR)/TorchletteSans-Variable.woff2 $(RELEASE_DIR)/variable/$$n.woff2; \
+	done
+	@ls -l $(RELEASE_DIR)/ttf $(RELEASE_DIR)/webfonts $(RELEASE_DIR)/variable
+
+# A clean rebuild of the release in BUILD_DIR, compared file by file with RELEASE_DIR:
+# the .ttf and the variable font byte for byte, the woff2 byte for byte or, for the web
+# fonts of v0.5.7 and before (written with the time of writing), table by table.
 check:
 	rm -rf $(BUILD_DIR)
-	@set -e; for s in $(STYLES); do \
-	  $(MAKE) --no-print-directory $(BUILD_DIR)/TorchletteSans-$$s.ttf >/dev/null; \
-	  $(SUBSET) $(BUILD_DIR)/TorchletteSans-$$s.ttf $(SUBSET_FLAGS) --output-file=$(BUILD_DIR)/rebuilt-$$s.woff2; \
-	  cmp $(BUILD_DIR)/rebuilt-$$s.woff2 $(WEB_REF)/TorchletteSans-$$s.woff2 && echo "identical: $$s"; \
-	done
+	$(MAKE) --no-print-directory release RELEASE_DIR=$(BUILD_DIR)/release
+	$(PY) release.py compare $(BUILD_DIR)/release $(RELEASE_DIR)
 
 clean:
 	rm -rf $(BUILD_DIR)

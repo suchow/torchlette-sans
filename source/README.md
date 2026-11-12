@@ -1,9 +1,5 @@
 # Torchlette Sans
 
-## v0.5.7 source status
-
-The scripts reflect torchlette source commit `ab77fd7`. The released fonts were built from that source with additional intermediate augmentation and transplantation steps; this directory alone has not been verified to reproduce the release binaries. The release archive contains the finished static and variable fonts.
-
 Torchlette Sans is the text face of the torchlette web app. It is a modified
 version of [Mulish](https://github.com/googlefonts/mulish) and, like Mulish, is
 licensed under the SIL Open Font License 1.1 (`OFL.txt`). Mulish's own license
@@ -182,13 +178,36 @@ and the copyright notices above are the attribution it asks for.
 
 ## Build
 
-Requires [uv](https://docs.astral.sh/uv/). From this folder:
+Requires [uv](https://docs.astral.sh/uv/) and nothing else: the Makefile pins Python 3.12
+and every tool (fontTools 4.68.0, skia-pathops 0.9.2, brotli 1.2.1, ttfautohint-py 0.6.1),
+and this folder holds every input. From this folder of a fresh clone:
+
+    make -j7 release
+
+builds the release in `../fonts`, the files the GitHub releases carry:
+
+- `ttf/TorchletteSans-<style>.ttf`, the fourteen styles (seven weights, upright and
+  italic), each built from its own static instance of Mulish by `build.py` with the
+  default modules (about 4 minutes for all fourteen with `-j7`);
+- `webfonts/TorchletteSans-<style>.woff2`, the same fonts, whole, as WOFF2
+  (`release.py woff2`, which keeps the .ttf's timestamp);
+- `variable/TorchletteSans-Variable.ttf` and `.woff2`, the wght/ital variable font that
+  `variable.py` makes from the fourteen .ttf (about 9 minutes), also under the name
+  `TorchletteSansVariable`.
+
+The build is deterministic: the same source gives the same bytes. `make -j7 check`
+rebuilds the release from scratch in `build/release` and compares it with `../fonts`
+(`release.py compare`): the .ttf and the variable font byte for byte, and the web fonts
+byte for byte or, for those of v0.5.7 and before, which carried the time they were
+written in `head.modified`, table by table. On the v0.5.7 tag every .ttf and both
+variable fonts are byte-identical, and every web font has the same tables but for that
+timestamp. The folders `auxiliary-v03/`, `canonical_export/` and `variable-v0.4/` are
+the record of earlier variable-font work; the release build does not use them.
 
     make
 
-This writes `build/TorchletteSans-<style>.ttf` for the fourteen styles (seven weights,
-upright and italic) and the subset web fonts
-`../../web/public/fonts/TorchletteSans-<style>.woff2`. The .ttf keeps
+writes `build/TorchletteSans-<style>.ttf` and the torchlette app's subset web fonts
+`build/web/TorchletteSans-<style>.woff2` (`WEB_DIR`). The .ttf keeps
 every feature and is hinted. The woff2 is unhinted and keeps only the code points
 in the Makefile's `UNICODES` and the features in `web_features.txt`: what browsers
 apply by default (kern, liga, clig, calt, rlig, ccmp, locl, mark, mkmk) and what
@@ -196,8 +215,7 @@ the app's CSS turns on (ss01, ss02, ss16, the figure features, smcp and c2sc), a
 (the vector module's random word marks). The
 other stylistic sets, the cvNN, case, cpsp, zero, aalt, salt, sups, subs, frac and
 the rest are in the .ttf only. The tool versions are pinned, so each woff2 is
-byte-identical on every build; `make check` rebuilds all fourteen from scratch and
-compares.
+byte-identical on every build.
 
 ## Check
 
