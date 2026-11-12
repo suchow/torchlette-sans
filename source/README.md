@@ -44,7 +44,15 @@ docstring lists what it changes):
   `doublestruck`), and the Unicode spaces and joiners.
 - `otfeatures`: case forms of the punctuation (case), capital spacing (cpsp), a
   slashed zero (zero), mark attachment on `build.py`'s glyphs, GDEF classes and
-  ligature carets, and aalt and salt.
+  ligature carets, and aalt and salt; dlig (the Th and th ligatures of ss01 and ss03);
+  and fixes to Mulish's own layout: a GDEF class for every glyph, frac only around a
+  slash between digits, and locl for Romanian and the Turkic languages Mulish left out.
+
+  Of the other registered features, these are not in the font: clig (there are no
+  contextual ligatures beyond those of liga, calt and ss16), pcap and c2pc (petite
+  capitals would be a new alphabet drawn at the x-height, with its accented forms,
+  Cyrillic, marks and kerning), unic (it needs those x-height capitals too), and titl
+  (no titling forms are drawn).
 - `sigmoid`: the first i of "sigmoid" drawn as a small sigmoid curve, in ss16.
 - `vector`: ten more forms of ss16's "vector"/"vectors" word mark, in each of which a stroke
   of the word grows into the arrow (Jordan's picks from the vector-ligature lab: v01 v02 v06

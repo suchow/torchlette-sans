@@ -1,8 +1,8 @@
 """otfeatures: case forms and capital spacing, the slashed zero, mark attachment for
 build.py's glyphs, their GDEF classes and ligature carets, and aalt / salt.
 
-Feature tags: extends GSUB case, ccmp, calt and aalt and GPOS mark; adds GSUB zero and
-salt and GPOS cpsp. The new ones and case and aalt are off by default. Of the default-on
+Feature tags: extends GSUB case, ccmp, calt, aalt, frac and locl and GPOS mark; adds GSUB
+zero, salt and dlig and GPOS cpsp. The new ones and case and aalt are off by default. Of the default-on
 additions, calt's one lookup slashes a zero that is the only digit of its number (see
 below); mark and ccmp's one lookup touch only a combining mark after a glyph that
 had no anchors (a small cap, an alternate, a figure, a ligature), which was left
@@ -55,6 +55,7 @@ unpositioned before; other text shapes exactly as before.
   slash, so a lone 7, the 7 of "7 1/2" and the slash of "and/or" changed too. Its
   lookups are replaced in place: only a slash between digits becomes the fraction slash,
   only the digits before a fraction slash numerators, those after it denominators.
+- dlig: the Th and th ligatures (ss01's and ss03's lookups) as discretionary ligatures.
 - locl: Mulish registers the Latin language systems ROM, AZE, CRT, KAZ and TAT with no
   locl. Romanian gets Moldavian's (Ş ş Ţ ţ to Ș ș Ț ț); Azerbaijani, Crimean Tatar, Kazakh
   and Tatar get Turkish's (the i that keeps its dot), as the same feature record.
@@ -526,6 +527,31 @@ def _locl_languages(ctx, gsub):
     ctx.log(f'locl: {" ".join(done) or "none"} share their neighbours\' lookups')
 
 
+def _dlig(ctx, gsub):
+    """dlig, discretionary ligatures: the Th and th ligatures of ss01 and ss03, the same
+    lookups under the tag that layout applications and CSS (font-variant-ligatures:
+    discretionary-ligatures) offer for them. One new feature record, in every language
+    system; ss01 and ss03 stay as they are."""
+    from fontTools.ttLib.tables import otTables
+    fl = gsub.FeatureList.FeatureRecord
+    if any(r.FeatureTag == 'dlig' for r in fl): raise SystemExit('otfeatures: the font already has dlig')
+    idx = sorted({i for r in fl if r.FeatureTag in ('ss01', 'ss03') for i in r.Feature.LookupListIndex})
+    if not idx: return
+    rec = otTables.FeatureRecord(); rec.FeatureTag = 'dlig'
+    rec.Feature = otTables.Feature(); rec.Feature.FeatureParams = None
+    rec.Feature.LookupListIndex = idx; rec.Feature.LookupCount = len(idx)
+    allr = fl + [rec]
+    order = sorted(range(len(allr)), key=lambda i: allr[i].FeatureTag)
+    remap = {o: n for n, o in enumerate(order)}
+    gsub.FeatureList.FeatureRecord = [allr[i] for i in order]; gsub.FeatureList.FeatureCount = len(allr)
+    for sr in gsub.ScriptList.ScriptRecord:
+        for ls in [sr.Script.DefaultLangSys] + [l.LangSys for l in sr.Script.LangSysRecord]:
+            if not ls: continue
+            ls.FeatureIndex = sorted([remap[i] for i in ls.FeatureIndex] + [remap[len(fl)]]); ls.FeatureCount = len(ls.FeatureIndex)
+            if ls.ReqFeatureIndex != 0xFFFF: ls.ReqFeatureIndex = remap[ls.ReqFeatureIndex]
+    ctx.log(f'dlig: lookups {idx} (ss01 Th, ss03 th)')
+
+
 FRAC_DIGITS = 'zero one two three four five six seven eight nine'.split()
 
 
@@ -771,3 +797,4 @@ def post(ctx):
             f'aalt {len(aalt)} glyphs, salt {len(salt)}; {nk} kerning entries copied')
     _locl_languages(ctx, gsub)
     _frac(ctx, gsub)
+    _dlig(ctx, gsub)

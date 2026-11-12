@@ -392,6 +392,13 @@ if kept('frac'):
         g = names(text, dict(F, **feats))
         check(not g[0].endswith(('.numr', '.dnom')) and g[2:] == ['one.numr', 'fraction', 'two.dnom'], f'frac {text!r} {feats}: {g}')
 
+# ---------------------------------------------------------------- dlig
+if kept('dlig'):
+    check(names('The other', {'dlig': 1})[:3] == ['T_h', 'e', 'space'] and 't_h' in names('The other', {'dlig': 1}),
+          f"dlig: The other -> {names('The other', {'dlig': 1})}")
+    check(names('The other') == names('The other', {'dlig': 0}) and 'T_h' not in names('The other'), 'dlig: Th without dlig')
+    check(names('The other', {'dlig': 1, 'smcp': 1}) == names('The other', {'smcp': 1}), 'dlig: a ligature under smcp')
+
 # ---------------------------------------------------------------- locl
 def names_lang(text, lang, feats=None):
     b = hb.Buffer(); b.add_str(text); b.guess_segment_properties(); b.language = lang
