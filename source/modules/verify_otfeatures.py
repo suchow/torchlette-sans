@@ -367,6 +367,11 @@ if os.environ.get('MULISH_STATIC'):            # Mulish's own carets (fi, fl) as
     for g, lg in zip(_ml.Coverage.glyphs, _ml.LigGlyph):
         if g in GO: check(carets.get(g) == [c.Coordinate for c in lg.CaretValue], f'{g} carets {carets.get(g)} changed')
 check(all(cd.get(g) == 3 for g in ('acutecomb', 'uni0338', 'dotbelowcomb')), 'marks lost their class')
+unclassed = [g for g in GO if g != '.notdef' and g not in cd and not omitted_component_class(g)]
+check(not unclassed, f'GDEF: {len(unclassed)} glyphs without a class: {unclassed[:10]}')
+check(all(cd.get(g) == 3 for g in encoded_marks), f'GDEF: combining marks not class 3: {[g for g in encoded_marks if cd.get(g) != 3][:10]}')
+_cmap = tt.getBestCmap()
+check(all(cd.get(_cmap[ord(c)]) == 1 for c in 'БВДəðŋß ' if ord(c) in _cmap), 'GDEF: Б В Д ə ð ŋ ß space are not bases')
 # carets follow the letters: office's ffi has two, between the letters
 r = shape('office')
 check(r[1]['g'] == 'f_f_i' and len(carets.get('f_f_i', [])) == 2, f'office: {[x["g"] for x in r]}')

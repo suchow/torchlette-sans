@@ -41,7 +41,9 @@ unpositioned before; other text shapes exactly as before.
 - GDEF: every glyph build.py and this module add (and any other module's glyph
   left without one) gets a glyph class (ligature for
   every ligature substitution's output, base otherwise) and each ligature without
-  carets a caret between each pair of its characters.
+  carets a caret between each pair of its characters. Mulish's own glyphs that Mulish
+  left unclassed get one too (mark for a combining mark, ligature, or base), so every
+  glyph but .notdef has a class; build.py stops on any glyph left without one.
 - aalt: one alternate lookup with every glyph's single alternates from Mulish's
   aalt, ss04-ss08, case, zero, smcp, c2sc, the figure features, sups, subs, sinf,
   numr, dnom, ordn and the ss15/ss16/cvNN letter and sign alternates (not the
@@ -645,6 +647,20 @@ def post(ctx):
     new = [g for g in font.getGlyphOrder() if g not in ctx.mulish_glyphs]
     for g in new:                                     # a class another module set stays
         if g not in cd: cd[g] = 2 if g in ligdefs else 1
+    # Mulish leaves about 300 of its own glyphs without a class (Б ð ŋ ß, the spaces, the
+    # spacing accents, its numerators and denominators ...): a combining mark (by its code
+    # point, or an unencoded form of a mark, strokecomb.obarred) is a mark, a ligature a
+    # ligature, everything else a base. Only .notdef stays unclassed.
+    # An encoded character that a ligature rule also makes (½ from 1/2, ≤ from <=, … from
+    # ...) is a base: typed as itself it is one character, and it has no ligature anchors.
+    enc = {g: u for u, g in font.getBestCmap().items()}
+    old = 0
+    for g in font.getGlyphOrder():
+        if g in cd or g == '.notdef': continue
+        stem = g.split('.')[0]
+        if g in enc: cd[g] = 3 if unicodedata.category(chr(enc[g])) in ('Mn', 'Me') else 1
+        else: cd[g] = 3 if cd.get(stem) == 3 or stem.endswith('comb') else 2 if g in ligdefs else 1
+        old += 1
     alt_src = {}
     for a, bs in _singles(gsub, range(len(gsub.LookupList.Lookup))):
         for b in bs: alt_src.setdefault(b, a)
@@ -698,6 +714,7 @@ def post(ctx):
     for fr in gsub.FeatureList.FeatureRecord:
         if fr.FeatureTag == 'aalt':
             fr.Feature.LookupListIndex = [aalt_i]; fr.Feature.LookupCount = 1
-    ctx.log(f'GDEF: {len(new)} glyphs classed ({sum(1 for g in new if cd[g] == 2)} ligatures, {ncar} with carets); '
+    ctx.log(f'GDEF: {len(new)} glyphs classed ({sum(1 for g in new if cd[g] == 2)} ligatures, {ncar} with carets), '
+            f'and {old} of Mulish\'s that had no class; '
             f'aalt {len(aalt)} glyphs, salt {len(salt)}; {nk} kerning entries copied')
     _locl_languages(ctx, gsub)

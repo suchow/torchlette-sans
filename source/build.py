@@ -2650,6 +2650,12 @@ if ITALIC:
     print(f'italic: reslanted {ITALIC_K:g} per unit about y {ITALIC_YC:g}; smooth points restored again: {moved}')
 
 run_modules('post')
+# Every glyph but .notdef has a GDEF class once otfeatures has run (it classes what the
+# other modules and Mulish leave out); a glyph a later phase adds without one stops the build.
+if 'otfeatures' in [n for n, _, _ in MODULES_RUN]:
+    _cd = font['GDEF'].table.GlyphClassDef.classDefs
+    _unclassed = [g for g in font.getGlyphOrder() if g != '.notdef' and g not in _cd]
+    if _unclassed: sys.exit(f'GDEF: {len(_unclassed)} glyphs without a glyph class, e.g. {_unclassed[:10]}')
 write_ss16_owners()
 font['maxp'].numGlyphs = len(font.getGlyphOrder())
 font.getReverseGlyphMap(rebuild=True)
