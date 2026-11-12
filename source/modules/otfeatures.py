@@ -49,6 +49,9 @@ unpositioned before; other text shapes exactly as before.
   word marks' and spacing pieces that only make sense inside their words). It
   replaces Mulish's two aalt lookups, whose alternates come first in it.
 - salt: one alternate lookup with the ss04-ss08 alternates.
+- locl: Mulish registers the Latin language systems ROM, AZE, CRT, KAZ and TAT with no
+  locl. Romanian gets Moldavian's (Ş ş Ţ ţ to Ș ș Ț ț); Azerbaijani, Crimean Tatar, Kazakh
+  and Tatar get Turkish's (the i that keeps its dot), as the same feature record.
 
 Copies of the kerning: each new case form and slashed zero is added to every pair
 positioning subtable wherever its source glyph is, so it kerns as the source does.
@@ -485,6 +488,38 @@ def features(ctx):
 
 
 # ---------------------------------------------------------------- post
+# locl for the Latin language systems Mulish registers without one: Romanian takes
+# Moldavian's lookups (Ş ş Ţ ţ to the comma-below Ș ș Ț ț), and the Turkic languages that
+# write the dotted and dotless i as Turkish does take Turkish's (i keeps its dot under
+# ligatures and case changes).
+LOCL_SHARE = {'ROM ': 'MOL ', 'AZE ': 'TRK ', 'CRT ': 'TRK ', 'KAZ ': 'TRK ', 'TAT ': 'TRK '}
+
+
+def _locl_languages(ctx, gsub):
+    from fontTools.ttLib.tables import otTables
+    feats = gsub.FeatureList.FeatureRecord
+    done = []
+    for sr in gsub.ScriptList.ScriptRecord:
+        if sr.ScriptTag != 'latn': continue
+        langs = {lr.LangSysTag: lr.LangSys for lr in sr.Script.LangSysRecord}
+        for lang, src in LOCL_SHARE.items():
+            if src not in langs: continue
+            locl = [i for i in langs[src].FeatureIndex if feats[i].FeatureTag == 'locl']
+            if not locl: continue
+            ls = langs.get(lang)
+            if ls is None:                                 # a language system of its own: dflt's features
+                ls = otTables.LangSys(); ls.LookupOrder = None; ls.ReqFeatureIndex = 0xFFFF
+                ls.FeatureIndex = list(sr.Script.DefaultLangSys.FeatureIndex)
+                lr = otTables.LangSysRecord(); lr.LangSysTag = lang; lr.LangSys = ls
+                sr.Script.LangSysRecord.append(lr)
+                sr.Script.LangSysRecord.sort(key=lambda r: r.LangSysTag)
+                sr.Script.LangSysCount = len(sr.Script.LangSysRecord)
+            if any(feats[i].FeatureTag == 'locl' for i in ls.FeatureIndex): continue
+            ls.FeatureIndex = sorted(set(ls.FeatureIndex) | set(locl)); ls.FeatureCount = len(ls.FeatureIndex)
+            done.append(lang.strip())
+    ctx.log(f'locl: {" ".join(done) or "none"} share their neighbours\' lookups')
+
+
 AALT_FROM = ['ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'case', 'zero', 'smcp', 'c2sc', 'onum', 'pnum', 'tnum',
              'sups', 'subs', 'sinf', 'numr', 'dnom', 'ordn', 'ss01', 'ss02', 'ss03', 'ss15', 'ss16'] + [f'cv{i:02d}' for i in range(1, 100)]
 SALT_FROM = ['ss04', 'ss05', 'ss06', 'ss07', 'ss08']
@@ -665,3 +700,4 @@ def post(ctx):
             fr.Feature.LookupListIndex = [aalt_i]; fr.Feature.LookupCount = 1
     ctx.log(f'GDEF: {len(new)} glyphs classed ({sum(1 for g in new if cd[g] == 2)} ligatures, {ncar} with carets); '
             f'aalt {len(aalt)} glyphs, salt {len(salt)}; {nk} kerning entries copied')
+    _locl_languages(ctx, gsub)

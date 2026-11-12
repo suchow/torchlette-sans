@@ -371,6 +371,22 @@ check(all(cd.get(g) == 3 for g in ('acutecomb', 'uni0338', 'dotbelowcomb')), 'ma
 r = shape('office')
 check(r[1]['g'] == 'f_f_i' and len(carets.get('f_f_i', [])) == 2, f'office: {[x["g"] for x in r]}')
 
+# ---------------------------------------------------------------- locl
+def names_lang(text, lang, feats=None):
+    b = hb.Buffer(); b.add_str(text); b.guess_segment_properties(); b.language = lang
+    hb.shape(HB, b, feats or {}); return [GO[i.codepoint] for i in b.glyph_infos]
+if kept('locl'):
+    for lang in ('ro', 'mo'):
+        got = names_lang('ŞşŢţ', lang)
+        check(got == ['uni0218', 'uni0219', 'uni021A', 'uni021B'], f'locl {lang}: ŞşŢţ -> {got}')
+    check(names_lang('ŞşŢţ', 'en') == ['Scedilla', 'scedilla', 'uni0162', 'uni0163'], 'locl en: Ş ş Ţ ţ changed')
+    tr = names_lang('fi i', 'tr')
+    check('i.loclTRK' in tr, f'locl tr: fi i -> {tr}')
+    for lang in ('az', 'crh', 'kk', 'tt'):
+        got = names_lang('fi i', lang)
+        check(got == tr, f'locl {lang}: fi i -> {got}, Turkish {tr}')
+    check('i.loclTRK' not in names_lang('fi i', 'en'), 'locl en: dotted i form outside Turkic')
+
 # ---------------------------------------------------------------- aalt / salt
 if kept('aalt', 'salt'):
     gsub = tt['GSUB'].table
