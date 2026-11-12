@@ -376,6 +376,22 @@ check(all(cd.get(_cmap[ord(c)]) == 1 for c in 'БВДəðŋß ' if ord(c) in _cm
 r = shape('office')
 check(r[1]['g'] == 'f_f_i' and len(carets.get('f_f_i', [])) == 2, f'office: {[x["g"] for x in r]}')
 
+# ---------------------------------------------------------------- frac
+if kept('frac'):
+    F = {'frac': 1}
+    def fr(t): return ' '.join(names(t, F))
+    for text, want in (('1/2', 'one.numr fraction two.dnom'),
+                       ('10/31', 'one.numr zero.numr fraction three.dnom one.dnom'),
+                       ('7 1/2', 'seven space one.numr fraction two.dnom'),
+                       ('3 3/4', 'three space three.numr fraction four.dnom'),
+                       ('1⁄2', 'one.numr fraction two.dnom'),
+                       ('7', 'seven'), ('7 and 8', 'seven space a n d space eight'),
+                       ('and/or', 'a n d slash o r'), ('x/2', 'x slash two'), ('2/', 'two slash')):
+        check(fr(text) == want, f'frac {text!r}: {fr(text)}, expected {want}')
+    for text, feats in (('7 1/2', {'onum': 1}), ('7 1/2', {'tnum': 1})):
+        g = names(text, dict(F, **feats))
+        check(not g[0].endswith(('.numr', '.dnom')) and g[2:] == ['one.numr', 'fraction', 'two.dnom'], f'frac {text!r} {feats}: {g}')
+
 # ---------------------------------------------------------------- locl
 def names_lang(text, lang, feats=None):
     b = hb.Buffer(); b.add_str(text); b.guess_segment_properties(); b.language = lang

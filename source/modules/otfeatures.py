@@ -51,6 +51,10 @@ unpositioned before; other text shapes exactly as before.
   word marks' and spacing pieces that only make sense inside their words). It
   replaces Mulish's two aalt lookups, whose alternates come first in it.
 - salt: one alternate lookup with the ss04-ss08 alternates.
+- frac: Mulish's frac made a numerator of every digit and a fraction slash of every
+  slash, so a lone 7, the 7 of "7 1/2" and the slash of "and/or" changed too. Its
+  lookups are replaced in place: only a slash between digits becomes the fraction slash,
+  only the digits before a fraction slash numerators, those after it denominators.
 - locl: Mulish registers the Latin language systems ROM, AZE, CRT, KAZ and TAT with no
   locl. Romanian gets Moldavian's (Ş ş Ţ ţ to Ș ș Ț ț); Azerbaijani, Crimean Tatar, Kazakh
   and Tatar get Turkish's (the i that keeps its dot), as the same feature record.
@@ -522,6 +526,54 @@ def _locl_languages(ctx, gsub):
     ctx.log(f'locl: {" ".join(done) or "none"} share their neighbours\' lookups')
 
 
+FRAC_DIGITS = 'zero one two three four five six seven eight nine'.split()
+
+
+def _frac(ctx, gsub):
+    """Mulish's frac turns every slash into a fraction slash and every digit into a
+    numerator, then the digits after a fraction slash into denominators, so a lone 7 or
+    the 7 of "7 1/2" comes out a numerator and "and/or" gets a fraction slash. Its three
+    lookups are replaced in place (so frac still runs where Mulish's did, before onum,
+    tnum and pnum): a slash between two digits becomes the fraction slash; digits before
+    a fraction slash become numerators (reverse chaining, so a run of any length); digits
+    after one, or after a denominator, become denominators. Mulish's two nested
+    lookups, which only its chain used, take the new nested ones."""
+    from fontTools.ttLib import TTFont
+    from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
+    font = ctx.font; LL = gsub.LookupList.Lookup
+    fr = [r for r in gsub.FeatureList.FeatureRecord if r.FeatureTag == 'frac']
+    top = sorted({i for r in fr for i in r.Feature.LookupListIndex})
+    if [LL[i].LookupType for i in top] != [1, 1, 6]:
+        raise SystemExit(f'otfeatures: frac lookups {top} are not Mulish\'s (slash, numerators, chain)')
+    nested = sorted({o.LookupListIndex for i in top for o in ctx.walk(LL[i]) if type(o).__name__ == 'SubstLookupRecord'})
+    users = {}
+    for i, lk in enumerate(LL):
+        for o in ctx.walk(lk):
+            if type(o).__name__ == 'SubstLookupRecord': users.setdefault(o.LookupListIndex, set()).add(i)
+    feat_use = {i for r in gsub.FeatureList.FeatureRecord if r.FeatureTag != 'frac' for i in r.Feature.LookupListIndex}
+    if len(nested) != 2 or any(users.get(n, set()) - set(top) or n in feat_use for n in nested):
+        raise SystemExit(f'otfeatures: frac\'s nested lookups {nested} are used elsewhere')
+    D = ' '.join(FRAC_DIGITS); N = ' '.join(d + '.numr' for d in FRAC_DIGITS); M = ' '.join(d + '.dnom' for d in FRAC_DIGITS)
+    fea = f'''languagesystem DFLT dflt;
+lookup OTF_FRAC_SLASH_SUB {{ sub slash by fraction; }} OTF_FRAC_SLASH_SUB;
+lookup OTF_FRAC_DNOM_SUB {{ sub [{D}] by [{M}]; }} OTF_FRAC_DNOM_SUB;
+lookup OTF_FRAC_SLASH {{ sub [{D}] slash' lookup OTF_FRAC_SLASH_SUB [{D}]; }} OTF_FRAC_SLASH;
+lookup OTF_FRAC_NUMR {{ rsub [{D}]' [fraction {N}] by [{N}]; }} OTF_FRAC_NUMR;
+lookup OTF_FRAC_DNOM {{ sub [fraction {M}] [{D}]' lookup OTF_FRAC_DNOM_SUB; }} OTF_FRAC_DNOM;
+feature frac {{ lookup OTF_FRAC_SLASH; lookup OTF_FRAC_NUMR; lookup OTF_FRAC_DNOM; }} frac;
+'''
+    tmp = TTFont(); tmp.setGlyphOrder(font.getGlyphOrder())
+    addOpenTypeFeaturesFromString(tmp, fea, tables=['GSUB'])
+    new = tmp['GSUB'].table.LookupList.Lookup            # 0, 1 nested; 2, 3, 4 the feature's
+    slot = {0: nested[0], 1: nested[1]}
+    for lk in new[2:]:
+        for o in ctx.walk(lk):
+            if type(o).__name__ == 'SubstLookupRecord': o.LookupListIndex = slot[o.LookupListIndex]
+    for k, i in slot.items(): LL[i] = new[k]
+    for k, i in zip((2, 3, 4), top): LL[i] = new[k]
+    ctx.log(f'frac: lookups {top} (nested {nested}) only between digits and a slash')
+
+
 AALT_FROM = ['ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'case', 'zero', 'smcp', 'c2sc', 'onum', 'pnum', 'tnum',
              'sups', 'subs', 'sinf', 'numr', 'dnom', 'ordn', 'ss01', 'ss02', 'ss03', 'ss15', 'ss16'] + [f'cv{i:02d}' for i in range(1, 100)]
 SALT_FROM = ['ss04', 'ss05', 'ss06', 'ss07', 'ss08']
@@ -718,3 +770,4 @@ def post(ctx):
             f'and {old} of Mulish\'s that had no class; '
             f'aalt {len(aalt)} glyphs, salt {len(salt)}; {nk} kerning entries copied')
     _locl_languages(ctx, gsub)
+    _frac(ctx, gsub)
