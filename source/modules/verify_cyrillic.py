@@ -297,5 +297,23 @@ for pair in ('A\u0422', '\u0422A', 'V\u0414', 'L\u0422', '\u0413O'):
     d = kern_delta(pair, {'smcp': 1, 'c2sc': 1})
     check(d < 0, f'cross-script small-cap pair {pair!r} not kerned ({d})')
 
+# Capitals against punctuation (CYRILLIC_PUNCT_KERN): Г and its accented forms as T, at
+# least as tight as T (Г's arm reaches farther); У and its forms as Y on both sides; Ч, whose
+# right side is a stem, stays 0, as H. does.
+t_dot = kern_delta('T.')
+for g in 'ГЃҐҒ':
+    for p in '.,…»›:':
+        d = kern_delta(g + p)
+        tight = g != 'Ғ' or p in '.,…'               # Ғ's stroke stands out at mid-height
+        check(d < 0 and (d <= kern_delta('T' + p) or not tight), f'{g}{p} kerned {d}, T{p} {kern_delta("T" + p)}')
+for g in 'УЎӮӰӲ':
+    for p in '.,…»':
+        d = kern_delta(g + p)
+        check(d < 0, f'{g}{p} not kerned ({d})')
+    for p in '«‹':
+        d = kern_delta(p + g)
+        check(d < 0, f'{p}{g} not kerned ({d})')
+check(kern_delta('Ч.') == 0 and kern_delta('«Г') == 0, f'Ч. {kern_delta("Ч.")}, «Г {kern_delta("«Г")}: should stay 0')
+
 print(f'cyrillic {STYLE} {MODE}: {checks - len(fails)}/{checks} checks passed ({len(cyr_sc_glyphs)} .sc.cyrillic glyphs)')
 sys.exit(1 if fails else 0)

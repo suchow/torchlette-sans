@@ -46,6 +46,9 @@ What this module adds (owned glyphs suffixed `.cyrillic`, lookups/classes prefix
      `CYRILLIC_CROSS_KERN` bridges Mulish's separate Latin and Cyrillic kerning classes
      across script boundaries (`A`+`Т`, `Т`+`A`, `V`+`Д`, `T`+`о`, `Г`+`o`, etc.) in a
      single conflict-free Format-2 subtable without touching tabular figures.
+     `CYRILLIC_PUNCT_KERN` kerns Г Ѓ Ґ Ғ (right side, as T) and У Ў Ӯ Ӱ Ӳ (both sides,
+     as Y) against the punctuation their Latin model kerns with (Г. Г, Г» У. «У ...),
+     scaled by the open space beside each mark (see `_build_punct_kern`).
 
 3. `post(ctx)`:
    Verifies against the compiled `GPOS` table that zero kerning pairs in
@@ -671,6 +674,78 @@ def _build_cross_kern(ctx):
     return out
 
 
+# Cyrillic capitals whose open side has the shape of a Latin capital's, for the
+# punctuation kerning Mulish gives the Latin capital and not the Cyrillic: the right side
+# of Г Ѓ Ґ Ғ is T's (an arm over open space), and both sides of У Ў Ӯ Ӱ Ӳ are Y's (the arms
+# over open space, the foot under them). Ч is not here: its right side is a full-height
+# stem, which takes no kerning against a period in Mulish's Latin (H.) or in the reference
+# faces (IBM Plex Sans, PT Sans, Arial, SF: Ч. 0).
+PUNCT_RIGHT = {'uni0413': 'T', 'uni0403': 'T', 'uni0490': 'T', 'uni0492': 'T',
+               'uni0423': 'Y', 'uni040E': 'Y', 'uni04EE': 'Y', 'uni04F0': 'Y', 'uni04F2': 'Y'}
+PUNCT_LEFT = {'uni0423': 'Y', 'uni040E': 'Y', 'uni04EE': 'Y', 'uni04F0': 'Y', 'uni04F2': 'Y'}
+PUNCT_RATIO = (0.0, 1.5)   # less room than the Latin model, less kerning; never over 1.5 times
+PUNCT_PAD = 60
+
+
+def _build_punct_kern(ctx):
+    """CYRILLIC_PUNCT_KERN: Г, У and their accented forms against the punctuation their Latin
+    model (T, Y) kerns with, for the pairs Mulish leaves at 0 (Г. Г, Г» У. У, «У ...).
+
+    A positive value (T” T) T?: the arm's end meets the mark) is taken as it is. A negative
+    one is scaled by how much more open space the Cyrillic letter has beside that mark than
+    the Latin one: the distance from the letter's ink to its advance edge (right side) or
+    origin (left side), measured across the punctuation mark's own height range (60 units
+    more each way), Cyrillic
+    over Latin, at most 1.5 (PUNCT_RATIO): Ғ's stroke, which stands out to the right at
+    mid-height, takes less kerning against a dash or a guillemet than Г does. Г's arm reaches farther from its stem than T's half
+    bar, so Г. is about 1.45 times T. (IBM Plex Sans gives 1.5, PT Sans 1.07, Arial 1.1);
+    У's foot leaves a little more room than Y's stem (1.17 times Y.)."""
+    font = ctx.font
+    have = set(font.getGlyphOrder())
+    rev = {g: u for u, g in font.getBestCmap().items()}
+    existing = _effective_kerning(font['GPOS'].table)
+
+    def is_punct(g):
+        u = rev.get(g)
+        return u is not None and unicodedata.category(chr(u))[0] == 'P'
+
+    def ink(g):
+        b = ctx.path_of(g).bounds
+        return b if b and b[3] > b[1] else None
+
+    def open_side(g, y0, y1, right):
+        b = ctx.clip(ctx.path_of(g), (-4000, y0, 8000, y1)).bounds
+        if not b or b[2] <= b[0]: return None
+        return ctx.W(g) - b[2] if right else b[0]
+
+    def value(cyr, lat, mark, v, right):
+        if v >= 0: return v
+        m = ink(mark)
+        if not m: return v
+        # the mark's height range, and PUNCT_PAD more above and below: a stroke that ends
+        # just over a dash still counts as beside it
+        y0, y1 = m[1] - PUNCT_PAD, m[3] + PUNCT_PAD
+        oc, ol = open_side(cyr, y0, y1, right), open_side(lat, y0, y1, right)
+        if oc is None or ol is None or ol <= 0: return v
+        r = min(max(oc / ol, PUNCT_RATIO[0]), PUNCT_RATIO[1])
+        return round(v * r)
+
+    out = {}
+    for cyr, lat in PUNCT_RIGHT.items():
+        if cyr not in have or lat not in have: continue
+        for (a, b), v in existing.items():
+            if a == lat and is_punct(b) and (cyr, b) not in existing:
+                k = value(cyr, lat, b, v, True)
+                if k: out[cyr, b] = k
+    for cyr, lat in PUNCT_LEFT.items():
+        if cyr not in have or lat not in have: continue
+        for (a, b), v in existing.items():
+            if b == lat and is_punct(a) and (a, cyr) not in existing:
+                k = value(cyr, lat, a, v, False)
+                if k: out[a, cyr] = k
+    return out
+
+
 # ================================================================ phase 2: features
 def features(ctx):
     have = set(ctx.font.getGlyphOrder())
@@ -738,16 +813,20 @@ def features(ctx):
 
     sc_kern = _build_sc_kern(ctx)
     cross_kern = _build_cross_kern(ctx)
+    punct_kern = _build_punct_kern(ctx)
     ctx.cyr_sc_kern = sc_kern
     ctx.cyr_cross_kern = cross_kern
+    ctx.cyr_punct_kern = punct_kern
 
-    kern_fea = _pairs_fea('CYRILLIC_SC_KERN', sc_kern) + _pairs_fea('CYRILLIC_CROSS_KERN', cross_kern)
+    kern_fea = (_pairs_fea('CYRILLIC_SC_KERN', sc_kern) + _pairs_fea('CYRILLIC_CROSS_KERN', cross_kern)
+                + _pairs_fea('CYRILLIC_PUNCT_KERN', punct_kern))
     if kern_fea:
         ctx.gpos(kern_fea)
 
     ctx.log(
         f'smcp: {len(smcp_map)}, c2sc: {len(c2sc_map)}, mark bases: {getattr(ctx, "cyr_mark_bases", 0)}, '
-        f'sc_kern: {len(sc_kern)} pairs, cross_kern: {len(cross_kern)} pairs'
+        f'sc_kern: {len(sc_kern)} pairs, cross_kern: {len(cross_kern)} pairs, punct_kern: {len(punct_kern)} pairs '
+        f'({" ".join(f"{a}+{b}={v}" for (a, b), v in sorted(punct_kern.items()) if b == "period" or a == "guillemotleft")})'
     )
 
 
@@ -918,3 +997,6 @@ def post(ctx):
     bad_cx = [(k, v, eff.get(k, 0)) for k, v in ctx.cyr_cross_kern.items() if eff.get(k, 0) != v]
     if bad_cx:
         raise SystemExit(f'cyrillic: {len(bad_cx)} CYRILLIC_CROSS_KERN pairs masked or altered, e.g. {bad_cx[:5]}')
+    bad_px = [(k, v, eff.get(k, 0)) for k, v in ctx.cyr_punct_kern.items() if eff.get(k, 0) != v]
+    if bad_px:
+        raise SystemExit(f'cyrillic: {len(bad_px)} CYRILLIC_PUNCT_KERN pairs masked or altered, e.g. {bad_px[:5]}')
