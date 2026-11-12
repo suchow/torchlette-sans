@@ -152,7 +152,17 @@ if present:
             check(names(s, APP) == want, f'{key}: PUA with the app features shapes to {names(s, APP)}')
     unclosed = names(chr(PUA['lopen']) + chr(PUA['wire']) + chr(PUA['dot']))
     check(not any(n.endswith('t' + SUF) for n in unclosed), f'an unclosed loop draws a loop line: {unclosed}')
-    print(f'shaping: {len(DIAGRAMS)} diagrams as ASCII (ss20) and PUA (calt)')
+    # ss20 works with calt on (the default) and off: its own four bracket lookups turn the
+    # ASCII into the PUA glyphs, and the attachment lookups it shares with calt then join
+    # them, once, whichever of the two features is on.
+    for key, (asc, _, want, _) in DIAGRAMS.items():
+        for calt in (1, 0):
+            got = names(asc, {'ss20': 1, 'calt': calt})
+            check(got == ['open' + SUF] + want + ['close' + SUF], f'{key}: {asc} under ss20 with calt={calt} shapes to {got}')
+    gsub = f['GSUB'].table
+    lk = lambda tag: {i for fr in gsub.FeatureList.FeatureRecord if fr.FeatureTag == tag for i in fr.Feature.LookupListIndex}
+    check(lk('ss20') - lk('calt'), f'ss20 has no lookups of its own: {sorted(lk("ss20"))} within calt {sorted(lk("calt"))}')
+    print(f'shaping: {len(DIAGRAMS)} diagrams as ASCII (ss20, with calt on and off) and PUA (calt)')
 
     # ---- 4. strokes -------------------------------------------------------------------------------
     mb = path('minus').bounds; AX = (mb[1] + mb[3]) / 2

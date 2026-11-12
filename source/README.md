@@ -56,6 +56,10 @@ docstring lists what it changes):
   cmap that 𝔼 and 𝟙 (outside the BMP) need.
 - `ui`: the interface symbols ✓ ✗ ■ □ ▶ ● ○ ★, the circled numbers ①–⑳ with Torchlette's small-cap figures,
   and the keyboard symbols ⌘ ⌥ ⇧ ⏎ ⌫.
+- `tensordiagram`: Penrose tensor-diagram glyphs (U+EE00-EE07) that join up under calt,
+  and ss20 ("Tensor diagrams"), which turns an ASCII diagram in square brackets
+  (`[-*-]`, `[(-*-*-)]`) into them. ss20 has its own lookups for the brackets and shares
+  calt's joining lookups, so it works whether calt is on (the default) or off.
 - `meta`: the name table, OS/2 and STAT metadata, a drawn .notdef, feature names,
   ligature carets, and, when `ttfautohint-py` is installed (the Makefile pins it),
   ttfautohint hinting of the .ttf.
