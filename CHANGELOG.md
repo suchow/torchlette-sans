@@ -2,19 +2,14 @@
 
 ## v0.5.11 (2026-11-14)
 
-- Windows programs that space lines by the win metrics, such as Notepad, no longer set lines far apart: usWinAscent and usWinDescent are 1100 and 480 (they were 3260 and 2780).
-- Kerning between Latin and Greek letters where an application sets them in one run, as in AΥ, TΟ, and Yα.
-- Kerning of the Vietnamese letters against Cyrillic, and of accented letters against ⟨ and ⟩. The accented a's keep clear of T, V, W, and Y in the heavy weights and the italics.
-- Small capitals for ϑ, ϕ, ϖ, ϰ, ϱ, and ϵ (smcp) and for ϴ (c2sc). The micro sign µ keeps its form.
-- nalt: the whole numbers 1 to 20 become the circled numbers ① to ⑳.
-- mgrk: Σ, Π, and Δ become the math symbols ∑, ∏, and ∆.
+- New letters and signs: the long s ſ, which small capitals turn into S; ℃, ℉, and ℗; and the bitcoin, new shekel, lari, and rupee signs ₿, ₪, ₾, and ₨.
+- New punctuation: the two- and three-em dashes ⸺ and ⸻, the swung dash ⁓, the reversed quotation marks ‛ and ‟, ‱, the interrobang ‽, the hyphenation point ‧, ‼ and ⁇, the reversed question mark ⸮, and ⁑.
+- New geometric shapes: triangles pointing four ways, black and white, large and small (▲ △ ▼ ▽ ◀ ◁ ▷ and ▴ ▵ ▾ ▿ ◂ ◃ ▹); ◆, ☆, ▪, ▫, ◦, and ◯; and the dotted circle ◌, which takes combining marks.
+- New spaces and joiners: the en and em quads (U+2000, U+2001), the three-, four-, and six-per-em spaces (U+2004 to U+2006), the medium mathematical space (U+205F), the zero width no-break space (U+FEFF), and the zero width non-joiner and joiner (U+200C, U+200D).
+- Kerning: Latin against Greek letters where an application sets them in one run, as in AΥ, TΟ, and Yα; the Vietnamese letters against Cyrillic; and accented letters against ⟨ and ⟩. The accented a's keep clear of T, V, W, and Y in the heavy weights and the italics.
 - Mark attachment: accents above and below on ŋ, ə, ɓ, ɗ, ħ, đ, ð, ß, and the other letters that had no place for them; marks below on g, ø, and the Greek and Cyrillic letters that do not descend; and the ogonek on the Latin consonants that do not descend.
-- The en and em quads (U+2000, U+2001), the three-, four-, and six-per-em spaces (U+2004 to U+2006), the medium mathematical space (U+205F), the zero width no-break space (U+FEFF), and the zero width non-joiner and joiner (U+200C, U+200D).
-- The long s ſ, which small capitals turn into S.
-- ℃, ℉, and ℗.
-- Punctuation: the two- and three-em dashes ⸺ and ⸻, the swung dash ⁓, the reversed quotation marks ‛ and ‟, ‱, the interrobang ‽, the hyphenation point ‧, ‼ and ⁇, the reversed question mark ⸮, and ⁑.
-- The bitcoin sign ₿, the new shekel sign ₪, the lari sign ₾, and the rupee sign ₨.
-- Geometric shapes: triangles pointing four ways, black and white, large and small (▲ △ ▼ ▽ ◀ ◁ ▷ and ▴ ▵ ▾ ▿ ◂ ◃ ▹); ◆, ☆, ▪, ▫, ◦, and ◯; and the dotted circle ◌, which takes combining marks.
+- Features: small capitals for ϑ, ϕ, ϖ, ϰ, ϱ, and ϵ (smcp) and for ϴ (c2sc), while the micro sign µ keeps its form; nalt turns the whole numbers 1 to 20 into the circled numbers ① to ⑳; and mgrk turns Σ, Π, and Δ into the math symbols ∑, ∏, and ∆.
+- Windows programs that space lines by the win metrics, such as Notepad, no longer set lines far apart: usWinAscent and usWinDescent are 1100 and 480 (they were 3260 and 2780).
 - 111 glyphs that no character, feature, or MATH entry reached are removed: unused sizes of the stretchy arrows and of the wide hat, and the numerators 6, 8, and 9 that no fraction uses.
 
 ## v0.5.10 (2026-11-14)
