@@ -208,15 +208,34 @@ if 'longs' in HAVE:
     check(bs[1] == bf[1] and bs[3] == bf[3] and abs(bs[0] - bf[0]) <= 1 and abs(bs[2] - bf[2]) <= 1,
           f'longs: ink {bs}, f {bf} (stem, nub and hook are f\'s)')
     gs_ = GLYF['longs']
-    # one simple contour made of f's own points, fewer of them: nothing added (a point left
-    # inside the stem, a handle moved), so the outline is f's wherever the arm was not.
+    # one simple contour: f's own points, in f's order and on/off-curve as in f, with one run
+    # of them (the arm) taken out, nothing added (a point left inside the stem), so the
+    # outline is f's wherever the arm was not. Each point is f's to a unit, except the
+    # handle beside either end of the new straight edge: the stem now runs from the
+    # baseline to where the hook begins, and in the italics the build's last smooth-point
+    # pass (after the reslant and rounding) re-aims that handle along it, by up to 2 units
+    # (1 to 2 in six italics, 0 in the uprights); 3 allowed. A point left inside the stem
+    # or a notch is an extra on-curve point and moves the run, so fails here.
     # (The same points and flags at all seven weights of each slant: section 8.)
     gf_ = GLYF['f']
     f_pts = [tuple(c) for c in gf_.coordinates] if not gf_.isComposite() else []
-    stray = [] if gs_.isComposite() else [tuple(c) for c in gs_.coordinates
-                                          if not any(abs(c[0] - x) <= 1 and abs(c[1] - y) <= 1 for x, y in f_pts)]
+    f_on = [bool(v & 1) for v in gf_.flags] if not gf_.isComposite() else []
+    stray = ['composite']
+    if not gs_.isComposite() and f_pts and 0 < len(f_pts) - len(gs_.coordinates):
+        l_pts = [tuple(c) for c in gs_.coordinates]; l_on = [bool(v & 1) for v in gs_.flags]
+        nl, run = len(l_pts), len(f_pts) - len(gs_.coordinates)
+        def _dev(s):                                   # f with f[s:s+run] taken out, against ſ
+            m = f_pts[:s] + f_pts[s + run:]
+            return [max(abs(a[0] - b[0]), abs(a[1] - b[1])) for a, b in zip(l_pts, m)]
+        s = min(range(nl + 1), key=lambda s: (max(_dev(s)), sum(_dev(s))))
+        dev, m_on = _dev(s), f_on[:s] + f_on[s + run:]
+        ends = {(s - 1) % nl, s % nl}                  # the two points either side of the run
+        handles = {h for e in ends for h in ((e - 1) % nl, (e + 1) % nl) if h not in ends and l_on[e] and not l_on[h]}
+        stray = [(i, l_pts[i]) for i in range(nl)
+                 if l_on[i] != m_on[i] or dev[i] > (3 if i in handles else 1)]
     check(not gs_.isComposite() and gs_.numberOfContours == 1 and len(gs_.coordinates) < len(f_pts) and not stray,
-          f'longs: {gs_.numberOfContours} contours, {len(gs_.coordinates)} points (f has {len(f_pts)}), points not f\'s: {stray}')
+          f'longs: {gs_.numberOfContours} contours, {len(gs_.coordinates)} points (f has {len(f_pts)}), '
+          f'points not f\'s (f less one run of points): {stray}')
     # nothing of ſ stands right of f's stem at the crossbar's height: its ink there is the stem and the nub
     import pathops as _po
     from fontTools.pens.transformPen import TransformPen
