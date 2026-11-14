@@ -8,20 +8,29 @@
 #   make ttf      the .ttf only (no woff2 written)
 #   make verify   HarfBuzz feature check (verify.py, verify_ss16.py, modules/verify_*.py) of each built font and of its web subset, and make fontbakery
 #   make fontbakery  fontbakery check-universal on every built .ttf; fails on an error, an incomplete report or a FAIL outside fontbakery_gate.py's ALLOWED
+#   make dist     the release download from the committed files, no font build: DIST_DIR/TorchletteSans-v<X.Y.Z>.zip and its SHA256SUMS
+#   make deliver  the app's fonts from the released files, no font build: COURSE_PUBLIC/fonts (the web subsets of RELEASE_DIR/ttf)
+#                 and COURSE_PUBLIC/sans/fonts (copies of RELEASE_DIR/webfonts)
 #   make clean
 #
 # Variables (see modules/README.md):
 #   MODULES=a,b | none   build with only these modules/*.py (default: all of them but MODULES_OFF)
 #   BUILD_DIR=dir        where the .ttf, the Mulish instances and the check files go (default: build)
 #   WEB_DIR=dir          where `make` writes the app's subset woff2 (default: BUILD_DIR/web)
-#   RELEASE_DIR=dir      where `make release` writes and `make check` compares (default: ../fonts)
+#   RELEASE_DIR=dir      where `make release` writes, `make check` compares, and `make dist` and
+#                        `make deliver` read the released fonts (default: ../fonts)
+#   DIST_DIR=dir         where `make dist` writes the zip and SHA256SUMS (default: BUILD_DIR/dist)
+#   COURSE_PUBLIC=dir    the app's web/public folder, which `make deliver` writes into; it must exist
+#                        (default: ../../torchlette/web/public)
 #   WEB_REF=dir          the app's committed subset woff2 that `make check-web` compares with
 #                        (default: ../../torchlette/web/public/fonts, the torchlette repository beside this one)
 #   LEVELS_DIR=dir       the app's lesson prose, which `make verify` has verify_ss16.py shape when it
 #                        is there (default: ../../torchlette/web/levels)
 #
 # The font version (name ID 5, head.fontRevision) is the one line in VERSION, such as
-# 0.504 for release v0.5.4; set it there once per release.
+# 0.504 for release v0.5.4; set it there once per release. `make dist` names the release
+# from it: the first digit after the point is the minor version, the last two the patch
+# (0.504 is v0.5.4, 0.510 is v0.5.10).
 #
 # Tool versions are pinned so that a rebuild is byte-identical.
 
@@ -45,6 +54,8 @@ NORMAL_HELPER_DEPS := $(sort $(wildcard modules/_*.py mathitalic_references.py))
 BUILD_DIR := build
 WEB_DIR   := $(BUILD_DIR)/web
 RELEASE_DIR := ../fonts
+DIST_DIR    := $(BUILD_DIR)/dist
+COURSE_PUBLIC := ../../torchlette/web/public
 # the torchlette app's committed subset woff2 and its lesson prose, in a clone of the
 # torchlette repository beside this one; verify_ss16.py shapes the prose when it is there
 WEB_REF    := ../../torchlette/web/public/fonts
@@ -152,7 +163,8 @@ WEB_FEATURES := $(shell grep -v '^\#' web_features.txt | paste -sd, -)
 MATHITALIC_ON := $(filter mathitalic,$(MODULES_ON))
 MATHITALIC_ENV :=
 ifneq ($(MATHITALIC_ON),)
-ifneq ($(MAKECMDGOALS),clean)
+# (not for clean, dist and deliver alone, which build no font)
+ifneq ($(if $(MAKECMDGOALS),$(filter-out clean dist deliver,$(MAKECMDGOALS)),all),)
 ifeq ($(filter greek,$(MODULES_ON)),)
 $(error mathitalic requires an explicit Greek selection; default Greek policy is unchanged)
 endif
@@ -184,7 +196,7 @@ endif
 SUBSET_FLAGS = --unicodes='$(UNICODES)' --layout-features='$(WEB_FEATURES)' --name-IDs='*' --name-languages='*' \
 	--notdef-outline --recalc-average-width --no-hinting --flavor=woff2
 
-.PHONY: all ttf verify fontbakery release check check-web clean FORCE
+.PHONY: all ttf verify fontbakery release check check-web dist deliver deliver-dirs clean FORCE
 all: $(WEBS)
 ttf: $(TTFS)
 
@@ -289,6 +301,36 @@ check-web:
 	  if cmp $(BUILD_DIR)/web-check/TorchletteSans-$$s.woff2 $(WEB_REF)/TorchletteSans-$$s.woff2; \
 	  then echo "identical: $$s"; else status=1; fi; \
 	done; exit $$status
+
+# The release download, from the committed files and no build: OFL.txt and licenses/
+# from the repository, the fonts in RELEASE_DIR (ttf/, webfonts/, variable/) and the
+# specimen PDF of this version, all in the one folder TorchletteSans-v<X.Y.Z>, zipped by
+# release.py zip with sorted entries and fixed dates and permissions, so the bytes and
+# the SHA-256 repeat; and SHA256SUMS, as shasum -a 256 writes it.
+RELEASE_TAG = v$(shell sed -E 's/^([0-9]+)\.([0-9])0?([0-9]+)$$/\1.\2.\3/' VERSION)
+RELEASE_NAME = TorchletteSans-$(RELEASE_TAG)
+SPECIMEN = ../specimen/$(RELEASE_NAME)-specimen.pdf
+dist: release.py VERSION
+	@echo '$(RELEASE_TAG)' | grep -Eq '^v[0-9]+\.[0-9]\.[0-9]+$$' || { echo 'VERSION is not like 0.504'; exit 1; }
+	@test -f $(SPECIMEN) || { echo 'make dist: no specimen PDF for $(RELEASE_TAG): $(SPECIMEN) is missing'; exit 1; }
+	@mkdir -p $(DIST_DIR)
+	$(PY) release.py zip $(DIST_DIR)/$(RELEASE_NAME).zip $(RELEASE_NAME) ../OFL.txt ../licenses $(RELEASE_DIR) $(SPECIMEN)
+	cd $(DIST_DIR) && shasum -a 256 $(RELEASE_NAME).zip > SHA256SUMS
+	@cat $(DIST_DIR)/SHA256SUMS
+
+# The fonts the app vendors, from the released files and no build: in COURSE_PUBLIC/fonts
+# the web subset of each released .ttf, cut as `make` cuts it from a built one; in
+# COURSE_PUBLIC/sans/fonts a copy of each released whole-font woff2. Written every time.
+DELIVER_SUBSETS := $(foreach s,$(STYLES),$(COURSE_PUBLIC)/fonts/TorchletteSans-$(s).woff2)
+DELIVER_COPIES  := $(foreach s,$(STYLES),$(COURSE_PUBLIC)/sans/fonts/TorchletteSans-$(s).woff2)
+deliver: $(DELIVER_SUBSETS) $(DELIVER_COPIES)
+deliver-dirs:
+	@test -d $(COURSE_PUBLIC) || { echo 'make deliver: COURSE_PUBLIC $(COURSE_PUBLIC) is not a folder'; exit 1; }
+	@mkdir -p $(COURSE_PUBLIC)/fonts $(COURSE_PUBLIC)/sans/fonts
+$(DELIVER_SUBSETS): $(COURSE_PUBLIC)/fonts/TorchletteSans-%.woff2: $(RELEASE_DIR)/ttf/TorchletteSans-%.ttf web_features.txt FORCE | deliver-dirs
+	$(SUBSET) $< $(SUBSET_FLAGS) --output-file=$@
+$(DELIVER_COPIES): $(COURSE_PUBLIC)/sans/fonts/TorchletteSans-%.woff2: $(RELEASE_DIR)/webfonts/TorchletteSans-%.woff2 FORCE | deliver-dirs
+	cp $< $@
 
 clean:
 	rm -rf $(BUILD_DIR)
