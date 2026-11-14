@@ -13,6 +13,7 @@
 - The long s ſ, which small capitals turn into S.
 - ℃, ℉, and ℗.
 - Punctuation: the two- and three-em dashes ⸺ and ⸻, the swung dash ⁓, the reversed quotation marks ‛ and ‟, ‱, the interrobang ‽, the hyphenation point ‧, ‼ and ⁇, the reversed question mark ⸮, and ⁑.
+- The bitcoin sign ₿, the new shekel sign ₪, the lari sign ₾, and the rupee sign ₨.
 - Geometric shapes: triangles pointing four ways, black and white, large and small (▲ △ ▼ ▽ ◀ ◁ ▷ and ▴ ▵ ▾ ▿ ◂ ◃ ▹); ◆, ☆, ▪, ▫, ◦, and ◯; and the dotted circle ◌, which takes combining marks.
 - 111 glyphs that no character, feature, or MATH entry reached are removed: unused sizes of the stretchy arrows and of the wide hat, and the numerators 6, 8, and 9 that no fraction uses.
 

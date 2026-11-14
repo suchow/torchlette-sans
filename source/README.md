@@ -67,6 +67,9 @@ docstring lists what it changes):
 - `logic`: the turnstiles ⊢ ⊣ ⊧ ⊨ ⊬ ⊭, the modal operators ◇ ◻ and the black diamond ◆,
   the marks ∎ ☡ ↯ ⁎ ‣ ⌑, the APL glyphs ⍳ ⍴ ⍉ ⌽, and the white trapezium ⏢; ss09, and
   calt beside logic, turn □ into the modal box.
+- `currency`: the bitcoin, new shekel, lari, and rupee signs ₿ ₪ ₾ ₨, drawn at each weight
+  from B, H, O, R, and s with the strokes and bars of $ and €. ₿ is on the figure width, as
+  Mulish's currency signs are; ₪ ₾ ₨ have their own widths.
 - `punctuation`: the two- and three-em dashes ⸺ ⸻, the swung dash ⁓, the reversed
   quotation marks ‛ ‟, the per ten thousand sign ‱, the interrobang ‽, the hyphenation
   point ‧, ‼ ⁇, the reversed question mark ⸮, the two asterisks ⁑, and ℃ ℉ ℗, with small
