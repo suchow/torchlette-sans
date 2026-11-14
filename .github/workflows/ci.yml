@@ -42,6 +42,14 @@ jobs:
           enable-cache: true
           cache-dependency-glob: source/Makefile
       - run: cd source && make -j"$(sysctl -n hw.ncpu)" check
+      # The rebuilt release, kept whether or not it matches fonts/: when the sources
+      # have changed, these are the files to look at and the next release's files.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-rebuild
+          path: source/build/release
+          if-no-files-found: ignore
 
   verify:
     # The checks test what the fonts do, not their bytes, so Linux will do; the old
