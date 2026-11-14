@@ -240,9 +240,10 @@ checks that the gate rejects broken runs.
 
 CI (`.github/workflows/ci.yml`) has two jobs. The job `check` runs `make check` on an
 Apple silicon Mac, the kind of machine the release is built on. The job `verify` runs
-`make verify` on all fourteen styles and keeps the fontbakery report as an artifact.
-To check a few styles by hand, name them: `make verify STYLES="Regular Italic Bold BoldItalic"`
-takes about a quarter of the time all fourteen do.
+`make verify` on all fourteen styles and uploads the fontbakery report as an artifact.
+To verify only some styles by hand, name them in `STYLES`. For example,
+`make verify STYLES="Regular Italic Bold BoldItalic"` takes about a quarter of the time
+that all fourteen take.
 
     uv run --no-project --with fonttools python outline_check.py build/TorchletteSans-Bold.ttf build/Mulish-675.ttf [--all]
 
