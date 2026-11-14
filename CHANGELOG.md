@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.5.11 (2026-11-14)
 
 - Windows programs that space lines by the win metrics, such as Notepad, no longer set lines far apart: usWinAscent and usWinDescent are 1100 and 480 (they were 3260 and 2780).
 - Kerning between Latin and Greek letters where an application sets them in one run, as in AΥ, TΟ, and Yα.
