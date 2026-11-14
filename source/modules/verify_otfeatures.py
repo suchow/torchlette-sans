@@ -1,5 +1,7 @@
 """HarfBuzz check of the otfeatures module: case, cpsp, zero, mark attachment on
-build.py's glyphs, GDEF classes and carets, aalt and salt, mgrk, nalt and the grek script record.
+build.py's glyphs and on letters Mulish left without anchors, GDEF classes and carets,
+aalt and salt, mgrk, nalt and the grek script record. In the full font it also checks
+that every glyph but Mulish's few leftovers is reached by some text, feature or the MATH table.
 
     MULISH_STATIC=Mulish-<wght>.ttf verify_otfeatures.py FONT.ttf STYLE full|subset
 
@@ -420,6 +422,35 @@ check(all(cd.get(_cmap[ord(c)]) == 1 for c in 'БВДəðŋß ' if ord(c) in _cm
 # carets follow the letters: office's ffi has two, between the letters
 r = shape('office')
 check(r[1]['g'] == 'f_f_i' and len(carets.get('f_f_i', [])) == 2, f'office: {[x["g"] for x in r]}')
+
+# ---------------------------------------------------------------- reachability
+# Every glyph is reached from a code point, a feature (any script, language or lookup), the
+# MATH table or a composite: what the fontTools subsetter keeps when asked for every code
+# point and every feature. A glyph no input reaches only adds bytes. Mulish's own leftovers
+# stay, since the build only adds glyphs and cannot safely drop one of Mulish's. Full font
+# only: the web subset leaves glyphs out by design.
+UNREACHED_OK = {
+    'NULL',                 # Mulish's empty glyph
+    'uni0326.alt',          # Mulish: the same outline as uni0326
+    'caron.alt',            # Mulish: a spacing uni030C.alt, which no character calls for
+    'uni0336.case',         # Mulish: the case form of U+0336, which the font does not map
+    'strokecomb.obarred',   # Mulish: an unencoded stroke mark nothing composes or substitutes
+}
+if MODE == 'full':
+    import logging
+    from fontTools import subset
+    logging.getLogger('fontTools.subset').setLevel(logging.ERROR)
+    _ft = TTFont(PATH)
+    _sub = subset.Subsetter(subset.Options(layout_features=['*'], layout_scripts=['*'], glyph_names=True,
+                                           notdef_outline=True, name_IDs=['*'], name_languages=['*'], hinting=False,
+                                           drop_tables=[], passthrough_tables=True))
+    _sub.populate(unicodes=_ft.getBestCmap().keys())
+    _sub.subset(_ft)
+    _kept = set(_ft.getGlyphOrder())
+    unreached = {g for g in GO if g not in _kept}
+    check(unreached <= UNREACHED_OK, f'{len(unreached - UNREACHED_OK)} glyphs reached by no code point, feature, '
+          f'MATH entry or composite: {sorted(unreached - UNREACHED_OK)[:12]}')
+    check(UNREACHED_OK <= unreached, f'UNREACHED_OK names glyphs that are gone or now reached: {sorted(UNREACHED_OK - unreached)}')
 
 # ---------------------------------------------------------------- frac
 if kept('frac'):

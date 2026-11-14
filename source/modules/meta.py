@@ -15,7 +15,8 @@ post      name: no Mac records; IDs 3 (unique ID with the vendor), 9, 10, 11, 12
           OS/2: fsSelection (REGULAR for every upright non-bold style, so SemiBold
           too, as its legacy subfamily is Regular), achVendID, xAvgCharWidth and
           usMaxContext recomputed, Unicode ranges recomputed, PANOSE, fsType 0,
-          usWinAscent/Descent with headroom; typo and hhea are kept (they set the
+          usWinAscent/Descent covering every glyph text can reach (not the MATH
+          table's own sizes and parts); typo and hhea are kept (they set the
           app's line box).
           STAT: axes wght and ital; this font's own axis values only, as the spec's
           non-variable examples do (Regular 400 elidable linked to Bold 700, ital 0
@@ -43,13 +44,15 @@ DESIGNER = 'The Torchlette Authors; Vernon Adams (Mulish)'
 DESCRIPTION = ('Torchlette Sans is the text face of torchlette, a modified version of Mulish '
                'with round dots, a lower x-height, old-style figures, true small capitals '
                'and the Torchlette prose ligatures.')
-# usWinAscent/Descent, the same in every style: the tallest glyph (U+1E66, a stacked
-# caron and dot) reaches 1044 in Regular, 1059 in Bold, 1065 in ExtraBold; the deepest
-# (cedilla and comma-below capitals) -270, -277, -282. The headroom is for Greek with
-# tonos and dialytika, superiors, arrows and Black. math_table's tall slanted radicals
-# (up to 6000, centred at 240: -2760..3240) set the values now. USE_TYPO_METRICS is on, so
-# browsers and apps space lines by the typo/hhea metrics, which this does not change.
-WIN_ASCENT, WIN_DESCENT = 3260, 2780
+# usWinAscent/Descent, the same in every style: they cover every glyph text can reach,
+# with a little room. In v0.5.10 the tallest (U+1E66, a stacked caron and dot) reaches
+# 1040 in Light, 1044 in Regular and 1065 in ExtraBold; the deepest is U+23DF (the bottom
+# curly bracket, -455 in every style). The MATH table's own sizes and assembly parts
+# (_math_only below; math_table's slanted radicals reach -2760..3240) are left out: only
+# a math layout engine places them, and it sets its own line box. USE_TYPO_METRICS is on,
+# so browsers and apps space lines by the typo/hhea metrics, which this does not change;
+# programs that space lines by the win metrics (Word on Windows) get a text-sized line.
+WIN_ASCENT, WIN_DESCENT = 1100, 480
 # ttfautohint, when build.py's interpreter has the pinned ttfautohint-py (the Makefile's
 # PY line); without it the font stays unhinted, as before. The epoch keeps head.modified.
 HINT_OPTIONS = dict(no_info=True, windows_compatibility=True, fallback_script='latn', epoch=1793404800)
@@ -248,6 +251,34 @@ def _hint(ctx):
     return f'hinted: {n} glyph programs, ttfautohint-py {ttfautohint.__version__}'
 
 
+def _math_only(font):
+    """The glyphs only the MATH table reaches: the size variants and assembly parts it
+    names that no text reaches, from the cmap through any GSUB substitution (contexts are
+    ignored, so the set errs small) or as a component of a reached glyph."""
+    if 'MATH' not in font: return set()
+    mv = font['MATH'].table.MathVariants
+    named = set()
+    for cs in (mv.VertGlyphConstruction or []) + (mv.HorizGlyphConstruction or []):
+        named.update(r.VariantGlyph for r in cs.MathGlyphVariantRecord or [])
+        if cs.GlyphAssembly: named.update(p.glyph for p in cs.GlyphAssembly.PartRecords)
+    subs = []
+    for lk in font['GSUB'].table.LookupList.Lookup if 'GSUB' in font else []:
+        for st in lk.SubTable:
+            t = lk.LookupType
+            if t == 7: st, t = st.ExtSubTable, st.ExtensionLookupType
+            if t == 1: subs += [((a,), (b,)) for a, b in st.mapping.items()]
+            elif t in (2, 3): subs += [((a,), tuple(b)) for a, b in (st.mapping if t == 2 else st.alternates).items()]
+            elif t == 4: subs += [((a, *l.Component), (l.LigGlyph,)) for a, ls in st.ligatures.items() for l in ls]
+            elif t == 8: subs += [((a,), (b,)) for a, b in zip(st.Coverage.glyphs, st.Substitute)]
+    glyf, seen = font['glyf'], set(font.getBestCmap().values())
+    while True:
+        new = {o for i, out in subs if set(i) <= seen for o in out}
+        new |= {c.glyphName for g in seen if glyf[g].isComposite() for c in glyf[g].components}
+        if not (new := new - seen): break
+        seen |= new
+    return named - seen
+
+
 def post(ctx):
     from fontTools.otlLib.maxContextCalc import maxCtxFont
     font, style = ctx.font, ctx.STYLE
@@ -273,12 +304,18 @@ def post(ctx):
     os2.recalcUnicodeRanges(font)
     rat, pw = _panose(ctx)
     os2.usWinAscent, os2.usWinDescent = WIN_ASCENT, WIN_DESCENT
-    glyf = font['glyf']; ymax = ymin = 0
+    glyf = font['glyf']; ymax = ymin = 0; mymax = mymin = 0; who = ('', '')
+    math_only = _math_only(font)
     for n in font.getGlyphOrder():
         g = glyf[n]
-        if g.numberOfContours: g.recalcBounds(glyf); ymax = max(ymax, g.yMax); ymin = min(ymin, g.yMin)
+        if not g.numberOfContours: continue
+        g.recalcBounds(glyf)
+        if n in math_only: mymax = max(mymax, g.yMax); mymin = min(mymin, g.yMin); continue
+        if g.yMax > ymax: ymax, who = g.yMax, (n, who[1])
+        if g.yMin < ymin: ymin, who = g.yMin, (who[0], n)
     if ymax > WIN_ASCENT or -ymin > WIN_DESCENT:
-        raise SystemExit(f'meta: glyph bounds {ymin}..{ymax} exceed usWin {-WIN_DESCENT}..{WIN_ASCENT}; raise WIN_ASCENT/WIN_DESCENT in modules/meta.py')
+        raise SystemExit(f'meta: glyph bounds {ymin}..{ymax} ({who[1]}, {who[0]}) exceed usWin {-WIN_DESCENT}..{WIN_ASCENT}; '
+                         'raise WIN_ASCENT/WIN_DESCENT in modules/meta.py')
     _stat(ctx)
     n_car = _carets(ctx)
     slng = _meta_table(ctx)
@@ -287,5 +324,6 @@ def post(ctx):
     for nid in stale: nt.removeNames(nameID=nid)
     hinted = _hint(ctx)
     ctx.log(f'fsSelection {os2.fsSelection:#06x}, xAvgCharWidth {os2.xAvgCharWidth}, usMaxContext {os2.usMaxContext}, '
-            f'PANOSE weight {pw} (cap/stem {rat:.2f}), win {WIN_ASCENT}/{WIN_DESCENT} (glyphs {ymin}..{ymax}), '
+            f'PANOSE weight {pw} (cap/stem {rat:.2f}), win {WIN_ASCENT}/{WIN_DESCENT} (text glyphs {ymin}..{ymax}, '
+            f'{len(math_only)} MATH-only glyphs {mymin}..{mymax}), '
             f'carets for {n_car} ligatures, slng {slng}, dropped names {stale}; {hinted}')

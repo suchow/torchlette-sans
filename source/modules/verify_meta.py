@@ -148,17 +148,43 @@ hhea = font['hhea']
 check(os2.fsSelection & (1 << 7), 'USE_TYPO_METRICS off')
 check((os2.sTypoAscender, os2.sTypoDescender, os2.sTypoLineGap) == (hhea.ascent, hhea.descent, hhea.lineGap)
       == (fe.ascender, fe.descender, fe.line_gap), f'typo/hhea/HarfBuzz extents differ {fe}')
-top = bot = 0; who = ('', '')
+# The win metrics cover every glyph text can reach, and only those: not the MATH table's
+# own sizes and assembly parts, which no code point, substitution or composite reaches
+# (found here by the fontTools subsetter's closure with the MATH table dropped). They sit
+# within 100 units of that ink in the full font, so they set a text-sized line where apps space by them.
+def _math_only():
+    import logging
+    from fontTools import subset
+    logging.getLogger('fontTools.subset').setLevel(logging.ERROR)
+    f = TTFont(path)
+    named = set()
+    if 'MATH' in f:
+        mv = f['MATH'].table.MathVariants
+        for cs in (mv.VertGlyphConstruction or []) + (mv.HorizGlyphConstruction or []):
+            named.update(r.VariantGlyph for r in cs.MathGlyphVariantRecord or [])
+            if cs.GlyphAssembly: named.update(p.glyph for p in cs.GlyphAssembly.PartRecords)
+    if not named: return set()
+    sub = subset.Subsetter(subset.Options(layout_features=['*'], layout_scripts=['*'], glyph_names=True,
+                                          notdef_outline=True, drop_tables=['MATH'], name_IDs=['*'], hinting=False))
+    sub.populate(unicodes=f.getBestCmap().keys()); sub.subset(f)
+    return named - set(f.getGlyphOrder())
+math_only = _math_only()
+top = bot = mtop = mbot = 0; who = ('', '')
 for gid in range(face.glyph_count):
     e = hbf.get_glyph_extents(gid)
     if e is None or e.height == 0: continue
+    if hbf.get_glyph_name(gid) in math_only:
+        mtop = max(mtop, e.y_bearing); mbot = min(mbot, e.y_bearing + e.height); continue
     if e.y_bearing > top: top, who = e.y_bearing, (hbf.get_glyph_name(gid), who[1])
     if e.y_bearing + e.height < bot: bot, who = e.y_bearing + e.height, (who[0], hbf.get_glyph_name(gid))
-check(top <= os2.usWinAscent and -bot <= os2.usWinDescent, f'ink {bot}..{top} ({who}) outside win {os2.usWinAscent}/{os2.usWinDescent}')
+check(top <= os2.usWinAscent and -bot <= os2.usWinDescent, f'text ink {bot}..{top} ({who}) outside win {os2.usWinAscent}/{os2.usWinDescent}')
+if kind == 'full':   # the web subset keeps the metrics but not every tall or deep glyph
+    check(os2.usWinAscent - top <= 100 and os2.usWinDescent + bot <= 100,
+          f'win {os2.usWinAscent}/{os2.usWinDescent} more than 100 units beyond the text ink {bot}..{top}')
 half = (APP_LINE_HEIGHT * upm - (fe.ascender - fe.descender)) / 2   # half-leading of the app's line box
 # MATH-table size variants and assembly parts (unencoded *.math_table / *.mathglyphs glyphs)
-# only appear in stretched display math, which sets its own line box; the win metrics check
-# above covers them. Every other glyph must fit the app's text line box.
+# only appear in stretched display math, which sets its own line box; the win
+# metrics leave them out too. Every other glyph must fit the app's text line box.
 ltop = lbot = 0
 for gid in range(face.glyph_count):
     e = hbf.get_glyph_extents(gid)
@@ -190,7 +216,8 @@ elif 'meta' in font:
 else:
     check(False, 'no meta table')
 
-print(f'meta {style} {kind}: {checks - len(fails)}/{checks} checks; ink {bot}..{top}, win {os2.usWinAscent}/{os2.usWinDescent}, '
+print(f'meta {style} {kind}: {checks - len(fails)}/{checks} checks; text ink {bot}..{top}, {len(math_only)} MATH-only glyphs {mbot}..{mtop}, '
+      f'win {os2.usWinAscent}/{os2.usWinDescent}, '
       f'line box {fe.descender - half:.0f}..{fe.ascender + half:.0f}; {named} named ss/cv features; {len(carets)} caret glyphs')
 for f_ in fails: print('  FAIL', f_)
 sys.exit(1 if fails else 0)

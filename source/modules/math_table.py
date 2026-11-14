@@ -8,7 +8,8 @@ adding four standard horizontal math code points (U+0305 combining overline, U+2
 overline, U+23DE top curly bracket, U+23DF bottom curly bracket).
 
 Every glyph but the fences past 1430, the tall radicals and display integrals stays inside -320..1120; the
-radicals.size6..size18 (1545..6000) need meta.py's usWinAscent/Descent 3260/2780. Every assembly part stands on
+radicals.size6..size18 (1545..6000) reach -2760..3240, past meta.py's usWinAscent/Descent, which cover only the
+glyphs text can reach (a math layout engine sets its own line box). Every assembly part stands on
 y = 0 (as Latin Modern's and STIX's do).
 
 glyphs    Encoded additions (uni0305, uni203E, uni23DE, uni23DF), monoline flat-cut `radical`
@@ -1094,15 +1095,15 @@ RAD_SIZES = [
 ]
 # Tall surds stay slanted, as TeX's do (its largest is a 3 em check leaning 1 em), instead of a
 # check under a vertical pole: 12% steps from 1430 to 6000 (lean: RAD_TALL_LEAN), centred near the
-# math axis (a radical in a script-size fraction around a \dfrac, M068, needs 3900), which needs
-# usWinAscent/Descent 3260/2780 (meta.py; USE_TYPO_METRICS keeps line spacing on typo/hhea).
+# math axis (a radical in a script-size fraction around a \dfrac, M068, needs 3900). Like the
+# MATH table's other sizes, they reach past usWinAscent/Descent, which meta.py sets for text only.
 # The pole assembly is left for anything taller.
 # Chrome reads at most 20 MathGlyphVariantRecords per glyph: of the 22 that radical had
 # (base, size0..5, 15 tall), the 4200 and 4540 surds were never chosen, and anything past
 # 3890 took the pole assembly, whose upstroke bends where it turns vertical (X14). So base +
 # six steps + thirteen tall surds, 12% apart, up to 6000; past RAD_LEAN_MAX they keep its
 # lean and grow steeper, so the upstroke stays one straight line. 6000 centred on
-# RAD_TALL_MID needs usWinAscent/Descent 3260/2780 (meta.py).
+# RAD_TALL_MID reaches -2760..3240.
 RAD_TALL_H = (1545, 1730, 1937, 2168, 2428, 2718, 3043, 3407, 3815, 4271, 4782, 5354, 6000)
 RAD_LEAN_MAX = 4540.0
 assert 1 + 6 + len(RAD_TALL_H) <= 20, 'Chrome ignores MATH variant records past the 20th'
@@ -1486,7 +1487,7 @@ def glyphs(ctx):
 
     # 7. Display operators. TeX's display ∑ and ∏ are 1.4 em and about as wide as tall, with
     # strokes heavier than the text forms; Torchlette's are the whole 1430-unit vertical
-    # envelope (usWinAscent/Descent bound every glyph), 0.67 as wide as tall, with strokes
+    # envelope, 0.67 as wide as tall, with strokes
     # 1.3-1.5 rule thicknesses. ∫ ∬ ∭ ∮ ∯ grow past the envelope by assembly (DisplayOperator-
     # MinHeight 2000, as TeX's 2.2 em display integral): Mulish's hooks, enlarged, on a stem
     # that leans like TeX's toward its ends.

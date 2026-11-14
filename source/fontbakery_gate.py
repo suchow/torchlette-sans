@@ -27,6 +27,9 @@ ALLOWED = {
     # their partners, and capital Sigma without sigma (the Greek module, held out of
     # the default build, would add it).
     "case_mapping",
+    # usWinAscent/Descent (1100/480) cover every glyph text can reach, not the MATH
+    # table's tallest sizes and parts (the radical's reach -2760..3240), which head counts.
+    "family/win_ascent_and_descent",
 }
 
 # fontbakery 1.1.0's statuses that reach its exit code (cli.py: weight >= FAIL with

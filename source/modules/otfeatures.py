@@ -1,5 +1,6 @@
 """otfeatures: case forms and capital spacing, the slashed zero, mark attachment for
-build.py's glyphs, their GDEF classes and ligature carets, and aalt / salt.
+build.py's glyphs and the letters Mulish left unanchored, their GDEF classes and
+ligature carets, and aalt / salt.
 
 Feature tags: extends GSUB case, ccmp, calt, aalt, frac and locl and GPOS mark; adds GSUB
 zero, salt, dlig, mgrk and nalt and GPOS cpsp. The new ones and case and aalt are off by default. Of the default-on

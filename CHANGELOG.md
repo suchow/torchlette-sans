@@ -2,8 +2,12 @@
 
 ## Unreleased
 
+- Programs that space lines by the win metrics, such as Word on Windows, no longer set lines far apart: usWinAscent and usWinDescent are 1100 and 480, enough for every glyph that text reaches, where they were 3260 and 2780.
 - Latin and Greek letters kern against each other where an application sets them in one run: the Greek letters that share a Latin shape (Α Β Ε Ζ Κ Μ Ο Ρ Τ Υ Χ Ϊ Ϋ ο) kern as their Latin twins, as in AΥ and TΟ, and the other Greek letters kern against those Latin letters as against their Greek twins, as in Yα.
 - smcp turns ϑ, ϕ, ϖ, ϰ, ϱ, and ϵ into the small capitals of Θ, Φ, Π, Κ, Ρ, and Ε, and c2sc turns ϴ into Θ's; the micro sign µ keeps its form.
+- nalt turns the whole numbers 1 to 20 into the circled numbers ① to ⑳; 21, 1.5, and 0 stay as they are.
+- Accents above and below attach to ŋ, ə, ɓ, ɗ, ħ, đ, ð, ß, and the other letters that had no place for them, and marks below attach to g, ø, and the Greek and Cyrillic letters that do not descend.
+- The ogonek attaches to the Latin consonants that do not descend, as it does to the vowels.
 - The Vietnamese letters kern against Cyrillic as their base letters do, and accented letters kern against ⟨ and ⟩ no closer than their base letters.
 - The accented a's keep clear of T, V, W, and Y in the heavy weights and the italics.
 - mgrk turns Σ, Π, and Δ into the math symbols ∑, ∏, and ∆.
