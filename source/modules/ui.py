@@ -8,10 +8,16 @@ diagonal across its stroke (63 at Regular, 114 at Bold) for the two marks drawn 
 ✓ and ✗, since Torchlette's diagonals carry the stems' weight. The keyboard symbols, whose
 counters are small, take the crossbar only up to 0.15 of the cap height (106: ExtraBold's 121
 and Black's 139 are capped, Bold's 103 is not), as a heavier ⌘ is four dots and a square. The
-white shapes of issue 33 (△ ▽ ◁ ▷, ▵ ▿ ◃ ▹, ☆ ▫ ◦) take the crossbar up to half their inradius,
-so their counters stay open: at Black △ 114, ▵ 71, ▫ 109, ◦ 90; ☆, whose arms are narrow,
-58 from Regular on (its crossbar is 59); □ ○ ◯ never reach it. The
-circled numbers' rings follow their figures instead (below). The filled shapes have no stroke.
+white shapes of issue 33 (△ ▽ ◁ ▷, ▵ ▿ ◃ ▹, ▫) take the crossbar up to half their inradius,
+so their counters stay open: at Black △ 114, ▵ 71, ▫ 109; □ ○ ◯ never reach it. ☆ and ◦ keep
+gaining weight to Black on a softer curve, as a cap would make their heavy weights alike: ☆
+the crossbar up to 0.09 of the cap height (63) and 0.15 of its growth beyond (45 at Light, 59
+at Regular, 69 at Bold, 75 at Black, its inner star 0.61, 0.48, 0.39 and 0.35 of the outer;
+Apple SD Gothic Neo's ☆ falls to 0.24 at Heavy, but a smaller one fills in at text sizes and
+☆ must read apart from ★); ◦ the crossbar up to 0.28 of the bullet's diameter (102) and half
+its growth beyond, at most a third of the diameter (59 at Regular, 102 at Bold, 119 at Black,
+the counter 0.33 of the bullet there). The circled numbers' rings follow their figures
+instead (below). The filled shapes have no stroke.
 
 Sizes. The shapes stand on the baseline at the cap height, as Noto Sans Math sets them (its ■
 and ● are cap height, its ▶ an equilateral triangle 1.13 cap heights tall, since a triangle
@@ -23,7 +29,7 @@ centred on the capitals as ▶'s is (base 11 over the baseline, apex 11 under th
 Noto Sans Math stands ▲ on the baseline in ▶'s box: centring the centroid instead would lift ▲
 114 over the capitals and drop ▼ as far under the baseline), each other's mirror; ▴ ▾ ◂ ▹ ▵ ▿ ◃
 the same from codekeys' ▸ (0.62 of ▶, centred at half the x-height, sidebearings 70), whose
-rule is repeated here. ☆ is ★'s outline with the inner star mitred; ▪ ▫ a square 0.62 of the
+rule is repeated here. ☆ is ★'s outline (its advance too) with the inner star mitred; ▪ ▫ a square 0.62 of the
 cap height (▸'s scale: Noto Sans Math's ▪ is 0.56 of its ■, its • far smaller) centred at half
 the x-height as ▸ is; ◦ the bullet's own outline, hollow, on its spacing; ◯ a circle 1.125 of
 ○ (Noto Sans Math's ratio) on the capitals; ◌ twelve round dots, 36 + 0.3 of the crossbar across
@@ -84,7 +90,8 @@ ring's stroke against the figures' stem (0.8); UI_CN_FSK and UI_CN_FSK_BK, the f
 against H's at Regular and at Black (0.82, 0.64); UI_CN_FIGH, one figure's height against the
 inner diameter (0.62); UI_CN_PAIRH, two figures' height against one's (0.95); UI_CN_GAP and
 UI_CN_MARGIN, the pairs' gap and margin in rings (0.05, 0.025); UI_CN_KXMIN, the narrowest
-pair (0.75 of its height scale).
+pair (0.75 of its height scale); UI_STAR_KNEE and UI_STAR_SLOPE, ☆'s stroke (0.09 of the cap
+height, 0.15); UI_BUL_KNEE, ◦'s (0.28 of the bullet).
 """
 import math
 
@@ -211,14 +218,26 @@ def glyphs(ctx):
              scy + (R5 if i % 2 == 0 else 0.382 * R5) * math.sin(math.radians(90 + 36 * i))) for i in range(10)]
     (tx, ty), (ix, iy) = star[0], star[1]                          # a tip and the next inner corner
     s_inr = abs((tx - R5) * (iy - scy) - (ty - scy) * (ix - R5)) / math.hypot(ix - tx, iy - ty)   # the centre to an edge's line
-    place(0x2606, white(star, s_inr), 60)                          # ☆: ★'s outline, the inner star mitred
+    # ☆: ★'s outline (so ☆☆★★★ match in a rating), the inner star mitred, a copy of the outer
+    # scaled by 1 - stroke / s_inr. The stroke is the crossbar up to UI_STAR_KNEE of the cap height
+    # and beyond it UI_STAR_SLOPE of the crossbar's growth (never over 0.8 of s_inr), so it gains
+    # weight to Black while the inner star stays open enough to tell ☆ from ★ in running text.
+    sk = c.P('UI_STAR_KNEE', 0.09) * CH; ss = US if US <= sk else sk + c.P('UI_STAR_SLOPE', 0.15) * (US - sk)
+    ss = min(ss, 0.8 * s_inr)
+    ctx.log(f'☆: stroke {ss:.1f}, inner star {1 - ss / s_inr:.2f} of the outer')
+    place(0x2606, diff(poly(star), poly(inset(star, ss))), 60)
     s2 = 0.62 * CH; sq2 = [(0, XH / 2 - s2 / 2), (s2, XH / 2 - s2 / 2), (s2, XH / 2 + s2 / 2), (0, XH / 2 + s2 / 2)]
     place(0x25AA, poly(sq2), 60, XH / 2)
     place(0x25AB, white(sq2, s2 / 2), 60, XH / 2)
     bp = path_of('bullet'); bb = bp.bounds
     fin = lambda p, k=1: transformed(p, (1, 0, k * K, 1, -k * K * YC, 0)) if K else p   # to the slanted frame (k=-1: back)
     fb = fin(bp).bounds; bcx, bcy, brx, bry = (fb[0] + fb[2]) / 2, (fb[1] + fb[3]) / 2, (fb[2] - fb[0]) / 2, (fb[3] - fb[1]) / 2
-    bs = min(US, 0.5 * min(brx, bry))
+    # ◦'s ring: the crossbar up to UI_BUL_KNEE of the bullet's diameter, beyond it half the
+    # crossbar's growth, so it gains weight to Black; never past a third of the diameter (the
+    # counter stays at least a third of it across). The bullet is the same at every weight.
+    bd = 2 * min(brx, bry); bk = c.P('UI_BUL_KNEE', 0.28) * bd
+    bs = min(US if US <= bk else bk + 0.5 * (US - bk), bd / 3)
+    ctx.log(f'◦: ring {bs:.1f}, counter {1 - 2 * bs / bd:.2f} of the bullet')
     put(0x25E6, diff(bp, fin(ellipse(bcx, bcy, brx - bs, bry - bs), -1)), W('bullet'))   # ◦: the bullet, hollow, on its spacing
     RL = 1.125 * R                                                 # ◯: Noto Sans Math's ◯ is 1.125 of its ○
     place(0x25EF, diff(ellipse(RL, CC, RL, RL), ellipse(RL, CC, RL - US, RL - US)), 60)

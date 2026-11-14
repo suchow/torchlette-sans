@@ -25,7 +25,10 @@
      step, the new ring a copy of the last.
    - ‧ is the middle dot, centred on the hyphen's height (within 1), its sidebearings
      at most 0.6 of the middle dot's.
-   - ⁑ is * over ⁎ exactly, the asterisk's advance.
+   - ⁑ is two equal asterisks (bounds within a unit, one straight over the other) standing
+     from the baseline to the cap height (each within the overshoot of O), each 0.6 to 1 of
+     the asterisk's height, the top arm at least 0.85 of the asterisk's (and not under it
+     scaled), at least 0.6 of the arm apart, sidebearings the asterisk's scaled (within 0.1).
    - ℃ ℉ hold ° at its own place and C or F moved in, closer than typed (advance under
      ° + letter) and clear of the ring (no contour merged).
    - ℗ holds the ring of © exactly, the ©'s advance, and a P (two contours) inside the
@@ -250,8 +253,30 @@ for suf, h in (('', 'hyphen'), ('.case', 'hyphen.case')):
     check(b[0] <= 0.6 * db[0] + 1 and W(n) - b[2] <= 0.6 * (W(d) - db[2]) + 1, f'{n}: sidebearings {b[0]:.0f}/{W(n) - b[2]:.0f}, {d} {db[0]:.0f}/{W(d) - db[2]:.0f}')
 
 if have('uni2051'):
-    d = xor_frac(outline('uni2051'), union(outline('asterisk'), outline('uni204E')))
-    check(d < 0.01 and W('uni2051') == W('asterisk'), f'uni2051: not * over the low asterisk ({d:.3%} differs, advance {W("uni2051")})')
+    p, ap = outline('uni2051'), outline('asterisk'); b, ab = p.bounds, ap.bounds
+    CAP, OV = outline('H').bounds[3], -outline('O').bounds[1]          # the cap height, the round letters' overshoot
+    check(b[1] >= -OV and b[1] <= OV and b[3] <= CAP + OV and b[3] >= CAP - OV,
+          f'uni2051: ink {b[1]:.0f}..{b[3]:.0f}, want from the baseline to the cap height {CAP:.0f} (within {OV:.0f})')
+    cs = []
+    for c_ in p.contours:
+        q = pathops.Path(); c_.draw(q.getPen()); cs.append(q)
+    check(len(cs) == 2, f'uni2051: {len(cs)} contours, want two asterisks apart')
+    if len(cs) == 2:
+        lo_, up_ = sorted(cs, key=lambda q: q.bounds[1]); lb, ub = lo_.bounds, up_.bounds
+        check(all(abs((ub[i] - ub[j]) - (lb[i] - lb[j])) <= 1 for i, j in ((2, 0), (3, 1))) and abs(ub[0] - lb[0]) <= 1
+              and abs(area(up_) - area(lo_)) <= 0.01 * area(lo_),
+              f'uni2051: the asterisks differ ({tuple(round(v) for v in lb)} and {tuple(round(v) for v in ub)}), want one over the other')
+        k = (lb[3] - lb[1]) / (ab[3] - ab[1])
+        check(0.6 <= k <= 1.02, f'uni2051: each asterisk {k:.2f} of the asterisk\'s height')
+        arm = lambda q, qb: (lambda sp: sp[-1][1] - sp[0][0] if sp else 0)(hspans(q, qb[3] - 0.15 * (qb[3] - qb[1])))   # the top arm near its end
+        a1, a0 = arm(up_, ub), arm(ap, ab)
+        check(a1 >= 0.85 * a0 and a1 >= k * a0 - 0.5, f'uni2051: arm {a1:.1f} against the asterisk\'s {a0:.1f} (scaled {k:.2f})')
+        near_ = pathops.Path(); lo_.draw(near_.getPen())                # the white between: at least 0.6 of the arm
+        near_.stroke(1.2 * a0, pathops.LineCap.BUTT_CAP, pathops.LineJoin.MITER_JOIN, 4)
+        check(not list(pathops.op(near_, up_, pathops.PathOp.INTERSECTION).contours), f'uni2051: the asterisks within {0.6 * a0:.0f} of each other')
+        lsb, rsb, alsb, arsb = b[0], W('uni2051') - b[2], ab[0], W('asterisk') - ab[2]
+        check(abs(lsb - k * alsb) <= 0.1 * alsb + 2 and abs(rsb - k * arsb) <= 0.1 * arsb + 2,
+              f'uni2051: sidebearings {lsb:.0f}/{rsb:.0f}, the asterisk\'s {alsb:.0f}/{arsb:.0f} times {k:.2f}')
 
 for n, L in (('uni2103', 'C'), ('uni2109', 'F')):
     if not have(n): continue

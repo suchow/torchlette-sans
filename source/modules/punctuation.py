@@ -28,8 +28,14 @@ included):
   the top that 0.75 of its typed gap all but closed it), nor over the typed gap.
 - ⸮ (U+2E2E, reversed question mark): the ? mirrored about the middle of its advance, its
   dot drawn again round (build.py's `dot`), so it stays a circle in the italic.
-- ⁑ (U+2051, two asterisks aligned vertically): the asterisk over the low asterisk ⁎
-  (U+204E), the asterisk's advance.
+- ⁑ (U+2051, two asterisks aligned vertically): two equal asterisks in a compact stack
+  within the line, the lower one on the baseline, the upper one's top at the cap height, the
+  lower one's top arm reaching up between the upper one's legs with DAST_GAP of the arm's
+  width between them at the closest (as STIX Two stacks them, not the asterisk over the low
+  asterisk ⁎, which would hang 0.17 em under the baseline). Each is the asterisk scaled by
+  the largest k that fits, at most DAST_MAX (0.85 from Light to SemiBold, 0.80 at Bold, 0.72
+  at Black; the italics 0.85 to 0.75), its outline offset out by DAST_WT of what the scaling
+  took from the arm's width; sidebearings the asterisk's times k.
 - ℃ ℉ (U+2103, U+2109): the degree sign followed by C or F, the letter moved in until
   the closest white between the ring and the letter, across the ring's height, is
   TUCK of what it is in °C or °F typed (unkerned).
@@ -57,6 +63,9 @@ TUCK = 0.5            # ℃ ℉: the white between ring and letter, of what °C 
 IB_SIDE = 0.3         # ‽: the white between the hook's left terminal and the stem, of the ?'s aperture
 IB_OPEN = 0.65        # ‽: the counter between the stem and the bowl, of the ?'s aperture
 NARROW = 0.5          # ‧: its sidebearings, of the middle dot's
+DAST_GAP = 0.8        # ⁑: the closest white between the two asterisks, of the asterisk's arm width
+DAST_WT = 0.6         # ⁑: of the arm width the scaling takes away, how much the outline offset gives back
+DAST_MAX = 0.85       # ⁑: the asterisks' largest scale (the light weights would fit them larger, nested deep)
 
 
 def _name(cp):
@@ -244,7 +253,47 @@ def glyphs(ctx):
     forms(0x2027, hyph_point, {'': ['periodcentered', 'hyphen'], 'case': ['periodcentered.case.otfeatures', 'hyphen.case']})
 
     # ---- two asterisks ---------------------------------------------------------------------
-    forms(0x2051, lambda src: (union(path_of(src[0]), path_of(src[1])), W(src[0])), {'': ['asterisk', 'uni204E']})
+    # Two equal asterisks stacked within the line: the lower one on the baseline, the upper one's
+    # top at the cap height, the lower one's top arm reaching up between the upper one's legs
+    # with DAST_GAP of the arm's width between them at the closest. Both are the asterisk scaled
+    # by k, the outline then offset out by DAST_WT of what the scaling took from half the arm's
+    # width, so the smaller arms look as heavy as the asterisk's (a smaller figure needs relatively
+    # heavier strokes, as small capitals do); k is the largest that fits the pair in the cap
+    # height, but no more than DAST_MAX (where k is capped the gap is wider than DAST_GAP).
+    # Sidebearings are the asterisk's times k.
+    ch = path_of('H').bounds[3]
+
+    def dilate(p, e):
+        q = pathops.Path(); p.draw(q.getPen())
+        q.stroke(2 * e, pathops.LineCap.BUTT_CAP, pathops.LineJoin.MITER_JOIN, 4)
+        return union(p, q)
+
+    def two_asterisks(src):
+        s = src[0]; p = path_of(s); b = p.bounds
+        arm = (lambda sp: sp[1] - sp[0])(hspans(p, b[3] - 0.15 * (b[3] - b[1]))[0])   # the top arm, near its end
+        gap = DAST_GAP * arm
+
+        def stack(k):
+            one = dilate(transformed(p, (k, 0, 0, k, 0, 0)), DAST_WT * (1 - k) * arm / 2); ob = one.bounds
+            one = mv(one, k * b[0] - ob[0], -ob[1])                # on the baseline, the left sidebearing scaled
+            near_ = dilate(one, gap)                               # the white the upper one keeps from it
+            lo, hi = 0.0, 2 * (ob[3] - ob[1])                      # the upper one's rise: touching, clear
+            while hi - lo > 0.25:
+                m = (lo + hi) / 2
+                if not list(pathops.op(near_, mv(one, 0, m), pathops.PathOp.INTERSECTION).contours): hi = m
+                else: lo = m
+            return one, hi
+        lo, hi = 0.5, DAST_MAX + 0.002
+        while hi - lo > 0.002:                                     # the largest k whose pair fits the cap height
+            k = (lo + hi) / 2; one, rise = stack(k)
+            if rise + one.bounds[3] <= ch: lo = k
+            else: hi = k
+        lo = min(lo, DAST_MAX)
+        one, rise = stack(lo); rise += ch - (rise + one.bounds[3])  # the top exactly at the cap height (the gap opens if k is capped)
+        ob = one.bounds
+        ctx.pu_dast = (lo, arm, gap)
+        return _join([one, mv(one, 0, rise)]), ob[2] + lo * (W(s) - b[2])
+    forms(0x2051, two_asterisks, {'': ['asterisk']})
 
     # ---- degree Celsius and Fahrenheit -----------------------------------------------------
     def degree_letter(src):

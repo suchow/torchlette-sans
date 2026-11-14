@@ -35,11 +35,18 @@
    are ▶ ▸ turned a quarter and ▼ ▾ ▲ ▴ turned over about ▶ ▸'s centre (outlines equal within
    about a unit, by the area they do not share), with ▶ ▸'s advance or each other's and their
    left sidebearing; each white shape's outer contour is its black one's (☆ ★'s, ▫ ▪'s, ◦ the
-   bullet's, ◆ is ◇'s), two contours, the stroke the crossbar up to half the inradius (△ ▵ ▫ ◦);
+   bullet's, ◆ is ◇'s), two contours, the stroke the crossbar up to half the inradius (△ ▵ ▫);
+   ☆'s stroke is the crossbar up to 0.09 of the cap height and 0.15 of the rest (within 2), at
+   least 0.6 of △'s, its inner star at least a third of ★'s width; ◦'s ring the crossbar up to
+   0.28 of the bullet's diameter and half the rest, at most a third of it (within 3), the
+   counter at least a third across; in full mode, with the other six weights of the slant
+   beside the font, ☆'s and ◦'s ink grows at every step from Light to Black, their contour
+   counts equal;
    ▪ is 0.62 cap heights square on 235; ◯ is 1.125 of ○ on the capitals in the crossbar; ◌ is
    twelve equal round dots at 30 degrees on one radius, 0.93 of the x-height across, top 480.
 """
 import math
+import os
 import sys
 
 import pathops
@@ -314,8 +321,17 @@ if have(0x25C6, 0x25C7):
 if have(0x2606, 0x2605):
     same(outer(P(0x2606)), P(0x2605), '☆\'s outline against ★'); check(adv(0x2606) == adv(0x2605), f'☆: advance {adv(0x2606)}, ★ {adv(0x2605)}')
     check(len(list(P(0x2606).contours)) == 2, f'☆: {len(list(P(0x2606).contours))} contours')
+    sb_ = P(0x2605).bounds; R5 = (sb_[2] - sb_[0]) / (2 * math.sin(math.radians(72)))
+    tip, vx = (0, R5), (0.382 * R5 * math.cos(math.radians(126)), 0.382 * R5 * math.sin(math.radians(126)))
+    s_inr = abs(tip[0] * vx[1] - tip[1] * vx[0]) / math.hypot(vx[0] - tip[0], vx[1] - tip[1])   # the centre to an edge's line
+    sk = 0.09 * CAP; want = min(US if US <= sk else sk + 0.15 * (US - sk), 0.8 * s_inr)
+    sp = spans(P(0x2606), x=(sb_[0] + sb_[2]) / 2)                       # the lowest span: the stroke at the bottom inner corner,
+    st = width(sp[0]) * s_inr / (0.382 * R5) if sp else 0                # along the corner's ray, at sin = s_inr / r off the edges
+    check(near(st, want, 2), f'☆: stroke {st:.1f} against {want:.1f} (the crossbar {US:.0f} up to {sk:.0f}, 0.15 of the rest)')
+    if have(0x25B3):
+        check(st >= 0.6 * stroke_of(0x25B3), f'☆: stroke {st:.1f} under 0.6 of △\'s {stroke_of(0x25B3):.1f}')
     inner = sorted(P(0x2606).contours, key=lambda c: (c.bounds[2] - c.bounds[0]))[0].bounds
-    check(inner[2] - inner[0] > 0.3 * (P(0x2605).bounds[2] - P(0x2605).bounds[0]), f'☆: inner star {inner} too small')
+    check(inner[2] - inner[0] >= 0.33 * (sb_[2] - sb_[0]), f'☆: inner star {inner} under a third of ★\'s width')
 if have(0x25AA, 0x25AB, 0x25A0):
     b = P(0x25AA).bounds
     check(near(b[2] - b[0], 0.62 * CAP, 1) and near(b[3] - b[1], 0.62 * CAP, 1) and near((b[1] + b[3]) / 2, 235, 1), f'▪: {b}, expected 0.62 of the cap height on 235')
@@ -323,8 +339,10 @@ if have(0x25AA, 0x25AB, 0x25A0):
     s = stroke_of(0x25AB); check(near(s, min(US, 0.155 * CAP), 2), f'▫: stroke {s:.1f} against {min(US, 0.155 * CAP):.1f}')
 if have(0x25E6, 0x2022):
     same(outer(P(0x25E6)), P(0x2022), '◦\'s outline against •'); check(adv(0x25E6) == adv(0x2022), f'◦: advance {adv(0x25E6)}, • {adv(0x2022)}')
-    b = P(0x2022).bounds; sp = spans(P(0x25E6), y=(b[1] + b[3]) / 2); bs = min(US, 0.25 * min(b[2] - b[0], b[3] - b[1]))
+    b = P(0x2022).bounds; sp = spans(P(0x25E6), y=(b[1] + b[3]) / 2); bd = min(b[2] - b[0], b[3] - b[1]); bk = 0.28 * bd
+    bs = min(US if US <= bk else bk + 0.5 * (US - bk), bd / 3)           # the crossbar, half its growth past 0.28 of the bullet
     check(len(sp) == 2 and all(near(width(s), bs, 3) for s in sp), f'◦: spans {sp} against {bs:.1f}')
+    check(len(sp) == 2 and sp[1][0] - sp[0][1] >= bd / 3 - 2, f'◦: counter {sp[1][0] - sp[0][1] if len(sp) == 2 else 0:.0f} under a third of the bullet {bd:.0f}')
 if have(0x25EF, 0x25CB):
     b, bo = P(0x25EF).bounds, P(0x25CB).bounds
     check(near(b[3] - b[1], 1.125 * (bo[3] - bo[1]), 3) and near((b[1] + b[3]) / 2, CC, 2), f'◯: {b} against ○ {bo}')
@@ -339,6 +357,24 @@ if have(0x25CC):
     an = sorted(math.degrees(math.atan2((d[1] + d[3]) / 2 - cy, (d[0] + d[2]) / 2 - cx)) % 360 for d in ds)
     check(rr[-1] - rr[0] <= 2 and all(near((an[(i + 1) % 12] - an[i]) % 360, 30, 0.6) for i in range(12)), f'◌: dot radii {rr[0]:.1f}..{rr[-1]:.1f}, angles {[round(a) for a in an]}')
     check(near(b[3], 480, 2) and near(b[3] - b[1], 0.93 * 470, 2), f'◌: {b}, expected 0.93 of the x-height with its top at 480')
+# across the seven weights of this slant (full mode, when they are beside this font): ☆ and ◦
+# gain ink at every step, and keep their contour count (the variable font interpolates them)
+if MODE == 'full':
+    d_ = os.path.dirname(os.path.abspath(PATH))
+    W7 = ['Light', 'Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold', 'Black']
+    sibs = [os.path.join(d_, f'TorchletteSans-{({"Regular": "Italic"}.get(w, w + "Italic") if ITALIC else w)}.ttf') for w in W7]
+    if all(os.path.exists(q) for q in sibs):
+        fs7 = [TTFont(q, lazy=True) for q in sibs]
+        for u in (0x2606, 0x25E6):
+            g = cmap.get(u)
+            if not g or not all(g in f_.getGlyphOrder() for f_ in fs7): check(False, f'U+{u:04X}: missing in a weight'); continue
+            areas = []
+            for f_ in fs7:
+                gs_ = f_.getGlyphSet(); q = pathops.Path(); gs_[g].draw(q.getPen(glyphSet=gs_)); q.simplify(); areas.append(abs(q.area))
+            check(all(a < b_ for a, b_ in zip(areas, areas[1:])), f'{chr(u)}: ink across the weights {[round(a) for a in areas]}, not growing at every step')
+            counts = [f_['glyf'][g].numberOfContours for f_ in fs7]
+            check(len(set(counts)) == 1, f'{chr(u)}: contours across the weights {counts}')
+        print('issue 33 shapes: ☆ and ◦ ink and contours compared across the seven weights')
 print('issue 33 shapes: triangles, ◆ ☆ ▪ ▫ ◦ ◯ ◌ as designed')
 
 # ---- 6. metrics --------------------------------------------------------------------------------
