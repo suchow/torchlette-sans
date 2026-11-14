@@ -1,5 +1,6 @@
-"""ui: the interface symbols ✓ ✗ ■ □ ▶ ● ○ ★, the circled numbers ①-⑳ and the keyboard
-symbols ⌘ ⌥ ⇧ ⏎ ⌫, drawn in Torchlette's strokes at every weight.
+"""ui: the interface symbols ✓ ✗ ■ □ ▶ ● ○ ★, the geometric shapes that go with them (▲ △ ▼ ▽
+◀ ◁ ▷, ▴ ▵ ▾ ▿ ◂ ◃ ▹, ☆ ▪ ▫ ◦ ◯ ◌), the circled numbers ①-⑳ and the keyboard symbols ⌘ ⌥ ⇧ ⏎
+⌫, drawn in Torchlette's strokes at every weight.
 
 Strokes. Two measures of this style's capitals are the monoline weights: H's crossbar (59 at
 Regular, 103 at Bold, 139 at Black) for every outlined shape (□ ○, ⌘ ⌥ ⇧ ⏎ ⌫), and X's
@@ -7,6 +8,9 @@ diagonal across its stroke (63 at Regular, 114 at Bold) for the two marks drawn 
 ✓ and ✗, since Torchlette's diagonals carry the stems' weight. The keyboard symbols, whose
 counters are small, take the crossbar only up to 0.15 of the cap height (106: ExtraBold's 121
 and Black's 139 are capped, Bold's 103 is not), as a heavier ⌘ is four dots and a square. The
+white shapes of issue 33 (△ ▽ ◁ ▷, ▵ ▿ ◃ ▹, ☆ ▫ ◦) take the crossbar up to half their inradius,
+so their counters stay open: at Black △ 114, ▵ 71, ▫ 109, ◦ 90; ☆, whose arms are narrow,
+58 from Regular on (its crossbar is 59); □ ○ ◯ never reach it. The
 circled numbers' rings follow their figures instead (below). The filled shapes have no stroke.
 
 Sizes. The shapes stand on the baseline at the cap height, as Noto Sans Math sets them (its ■
@@ -14,7 +18,17 @@ and ● are cap height, its ▶ an equilateral triangle 1.13 cap heights tall, s
 looks smaller than its box): ■ □ a cap-height square; ● ○ a circle of the cap height with
 O's overshoot; ▶ the equilateral triangle, centred on the capitals; ★ a regular pentagram
 (inner radius 0.382 of the outer, as Noto Sans Math's) as wide as the cap height, its box
-centred on the capitals. ✓: the long arm rises at 58 degrees to the cap height from a vertex
+centred on the capitals. The other triangles are ▶ turned: ◀ mirrored, ▲ ▼ with their box
+centred on the capitals as ▶'s is (base 11 over the baseline, apex 11 under the cap height, as
+Noto Sans Math stands ▲ on the baseline in ▶'s box: centring the centroid instead would lift ▲
+114 over the capitals and drop ▼ as far under the baseline), each other's mirror; ▴ ▾ ◂ ▹ ▵ ▿ ◃
+the same from codekeys' ▸ (0.62 of ▶, centred at half the x-height, sidebearings 70), whose
+rule is repeated here. ☆ is ★'s outline with the inner star mitred; ▪ ▫ a square 0.62 of the
+cap height (▸'s scale: Noto Sans Math's ▪ is 0.56 of its ■, its • far smaller) centred at half
+the x-height as ▸ is; ◦ the bullet's own outline, hollow, on its spacing; ◯ a circle 1.125 of
+○ (Noto Sans Math's ratio) on the capitals; ◌ twelve round dots, 36 + 0.3 of the crossbar across
+(54 at Regular, 78 at Black), on a ring 0.93 of the x-height across with its top at o's (480),
+as Noto Sans Math's ◌ stands. Sidebearings 60 as ■'s, ▸'s 70 for the small triangles. ✓: the long arm rises at 58 degrees to the cap height from a vertex
 whose mitred point is 12 under the baseline, the short arm comes in at 45 degrees from 0.36
 of the height; ✗: two strokes crossing, cap height tall and 0.8 of that wide (Noto Sans
 Symbols2's ✗ is 562 by 736), their ends cut flat at the baseline and cap height as X's are.
@@ -59,10 +73,13 @@ numbers lean, as Mulish Italic's figures do. Advances and sidebearings are the s
 frames.
 
 Nothing existing is changed. No layout features. Glyph names: uni2713, uni2717, uni25A0,
-uni25A1, uni25B6, uni25CF, uni25CB, uni2605, uni2460 ... uni2473, uni2318, uni2325, uni21E7,
+uni25A1, uni25B6, uni25CF, uni25CB, uni2605, uni25B2 uni25B3 uni25BC uni25BD uni25C0 uni25C1
+uni25B7 uni25B4 uni25B5 uni25BE uni25BF uni25C2 uni25C3 uni25B9 uni2606 uni25AA uni25AB uni25E6
+uni25EF uni25CC, uni2460 ... uni2473, uni2318, uni2325, uni21E7,
 uni23CE, uni232B. Code points outside the Makefile's web subset ranges: the circled numbers,
-U+2460-2473 (the Makefile names ★ ✓ ✗, U+2605, U+2713 and U+2717, which the app's interface
-shows). Knobs (environment): UI_RING, the circled numbers' ring in cap heights (1.08); UI_CN_Q, the
+U+2460-2473 (the Makefile names ★ ☆ ✓ ✗, U+2605, U+2606, U+2713 and U+2717, which the app's
+interface shows; the other shapes are in its U+25A0-25FF). ◌'s mark anchors (above at 454 and
+below on the baseline, over and under its centre, as the lowercase letters') are otfeatures'. Knobs (environment): UI_RING, the circled numbers' ring in cap heights (1.08); UI_CN_Q, the
 ring's stroke against the figures' stem (0.8); UI_CN_FSK and UI_CN_FSK_BK, the figures' stem
 against H's at Regular and at Black (0.82, 0.64); UI_CN_FIGH, one figure's height against the
 inner diameter (0.62); UI_CN_PAIRH, two figures' height against one's (0.95); UI_CN_GAP and
@@ -168,6 +185,48 @@ def glyphs(ctx):
     place(0x25CB, diff(ellipse(R, CC, R, R), ellipse(R, CC, R - US, R - US)), 60)
     R5 = CH / (2 * math.sin(math.radians(72)))
     place(0x2605, pentagram(R5, CC - R5 * (1 - math.cos(math.radians(36))) / 2, R5, 0.382 * R5), 60)
+
+    # ---- more geometric shapes (issue 33) ---------------------------------------------------------
+    # A white shape is its black one less the outline inset by the crossbar, mitred, the stroke
+    # held to half the shape's inradius so a small or pointed counter stays open at the heavy
+    # weights (□ ○ ◯ never reach it).
+    def white(pts, inr):
+        return diff(poly(pts), poly(inset(pts, min(US, 0.5 * inr))))
+
+    def triangles(side, cy, lsb, cps):
+        """The black and white triangles of one size pointing up, down, left and right; cps
+        maps 'u' 'd' 'l' 'r' and the white 'U' 'D' 'L' 'R' to code points (▶ ▸ exist)."""
+        tall = side * math.sqrt(3) / 2; inr = side / (2 * math.sqrt(3))
+        pts = {'u': [(0, cy - tall / 2), (side, cy - tall / 2), (side / 2, cy + tall / 2)],
+               'd': [(0, cy + tall / 2), (side / 2, cy - tall / 2), (side, cy + tall / 2)],
+               'r': [(0, cy - side / 2), (tall, cy), (0, cy + side / 2)],
+               'l': [(tall, cy - side / 2), (tall, cy + side / 2), (0, cy)]}
+        for k, cp in cps.items():
+            place(cp, poly(pts[k]) if k.islower() else white(pts[k.lower()], inr), lsb, cy)
+    triangles(side, CC, 60, {'u': 0x25B2, 'U': 0x25B3, 'd': 0x25BC, 'D': 0x25BD, 'l': 0x25C0, 'L': 0x25C1, 'R': 0x25B7})
+    XH = c.XH                                                      # ▸ (codekeys): 0.62 of ▶, centred at half the x-height
+    triangles(0.62 * side, XH / 2, 70, {'u': 0x25B4, 'U': 0x25B5, 'd': 0x25BE, 'D': 0x25BF, 'l': 0x25C2, 'L': 0x25C3, 'R': 0x25B9})
+    scy = CC - R5 * (1 - math.cos(math.radians(36))) / 2           # ★'s centre
+    star = [(R5 + (R5 if i % 2 == 0 else 0.382 * R5) * math.cos(math.radians(90 + 36 * i)),
+             scy + (R5 if i % 2 == 0 else 0.382 * R5) * math.sin(math.radians(90 + 36 * i))) for i in range(10)]
+    (tx, ty), (ix, iy) = star[0], star[1]                          # a tip and the next inner corner
+    s_inr = abs((tx - R5) * (iy - scy) - (ty - scy) * (ix - R5)) / math.hypot(ix - tx, iy - ty)   # the centre to an edge's line
+    place(0x2606, white(star, s_inr), 60)                          # ☆: ★'s outline, the inner star mitred
+    s2 = 0.62 * CH; sq2 = [(0, XH / 2 - s2 / 2), (s2, XH / 2 - s2 / 2), (s2, XH / 2 + s2 / 2), (0, XH / 2 + s2 / 2)]
+    place(0x25AA, poly(sq2), 60, XH / 2)
+    place(0x25AB, white(sq2, s2 / 2), 60, XH / 2)
+    bp = path_of('bullet'); bb = bp.bounds
+    fin = lambda p, k=1: transformed(p, (1, 0, k * K, 1, -k * K * YC, 0)) if K else p   # to the slanted frame (k=-1: back)
+    fb = fin(bp).bounds; bcx, bcy, brx, bry = (fb[0] + fb[2]) / 2, (fb[1] + fb[3]) / 2, (fb[2] - fb[0]) / 2, (fb[3] - fb[1]) / 2
+    bs = min(US, 0.5 * min(brx, bry))
+    put(0x25E6, diff(bp, fin(ellipse(bcx, bcy, brx - bs, bry - bs), -1)), W('bullet'))   # ◦: the bullet, hollow, on its spacing
+    RL = 1.125 * R                                                 # ◯: Noto Sans Math's ◯ is 1.125 of its ○
+    place(0x25EF, diff(ellipse(RL, CC, RL, RL), ellipse(RL, CC, RL - US, RL - US)), 60)
+    # ◌: twelve dots on a ring 0.93 of the x-height across, its top at o's (x-height plus 10),
+    # the dots 36 + 0.3 of the crossbar across (54 at Regular, 78 at Black)
+    RO = 0.465 * XH; DD = 36 + 0.3 * US; rc = RO - DD / 2; dcy = XH + 10 - RO
+    place(0x25CC, union(*[ellipse(RO + rc * math.cos(math.radians(90 + 30 * i)), dcy + rc * math.sin(math.radians(90 + 30 * i)), DD / 2, DD / 2)
+                          for i in range(12)]), 60, dcy)
 
     # ---- circled numbers ------------------------------------------------------------------------
     # The figures' vertical stem FS follows H's stem (FSK of it at Regular, FSK_BK at Black,

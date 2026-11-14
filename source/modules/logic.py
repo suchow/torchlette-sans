@@ -17,7 +17,7 @@ fourteen static styles so variable-font (`gvar`) interpolation stays exact:
   across the horizontal arm(s) with analytical line-line intersections so Heavy
   and Black weights keep wide-open counters.
 - `LG2` modal operators (`◇` U+25C7, `◻` U+25FB, and unencoded `uni25A1.math.logic`
-  for `□` U+25A1): hollow x-height-scale operators centered on `LIN_AXIS` and
+  for `□` U+25A1), and `◆` U+25C6 (issue 33), `◇`'s outer contour filled: hollow x-height-scale operators centered on `LIN_AXIS` and
   counter-sheared upright in italic styles (matching `ui.py`'s geometric shapes).
   `ui.py`'s cap-height `uni25A1` (`□`) is left untouched; `ss09` ("Modal necessity
   box") substitutes `uni25A1 -> uni25A1.math.logic` unconditionally, and a
@@ -61,7 +61,7 @@ outlines or control points copied):
 Feature tags added: `ss09` ("Modal necessity box"); contextual lookup added to
 `calt` (`LOGIC_MODAL_CALT`).
 Glyph names added: `uni22A2`, `uni22A3`, `uni22A7`, `uni22A8`, `uni22AC`,
-`uni22AD`, `uni25C7`, `uni25FB`, `uni25A1.math.logic`, `uni220E`, `uni2621`,
+`uni22AD`, `uni25C7`, `uni25C6`, `uni25FB`, `uni25A1.math.logic`, `uni220E`, `uni2621`,
 `uni21AF`, `uni204E`, `uni2023`, `uni2311`, `uni2373`, `uni2374`, `uni2349`,
 `uni233D`, `uni23E2`.
 Code points outside the Makefile's current `UNICODES` web-subset list: `U+2621`
@@ -378,6 +378,8 @@ def glyphs(ctx):
     dia_outer = _on_pts([(dcx, A + r_dia), (dcx + r_dia, A), (dcx, A - r_dia), (dcx - r_dia, A)])
     dia_inner = _on_pts([(dcx, A + r_dia_in), (dcx - r_dia_in, A), (dcx, A - r_dia_in), (dcx + r_dia_in, A)])
     put_tt(0x25C7, [(dia_outer, False), (dia_inner, True)], 650, upright_cy=A)
+    # ◆ U+25C6 BLACK DIAMOND (◇'s outer contour filled; 1 contour, 4 points)
+    put_tt(0x25C6, [(dia_outer, False)], 650, upright_cy=A)
 
     # =========================================================================
     # LG3 — End of Proof, Bourbaki/Knuth Dangerous Bend, Zigzag Arrow & Marks

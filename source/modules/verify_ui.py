@@ -29,7 +29,15 @@
    (point, cross, side).
 5. Italic styles: ■ ● ⌘ ① keep square bounds (the pictures stand upright) while ①'s figure
    leans with the slant (its stem moves 0.1587 of the rise between two heights, within 10).
-6. Nothing leaves the typo or win vertical metrics.
+6. Nothing leaves the typo or win vertical metrics (the issue-33 shapes included).
+7. Issue 33's shapes: each of ▲ △ ▼ ▽ ◀ ◁ ▷ ▴ ▵ ▾ ▿ ◂ ◃ ▹ ◆ ☆ ▪ ▫ ◦ ◯ ◌ is mapped, inked, a base
+   (GDEF 1), shapes between letters and is not kerned beside A V 7; ◀ ◂ are ▶ ▸ mirrored, ▲ ▴
+   are ▶ ▸ turned a quarter and ▼ ▾ ▲ ▴ turned over about ▶ ▸'s centre (outlines equal within
+   about a unit, by the area they do not share), with ▶ ▸'s advance or each other's and their
+   left sidebearing; each white shape's outer contour is its black one's (☆ ★'s, ▫ ▪'s, ◦ the
+   bullet's, ◆ is ◇'s), two contours, the stroke the crossbar up to half the inradius (△ ▵ ▫ ◦);
+   ▪ is 0.62 cap heights square on 235; ◯ is 1.125 of ○ on the capitals in the crossbar; ◌ is
+   twelve equal round dots at 30 degrees on one radius, 0.93 of the x-height across, top 480.
 """
 import math
 import sys
@@ -229,7 +237,112 @@ if ITALIC and 0x2460 in present:
     else: check(False, f'①: spans {lo} / {hi}')
     print('italic: the pictures stand upright, the figures lean')
 
+# ---- 7. more geometric shapes (issue 33) -----------------------------------------------------------
+def T(p, m):
+    q = pathops.Path(); p.draw(TransformPen(q.getPen(), m)); return q
+
+
+def xor_area(a, b):
+    """The area two outlines do not share (by a fine scanline count; 0 when they are equal)."""
+    q = pathops.op(a, b, pathops.PathOp.XOR); bb = q.bounds
+    if not bb or bb[2] - bb[0] < 0.5: return 0.0
+    tot = 0.0
+    for i in range(int(bb[1]), int(bb[3]) + 1, 2):
+        tot += 2 * sum(width(s) for s in spans(q, y=i + 0.5))
+    return tot
+
+
+def outer(p):
+    """p's outer contour filled (the contour with the widest bounds)."""
+    cs = sorted(p.contours, key=lambda c: -(c.bounds[2] - c.bounds[0]) * (c.bounds[3] - c.bounds[1]))
+    q = pathops.Path(); cs[0].draw(q.getPen()); return pathops.op(q, q, pathops.PathOp.UNION)
+
+
+def same(a, b, what):                                                    # equal within about a unit along the outline
+    b0 = a.bounds; per = 2 * ((b0[2] - b0[0]) + (b0[3] - b0[1]))
+    d = xor_area(a, b); check(d <= 1.5 * per, f'{what}: outlines differ by {d:.0f} square units (allowed {1.5 * per:.0f})')
+
+
+def centred(p):                                                          # p with its box centred on the origin
+    b = p.bounds; return T(p, (1, 0, 0, 1, -(b[0] + b[2]) / 2, -(b[1] + b[3]) / 2))
+
+
+NEW33 = {0x25B2: '▲', 0x25B3: '△', 0x25BC: '▼', 0x25BD: '▽', 0x25C0: '◀', 0x25C1: '◁', 0x25B7: '▷',
+         0x25B4: '▴', 0x25B5: '▵', 0x25BE: '▾', 0x25BF: '▿', 0x25C2: '◂', 0x25C3: '◃', 0x25B9: '▹',
+         0x25C6: '◆', 0x2606: '☆', 0x25AA: '▪', 0x25AB: '▫', 0x25E6: '◦', 0x25EF: '◯', 0x25CC: '◌'}
+gdef = f['GDEF'].table.GlyphClassDef.classDefs
+for u, ch in NEW33.items():
+    if u not in cmap: check(False, f'U+{u:04X} {ch} unmapped'); continue
+    g = cmap[u]; check(path(g).bounds is not None and hmtx[g][0] > 0, f'{g}: no ink or no advance')
+    check(gdef.get(g) == 1, f'{g}: GDEF class {gdef.get(g)}, not 1 (base)')
+    for feats in (None, APP):
+        names = shape('a' + ch + 'b', feats); check(len(names) == 3 and names[1] == g, f'a{ch}b shapes to {names} (features {feats})')
+    b = hb.Buffer(); b.add_str('AV' + ch + 'VA7' + ch + '7'); b.guess_segment_properties(); hb.shape(hbfont, b, {})
+    check(all(p.x_advance == hmtx[hbfont.get_glyph_name(i.codepoint)][0] and p.x_offset == 0 for i, p in zip(b.glyph_infos, b.glyph_positions)
+              if i.codepoint == f.getGlyphID(g)), f'{ch}: kerned or moved beside A V 7')
+G = {u: cmap.get(u) for u in list(NEW33) + [0x25B6, 0x25B8, 0x25A0, 0x25A1, 0x25CB, 0x2605, 0x25C7, 0x2022]}
+have = lambda *us: all(G.get(u) for u in us)
+adv = lambda u: hmtx[G[u]][0]
+P = lambda u: path(G[u])
+inr_tri = lambda u: (P(u).bounds[2] - P(u).bounds[0]) / (2 * math.sqrt(3))   # ▲ ▼: the width is the side
+
+
+def stroke_of(u):                                                        # a white shape's stroke: the lowest span on its vertical centre line
+    p = P(u); b = p.bounds; sp = spans(p, x=(b[0] + b[2]) / 2); return width(sp[0]) if sp else 0
+
+
+for big in (True, False):
+    r_, l_, u_, d_ = (0x25B6, 0x25C0, 0x25B2, 0x25BC) if big else (0x25B8, 0x25C2, 0x25B4, 0x25BE)
+    wr, wl, wu, wd = (0x25B7, 0x25C1, 0x25B3, 0x25BD) if big else (0x25B9, 0x25C3, 0x25B5, 0x25BF)
+    if not have(r_, l_, u_, d_, wr, wl, wu, wd): continue
+    rb, ub = P(r_).bounds, P(u_).bounds; cy = (rb[1] + rb[3]) / 2
+    same(centred(P(l_)), centred(T(P(r_), (-1, 0, 0, 1, 0, 0))), f'{NEW33[l_]} against ▶/▸ mirrored')
+    same(P(d_), T(P(u_), (1, 0, 0, -1, 0, 2 * cy)), f'{NEW33[d_]} against {NEW33[u_]} turned over')
+    same(centred(P(u_)), centred(T(P(r_), (0, 1, -1, 0, 0, 0))), f'{NEW33[u_]} against ▶/▸ turned a quarter')
+    check(near((ub[1] + ub[3]) / 2, cy, 1), f'{NEW33[u_]}: centred at {(ub[1] + ub[3]) / 2:.0f}, ▶/▸ at {cy:.0f}')
+    check(adv(l_) == adv(r_) and adv(wl) == adv(r_) and adv(wr) == adv(r_), f'◀ ◁ ▷: advances {adv(l_)} {adv(wl)} {adv(wr)} against {adv(r_)}')
+    check(adv(d_) == adv(u_) == adv(wu) == adv(wd), f'▲ ▼ △ ▽ advances {adv(u_)} {adv(d_)} {adv(wu)} {adv(wd)}')
+    check(all(near(hmtx[G[v]][1], hmtx[G[r_]][1], 1) for v in (l_, u_, d_)), f'{NEW33[u_]} {NEW33[d_]} {NEW33[l_]}: left sidebearings against {hmtx[G[r_]][1]}')
+    sw = min(US, 0.5 * inr_tri(u_))
+    for b_, w_ in ((r_, wr), (l_, wl), (u_, wu), (d_, wd)):
+        same(outer(P(w_)), P(b_), f'{NEW33[w_]}\'s outline against {chr(b_)}')
+        check(len(list(P(w_).contours)) == 2, f'{NEW33[w_]}: {len(list(P(w_).contours))} contours, expected 2')
+    s = stroke_of(wu); check(near(s, sw, 2), f'{NEW33[wu]}: stroke {s:.1f} against {sw:.1f} (the crossbar {US:.0f} up to half the inradius)')
+    if big: check(near(ub[1], CC - (ub[3] - ub[1]) / 2, 1) and near(ub[3] - ub[1], (rb[3] - rb[1]) * math.sqrt(3) / 2, 3), f'▲: {ub}')
+if have(0x25C6, 0x25C7):
+    same(P(0x25C6), outer(P(0x25C7)), '◆ against ◇\'s outline'); check(adv(0x25C6) == adv(0x25C7), f'◆: advance {adv(0x25C6)}, ◇ {adv(0x25C7)}')
+if have(0x2606, 0x2605):
+    same(outer(P(0x2606)), P(0x2605), '☆\'s outline against ★'); check(adv(0x2606) == adv(0x2605), f'☆: advance {adv(0x2606)}, ★ {adv(0x2605)}')
+    check(len(list(P(0x2606).contours)) == 2, f'☆: {len(list(P(0x2606).contours))} contours')
+    inner = sorted(P(0x2606).contours, key=lambda c: (c.bounds[2] - c.bounds[0]))[0].bounds
+    check(inner[2] - inner[0] > 0.3 * (P(0x2605).bounds[2] - P(0x2605).bounds[0]), f'☆: inner star {inner} too small')
+if have(0x25AA, 0x25AB, 0x25A0):
+    b = P(0x25AA).bounds
+    check(near(b[2] - b[0], 0.62 * CAP, 1) and near(b[3] - b[1], 0.62 * CAP, 1) and near((b[1] + b[3]) / 2, 235, 1), f'▪: {b}, expected 0.62 of the cap height on 235')
+    same(outer(P(0x25AB)), P(0x25AA), '▫\'s outline against ▪'); check(adv(0x25AA) == adv(0x25AB), '▪ ▫ advances')
+    s = stroke_of(0x25AB); check(near(s, min(US, 0.155 * CAP), 2), f'▫: stroke {s:.1f} against {min(US, 0.155 * CAP):.1f}')
+if have(0x25E6, 0x2022):
+    same(outer(P(0x25E6)), P(0x2022), '◦\'s outline against •'); check(adv(0x25E6) == adv(0x2022), f'◦: advance {adv(0x25E6)}, • {adv(0x2022)}')
+    b = P(0x2022).bounds; sp = spans(P(0x25E6), y=(b[1] + b[3]) / 2); bs = min(US, 0.25 * min(b[2] - b[0], b[3] - b[1]))
+    check(len(sp) == 2 and all(near(width(s), bs, 3) for s in sp), f'◦: spans {sp} against {bs:.1f}')
+if have(0x25EF, 0x25CB):
+    b, bo = P(0x25EF).bounds, P(0x25CB).bounds
+    check(near(b[3] - b[1], 1.125 * (bo[3] - bo[1]), 3) and near((b[1] + b[3]) / 2, CC, 2), f'◯: {b} against ○ {bo}')
+    sp = spans(P(0x25EF), y=CC); check(len(sp) == 2 and all(near(width(s), US, 2) for s in sp), f'◯: spans {sp} against {US:.0f}')
+if have(0x25CC):
+    cs = list(P(0x25CC).contours); b = P(0x25CC).bounds; cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+    check(len(cs) == 12, f'◌: {len(cs)} dots, expected 12')
+    ds = [c.bounds for c in cs]                                          # within 2: the reslant's rounding
+    dw = [d[2] - d[0] for d in ds]; dh = [d[3] - d[1] for d in ds]
+    check(max(dw) - min(dw) <= 2 and max(dh) - min(dh) <= 2 and max(abs(w - h) for w, h in zip(dw, dh)) <= 2, f'◌: dots {sorted(set(map(round, dw)))} by {sorted(set(map(round, dh)))}')
+    rr = sorted(math.hypot((d[0] + d[2]) / 2 - cx, (d[1] + d[3]) / 2 - cy) for d in ds)
+    an = sorted(math.degrees(math.atan2((d[1] + d[3]) / 2 - cy, (d[0] + d[2]) / 2 - cx)) % 360 for d in ds)
+    check(rr[-1] - rr[0] <= 2 and all(near((an[(i + 1) % 12] - an[i]) % 360, 30, 0.6) for i in range(12)), f'◌: dot radii {rr[0]:.1f}..{rr[-1]:.1f}, angles {[round(a) for a in an]}')
+    check(near(b[3], 480, 2) and near(b[3] - b[1], 0.93 * 470, 2), f'◌: {b}, expected 0.93 of the x-height with its top at 480')
+print('issue 33 shapes: triangles, ◆ ☆ ▪ ▫ ◦ ◯ ◌ as designed')
+
 # ---- 6. metrics --------------------------------------------------------------------------------
+present.update({u: cmap[u] for u in NEW33 if u in cmap})
 for u, g in present.items():
     b = path(g).bounds
     check(b[3] <= os2.sTypoAscender and b[1] >= os2.sTypoDescender and b[3] <= os2.usWinAscent and b[1] >= -os2.usWinDescent,
