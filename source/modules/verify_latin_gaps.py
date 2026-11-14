@@ -8,8 +8,10 @@ Verifies across every style (upright and italic, Light through Black):
 2. Complete 48-character Pinyin repertoire (24 uppercase + 24 lowercase), dotless `ǐ` (`U+01D0`),
    stacked `ü` + tone (`U+01D5..U+01DC`) clear vertical separation and round dots within `usWinAscent`,
    and 550-unit `smcp`/`c2sc` small caps for all 48 Pinyin letters.
-3. Long s `ſ` (`U+017F`): f's contour less the crossbar's right arm (four points), f's advance,
-   height and left side, nothing right of the stem at the crossbar's height; `smcp` -> `S.sc`;
+3. Long s `ſ` (`U+017F`): f's contour less the crossbar's right arm (one contour of f's own points,
+   fewer of them), f's advance, height and left side, nothing right of the stem at the crossbar's
+   height, and row by row f's ink elsewhere, the stem's right edge straight across the bar (no
+   notch); `smcp` -> `S.sc`;
    kerning as f on its right (`KERN`, from the kern module's `INHERIT`).
    All Latin `case_mapping` pairs (`Ĳ/ĳ`, `Ǔ/ǔ`, `Ǥ/ǥ`, `Ǩ/ǩ`, `Ȟ/ȟ`, `Ȩ/ȩ`, `Ƒ/ƒ`), zero non-Greek
    `case_mapping` gaps in `cmap`, and 100% Latin `Ll`/`Lu` coverage in `smcp`/`c2sc`.
@@ -206,8 +208,15 @@ if 'longs' in HAVE:
     check(bs[1] == bf[1] and bs[3] == bf[3] and abs(bs[0] - bf[0]) <= 1 and abs(bs[2] - bf[2]) <= 1,
           f'longs: ink {bs}, f {bf} (stem, nub and hook are f\'s)')
     gs_ = GLYF['longs']
-    check(not gs_.isComposite() and gs_.numberOfContours == 1 and len(gs_.coordinates) == len(GLYF['f'].coordinates) - 4,
-          f'longs: {gs_.numberOfContours} contours, {len(gs_.coordinates)} points (f has {len(GLYF["f"].coordinates)}; four go)')
+    # one simple contour made of f's own points, fewer of them: nothing added (a point left
+    # inside the stem, a handle moved), so the outline is f's wherever the arm was not.
+    # (The same points and flags at all seven weights of each slant: section 8.)
+    gf_ = GLYF['f']
+    f_pts = [tuple(c) for c in gf_.coordinates] if not gf_.isComposite() else []
+    stray = [] if gs_.isComposite() else [tuple(c) for c in gs_.coordinates
+                                          if not any(abs(c[0] - x) <= 1 and abs(c[1] - y) <= 1 for x, y in f_pts)]
+    check(not gs_.isComposite() and gs_.numberOfContours == 1 and len(gs_.coordinates) < len(f_pts) and not stray,
+          f'longs: {gs_.numberOfContours} contours, {len(gs_.coordinates)} points (f has {len(f_pts)}), points not f\'s: {stray}')
     # nothing of ſ stands right of f's stem at the crossbar's height: its ink there is the stem and the nub
     import pathops as _po
     from fontTools.pens.transformPen import TransformPen
@@ -225,6 +234,30 @@ if 'longs' in HAVE:
         if len(sf) == 1 and sf[0][1] > stem[1] + 20:          # f's crossbar row
             check(len(sl) == 1 and sl[0][1] <= stem[1] + 1.5 and abs(sl[0][0] - sf[0][0]) <= 1,
                   f'longs: row {y}: {sl}, want f\'s nub and stem to {stem[1]:.0f} (f {sf})')
+    # the stem's right edge is straight where the arm was, with no notch: row by row, ſ's ink
+    # is f's, except across the crossbar (f's own band, less two units at each edge), where it
+    # ends at the stem's right edge; in the italics the rows are read with the slant taken out
+    # (2.5 units: f's own italic edge wobbles a unit with rounding; the notch was 9 to 23)
+    _x = stem[1] + 0.5 * (stem[1] - stem[0])
+    _r = _po.Path(); _pen = _r.getPen()
+    _pen.moveTo((_x - .5, -3000)); _pen.lineTo((_x + .5, -3000)); _pen.lineTo((_x + .5, 5000)); _pen.lineTo((_x - .5, 5000)); _pen.closePath()
+    _bar = sorted((c.bounds[1], c.bounds[3]) for c in _po.op(pf, _r, _po.PathOp.INTERSECTION).contours)
+    check(len(_bar) >= 1, f'longs: no crossbar found in f at x {_x:.0f}')
+    if _bar:
+        cb0, cb1 = _bar[0]
+        bad_rows = []
+        for y in range(int(0.03 * bf[3]), int(0.97 * bf[3]), 3):
+            if cb0 - 2 <= y <= cb1 + 2 and not (cb0 + 2 <= y <= cb1 - 2):
+                continue                                       # the crossbar's own edges
+            sl, sf = _hs(pl, y), _hs(pf, y)
+            if cb0 + 2 <= y <= cb1 - 2:
+                ok = len(sl) == 1 and abs(sl[0][0] - sf[0][0]) <= 1 and abs(sl[0][1] - stem[1]) <= 2.5
+            else:
+                ok = len(sl) == len(sf) and all(abs(a - c) <= 2.5 and abs(b - d) <= 2.5 for (a, b), (c, d) in zip(sl, sf))
+            if not ok:
+                bad_rows.append((y, [tuple(round(v) for v in s) for s in sl], [tuple(round(v) for v in s) for s in sf]))
+        check(not bad_rows, f'longs: stem edge not f\'s (straight to {stem[1]:.0f} across the bar at {cb0:.0f}..{cb1:.0f}) '
+                            f'in {len(bad_rows)} rows, e.g. (y, longs, f) {bad_rows[:3]}')
     if kept('smcp'):
         r_s = shape('\u017F', {'smcp': 1})
         check([r['g'] for r in r_s] == ['S.sc'], f'longs smcp -> {[r["g"] for r in r_s]}, want S.sc')

@@ -313,8 +313,9 @@ def _build_f_hook(ctx, f_glyph, j_glyph, min_lsb):
 
 def _build_long_s(ctx):
     """ſ (U+017F, `longs`): f's own contour with the right arm of the crossbar taken out,
-    point by point: the arm's points (right of the stem, within the crossbar's height) and
-    the two corners where it met the stem go, and the stem's right edge runs straight
+    point by point: the arm's points (right of the stem's middle, within the crossbar's
+    height: the arm's corners, the two where it met the stem, and the end of Mulish's
+    overlapping crossbar inside the stem) go, and the stem's right edge runs straight
     from the baseline to where the hook begins. The stem, the left nub of the crossbar,
     the hook, the advance and the sidebearings are f's. f has one contour with the same
     points at every weight, so ſ has too (variable-font compatible, as section 7 of
@@ -327,8 +328,16 @@ def _build_long_s(ctx):
     s0, s1 = ctx.hspans(p, 0.1 * b[3])[0]                      # the stem, below the crossbar
     cb0, cb1 = ctx.vspans(p, s1 + 0.5 * (s1 - s0))[0]          # the crossbar's right arm
     coords, flags = list(f.coordinates), list(f.flags)
-    drop = [i for i, (x, y) in enumerate(coords) if cb0 - 0.5 <= y <= cb1 + 0.5 and x > s1 - 2]
-    assert len(drop) == 4 and all(flags[i] & 1 for i in drop), f'longs: crossbar arm points {[coords[i] for i in drop]}'
+    # At this point f is still Mulish's overlapping contour (build.py removes overlaps after
+    # the modules' glyphs phase): the crossbar's top edge runs on into the stem to a point
+    # inside it (148,470 at Light), which a test of x > s1 kept, and which notched the
+    # stem's right edge once the overlaps were removed. Everything at the crossbar's height
+    # right of the stem's middle goes: the arm's four corners and that point if it is there.
+    drop = [i for i, (x, y) in enumerate(coords) if cb0 - 0.5 <= y <= cb1 + 0.5 and x > (s0 + s1) / 2]
+    assert len(drop) in (4, 5) and all(flags[i] & 1 for i in drop), f'longs: crossbar arm points {[coords[i] for i in drop]}'
+    assert drop == list(range(drop[0], drop[0] + len(drop))), f'longs: crossbar arm points not one run: {drop}'
+    nb = (coords[drop[0] - 1], coords[(drop[-1] + 1) % len(coords)])   # the stem's right edge either side of the arm
+    assert all(abs(x - s1) <= 1.5 for x, _ in nb), f'longs: stem edge around the arm {nb}, stem {s0:.1f}..{s1:.1f}'
     keep = [i for i in range(len(coords)) if i not in drop]
     g = Glyph()
     g.numberOfContours = 1
