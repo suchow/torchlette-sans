@@ -1,12 +1,12 @@
 """HarfBuzz check of the otfeatures module: case, cpsp, zero, mark attachment on
-build.py's glyphs, GDEF classes and carets, aalt and salt, mgrk and the grek script record.
+build.py's glyphs, GDEF classes and carets, aalt and salt, mgrk, nalt and the grek script record.
 
     MULISH_STATIC=Mulish-<wght>.ttf verify_otfeatures.py FONT.ttf STYLE full|subset
 
 Every check shapes real text (or reads the table a shaper reads) and has a negative
 counterpart: with the feature off, text shapes as without the module. With
 TS_WEB_SUBSET=1 the features web_features.txt leaves out (case, cpsp, aalt, salt,
-mgrk, the stylistic sets but ss01, ss02 and ss16) are not checked.
+mgrk, nalt, the stylistic sets but ss01, ss02 and ss16) are not checked.
 """
 import os, sys
 import unicodedata
@@ -256,6 +256,47 @@ for pre in [g for g in GO if (g.endswith('.sc') or g.endswith('.ss04') or g.ends
     check(abs(a[0] - mk.x) <= 8 and abs(a[1] - mk.y) <= 8, f'{pre}: {base.glyphName} + {mk.glyphName} at {a}, precomposed at ({mk.x}, {mk.y})')
 check(agree >= 150, f'only {agree} precomposed small caps and alternates compared')
 
+# letters Mulish left unanchored (issue 28): a combining acute, dot below or ogonek after
+# them is moved by the mark feature (a nonzero offset), its anchor falls within the
+# letter's ink from left to right, an above mark sits on the letter's top, a dot below
+# under its foot (or its descender), and an ogonek hangs from its foot, joined to it.
+NEW_TOP = 'ŋəɓɗħđðßƴǥƒƁƊĦƑƳǤẞ'
+NEW_BOT = ('ŋəɓɗħđðßƴǥƒgøƁƊĦƑƳǤẞ' + 'αδεικλνοπστυωθΓΔΛΞΠΣΦΨΩΑΟ'
+           + 'ГЖИКМНТУХЧЫгжикхчыэѳҠһәө')
+NEW_OGON = 'bcdfhklmnprstvwxzBCDFGHKLMNPRSTVWXZ'
+_mk_anchor = {}
+for lk in gp.LookupList.Lookup:
+    for st in lk.SubTable:
+        if lk.LookupType == 9: st = st.ExtSubTable
+        if getattr(st, 'LookupType', lk.LookupType) == 4 and hasattr(st, 'MarkCoverage'):
+            for g, r in zip(st.MarkCoverage.glyphs, st.MarkArray.MarkRecord): _mk_anchor.setdefault(g, r.MarkAnchor.XCoordinate)
+if kept('mark'):
+    _cm = tt.getBestCmap()
+    for chars, mark, kind in ((NEW_TOP, '́', 'top'), (NEW_BOT, '̣', 'bottom'), (NEW_OGON, '̨', 'ogonek')):
+        for ch in chars:
+            if ord(ch) not in _cm: continue
+            r = shape(ch + mark)
+            what = f'letter anchor {ch}{mark} ({kind}): {[x["g"] for x in r]}'
+            if len(r) != 2: check(False, f'{what}: composed'); continue
+            base, m = r
+            check(m['dx'] != 0 or m['y'] != 0, f'{what}: mark not positioned')
+            b, mi = ink(base), ink(m)
+            ax = m['x'] + _mk_anchor.get(m['g'], 0)
+            check(b[0] <= ax <= b[2], f'{what}: mark anchor x {ax} outside the ink {b[0]}..{b[2]}')
+            if kind == 'ogonek':
+                check(mi[1] < 0 <= mi[3] and b[0] <= (mi[0] + mi[2]) / 2 <= b[2] + 40,
+                      f'{what}: ogonek {mi} not hung from the foot of {b}')
+                def inside(x, y):
+                    pen = PointInsidePen(GS, (x - base['x'], y - base['y'])); GS[base['g']].draw(pen); return pen.getResult()
+                check(any(inside(ax, y) for y in (2, 8, 15)), f'{what}: the ogonek\'s anchor ({ax}, 0) is not on the letter\'s foot')
+            elif kind == 'top':
+                placed(base, m, kind, what)
+                check(mi[1] >= b[3] - 5, f'{what}: mark bottom {mi[1]} below the letter top {b[3]}')
+            else:                                       # on the baseline, or under a descender
+                check(b[1] - 260 <= mi[3] <= -60 and b[0] <= (mi[0] + mi[2]) / 2 <= b[2],
+                      f'{what}: dot {mi} not under the letter {b}')
+                check(m['adv'] == 0, f'{what}: mark advance {m["adv"]}')
+
 def subset_component_only(font):
     """Conservative glyf-only dependencies, never encoded/layout/caret consumers.
 
@@ -347,14 +388,18 @@ for table in tt['cmap'].tables:
         for cp, g in getattr(table, 'cmap', {}).items():
             encoded_categories.setdefault(g, set()).add(unicodedata.category(chr(cp)))
 encoded_marks = {g for g, categories in encoded_categories.items() if categories <= {'Mn', 'Me'}}
+# nalt's ⑩-⑳ are ligature outputs but encoded characters of their own: bases, no carets
+NALT_OUT = {g for u, g in tt.getBestCmap().items() if 0x2469 <= u <= 0x2473}
 def expected_new_class(g):
-    return 2 if g in ligs else 3 if g in encoded_marks else 1
+    return 1 if g in NALT_OUT else 2 if g in ligs else 3 if g in encoded_marks else 1
 if MUL is not None:
     new = [g for g in GO if g not in MUL]
     check(len(new) > 500, f'only {len(new)} glyphs beyond Mulish')
     check(all(cd.get(g) == expected_new_class(g) or omitted_component_class(g) for g in new), f'incorrect new glyph classes: {[g for g in new if cd.get(g) != expected_new_class(g) and not omitted_component_class(g)][:10]}')
     for g in new:
-        if g in ligs:
+        if g in NALT_OUT:
+            check(cd.get(g) == 1 and not carets.get(g), f'GDEF {g}: class {cd.get(g)}, carets {carets.get(g)}; nalt\'s circled number is a base')
+        elif g in ligs:
             check(cd.get(g) == 2, f'GDEF {g}: class {cd.get(g)}, a ligature')
             c = carets.get(g, [])
             n = len(g.split('.')[0].split('_')) if '_' in g else None
@@ -464,6 +509,30 @@ if kept('mgrk'):
     a0, a1 = names(allg), names(allg, {'mgrk': 1})
     diff = sorted({(a, b) for a, b in zip(a0, a1) if a != b})
     check(len(a0) == len(a1) and diff == sorted(MG), f'mgrk: the Greek block changes {diff}')
+
+# ---------------------------------------------------------------- nalt
+# A whole number from 1 to 20 to its circled form (① to ⑳); 10-20 are one glyph, not
+# ①⓪ or ①①; longer numbers and numbers joined by a decimal point stay; off, nothing changes.
+if kept('nalt'):
+    _cm = tt.getBestCmap()
+    C = {n: _cm.get(0x2460 + n - 1) for n in range(1, 21)}
+    check(all(C.values()), f'nalt: circled numbers missing from the cmap: {[n for n, g in C.items() if not g]}')
+    gsub = tt['GSUB'].table
+    check(any(fr.FeatureTag == 'nalt' for fr in gsub.FeatureList.FeatureRecord), 'nalt: no nalt feature')
+    want = [C[1], 'space', C[5], 'space', C[10], 'space', C[20]]
+    for feats in ({'nalt': 1}, {'nalt': 1, 'onum': 1}, {'nalt': 1, 'pnum': 1, 'zero': 1}, {'nalt': 1, 'smcp': 1}):
+        if not kept(*feats): continue
+        got = names('1 5 10 20', feats)
+        check(got == want, f'nalt {feats}: 1 5 10 20 -> {got}, want {want}')
+    got = names(' '.join(str(n) for n in range(1, 21)), {'nalt': 1})
+    check(got[::2] == [C[n] for n in range(1, 21)], f'nalt: 1 to 20 -> {got[::2]}')
+    check(names('(3) [12]', {'nalt': 1}) == ['parenleft', C[3], 'parenright', 'space', 'bracketleft', C[12], 'bracketright'], 'nalt: (3) [12]')
+    for t in ('21', '25', '100', '0', '1.5', '2026', '1,2', '120', '201'):
+        check(names(t, {'nalt': 1}) == names(t), f'nalt: {t} -> {names(t, {"nalt": 1})}, want it unchanged')
+    for t in ('1 5 10 20', '12 x 7', 'H1 ①'):
+        check(names(t) == names(t, {'nalt': 0}) and not any(g in C.values() for g in names(t.replace('①', ''))), f'nalt off: {t} -> {names(t)}')
+    r = shape('10', {'nalt': 1})
+    check(len(r) == 1 and r[0]['adv'] == tt['hmtx'][C[10]][0], f'nalt: 10 -> {r}')
 
 # ---------------------------------------------------------------- aalt / salt
 if kept('aalt', 'salt'):
