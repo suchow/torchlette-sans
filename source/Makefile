@@ -3,6 +3,7 @@
 #   make release  the release files in ../fonts: ttf/ (the fourteen .ttf), webfonts/ (the same fonts as
 #                 woff2) and variable/ (the wght/ital variable font, .ttf and .woff2, under both names)
 #   make check    clean rebuild of the release in BUILD_DIR, compared with ../fonts (release.py compare)
+#   make check-web  clean rebuild of the app's subset woff2 in BUILD_DIR, compared byte for byte with WEB_REF
 #   make          build/TorchletteSans-<style>.ttf for each of STYLES (seven weights, upright and italic) and the app's subset woff2 in WEB_DIR
 #   make ttf      the .ttf only (no woff2 written)
 #   make verify   HarfBuzz feature check (verify.py, verify_ss16.py, modules/verify_*.py) of each built font and of its web subset, and make fontbakery
@@ -14,6 +15,10 @@
 #   BUILD_DIR=dir        where the .ttf, the Mulish instances and the check files go (default: build)
 #   WEB_DIR=dir          where `make` writes the app's subset woff2 (default: BUILD_DIR/web)
 #   RELEASE_DIR=dir      where `make release` writes and `make check` compares (default: ../fonts)
+#   WEB_REF=dir          the app's committed subset woff2 that `make check-web` compares with
+#                        (default: ../../torchlette/web/public/fonts, the torchlette repository beside this one)
+#   LEVELS_DIR=dir       the app's lesson prose, which `make verify` has verify_ss16.py shape when it
+#                        is there (default: ../../torchlette/web/levels)
 #
 # The font version (name ID 5, head.fontRevision) is the one line in VERSION, such as
 # 0.504 for release v0.5.4; set it there once per release.
@@ -40,8 +45,11 @@ NORMAL_HELPER_DEPS := $(sort $(wildcard modules/_*.py mathitalic_references.py))
 BUILD_DIR := build
 WEB_DIR   := $(BUILD_DIR)/web
 RELEASE_DIR := ../fonts
-# the torchlette app's lesson prose, which verify_ss16.py also shapes when it is there
-LEVELS    := $(wildcard ../../web/levels)
+# the torchlette app's committed subset woff2 and its lesson prose, in a clone of the
+# torchlette repository beside this one; verify_ss16.py shapes the prose when it is there
+WEB_REF    := ../../torchlette/web/public/fonts
+LEVELS_DIR := ../../torchlette/web/levels
+LEVELS     := $(wildcard $(LEVELS_DIR))
 
 # Modules: every modules/*.py but verify_*.py and _*.py, in sorted order, less
 # MODULES_OFF; MODULES picks a subset (a comma list, or none) and may name a module
@@ -176,7 +184,7 @@ endif
 SUBSET_FLAGS = --unicodes='$(UNICODES)' --layout-features='$(WEB_FEATURES)' --name-IDs='*' --name-languages='*' \
 	--notdef-outline --recalc-average-width --no-hinting --flavor=woff2
 
-.PHONY: all ttf verify fontbakery release check clean FORCE
+.PHONY: all ttf verify fontbakery release check check-web clean FORCE
 all: $(WEBS)
 ttf: $(TTFS)
 
@@ -205,7 +213,7 @@ $(WEB_DIR)/TorchletteSans-%.woff2: $(BUILD_DIR)/TorchletteSans-%.ttf web_feature
 # shipped woff2 drops; the glyphs and layout tables are the same), each against
 # stock Mulish (Mulish Italic for an italic style) at the same wght for Mulish's own
 # features; then ss16 (the prose ligatures) on each, with the lesson prose in
-# ../../web/levels for the full font; then each built module's
+# LEVELS_DIR for the full font; then each built module's
 # modules/verify_<name>.py, if it has one, on both.
 # The subset runs have TS_WEB_SUBSET=1: the scripts skip the checks of features that
 # web_features.txt leaves out (webfeatures.py). The full font's checks are complete.
@@ -271,6 +279,16 @@ check:
 	rm -rf $(BUILD_DIR)
 	$(MAKE) --no-print-directory release RELEASE_DIR=$(BUILD_DIR)/release
 	$(PY) release.py compare $(BUILD_DIR)/release $(RELEASE_DIR)
+
+# A clean rebuild of the app's subset woff2 in BUILD_DIR, compared byte for byte with
+# the committed ones in WEB_REF.
+check-web:
+	rm -rf $(BUILD_DIR)
+	$(MAKE) --no-print-directory all WEB_DIR=$(BUILD_DIR)/web-check
+	@status=0; for s in $(STYLES); do \
+	  if cmp $(BUILD_DIR)/web-check/TorchletteSans-$$s.woff2 $(WEB_REF)/TorchletteSans-$$s.woff2; \
+	  then echo "identical: $$s"; else status=1; fi; \
+	done; exit $$status
 
 clean:
 	rm -rf $(BUILD_DIR)

@@ -39,7 +39,8 @@ docstring lists what it changes):
   doubled, as Noto Sans Math and DejaVu Sans draw them; `modules/symbols.py`,
   `doublestruck`), and the Unicode spaces and joiners.
 - `otfeatures`: case forms of the punctuation (case), capital spacing (cpsp), a
-  slashed zero (zero), mark attachment on `build.py`'s glyphs, GDEF classes and
+  slashed zero (zero, and by default in calt for a zero that is the only digit of
+  its number: 0, x[0], (0), but not 10 or 0.05), mark attachment on `build.py`'s glyphs, GDEF classes and
   ligature carets, and aalt and salt; dlig (the Th and th ligatures of ss01 and ss03);
   and fixes to Mulish's own layout: a GDEF class for every glyph, frac only around a
   slash between digits, and locl for Romanian and the Turkic languages Mulish left out.
@@ -215,7 +216,11 @@ the app's CSS turns on (ss01, ss02, ss16, the figure features, smcp and c2sc), a
 (the vector module's random word marks). The
 other stylistic sets, the cvNN, case, cpsp, zero, aalt, salt, sups, subs, frac and
 the rest are in the .ttf only. The tool versions are pinned, so each woff2 is
-byte-identical on every build.
+byte-identical on every build: `make -j4 check-web` rebuilds all fourteen from scratch
+and compares them byte for byte with the app's committed ones in `WEB_REF` (by default
+`../../torchlette/web/public/fonts`, a clone of the torchlette repository beside this
+one). `make verify` also shapes the app's lesson prose in `LEVELS_DIR` (by default
+`../../torchlette/web/levels`) when it is there.
 
 ## Check
 
