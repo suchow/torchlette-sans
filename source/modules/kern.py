@@ -23,6 +23,13 @@ What it adds (all GPOS, feature `kern`, no new glyphs, outlines, advances or tag
    the letter's (the arrow of "gradient", the curl of "backward", the two-storey
    a); corrections under MIN_K units are dropped. A side built into the glyph (the
    word marks carry the kerning of their known neighbour) gets no pairs.
+   That correction compares mean row gaps, so it hardly grows with weight, while the
+   white between a heavy accent and a heavy arm shrinks (Black Italic Yẵ came 29
+   units from the arm, Ya 122). So an accented letter (its base's letter plus marks)
+   also keeps a clearance floor against the overhanging capitals T V W Y: its
+   correction is raised in ROUND steps until the closest distance between the two
+   outlines is at least CLEAR_RATIO of the base pair's (Ya with Ya's kerning, the
+   same style). The floor only loosens, and only pairs below it.
 
 3. KERN_FIG. The proportional figures (lining .pnum, old-style .osf, small-cap .sc)
    kerned with one another and with the punctuation that meets figures (period,
@@ -77,6 +84,10 @@ GAIN_OPS = 0.15           # relations and arrows: math spacing is meant to stay 
 MIN_K = 10                # smaller model values are dropped
 MAX_K = 60                # and larger ones capped
 ROUND = 5
+CLEAR_CAPS = ('T', 'V', 'W', 'Y')   # capitals whose arms and bars reach over an accent
+CLEAR_RATIO = 0.40        # an accented letter's clearance from them, at least this much of its base's
+CLEAR_MAX = 150           # most the floor adds to a correction
+CLEAR_STEP, CLEAR_CELL = 4, 50   # outline sampling and search grid for the clearance
 
 # --- inheritance --------------------------------------------------------------
 # glyph -> (base whose left-side kerning it takes, base whose right-side kerning it takes)
@@ -253,7 +264,7 @@ class Model:
     glyph, -gain * (G(a,b) - G(a,ref) - G(ref,b) + G(ref,ref)), so a glyph's own
     sidebearings, which its spacing already sets, cancel out."""
     def __init__(self, ctx):
-        self.ctx = ctx; self.cache = {}; self.gcache = {}
+        self.ctx = ctx; self.cache = {}; self.gcache = {}; self.pcache = {}
 
     def edges(self, n):
         if n in self.cache: return self.cache[n]
@@ -296,6 +307,42 @@ class Model:
             m = min(g) + DEPTH; v = sum(min(x, m) for x in g) / len(g)
         self.gcache[key] = v
         return v
+
+    def points(self, n):
+        """n's outline sampled every CLEAR_STEP units, and the samples by grid cell. An
+        italic is drawn upright while the modules run; its points are leant here as the
+        finished font leans them, so a clearance is measured on the shapes as they print."""
+        if n not in self.pcache:
+            pen = _Seg(); self.ctx.path_of(n).draw(pen)
+            sk = getattr(self.ctx, 'ITALIC_K', 0) or 0
+            yc = getattr(self.ctx, 'ITALIC_YC', 0) if sk else 0
+            pts = []
+            for (x0, y0), (x1, y1) in pen.segs:
+                x0, x1 = x0 + sk * (y0 - yc), x1 + sk * (y1 - yc)
+                k = max(1, int(math.hypot(x1 - x0, y1 - y0) // CLEAR_STEP))
+                pts += [(x0 + (x1 - x0) * i / k, y0 + (y1 - y0) * i / k) for i in range(k)]
+            grid = defaultdict(list)
+            for x, y in pts: grid[int(x // CLEAR_CELL), int(y // CLEAR_CELL)].append((x, y))
+            self.pcache[n] = (pts, grid, min((x for x, _ in pts), default=0))
+        return self.pcache[n]
+
+    def clearance(self, a, b, k):
+        """The closest distance between a's outline and b's, b set at a's advance plus k."""
+        off = self.ctx.W(a) + k
+        A = self.points(a)[0]; _, grid, bmin = self.points(b)
+        best = INF
+        for x, y in A:
+            if x < bmin + off - min(best, 1000): continue
+            cx, cy = math.floor((x - off) / CLEAR_CELL), math.floor(y / CLEAR_CELL)
+            r = 0
+            while (r - 1) * CLEAR_CELL < best and r <= 1000 // CLEAR_CELL:
+                for i in range(cx - r, cx + r + 1):
+                    for j in range(cy - r, cy + r + 1):
+                        if max(abs(i - cx), abs(j - cy)) != r: continue
+                        for px, py in grid.get((i, j), ()):
+                            best = min(best, math.hypot(px + off - x, py - y))
+                r += 1
+        return best
 
     def dd(self, a, b, ref):
         vals = (self.G(a, b), self.G(a, ref), self.G(ref, b), self.G(ref, ref))
@@ -514,6 +561,24 @@ def features(ctx):
     CR = {g: corr_right(g, RB[g]) for g in new if RB[g]}
     CL = {g: corr_left(g, LB[g]) for g in new if LB[g]}
 
+    # the clearance floor: an accented letter keeps clear of the arms and bars of T V W Y
+    def accented(g, b):
+        return g in rev and b in rev and g != b and unicodedata.normalize('NFD', chr(rev[g]))[0] == chr(rev[b])
+    floors = {}
+    for g in new:
+        for sb, C, on_right in ((LB[g], CL, True), (RB[g], CR, False)):
+            if not sb or not accented(g, sb): continue
+            for c in CLEAR_CAPS:
+                if c not in have: continue
+                pair, ref = ((c, g), (c, sb)) if on_right else ((g, c), (sb, c))
+                k0 = base.get(ref, 0)
+                floor = CLEAR_RATIO * model.clearance(*ref, k0)
+                d0 = d = C[g].get(c, 0)
+                while model.clearance(*pair, k0 + d) < floor and d < d0 + CLEAR_MAX: d += ROUND
+                if d != d0:
+                    C[g][c] = d; floors[pair] = (d0, d)
+    ctx.clear_floors = floors
+
     universe = sorted(have)
     newset = set(new)
     tab = set(TABULAR)
@@ -613,6 +678,8 @@ def features(ctx):
         text, nl, nr = pairs_fea(nm, pr)
         ctx.gpos(text)
         ctx.log(f'{nm}: {len(pr)} pairs, {nl} x {nr} classes')
+    ctx.log(f'clearance floor raised {len(floors)} corrections: '
+            + ', '.join(f'{a} {b} {d0:+d}->{d:+d}' for (a, b), (d0, d) in sorted(floors.items())))
     ctx.log(f'{len(new)} glyphs inherit kerning; figure pairs {fig_log}; {len(ops)} relations and arrows, '
             f'{len(pairs_o)} pairs; {len(sups)} superiors and inferiors, {len(pairs_s)} pairs (x{sscale:.2f})')
 

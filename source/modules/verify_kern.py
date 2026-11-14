@@ -11,7 +11,8 @@
 3. Ligatures and new glyphs kern like their outer letters in real text with the app's
    features (ss01 ss02 ss16 onum pnum): "Tft" as T f, "(The" as ( T, "fy." as y . ...
    and the word marks add nothing on their built-in side. The Vietnamese a's kern as a
-   (Tạ as Ta), a stacked accent never tighter than a against T V W Y.
+   (Tạ as Ta), a stacked accent never tighter than a against T V W Y; every accented a
+   at least 0.40 of a's outline distance from T V W Y on either side (issue 12).
 4. Proportional figures are kerned (7. 1' '4 under onum pnum, under pnum, under smcp),
    tabular ones in the same text are not.
 
@@ -188,6 +189,53 @@ for text, (a, b) in (('Tạ', ('T', 'uni1EA1')), ('Vậ', ('V', 'uni1EAD')), ('Y
     if {a, b} <= have:
         got, want = boundary(text, a, b), pair_kern(pua, a, 'a')
         ok(got == want and want < 0, f'{text!r}: {a} {b} kern {got}, {a} a {want}')
+# an accented a keeps clear of the arms and bars of T V W Y (issue 12: in v0.5.10 Black Italic Yẵ
+# was 29 units from the arm, Yȁ 5, ấY 41, Ya 122): on the outlines as kerned, the closest distance
+# is at least 0.40 of a's own (the module's CLEAR_RATIO; 3 units for sampling and rounding)
+ACC_A = ['aacute', 'agrave', 'acircumflex', 'atilde', 'adieresis', 'aring', 'aringacute', 'amacron', 'abreve',
+         'uni01CE', 'uni0201', 'uni0203', 'uni0227'] + VIET_A
+_gs = tt.getGlyphSet(); _pts = {}
+
+
+def outline_pts(g):
+    if g not in _pts:
+        from fontTools.pens.basePen import BasePen
+        class Pen(BasePen):     # the outline every 4 units or so, curves in 16 steps
+            def __init__(s): super().__init__(_gs); s.p = []; s.c = s.o = None
+            def _moveTo(s, q): s.c = s.o = q; s.p.append(q)
+            def _lineTo(s, q):
+                a = s.c; n = max(1, int(((q[0] - a[0]) ** 2 + (q[1] - a[1]) ** 2) ** .5 // 4))
+                s.p += [(a[0] + (q[0] - a[0]) * i / n, a[1] + (q[1] - a[1]) * i / n) for i in range(1, n + 1)]; s.c = q
+            def _curveToOne(s, p1, p2, p3):
+                a = s.c
+                for i in range(1, 17):
+                    t = i / 16; m = 1 - t
+                    s._lineTo(tuple(m ** 3 * a[k] + 3 * m * m * t * p1[k] + 3 * m * t * t * p2[k] + t ** 3 * p3[k] for k in (0, 1)))
+            def _closePath(s):
+                if s.c != s.o: s._lineTo(s.o)
+            _endPath = _closePath
+        pen = Pen(); _gs[g].draw(pen); _pts[g] = pen.p
+    return _pts[g]
+
+
+def clearance(a, b, k):
+    off = hm[a][0] + k
+    B = [(x + off, y) for x, y in outline_pts(b)]; bx = min(x for x, _ in B)
+    A = [p for p in outline_pts(a) if p[0] > bx - 250]; ax = max(x for x, _ in A)
+    B = [p for p in B if p[0] < ax + 250]
+    return min(((x - u) ** 2 + (y - v) ** 2) ** .5 for x, y in A for u, v in B)
+
+
+for g in [g for g in ACC_A if g in have and 'a' in have]:
+    for c in [c for c in ('T', 'V', 'W', 'Y') if c in have]:
+        for l, r, base in ((c, g, (c, 'a')), (g, c, ('a', c))):
+            floor = 0.40 * clearance(*base, pair_kern(pua, *base))
+            got = clearance(l, r, pair_kern(pua, l, r))
+            ok(got >= floor - 3, f'{l} {r}: {got:.0f} units from the outline, under 0.40 of {base[0]} {base[1]}\'s ({floor:.0f}); kern {pair_kern(pua, l, r)}')
+for text, (a, b) in (('Yă', ('Y', 'abreve')), ('Yẵ', ('Y', 'uni1EB5')), ('Yặ', ('Y', 'uni1EB7')), ('ấY', ('uni1EA5', 'Y'))):
+    if {a, b} <= have:
+        got = boundary(text, a, b)
+        ok(got == pair_kern(pua, a, b), f'{text!r}: {a} {b} kern {got} in text, {pair_kern(pua, a, b)} as a pair')
 BUILT_IN = [('vector', 'v.vec', 'e'), ('residual', 'i', 'd_u_a_l.arch'), ('length', 'n', 'g_t.w200'), ('length', 'g_t.w200', 'h'),
             ('backward', 'b.backc', 'a'), ('forward', 'r', 'd.fwdb'), ('output', 'u', 't.out'), ('outputs', 'u', 't_s.out')]
 for text, a, b in BUILT_IN:
