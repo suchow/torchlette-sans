@@ -238,10 +238,11 @@ if fontbakery stops with an error, if the report is incomplete, or on any FAIL b
 checks listed, with their reasons, in `fontbakery_gate.py`; `verify_fontbakery_gate.py`
 checks that the gate rejects broken runs.
 
-CI (`.github/workflows/ci.yml`, job `fonts`) runs `make verify` on four styles, Regular,
-Italic, Bold and BoldItalic (`make verify STYLES="Regular Italic Bold BoldItalic"`), which
-takes about a quarter of the time all fourteen do, and uploads `build/fontbakery.md` when
-the job fails. Run `make verify` on all fourteen before a change ships.
+CI (`.github/workflows/ci.yml`) has two jobs. The job `check` runs `make check` on an
+Apple silicon Mac, the kind of machine the release is built on. The job `verify` runs
+`make verify` on all fourteen styles and keeps the fontbakery report as an artifact.
+To check a few styles by hand, name them: `make verify STYLES="Regular Italic Bold BoldItalic"`
+takes about a quarter of the time all fourteen do.
 
     uv run --no-project --with fonttools python outline_check.py build/TorchletteSans-Bold.ttf build/Mulish-675.ttf [--all]
 

@@ -1,0 +1,65 @@
+# Torchlette Sans: the checks of source/Makefile, run here and not on a laptop.
+#
+# check   a clean rebuild of the release (the fourteen .ttf, their woff2 and the variable
+#         font), compared with the committed fonts/ (make check)
+# verify  the HarfBuzz checks of all fourteen styles and their web subsets, then the
+#         fontbakery gate (make verify); the fontbakery report is kept as an artifact
+#
+# The Makefile pins Python 3.12 and every tool through uv, so the jobs need only uv.
+# make check-web and the lesson prose that make verify shapes need the torchlette
+# repository beside this one; it is private, so neither runs here, and verify_ss16.py
+# shapes its own test strings only (the Makefile drops LEVELS_DIR when it is absent).
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    # The release is built on an Apple silicon Mac, with the universal2 wheels of
+    # skia-pathops and ttfautohint-py and macOS's libm. A Linux build uses other
+    # binaries, compiled by another compiler for another processor, and a floating-point
+    # difference of one ulp can move a rounded coordinate; so the rebuild runs on
+    # an arm64 Mac too. The variable font alone takes about 9 minutes.
+    runs-on: macos-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: source/Makefile
+      - run: cd source && make -j"$(sysctl -n hw.ncpu)" check
+
+  verify:
+    # The checks test what the fonts do, not their bytes, so Linux will do; the old
+    # fonts job in the torchlette repository ran them there on four styles.
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: source/Makefile
+      - run: cd source && make -j"$(nproc)" verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fontbakery-report
+          path: |
+            source/build/fontbakery.md
+            source/build/fontbakery.json
+          if-no-files-found: ignore
