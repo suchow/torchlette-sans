@@ -24,9 +24,7 @@ docstring lists what it changes):
 - `greek`: the Greek alphabet (U+0370-03FF), with small capitals and kerning. The
   letters are Commissioner's Greek, fitted to Torchlette's metrics and stems (see
   "Greek sources" below); the capitals that share a Latin shape are Torchlette's Latin
-  capitals. It is held back from the default build (the Makefile's `MODULES_OFF`)
-  pending design review, so the shipped fonts have no Greek and browsers fall back to
-  a system font.
+  capitals. It is part of the default build.
 - `lnum`: the lnum feature, which maps every old-style figure back to the lining
   figure of the same spacing after onum, tnum and pnum have run, so
   `font-variant-numeric: lining-nums` overrides `oldstyle-nums` and keeps the spacing
@@ -41,6 +39,7 @@ docstring lists what it changes):
 - `otfeatures`: case forms of the punctuation (case), capital spacing (cpsp), a
   slashed zero (zero), mark attachment on `build.py`'s glyphs, GDEF classes and
   ligature carets, and aalt and salt; dlig (the Th and th ligatures of ss01 and ss03);
+  mgrk (Σ Π Δ to the symbols ∑ ∏ ∆); a grek script record with DFLT's features;
   and fixes to Mulish's own layout: a GDEF class for every glyph, frac only around a
   slash between digits, and locl for Romanian and the Turkic languages Mulish left out.
   By default, calt also slashes a zero that is the only digit of its number: the

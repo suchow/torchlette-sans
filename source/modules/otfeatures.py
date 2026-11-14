@@ -2,7 +2,7 @@
 build.py's glyphs, their GDEF classes and ligature carets, and aalt / salt.
 
 Feature tags: extends GSUB case, ccmp, calt, aalt, frac and locl and GPOS mark; adds GSUB
-zero, salt and dlig and GPOS cpsp. The new ones and case and aalt are off by default. Of the default-on
+zero, salt, dlig and mgrk and GPOS cpsp. The new ones and case and aalt are off by default. Of the default-on
 additions, calt's one lookup slashes a zero that is the only digit of its number (see
 below); mark and ccmp's one lookup touch only a combining mark after a glyph that
 had no anchors (a small cap, an alternate, a figure, a ligature), which was left
@@ -56,6 +56,11 @@ unpositioned before; other text shapes exactly as before.
   lookups are replaced in place: only a slash between digits becomes the fraction slash,
   only the digits before a fraction slash numerators, those after it denominators.
 - dlig: the Th and th ligatures (ss01's and ss03's lookups) as discretionary ligatures.
+- mgrk: Σ Π Δ to the mathematical symbols drawn for them, ∑ ∏ ∆ (U+2211 U+220F U+2206),
+  one single substitution. Ω and μ stay: Unicode prefers the letters to the ohm and micro signs. The Greek symbol letters (ϕ ϵ ϑ ϰ ϱ ϖ)
+  are not mapped: in mathematics they are other symbols than φ ε θ κ ρ π, not other forms.
+- grek: GSUB and GPOS get a script record for Greek, a copy of DFLT's, so Greek text gets
+  every feature without falling back to DFLT. It is made last, after every feature exists.
 - locl: Mulish registers the Latin language systems ROM, AZE, CRT, KAZ and TAT with no
   locl. Romanian gets Moldavian's (Ş ş Ţ ţ to Ș ș Ț ț); Azerbaijani, Crimean Tatar, Kazakh
   and Tatar get Turkish's (the i that keeps its dot), as the same feature record.
@@ -85,6 +90,8 @@ FIG_STEMS = {'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eig
              'uni00B2', 'uni00B3', 'uni00B9', 'uni2070'} | {f'uni{u:04X}' for u in range(0x2074, 0x207A)} \
             | {f'uni{u:04X}' for u in range(0x2080, 0x208A)}
 SUF = 'otfeatures'
+# mgrk: a Greek letter and the mathematical symbol drawn for it (Σ ∑, Π ∏, Δ ∆)
+MGRK = ((0x03A3, 0x2211), (0x03A0, 0x220F), (0x0394, 0x2206))
 
 
 def _rev(cmap):
@@ -470,6 +477,12 @@ def features(ctx):
              f"  ignore sub @OTFEATURES_FIG @OTFEATURES_ZSEP [{zs}]';\n  ignore sub [{zs}]' @OTFEATURES_ZSEP @OTFEATURES_FIG;\n"
              f"  sub [{zs}]' lookup OTFEATURES_ZERO;\n}} OTFEATURES_ZERO_CALT;\n"
              f"feature calt {{ lookup OTFEATURES_ZERO_CALT; }} calt;")
+    # mgrk: the pairs whose letter and symbol are both in the font (none without the greek module)
+    mg = [(cmap[a], cmap[b]) for a, b in MGRK if a in cmap and b in cmap]
+    ctx.mgrk_pairs = mg
+    if mg:
+        ctx.gsub(f"lookup OTFEATURES_MGRK {{ sub [{J(a for a, _ in mg)}] by [{J(b for _, b in mg)}]; }} OTFEATURES_MGRK;\n"
+                 f"feature mgrk {{ lookup OTFEATURES_MGRK; }} mgrk;")
     # lining figures take the capitals' .case marks (Mulish's ccmp gives them to the
     # capitals only): a top mark right after one becomes its .case form. Runs last, on
     # the figures' final forms (old-style and small-cap figures keep the lowercase marks).
@@ -550,6 +563,28 @@ def _dlig(ctx, gsub):
             ls.FeatureIndex = sorted([remap[i] for i in ls.FeatureIndex] + [remap[len(fl)]]); ls.FeatureCount = len(ls.FeatureIndex)
             if ls.ReqFeatureIndex != 0xFFFF: ls.ReqFeatureIndex = remap[ls.ReqFeatureIndex]
     ctx.log(f'dlig: lookups {idx} (ss01 Th, ss03 th)')
+
+
+def _grek(ctx):
+    """A script record for Greek in GSUB and GPOS: a copy of DFLT's, so a shaper finds the
+    Greek letters' features (smcp, c2sc, case, cpsp, kern, mgrk ...) under grek instead of
+    falling back to DFLT. Made after every other feature, so it has them all; a font that
+    already has a grek record keeps its own."""
+    import copy
+    from fontTools.ttLib.tables import otTables
+    done = []
+    for tag in ('GSUB', 'GPOS'):
+        if tag not in ctx.font: continue
+        sl = ctx.font[tag].table.ScriptList
+        if any(sr.ScriptTag == 'grek' for sr in sl.ScriptRecord): continue
+        dflt = next((sr for sr in sl.ScriptRecord if sr.ScriptTag == 'DFLT'), None)
+        if dflt is None: raise SystemExit(f'otfeatures: {tag} has no DFLT script record to copy for grek')
+        sr = otTables.ScriptRecord(); sr.ScriptTag = 'grek'; sr.Script = copy.deepcopy(dflt.Script)
+        sl.ScriptRecord.append(sr)
+        sl.ScriptRecord.sort(key=lambda r: r.ScriptTag); sl.ScriptCount = len(sl.ScriptRecord)
+        ls = sr.Script.DefaultLangSys
+        done.append(f'{tag} {len(ls.FeatureIndex) if ls else 0}')
+    ctx.log(f'grek: script record copied from DFLT ({", ".join(done)} features)' if done else 'grek: the font has its own')
 
 
 FRAC_DIGITS = 'zero one two three four five six seven eight nine'.split()
@@ -798,3 +833,4 @@ def post(ctx):
     _locl_languages(ctx, gsub)
     _frac(ctx, gsub)
     _dlig(ctx, gsub)
+    _grek(ctx)

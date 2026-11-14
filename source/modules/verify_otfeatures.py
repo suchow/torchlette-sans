@@ -1,12 +1,12 @@
 """HarfBuzz check of the otfeatures module: case, cpsp, zero, mark attachment on
-build.py's glyphs, GDEF classes and carets, aalt and salt.
+build.py's glyphs, GDEF classes and carets, aalt and salt, mgrk and the grek script record.
 
     MULISH_STATIC=Mulish-<wght>.ttf verify_otfeatures.py FONT.ttf STYLE full|subset
 
 Every check shapes real text (or reads the table a shaper reads) and has a negative
 counterpart: with the feature off, text shapes as without the module. With
-TS_WEB_SUBSET=1 the features web_features.txt leaves out (case, cpsp, zero, aalt,
-salt, the stylistic sets but ss01, ss02 and ss16) are not checked.
+TS_WEB_SUBSET=1 the features web_features.txt leaves out (case, cpsp, aalt, salt,
+mgrk, the stylistic sets but ss01, ss02 and ss16) are not checked.
 """
 import os, sys
 import unicodedata
@@ -414,6 +414,56 @@ if kept('locl'):
         got = names_lang('fi i', lang)
         check(got == tr, f'locl {lang}: fi i -> {got}, Turkish {tr}')
     check('i.loclTRK' not in names_lang('fi i', 'en'), 'locl en: dotted i form outside Turkic')
+
+# ---------------------------------------------------------------- grek
+# GSUB and GPOS have a script record for Greek with DFLT's features, and Greek text
+# shapes under it as under DFLT (script Zyyy, which HarfBuzz shapes with DFLT).
+def langsys(ls):
+    return None if ls is None else (ls.ReqFeatureIndex, list(ls.FeatureIndex))
+for tag in ('GSUB', 'GPOS'):
+    recs = {sr.ScriptTag: sr.Script for sr in tt[tag].table.ScriptList.ScriptRecord}
+    check('grek' in recs, f'grek: {tag} has no grek script record ({sorted(recs)})')
+    if 'grek' in recs and 'DFLT' in recs:
+        g, d = recs['grek'], recs['DFLT']
+        check(langsys(g.DefaultLangSys) == langsys(d.DefaultLangSys)
+              and [(r.LangSysTag, langsys(r.LangSys)) for r in g.LangSysRecord] == [(r.LangSysTag, langsys(r.LangSys)) for r in d.LangSysRecord],
+              f'grek: {tag} grek features differ from DFLT\'s')
+GREEK = 'ΑΒΓΔ Σοφία, ΤΑΥ; Ψυχή (ΩΜΕΓΑ) άλφα ΆΈΪ ξ ζ ς μ'
+
+
+def shape_script(text, script, feats=None):
+    b = hb.Buffer(); b.add_str(text); b.guess_segment_properties(); b.script = script
+    hb.shape(HB, b, feats or {})
+    return [(GO[i.codepoint], p.x_advance, p.x_offset, p.y_offset) for i, p in zip(b.glyph_infos, b.glyph_positions)]
+
+
+for feats in ({}, {'smcp': 1}, {'c2sc': 1}, {'case': 1}, {'kern': 0}, {'mgrk': 1}):
+    if not kept(*feats): continue
+    gr = shape_script(GREEK, 'Grek', feats)
+    check(gr == shape_script(GREEK, 'Zyyy', feats), f'grek {feats}: Greek shapes otherwise under grek than under DFLT')
+for tag, key in (('smcp', 0), ('c2sc', 0), ('kern', 1)):     # the features reach Greek under grek
+    if kept(tag):
+        check([x[key] for x in shape_script(GREEK, 'Grek', {tag: 1 - key})] != [x[key] for x in shape_script(GREEK, 'Grek', {tag: key})],
+              f'grek: {tag} does not change Greek text')
+
+# ---------------------------------------------------------------- mgrk
+# Σ Π Δ Ω μ to ∑ ∏ ∆ Ω µ, one single substitution; no other glyph changes.
+if kept('mgrk'):
+    _cm = tt.getBestCmap()
+    MG = [(_cm.get(a), _cm.get(b)) for a, b in ((0x03A3, 0x2211), (0x03A0, 0x220F), (0x0394, 0x2206))]
+    gsub = tt['GSUB'].table
+    li = sorted({i for fr in gsub.FeatureList.FeatureRecord if fr.FeatureTag == 'mgrk' for i in fr.Feature.LookupListIndex})
+    check(len(li) == 1 and gsub.LookupList.Lookup[li[0]].LookupType == 1, f'mgrk: lookups {li}, want one single substitution')
+
+    def gnames(text, script, feats=None): return [x[0] for x in shape_script(text, script, feats)]
+    for script in ('Grek', 'Zyyy', 'Latn'):
+        on, off = gnames('ΣΠΔ', script, {'mgrk': 1}), gnames('ΣΠΔ', script)
+        check(on == [b for _, b in MG], f'mgrk {script}: ΣΠΔ -> {on}, want {[b for _, b in MG]}')
+        check(off == [a for a, _ in MG] and off == gnames('ΣΠΔ', script, {'mgrk': 0}), f'mgrk off {script}: ΣΠΔ -> {off}')
+    allg = ''.join(chr(u) for u in range(0x0370, 0x0400) if u in _cm)
+    a0, a1 = names(allg), names(allg, {'mgrk': 1})
+    diff = sorted({(a, b) for a, b in zip(a0, a1) if a != b})
+    check(len(a0) == len(a1) and diff == sorted(MG), f'mgrk: the Greek block changes {diff}')
 
 # ---------------------------------------------------------------- aalt / salt
 if kept('aalt', 'salt'):
