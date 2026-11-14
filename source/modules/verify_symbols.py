@@ -23,8 +23,14 @@ space-control-*, prose-versus-literal-contexts), shaped under the app's settings
    deepest letters.
 4. Spaces and joiners: shaped widths of A<space>B are A + B + the space's semantic
    width (thin 1/5 em, hair 1/10, narrow no-break = thin, figure = tabular figure,
-   punctuation = period (within 5: Mulish's own U+2008 is 225, the period 222), en, em, no-break = space); ZWSP, ZWNJ, ZWJ, word joiner,
-   BOM and soft hyphen add no advance and no ink.
+   punctuation = period (within 5: Mulish's own U+2008 is 225, the period 222), en, em, the en
+   and em quads, three-, four- and six-per-em, medium mathematical = 4/18 em, no-break = space);
+   ZWSP, ZWNJ, ZWJ, word joiner, BOM and soft hyphen add no advance and no ink. Since HarfBuzz
+   falls back for spaces and joiners the font lacks, the font's own are checked too: each
+   space and joiner (U+2000-2006, U+205F, U+200B-200D, U+2060, U+FEFF) is in the cmap, an
+   empty glyph of its advance, GDEF base, in no kerning pair; ZWNJ between f and i keeps
+   them apart; kept as glyphs (PRESERVE_DEFAULT_IGNORABLES) the joiners are the font's
+   empty zero-width glyphs, not .notdef.
 5. Negative cases: the non-breaking hyphen stays a hyphen where ss16 turns - into a
    minus; ss02's -> <= >= and 28x28 still form; nothing here touches letters.
 6. Double-struck ℝ ℕ ℤ ℚ ℂ (Noto Sans Math's design on Torchlette's capitals): each stands
@@ -203,6 +209,8 @@ upem = face.upem
 tab = shape('0', {'tnum': 1, 'lnum': 1})[0][1]
 WANT = {0x2009: (upem / 5, 12), 0x200A: (upem / 10, 12), 0x202F: (shape(' ')[0][1], 0),
         0x2007: (tab, 0), 0x2008: (shape('.')[0][1], 5), 0x2002: (upem / 2, 0), 0x2003: (upem, 0),
+        0x2000: (upem / 2, 0), 0x2001: (upem, 0), 0x2004: (upem / 3, 1), 0x2005: (upem / 4, 0),
+        0x2006: (upem / 6, 1), 0x205F: (upem * 4 / 18, 1),
         0x00A0: (shape(' ')[0][1], 0)}
 for u, (w, tol) in WANT.items():
     for feats in (None, APP):
@@ -216,7 +224,41 @@ for u in (0x200B, 0x200C, 0x200D, 0x2060, 0xFEFF, 0x00AD):
         got = sum(a for _, a in out) - adv('AB', feats)
         ink = [g for g, _ in out[1:-1] if bounds(g) is not None]
         check(got == 0 and not ink and out[0][0] == 'A' and out[-1][0] == 'B', f'U+{u:04X} not zero-width/ink-free: {out}')
-print(f'spaces: {len(WANT)} widths, 6 zero-width controls')
+# The font's own glyphs, not HarfBuzz's fallbacks (it gives U+2000-200A a width and hides
+# the default-ignorables when the font lacks them, so the shaping above passes either way):
+# each space and joiner is mapped, to an empty base glyph of the stated advance, in no
+# kerning pair. Mapped, ZWNJ still stops f i -> fi, and where the default-ignorables are
+# kept (an application drawing the font's glyph) they show that empty glyph, not .notdef.
+MAPPED = {0x2000: 500, 0x2001: 1000, 0x2002: 500, 0x2003: 1000, 0x2004: 333, 0x2005: 250, 0x2006: 167,
+          0x205F: 222, 0x200B: 0, 0x200C: 0, 0x200D: 0, 0x2060: 0, 0xFEFF: 0}
+gdef_class = f['GDEF'].table.GlyphClassDef.classDefs
+kerned = set()
+for lk in f['GPOS'].table.LookupList.Lookup:
+    for st in lk.SubTable:
+        st = st.ExtSubTable if lk.LookupType == 9 else st
+        if getattr(st, 'LookupType', lk.LookupType) != 2: continue
+        kerned.update(st.Coverage.glyphs)
+        if st.Format == 1: kerned.update(r.SecondGlyph for ps in st.PairSet for r in ps.PairValueRecord)
+        else: kerned.update(st.ClassDef2.classDefs)
+for u, w in MAPPED.items():
+    g = cmap.get(u)
+    check(g is not None, f'U+{u:04X} is not in the cmap')
+    if g is None: continue
+    check(hmtx[g][0] == w and f['glyf'][g].numberOfContours == 0, f'U+{u:04X} {g}: advance {hmtx[g][0]} (want {w}), {f["glyf"][g].numberOfContours} contours (want none)')
+    check(gdef_class.get(g) == 1, f'U+{u:04X} {g}: GDEF class {gdef_class.get(g)}, want 1 (base)')
+    check(g not in kerned, f'U+{u:04X} {g} is in a kerning pair')
+fi = shape('fi')
+if len(fi) == 1:                                   # the font makes fi: ZWNJ between them must stop it
+    out = shape('f‌i')
+    check(len(out) == 3 and out[0][0] == cmap[ord('f')] and out[2][0] == cmap[ord('i')] and out[1][1] == 0,
+          f'f ZWNJ i should stay f, i with nothing visible between: {out} (fi: {fi})')
+keep = hb.BufferFlags.PRESERVE_DEFAULT_IGNORABLES
+for u in (0x200B, 0x200C, 0x200D, 0x2060, 0xFEFF):
+    b = hb.Buffer(); b.add_str(f'A{chr(u)}B'); b.guess_segment_properties(); b.flags = keep; hb.shape(font, b, {})
+    out = [(font.get_glyph_name(i.codepoint), p.x_advance) for i, p in zip(b.glyph_infos, b.glyph_positions)]
+    check(len(out) == 3 and out[1][0] == cmap.get(u) and out[1][1] == 0 and bounds(out[1][0]) is None,
+          f'U+{u:04X} kept as a glyph should be the font\'s empty zero-width one, not .notdef: {out}')
+print(f'spaces: {len(WANT)} widths, 6 zero-width controls, {len(MAPPED)} mapped to empty unkerned glyphs')
 
 # ---- 5. negative cases ---------------------------------------------------------------
 nb = shape('x ‑1', APP); hy = shape('x -1', APP)

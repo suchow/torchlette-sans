@@ -25,8 +25,13 @@ Everything here is drawn from Torchlette Sans's own parts, at each weight:
   ⋪ ⋫ ⋬ ⋭ ⊮ ⊯ ↚ ↛ ↮ ⇍ ⇏ ⇎, each its base with ∉'s slash, so that KaTeX's \\not and \\n...
   commands (precomposed, or base + U+0338, which HarfBuzz recomposes) reach one glyph; and
   the bases the font lacked, ⊏ ⊐ ⊑ ⊒ ⊲ ⊳ ⊴ ⊵ ⊩ ⊫.
-- Spaces: narrow no-break (the thin space's width), en and em; the word joiner is
-  an empty zero-width glyph; the non-breaking hyphen is a copy of the hyphen (a
+- Spaces: narrow no-break (the thin space's width), en and em, the en and em quads
+  (as wide as the en and em spaces), the three-, four- and six-per-em spaces and the
+  medium mathematical space (4/18 em); the word joiner, the zero width no-break space
+  and the zero width non-joiner and joiner are empty zero-width glyphs (HarfBuzz hides
+  these default-ignorables whether or not the font maps them, and they keep their effect
+  on ligatures; mapped, they show nothing where an application draws the font's glyph);
+  the non-breaking hyphen is a copy of the hyphen (a
   copy, so ss16's hyphen rules, which make minus signs and arrows, leave it alone).
 
 Nothing existing is changed: no glyph outline, advance, cmap entry or lookup of
@@ -468,7 +473,16 @@ def glyphs(ctx):
     put(0x202F, empty, W('uni2009'))          # narrow no-break space: the thin space's width
     put(0x2002, empty, 500)                   # en space
     put(0x2003, empty, 1000)                  # em space
+    put(0x2000, empty, 500)                   # en quad: the en space (its canonical equivalent)
+    put(0x2001, empty, 1000)                  # em quad: the em space
+    put(0x2004, empty, 333)                   # three-per-em space
+    put(0x2005, empty, 250)                   # four-per-em space
+    put(0x2006, empty, 167)                   # six-per-em space
+    put(0x205F, empty, 222)                   # medium mathematical space: 4/18 em
     put(0x2060, empty, 0)                     # word joiner
+    put(0xFEFF, empty, 0)                     # zero width no-break space (byte order mark)
+    put(0x200C, empty, 0)                     # zero width non-joiner (between f and i, still no fi)
+    put(0x200D, empty, 0)                     # zero width joiner
     put(0x2011, path_of('hyphen'), W('hyphen'))   # non-breaking hyphen: the hyphen, outside its GSUB rules
     ctx.log(f'{len(made)} glyphs; U+2192 -> arrowright; paired arrows {ctx.paired_gap} off the axis')
 
