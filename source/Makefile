@@ -28,7 +28,8 @@
 #                        is there (default: ../../torchlette/web/levels)
 #
 # The font version (name ID 5, head.fontRevision) is the one line in VERSION, such as
-# 0.504 for release v0.5.4; set it there once per release. `make dist` names the release
+# 0.504 for release v0.5.4; set it there once per release, and move ../CHANGELOG.md's
+# Unreleased notes under the release's heading (the notes the release publishes). `make dist` names the release
 # from it: the first digit after the point is the minor version, the last two the patch
 # (0.504 is v0.5.4, 0.510 is v0.5.10).
 #
@@ -152,6 +153,8 @@ UNICODES := $(UNICODES),U+20D7
 UNICODES := $(UNICODES),U+2A00-2A06
 # fleurons: 33 additional encoded characters from the selected source contract.
 UNICODES := $(UNICODES),U+2619,U+261C,U+261E,U+2766-2767,U+E900-E915,U+E920-E925
+# symbols: the zero width no-break space, beside the spaces and joiners U+2000-206F keeps.
+UNICODES := $(UNICODES),U+FEFF
 
 # The web subset keeps only the features in web_features.txt (what browsers apply by
 # default and what the app turns on); the .ttf keeps them all.

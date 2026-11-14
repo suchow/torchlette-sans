@@ -607,6 +607,10 @@ def glyphs(ctx):
     w_frac = ctx.W('fraction')
     pad_num = round(4.0 * min(1.0, max(0.0, (ctx.SV - 1.0) / 1.47)))
 
+    # The numerators the vulgar fractions use get a glyph (`<digit>.vnumr`); every digit's
+    # numerator outline is kept in num_src_paths/num_src_quads for afrc's `.anumr` figures.
+    vnumr_used = {DIG[num_ds[0]] for _cp, num_ds, _den in VULGAR_ADD}
+    assert 'two' in vnumr_used     # the two's branch normalizes its glyph's outline
     num_src_paths = {}
     num_src_quads = {}
     for d in DIG:
@@ -631,14 +635,17 @@ def glyphs(ctx):
             gs_num[d + '.dnom'].draw(p_vn_raw.getPen(glyphSet=gs_num))
             dx_vn = lsb_ref - p_vn_raw.bounds[0]
             p_vn = ctx.mv(p_vn_raw, dx_vn, 0)
-            _add_simple(ctx, gn_vn, p_vn, w_dnom)
             dg_num = gl_num[d + '.dnom']
             q_pack = (
                 [(x + dx_vn, y) for x, y in dg_num.coordinates],
                 list(dg_num.endPtsOfContours),
                 [int(f) & 1 for f in dg_num.flags],
             )
-            ctx.lg_quad_figs[gn_vn] = (q_pack[0], q_pack[1], q_pack[2], 0.0, 0.0)
+            if d in vnumr_used:
+                _add_simple(ctx, gn_vn, p_vn, w_dnom)
+                ctx.lg_quad_figs[gn_vn] = (q_pack[0], q_pack[1], q_pack[2], 0.0, 0.0)
+            else:
+                p_vn.simplify()      # as ctx.add does to a glyph's path: afrc's .anumr reads p_vn's bounds
             num_src_paths[d] = p_vn
             num_src_quads[d] = q_pack
 

@@ -45,7 +45,9 @@ What this module adds (owned glyphs suffixed `.cyrillic`, lookups/classes prefix
      plain punctuation) in a single conflict-free Format-2 subtable (zero masked pairs).
      `CYRILLIC_CROSS_KERN` bridges Mulish's separate Latin and Cyrillic kerning classes
      across script boundaries (`A`+`Т`, `Т`+`A`, `V`+`Д`, `T`+`о`, `Г`+`o`, etc.) in a
-     single conflict-free Format-2 subtable without touching tabular figures.
+     single conflict-free Format-2 subtable without touching tabular figures. The Latin
+     letters are those in Mulish's classes up to U+036F and in Latin Extended Additional
+     (U+1E00-1EFF: the Vietnamese ụ ủ ứ ọ ẹ ...).
      `CYRILLIC_PUNCT_KERN` kerns Г Ѓ Ґ Ғ (right side, as T) and У Ў Ӯ Ӱ Ӳ (both sides,
      as Y) against the punctuation their Latin model kerns with (Г. Г, Г» У. «У ...),
      scaled by the open space beside each mark (see `_build_punct_kern`).
@@ -637,7 +639,10 @@ def _build_cross_kern(ctx):
         if '.' in g:  # skip .ss04/.ss06/ligatures/etc. so kern.py's inheritance stays untouched
             return False
         u = rev.get(g)
-        return bool(u and unicodedata.category(chr(u)).startswith('L') and u < 0x0370)
+        # Latin Extended Additional too: Mulish puts ụ ủ ứ ọ ẹ ỵ Ụ Ọ Ạ ... in their letter's
+        # classes, and they kerned as their letter does against Latin only (uТ -74, ụТ 0
+        # through v0.5.10, issue 13)
+        return bool(u and unicodedata.category(chr(u)).startswith('L') and (u < 0x0370 or 0x1E00 <= u <= 0x1EFF))
 
     def is_cyr_letter(g):
         if g in TABULAR or g.endswith(SUF) or not _is_cyr_glyph(g) or g not in kerned:

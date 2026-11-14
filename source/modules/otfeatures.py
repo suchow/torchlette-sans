@@ -2,11 +2,12 @@
 build.py's glyphs, their GDEF classes and ligature carets, and aalt / salt.
 
 Feature tags: extends GSUB case, ccmp, calt, aalt, frac and locl and GPOS mark; adds GSUB
-zero, salt and dlig and GPOS cpsp. The new ones and case and aalt are off by default. Of the default-on
+zero, salt, dlig, mgrk and nalt and GPOS cpsp. The new ones and case and aalt are off by default. Of the default-on
 additions, calt's one lookup slashes a zero that is the only digit of its number (see
 below); mark and ccmp's one lookup touch only a combining mark after a glyph that
-had no anchors (a small cap, an alternate, a figure, a ligature), which was left
-unpositioned before; other text shapes exactly as before.
+had no anchor for it (a small cap, an alternate, a figure, a ligature, or a letter
+Mulish left unanchored), which was left unpositioned before; other text shapes
+exactly as before.
 
 - case: ( ) [ ] { } - – — « » ‹ › @ · ¡ ¿ centred on the capitals (their ink box's
   middle on the cap height's, 352.5). The hyphen takes build.py's hyphen.case (ss16's
@@ -36,6 +37,10 @@ unpositioned before; other text shapes exactly as before.
   zeros, and (mark-to-ligature) the letter ligatures. Anchors follow Mulish's
   conventions (see anchors_for below); where build.py drew a precomposed form of the
   base (Á.sc, á.ss04 ...), its mark offset is the anchor, so base + mark matches it.
+  The same lookup gives the letters Mulish left without an anchor for a class the
+  missing ones (issue 28, see _letter_anchors): above and below ŋ ə ɓ ɗ ħ đ ð ß ẞ Ħ Ɓ
+  Ɗ Ƒ ƒ Ƴ ƴ Ǥ ǥ (ү Ҽ ҽ Ҿ ҿ above), below g ø and the Greek and Cyrillic letters that
+  do not descend, and the ogonek on the Latin consonants; a class Mulish gives stays.
 - ccmp: a top mark right after a lining figure becomes its .case form, as Mulish's
   ccmp does after a capital (old-style and small-cap figures keep the lowercase marks).
 - GDEF: every glyph build.py and this module add (and any other module's glyph
@@ -56,6 +61,16 @@ unpositioned before; other text shapes exactly as before.
   lookups are replaced in place: only a slash between digits becomes the fraction slash,
   only the digits before a fraction slash numerators, those after it denominators.
 - dlig: the Th and th ligatures (ss01's and ss03's lookups) as discretionary ligatures.
+- mgrk: Σ Π Δ to the mathematical symbols drawn for them, ∑ ∏ ∆ (U+2211 U+220F U+2206),
+  one single substitution. Ω and μ stay: Unicode prefers the letters to the ohm and micro signs. The Greek symbol letters (ϕ ϵ ϑ ϰ ϱ ϖ)
+  are not mapped: in mathematics they are other symbols than φ ε θ κ ρ π, not other forms.
+- nalt: a whole number from 1 to 20 to its circled form, ① to ⑳ (ui's glyphs): a ligature
+  substitution for 10-20 tried before a single substitution for 1-9. A number that is
+  longer, or joined to another figure by a decimal point or group separator, stays as it
+  is (25, 100, 1.5 are not ②⑤, ⑩0, ①.⑤); 0 has no circled form in the font. ⑩-⑳ keep
+  ui's base class and get no ligature carets: typed as themselves they are one character.
+- grek: GSUB and GPOS get a script record for Greek, a copy of DFLT's, so Greek text gets
+  every feature without falling back to DFLT. It is made last, after every feature exists.
 - locl: Mulish registers the Latin language systems ROM, AZE, CRT, KAZ and TAT with no
   locl. Romanian gets Moldavian's (Ş ş Ţ ţ to Ș ș Ț ț); Azerbaijani, Crimean Tatar, Kazakh
   and Tatar get Turkish's (the i that keeps its dot), as the same feature record.
@@ -85,6 +100,8 @@ FIG_STEMS = {'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eig
              'uni00B2', 'uni00B3', 'uni00B9', 'uni2070'} | {f'uni{u:04X}' for u in range(0x2074, 0x207A)} \
             | {f'uni{u:04X}' for u in range(0x2080, 0x208A)}
 SUF = 'otfeatures'
+# mgrk: a Greek letter and the mathematical symbol drawn for it (Σ ∑, Π ∏, Δ ∆)
+MGRK = ((0x03A3, 0x2211), (0x03A0, 0x220F), (0x0394, 0x2206))
 
 
 def _rev(cmap):
@@ -307,6 +324,206 @@ def _composite(ctx, n, A, marks, mk2, delta, resolve):
     return out
 
 
+# ---------------------------------------------------------------- letters Mulish left unanchored
+# Mulish anchors most of its letters but not ŋ ə ɓ ɗ ħ đ ð ß ẞ Ħ Ɓ Ɗ Ƒ ƒ Ƴ ƴ Ǥ ǥ (no class at
+# all), g and ø below, any consonant for the ogonek, nor below the Greek letters (the greek
+# module anchors them above only) and some Cyrillic ones, so a combining mark after them stood
+# at its default place (issue 28). They get the missing classes by rule; a class that Mulish
+# or another lookup gives stays its own.
+# A letter drawn on a Mulish letter: that letter's anchors, moved by where its outline sits
+# in the new one (the slide that best covers the new outline, as _fit does for ligatures).
+DRAWN_ON = {0x0253: 'b', 0x0257: 'd', 0x0111: 'd', 0x0127: 'h', 0x014B: 'n', 0x01B4: 'y', 0x01E5: 'g',
+            0x0192: 'f', 0x00F8: 'o', 0x0181: 'B', 0x018A: 'D', 0x0126: 'H', 0x0191: 'F', 0x01B3: 'Y',
+            0x01E4: 'G', 0x04AF: 'v'}
+# letters of their own shape: above and below by the outline (_geometric's rule, the capitals'
+# above anchor at the cap height for the .case marks); ə takes the anchors Mulish gave ә, a
+# composite of it
+OWN_SHAPE = (0x00DF, 0x1E9E, 0x00F0, 0x0259, 0x0067, 0x04BC, 0x04BD, 0x04BE, 0x04BF)
+# the consonants that take an ogonek: g j q Q are left out (their descender or tail is where
+# the ogonek hangs), y as a vowel as Mulish leaves it; a letter whose foot descends (J, in
+# Torchlette) is left out when measured
+OGONEK_LATIN = 'bcdfhklmnprstvwxzBCDFGHJKLMNPRSTVWXZ'
+FOOT_Y = 15         # the height at which a letter's foot is measured for the ogonek
+
+
+def _letter_anchors(ctx, A, marks):
+    """The missing above (TOP), below (BOT) and ogonek (OGON) anchors of the letters above,
+    in the module's own mark-to-base lookup: {glyph: {class: (x, y)}}, and what was left
+    out (descending Greek and Cyrillic letters, whose place below needs an eye)."""
+    font = ctx.font; cmap = font.getBestCmap(); have = set(font.getGlyphOrder())
+    op, I, D = ctx.pathops.op, ctx.pathops.PathOp.INTERSECTION, ctx.pathops.PathOp.DIFFERENCE
+    gl = lambda ch: cmap.get(ord(ch))
+    out, left_out = {}, []
+    med = lambda v: sorted(v)[len(v) // 2]
+
+    def has(g, c): return c in A.get(g, {}) or c in out.get(g, {})
+
+    def get(g, c): return A.get(g, {}).get(c) or out.get(g, {}).get(c)
+
+    def put(g, c, a):
+        if a is not None and not has(g, c): out.setdefault(g, {})[c] = (round(a[0]), round(a[1]))
+    # the dot below's ink about its anchor, and the white Mulish leaves around it: under a
+    # letter on the baseline (u + dot below) and beside a descender (y + dot below)
+    if 'dotbelowcomb' not in marks or BOT not in A.get(gl('u'), {}) or BOT not in A.get(gl('y'), {}): return out, left_out
+    db = ctx.path_of('dotbelowcomb').bounds; ax, ay = marks['dotbelowcomb'][1]
+    dbox = (db[0] - ax, db[1] - ay, db[2] - ax, db[3] - ay)
+
+    def box(x, y, e): return (x + dbox[0] - e, y + dbox[1] - e, x + dbox[2] + e, y + dbox[3] + e)
+
+    def clear(p, x, y, e):
+        b = ctx.clip(p, box(x, y, e)).bounds
+        return not b or b == (0, 0, 0, 0)
+    u, y_ = gl('u'), gl('y')
+    g_below = ctx.path_of(u).bounds[1] - (A[u][BOT][1] + dbox[3])
+    py = ctx.path_of(y_); yx, yy = A[y_][BOT]
+    g_side = max([e for e in range(0, 200, 2) if clear(py, yx, yy, e)] or [0])
+    ctx.below_gaps = (g_below, g_side)
+
+    def bottom(g, x0):
+        """On the baseline at x0 if the dot below keeps Mulish's white (y's dot beside its
+        tail) from the outline there and has no ink under it; else under the middle of the
+        nearest foot where it does, or the nearest such x (within a third of the ink's
+        width); else under the descender, as far below it as u's dot is below the u."""
+        p = ctx.path_of(g); b = p.bounds
+
+        def open_(x):
+            u = ctx.clip(p, (x + dbox[0] - g_side, -3000, x + dbox[2] + g_side, dbox[1])).bounds
+            return clear(p, x, 0, g_side) and (not u or u == (0, 0, 0, 0))
+        if open_(x0): return (x0, 0)
+        # moved off x0: under the middle of the nearest foot that is clear (ŋ's left
+        # stem), or beside the descender as Mulish sets y's dot
+        for x in sorted(((a + c) / 2 for a, c in ctx.hspans(p, 1)), key=lambda x: abs(x - x0)):
+            if open_(x): return (x, 0)
+        for d in range(2, int((b[2] - b[0]) / 3) + 1, 2):
+            for x in (x0 - d, x0 + d):
+                if open_(x): return (x, 0)
+        return (x0, b[1] - g_below - dbox[3])
+
+    def gap(p, m, x, y, top=0):
+        """The white between outline p and mark m set at (x, y), to 2 units (up to `top`)."""
+        q = ctx.path_of(m, x - marks[m][1][0], y - marks[m][1][1])
+        e = 0
+        while e < top:
+            hit = False
+            for ddx, ddy in ((e, 0), (-e, 0), (0, e), (0, -e), (e * .7, e * .7), (-e * .7, e * .7), (e * .7, -e * .7), (-e * .7, -e * .7)):
+                b = op(ctx.path_of(m, x - marks[m][1][0] + ddx, y - marks[m][1][1] + ddy), p, I).bounds
+                if b and b != (0, 0, 0, 0): hit = True; break
+            if hit: break
+            e += 2
+        return e
+    # the white Mulish leaves between an above mark and an x-height letter (n or o + acute)
+    # or a capital (E or O + the .case acute; the round letters' overshoot makes it less):
+    # an above anchor is raised until its mark keeps that much
+    def ref_gap(chars, m):
+        return min(gap(ctx.path_of(gl(c)), m, *A[gl(c)][TOP], 200) for c in chars)
+    top_gap = {False: ref_gap('no', 'acutecomb'), True: ref_gap('EO', 'acutecomb.case')} \
+        if 'acutecomb.case' in marks and all(TOP in A.get(gl(c), {}) for c in 'noEO') else None
+    ctx.top_gap = top_gap
+
+    def lift(g, a, cap):
+        if top_gap is None: return a
+        x, y = a; p = ctx.path_of(g); m = 'acutecomb.case' if cap else 'acutecomb'
+        while gap(p, m, x, y, top_gap[cap]) < top_gap[cap] and y < a[1] + 200: y += 2
+        return (x, y)
+
+    def slide(g, src):
+        pg = ctx.path_of(g)
+
+        def score(dx):
+            q = ctx.path_of(src, dx)
+            return op(q, pg, I).area - 0.5 * op(q, pg, D).area
+        best = max(range(-150, 151, 10), key=score)
+        return max(range(best - 8, best + 9, 2), key=score)
+    cap_y = A.get(gl('H'), {}).get(TOP, (0, 705))[1]
+    # letters drawn on a Mulish letter
+    for u_, src_ch in DRAWN_ON.items():
+        g, src = cmap.get(u_), gl(src_ch)
+        if not g or not src or src not in A: continue
+        dx = slide(g, src); sa = A[src]
+        lower = unicodedata.category(chr(u_)) == 'Ll'
+        if TOP in sa:
+            x, y = sa[TOP][0] + dx, sa[TOP][1]
+            if not has(g, TOP): put(g, TOP, lift(g, (x, y), not lower))
+        x0 = sa[BOT][0] + dx if BOT in sa else (sa[TOP][0] + dx if TOP in sa else None)
+        if 0x0400 <= u_ <= 0x052F and ctx.path_of(g).bounds[1] < -30: left_out.append(chr(u_)); continue
+        if x0 is not None and not has(g, BOT): put(g, BOT, bottom(g, x0))
+    # letters of their own shape
+    comp_of = {}
+    for n in A:
+        c = ctx.glyf[n]
+        if c.isComposite() and len(c.components) == 1: comp_of.setdefault(c.components[0].glyphName, (n, c.components[0]))
+    for u_ in OWN_SHAPE:
+        g = cmap.get(u_)
+        if not g: continue
+        if g in comp_of:                                  # ə: Mulish's ә is ə moved
+            n, c = comp_of[g]
+            for k in (TOP, BOT):
+                if k in A[n]: put(g, k, (A[n][k][0] - c.x, A[n][k][1] - c.y))
+        cg = ctx.glyf[g]
+        if cg.isComposite():                              # Ҿ: Ҽ and its tail
+            c = cg.components[0]
+            if get(c.glyphName, TOP): put(g, TOP, (get(c.glyphName, TOP)[0] + c.x, get(c.glyphName, TOP)[1] + c.y))
+        geo = _geometric(ctx, g)
+        if TOP in geo:
+            x, y = geo[TOP]
+            cap = unicodedata.category(chr(u_)) == 'Lu'
+            if not has(g, TOP): put(g, TOP, lift(g, (x, cap_y) if cap else (x, y), cap))
+        x0 = get(g, TOP)[0] if (ctx.path_of(g).bounds[1] < -30 and has(g, TOP)) else geo.get(BOT, (None,))[0]
+        if x0 is not None and not has(g, BOT):
+            if ctx.path_of(g).bounds[1] < -30 and 0x0400 <= u_ <= 0x052F: left_out.append(chr(u_)); continue
+            put(g, BOT, bottom(g, x0))
+    # the ogonek: hung where Mulish hangs it on the same kind of foot, its right edge at
+    # FOOT_Y less the inset Mulish leaves on that kind, in this style: a stem (i u a I), a
+    # bowl, whose ink draws in towards the baseline (o e O U), or a flat or slanted foot
+    # (A E). The kind: a bowl if the rightmost ink's right edge at y 1 is 15 units or more
+    # short of FOOT_Y's; a stem if it is upright from FOOT_Y to 60 units above and no wider
+    # than 1.6 stems (i's foot, I's for a capital); flat otherwise.
+    def foot(g, stem=None):
+        p = ctx.path_of(g); s = ctx.hspans(p, FOOT_Y)
+        if not s: return None
+        r = s[-1][1]; s1 = ctx.hspans(p, 1); s2 = ctx.hspans(p, FOOT_Y + 60)
+        if not s1 or r - s1[-1][1] >= 15: kind = 'bowl'
+        elif s2 and abs(s2[-1][1] - r) <= 3 and (stem is None or s[-1][1] - s[-1][0] < 1.6 * stem): kind = 'stem'
+        else: kind = 'flat'
+        return r, kind, p, s[-1][1] - s[-1][0]
+    stems = {}
+    for ch in 'iI':
+        if gl(ch) and (f := foot(gl(ch))) and f[1] == 'stem': stems[ch] = f[3]
+    insets = {'stem': [], 'bowl': [], 'flat': []}; calib = []
+    for ch in 'iuaIoeOUAE':
+        g = gl(ch)
+        if g and OGON in A.get(g, {}) and (f := foot(g, stems.get('I' if ch.isupper() else 'i'))):
+            insets[f[1]].append(f[0] - A[g][OGON][0]); calib.append((ch, f[1], round(f[0] - A[g][OGON][0])))
+    ctx.ogonek_calib = calib
+    if len(stems) == 2 and all(insets.values()):
+        ins = {k: med(v) for k, v in insets.items()}
+        ctx.ogonek_insets = {k: round(v) for k, v in ins.items()}
+        for ch in OGONEK_LATIN:
+            g = gl(ch)
+            if not g or has(g, OGON) or not (f := foot(g, stems['I' if ch.isupper() else 'i'])): continue
+            r, kind, p, _ = f
+            under = ctx.clip(p, (r - 120, -400, r + 5, -30)).bounds
+            if under and under != (0, 0, 0, 0): left_out.append(ch); continue
+            put(g, OGON, (r - ins[kind], 0))
+            ctx.ogonek_kind = getattr(ctx, 'ogonek_kind', {}); ctx.ogonek_kind[ch] = kind
+    # below the Greek and Cyrillic letters: a composite as its first component, a letter on
+    # the baseline under the middle of its foot (_geometric); a descending letter is left out
+    def first_bot(g):
+        c = ctx.glyf[g]
+        if not c.isComposite(): return None
+        b0 = c.components[0]; a = get(b0.glyphName, BOT)
+        return None if a is None else (a[0] + b0.x, a[1] + b0.y)
+    for u_, g in sorted(cmap.items()):
+        # (the cyrillic module anchors the Cyrillic letters Mulish has no anchors for, below too)
+        if not (0x0370 <= u_ <= 0x03FF or (0x0400 <= u_ <= 0x052F and g in A)) or has(g, BOT): continue
+        if unicodedata.category(chr(u_)) not in ('Lu', 'Ll'): continue
+        if ctx.path_of(g).bounds[1] < -30:
+            if chr(u_) not in left_out: left_out.append(chr(u_))
+            continue
+        put(g, BOT, first_bot(g) or _geometric(ctx, g).get(BOT))
+    return out, left_out
+
+
 LINING_RE = re.compile(r'^(zero|one|two|three|four|five|six|seven|eight|nine)(\.pnum)?(\.ss08)?(\.zero\.otfeatures)?$')
 FIG_RE = re.compile(r'^(zero|one|two|three|four|five|six|seven|eight|nine)(\.(pnum|osf|tosf|sc|tf|ss08))*$')
 
@@ -377,6 +594,10 @@ def anchors_for(ctx):
         return r
 
     out = {g: a for g in want if (a := resolve(g))}
+    extra, ctx.anchors_left_out = _letter_anchors(ctx, A, marks)
+    ctx.letter_anchors = extra
+    for g, a in extra.items():
+        for c, v in a.items(): out.setdefault(g, {}).setdefault(c, v)
     # ligatures: one component per letter of the name, each with that letter's anchors
     # where the letter sits in the ligature (see _fit); an above anchor is raised as far
     # as the ligature's ink above it rose.
@@ -449,6 +670,56 @@ def _mark_fea(marks, bases, ligs):
     return '\n'.join(lines) + '\n'
 
 
+# ---------------------------------------------------------------- nalt
+def _nalt(ctx, figs, seps):
+    """nalt: a number from 1 to 20 to its circled form (① to ⑳, U+2460-2473): one chain
+    lookup that calls a ligature lookup for 10-20 (tried first, so they win over 1 and 2)
+    and a single substitution for 1-9. A number is a run of figures (any figure form,
+    joined by a decimal point or group separator as calt's zero counts them), so only a
+    whole number is circled: 25, 100, 1.5 and 2026 stay as they are. The font has no
+    circled zero (U+24EA), so 0 stays too. Each digit may be in its default, pnum, osf or
+    tosf form (Mulish's figure features run before every module lookup); the lookups run
+    before build.py's features (smcp's figures, ss16, calt's zero)."""
+    cmap = ctx.font.getBestCmap(); have = set(ctx.font.getGlyphOrder())
+    out = {n: cmap[0x2460 + n - 1] for n in range(1, 21) if 0x2460 + n - 1 in cmap}
+    ctx.nalt_pairs = out
+    if not out: return
+    J = ' '.join
+    forms = {d: [g for g in (FRAC_DIGITS[d], *(f'{FRAC_DIGITS[d]}.{s}' for s in NALT_FORMS)) if g in have] for d in range(10)}
+    one = [(g, out[d]) for d in range(1, 10) if d in out for g in forms[d]]
+    lig = [(forms[n // 10], forms[n % 10], out[n]) for n in range(10, 21) if n in out]
+    fea = [f"@OTFEATURES_NALT_FIG = [{J(figs)}];", f"@OTFEATURES_NALT_SEP = [{J(seps)}];" if seps else '']
+    if lig:
+        fea.append('lookup OTFEATURES_NALT_LIG {\n' + ''.join(f'  sub [{J(a)}] [{J(b)}] by {g};\n' for a, b, g in lig) + '} OTFEATURES_NALT_LIG;')
+    if one:
+        fea.append(f'lookup OTFEATURES_NALT_ONE {{ sub [{J(a for a, _ in one)}] by [{J(b for _, b in one)}]; }} OTFEATURES_NALT_ONE;')
+    rules = []
+
+    def guard(first, rest):
+        """ignore rules: the figures `first rest` touching another figure, or joined to one."""
+        r = [f'  ignore sub @OTFEATURES_NALT_FIG {first}\' {rest};', f'  ignore sub {first}\' {rest} @OTFEATURES_NALT_FIG;']
+        if seps:
+            r += [f'  ignore sub @OTFEATURES_NALT_FIG @OTFEATURES_NALT_SEP {first}\' {rest};',
+                  f'  ignore sub {first}\' {rest} @OTFEATURES_NALT_SEP @OTFEATURES_NALT_FIG;']
+        return r
+    if lig:
+        firsts = J(dict.fromkeys(g for a, _, _ in lig for g in a))
+        seconds = J(dict.fromkeys(g for _, b, _ in lig for g in b))
+        rules += guard(f'[{firsts}]', f'[{seconds}]\'')
+        rules += [f'  sub [{J(a)}]\' lookup OTFEATURES_NALT_LIG [{J(b)}]\';' for a, b, _ in lig]
+    if one:
+        singles = f'[{J(a for a, _ in one)}]'
+        rules += guard(singles, '')
+        rules.append(f'  sub {singles}\' lookup OTFEATURES_NALT_ONE;')
+    fea.append('lookup OTFEATURES_NALT {\n' + '\n'.join(rules) + '\n} OTFEATURES_NALT;')
+    fea.append('feature nalt { lookup OTFEATURES_NALT; } nalt;')
+    ctx.gsub('\n'.join(x for x in fea if x), before='main')
+    ctx.log(f'nalt: {len(one)} figures to ①-⑨, {len(lig)} pairs to ⑩-⑳')
+
+
+NALT_FORMS = ('pnum', 'osf', 'tosf')
+
+
 # ---------------------------------------------------------------- features
 def features(ctx):
     from fontTools.ttLib import TTFont
@@ -470,6 +741,13 @@ def features(ctx):
              f"  ignore sub @OTFEATURES_FIG @OTFEATURES_ZSEP [{zs}]';\n  ignore sub [{zs}]' @OTFEATURES_ZSEP @OTFEATURES_FIG;\n"
              f"  sub [{zs}]' lookup OTFEATURES_ZERO;\n}} OTFEATURES_ZERO_CALT;\n"
              f"feature calt {{ lookup OTFEATURES_ZERO_CALT; }} calt;")
+    # mgrk: the pairs whose letter and symbol are both in the font (none without the greek module)
+    mg = [(cmap[a], cmap[b]) for a, b in MGRK if a in cmap and b in cmap]
+    ctx.mgrk_pairs = mg
+    if mg:
+        ctx.gsub(f"lookup OTFEATURES_MGRK {{ sub [{J(a for a, _ in mg)}] by [{J(b for _, b in mg)}]; }} OTFEATURES_MGRK;\n"
+                 f"feature mgrk {{ lookup OTFEATURES_MGRK; }} mgrk;")
+    _nalt(ctx, figs, seps)
     # lining figures take the capitals' .case marks (Mulish's ccmp gives them to the
     # capitals only): a top mark right after one becomes its .case form. Runs last, on
     # the figures' final forms (old-style and small-cap figures keep the lowercase marks).
@@ -492,6 +770,8 @@ def features(ctx):
     ctx.gpos(f"lookup OTFEATURES_CPSP {{ pos [{J(caps)}] <{CPSP} 0 {2 * CPSP} 0>; }} OTFEATURES_CPSP;\n"
              f"feature cpsp {{ lookup OTFEATURES_CPSP; }} cpsp;")
     ctx.log(f'mark: {len(bases)} bases ({ctx.learned} anchors from precomposed glyphs), {len(ligs)} ligatures; cpsp: {len(caps)} glyphs')
+    ctx.log(f'mark: {sum(len(a) for a in ctx.letter_anchors.values())} anchors on {len(ctx.letter_anchors)} letters Mulish left without '
+            f'(ogonek insets {getattr(ctx, "ogonek_insets", None)}); not anchored below: {" ".join(ctx.anchors_left_out)}')
 
 
 # ---------------------------------------------------------------- post
@@ -550,6 +830,28 @@ def _dlig(ctx, gsub):
             ls.FeatureIndex = sorted([remap[i] for i in ls.FeatureIndex] + [remap[len(fl)]]); ls.FeatureCount = len(ls.FeatureIndex)
             if ls.ReqFeatureIndex != 0xFFFF: ls.ReqFeatureIndex = remap[ls.ReqFeatureIndex]
     ctx.log(f'dlig: lookups {idx} (ss01 Th, ss03 th)')
+
+
+def _grek(ctx):
+    """A script record for Greek in GSUB and GPOS: a copy of DFLT's, so a shaper finds the
+    Greek letters' features (smcp, c2sc, case, cpsp, kern, mgrk ...) under grek instead of
+    falling back to DFLT. Made after every other feature, so it has them all; a font that
+    already has a grek record keeps its own."""
+    import copy
+    from fontTools.ttLib.tables import otTables
+    done = []
+    for tag in ('GSUB', 'GPOS'):
+        if tag not in ctx.font: continue
+        sl = ctx.font[tag].table.ScriptList
+        if any(sr.ScriptTag == 'grek' for sr in sl.ScriptRecord): continue
+        dflt = next((sr for sr in sl.ScriptRecord if sr.ScriptTag == 'DFLT'), None)
+        if dflt is None: raise SystemExit(f'otfeatures: {tag} has no DFLT script record to copy for grek')
+        sr = otTables.ScriptRecord(); sr.ScriptTag = 'grek'; sr.Script = copy.deepcopy(dflt.Script)
+        sl.ScriptRecord.append(sr)
+        sl.ScriptRecord.sort(key=lambda r: r.ScriptTag); sl.ScriptCount = len(sl.ScriptRecord)
+        ls = sr.Script.DefaultLangSys
+        done.append(f'{tag} {len(ls.FeatureIndex) if ls else 0}')
+    ctx.log(f'grek: script record copied from DFLT ({", ".join(done)} features)' if done else 'grek: the font has its own')
 
 
 FRAC_DIGITS = 'zero one two three four five six seven eight nine'.split()
@@ -723,8 +1025,9 @@ def post(ctx):
     cd = ctx.GDEF_CLASS
     ligdefs = _ligatures(gsub)
     new = [g for g in font.getGlyphOrder() if g not in ctx.mulish_glyphs]
+    nalt_out = set(getattr(ctx, 'nalt_pairs', {}).values())
     for g in new:                                     # a class another module set stays
-        if g not in cd: cd[g] = 2 if g in ligdefs else 1
+        if g not in cd: cd[g] = 2 if g in ligdefs and g not in nalt_out else 1
     # Mulish leaves about 300 of its own glyphs without a class (Б ð ŋ ß, the spaces, the
     # spacing accents, its numerators and denominators ...): a combining mark (by its code
     # point, or an unencoded form of a mark, strokecomb.obarred) is a mark, a ligature a
@@ -759,6 +1062,7 @@ def post(ctx):
     ncar = 0
     for g in new:
         if g not in ligdefs or g in carets: continue   # carets another module set stay
+        if g in nalt_out: continue                    # ⑩-⑳: one character, a base (ui's class)
         cs = chars(g)
         if len(cs) < 2: continue
         fit = ctx.lig_fit.get(g)
@@ -798,3 +1102,4 @@ def post(ctx):
     _locl_languages(ctx, gsub)
     _frac(ctx, gsub)
     _dlig(ctx, gsub)
+    _grek(ctx)

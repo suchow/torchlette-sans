@@ -3,7 +3,8 @@
     verify_latin_gaps.py FONT.ttf STYLE full|subset
 
 Verifies across every style (upright and italic, Light through Black):
-1. Dutch `Ĳ`/`ĳ` (`U+0132`/`U+0133`) presence, non-nested components, `smcp`/`c2sc` -> `IJ.sc` (height 550).
+1. Dutch `Ĳ`/`ĳ` (`U+0132`/`U+0133`) presence, non-nested components, `smcp`/`c2sc` -> `IJ.sc` (height 550);
+   every vulgar-fraction numerator (`<digit>.vnumr`) a component of some fraction.
 2. Complete 48-character Pinyin repertoire (24 uppercase + 24 lowercase), dotless `ǐ` (`U+01D0`),
    stacked `ü` + tone (`U+01D5..U+01DC`) clear vertical separation and round dots within `usWinAscent`,
    and 550-unit `smcp`/`c2sc` small caps for all 48 Pinyin letters.
@@ -98,6 +99,11 @@ for g in GO:
     if gl.isComposite():
         nested = [c.glyphName for c in gl.components if GLYF[c.glyphName].isComposite()]
         check(not nested, f'{g}: nested components {nested}')
+# the vulgar fractions' numerators (`<digit>.vnumr`) exist only as their components: none is
+# built that no fraction uses (6, 8 and 9 were, reached by nothing)
+_components = {c.glyphName for g in GO if GLYF[g].isComposite() for c in GLYF[g].components}
+_vnumr = [g for g in GO if '.vnumr.' in g]
+check(all(g in _components for g in _vnumr), f'vulgar-fraction numerators no fraction uses: {[g for g in _vnumr if g not in _components]}')
 
 # ---- 2. Dutch IJ / ij (U+0132 / U+0133) ---------------------------------------
 check(CMAP.get(0x0132) == 'IJ', f'U+0132 mapped to {CMAP.get(0x0132)}')

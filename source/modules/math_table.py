@@ -33,10 +33,11 @@ glyphs    Encoded additions (uni0305, uni203E, uni23DE, uni23DF), monoline flat-
             ends; ∮ ∯ with a ring part. ∬ ∭ ∮ ∯ ⋃ ⋂ are drawn by `mathglyphs`; their MATH
             entries are made only when it has made the base glyph.
           - Horizontal stretchy accents, rules, arrows and curly brackets:
-            hat.size0..size6 (+ flat), tilde.size0..size6 (+ flat) (both with an inkless
+            hat.size3..size6 (+ flat), tilde.size0..size6 (+ flat) (both with an inkless
             contour 90 under the ink, in post), full-bleed hbar.size0..size6
-            (+ hbar.ext), and dense (4%) ladders of arrow{right,left,both} and of the drawn
-            {overbrace,underbrace} (0.5 em deep, stroke 1.75 rules) with assemblies past them.
+            (+ hbar.ext), and dense (4%) ladders of arrow{right,left,both} (only the 19
+            sizes of each that MATH lists) and of the drawn {overbrace,underbrace} (0.5 em
+            deep, stroke 1.75 rules) with assemblies past them.
           Vertical stretchy variants, radicals and horizontal stretch operators are counter-sheared
           in italic styles so stacked assembly parts and radicals stand upright with zero step.
 
@@ -1569,7 +1570,8 @@ def glyphs(ctx):
         (2700, 2620.0, 194.0),
         (3440, 3360.0, 204.0),
     ]):
-        emit(f'hat.size{idx}', [_hat_cw(adv_h, ink_w, 525.0, rise, hat_th)], adv_h)
+        if idx >= HAT_FROM:
+            emit(f'hat.size{idx}', [_hat_cw(adv_h, ink_w, 525.0, rise, hat_th)], adv_h)
     emit('hat.flat', [_hat_cw(400, 330.0, 525.0, 90.0, hat_th * 0.94)], 400)
 
     tld_th = max(41.0, bar * 0.96)
@@ -1590,12 +1592,15 @@ def glyphs(ctx):
         emit(f'hbar.size{idx}', [_rect_cw(0.0, 600.0, float(w_hb), 600.0 + r_th)], w_hb)
     emit('hbar.ext', [_rect_cw(0.0, 600.0, 600.0, 600.0 + r_th)], 600)
 
-    # Stretchy arrows: a 4% ladder (see OVERBRACE_ADV), each drawn like the base arrow
-    for k_i, w_ar in enumerate(ARROW_ADV, start=1):
+    # Stretchy arrows: a 4% ladder (see OVERBRACE_ADV), each drawn like the base arrow; only
+    # the sizes MATH lists (ARROW_KEPT, ARROWBOTH_KEPT)
+    for i in ARROW_KEPT:
+        k_i, w_ar = i + 1, ARROW_ADV[i]
         rcw = _arrow_rhead_cw(40.0, float(w_ar) - 40.0, axis, bar, sm)
         emit(f'arrowright.size{k_i}', [rcw], w_ar)
         emit(f'arrowleft.size{k_i}', _mirror_x([rcw], 0.5 * float(w_ar)), w_ar)
-    for k_i, w_ab in enumerate(ARROWBOTH_ADV, start=1):
+    for i in ARROWBOTH_KEPT:
+        k_i, w_ab = i + 1, ARROWBOTH_ADV[i]
         emit(f'arrowboth.size{k_i}', [_arrow_both_cw(40.0, float(w_ab) - 40.0, axis, bar, sm)], w_ab)
     # head parts 700 wide with 400 of shaft before the head (connector 380)
     ar_rhead = _arrow_rhead_cw(0.0, 660.0, axis, bar, sm)
@@ -1672,7 +1677,6 @@ def features(ctx):
     flac_pairs = [
         ('circumflex', 'hat.flat.math_table'),
         ('uni0302', 'hat.flat.math_table'),
-        ('hat.size0.math_table', 'hat.flat.math_table'),
         ('tilde', 'tilde.flat.math_table'),
         ('tildecomb', 'tilde.flat.math_table'),
         ('tilde.size0.math_table', 'tilde.flat.math_table'),
@@ -1799,6 +1803,24 @@ LONG_ARROW_SHORT = {0x27F5: 0x2190, 0x27F6: 0x2192, 0x27F7: 0x2194, 0x27F8: 0x21
 MAX_VARIANTS = 20
 
 
+def _thinned(n, k=MAX_VARIANTS - 1):
+    """Indices of the k of n ladder sizes MATH lists after the base glyph: evenly through
+    the ladder, its smallest and largest kept (all n when n <= k)."""
+    if n <= k:
+        return list(range(n))
+    return sorted({round(i * (n - 1) / (k - 1)) for i in range(k)})
+
+
+# → ← ↔: their 4% ladders (56 and 50 sizes) thinned so that with the base glyph MATH lists
+# MAX_VARIANTS, the most Chrome reads; the assembly takes over past the largest. Only these
+# sizes are drawn (size numbers stay their places on the ladder, size1 = ARROW_ADV[0]).
+ARROW_KEPT = _thinned(len(ARROW_ADV))
+ARROWBOTH_KEPT = _thinned(len(ARROWBOTH_ADV))
+# ^'s list takes mathglyphs' hat.w1..w5 and then the wide hats from HAT_FROM on; the smaller
+# wide hats would be reached by nothing, so they are not drawn.
+HAT_FROM = 3
+
+
 def _mathglyphs_constructions(ctx, cmap, order_set, vert_specs, horiz_specs):
     import copy
     made = ctx.globals.get('MATH_CONSTRUCTIONS', {})
@@ -1816,15 +1838,8 @@ def _mathglyphs_constructions(ctx, cmap, order_set, vert_specs, horiz_specs):
             if g in specs or not all(n in order_set for n in names):
                 continue
             specs[g] = ([_vrec(v, m) for v, m in spec['variants']], asm(spec['parts']))
-    # → ← ↔: their 4% ladders (57 and 51 variants) thinned to MAX_VARIANTS, evenly through the
-    # ladder and keeping its largest, so Chrome reads them all; the assembly takes over past it.
-    for cp in (0x2192, 0x2190, 0x2194):
-        g = cmap.get(cp)
-        if g not in horiz_specs: continue
-        recs, a = horiz_specs[g]
-        if len(recs) > MAX_VARIANTS:
-            rest, k = recs[1:], MAX_VARIANTS - 1
-            horiz_specs[g] = ([recs[0]] + [rest[round(i * (len(rest) - 1) / (k - 1))] for i in range(k)], a)
+    # → ← ↔ list only the sizes of their ladders that glyphs() draws (ARROW_KEPT, ARROWBOTH_KEPT:
+    # MAX_VARIANTS with the base); the assertion below holds them to it.
     hmtx = ctx.font['hmtx']
     touched = [cmap.get(cp) for cp in (0x2192, 0x2190, 0x2194)] + list(made.get('horiz', {}))
     for long_cp, short_cp in LONG_ARROW_SHORT.items():
@@ -2119,7 +2134,6 @@ def post(ctx):
 
     HAT_ADV = (340, 680, 1060, 1520, 2060, 2700, 3440)
     TILDE_ADV = (380, 700, 1080, 1540, 2080, 2720, 3460)
-    hat_vars = [_vrec(f'hat.size{i}.math_table', HAT_ADV[i]) for i in range(len(HAT_ADV))]
     tilde_vars = [_vrec(f'tilde.size{i}.math_table', TILDE_ADV[i]) for i in range(len(TILDE_ADV))]
     hbar_vars_full = [_vrec(f'hbar.size{i}.math_table', HBAR_ADV[i]) for i in range(len(HBAR_ADV))]
     hbar_vars_from_0305 = [_vrec('uni0305', 440)] + [_vrec(f'hbar.size{i}.math_table', HBAR_ADV[i]) for i in range(1, len(HBAR_ADV))]
@@ -2146,9 +2160,9 @@ def post(ctx):
         a.PartCount = len(parts)
         return a
 
-    ar_r_vars = [_vrec('arrowright', 660)] + [_vrec(f'arrowright.size{k}.math_table', w) for k, w in enumerate(ARROW_ADV, 1)]
-    ar_l_vars = [_vrec('arrowleft', 660)] + [_vrec(f'arrowleft.size{k}.math_table', w) for k, w in enumerate(ARROW_ADV, 1)]
-    ar_b_vars = [_vrec('arrowboth', 840)] + [_vrec(f'arrowboth.size{k}.math_table', w) for k, w in enumerate(ARROWBOTH_ADV, 1)]
+    ar_r_vars = [_vrec('arrowright', 660)] + [_vrec(f'arrowright.size{i + 1}.math_table', ARROW_ADV[i]) for i in ARROW_KEPT]
+    ar_l_vars = [_vrec('arrowleft', 660)] + [_vrec(f'arrowleft.size{i + 1}.math_table', ARROW_ADV[i]) for i in ARROW_KEPT]
+    ar_b_vars = [_vrec('arrowboth', 840)] + [_vrec(f'arrowboth.size{i + 1}.math_table', ARROWBOTH_ADV[i]) for i in ARROWBOTH_KEPT]
 
     ov_vars = [_vrec('uni23DE', OVERBRACE_ADV[0])] + [_vrec(f'overbrace.size{k}.math_table', w) for k, w in enumerate(OVERBRACE_ADV[1:], 1)]
     un_vars = [_vrec('uni23DF', OVERBRACE_ADV[0])] + [_vrec(f'underbrace.size{k}.math_table', w) for k, w in enumerate(OVERBRACE_ADV[1:], 1)]
@@ -2157,7 +2171,7 @@ def post(ctx):
     # wide hats; AdvanceMeasurement is each glyph's advance.
     hat_w = [f'hat.w{i}.mathglyphs' for i in range(1, 6) if f'hat.w{i}.mathglyphs' in order_set]
     hat_vars = ([_vrec(g, hmtx[g][0]) for g in hat_w]
-                + [_vrec(f'hat.size{i}.math_table', HAT_ADV[i]) for i in range(3, len(HAT_ADV))])
+                + [_vrec(f'hat.size{i}.math_table', HAT_ADV[i]) for i in range(HAT_FROM, len(HAT_ADV))])
     horiz_specs = {
         'asciicircum': (hat_vars, None),
         'circumflex': (hat_vars, None),

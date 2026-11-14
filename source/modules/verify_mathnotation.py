@@ -17,7 +17,9 @@
    in a line without ∷ stays a colon.
 6. SH4 calt + kern: in ⟨ψ|φ⟩ the bar is bar.braket.mathnotation, which lies within the angle
    brackets' height; ⟨q and k⟩ are kerned closer than unkerned, and the ink gap of ⟨q is within
-   30 units of the gap of (q.
+   30 units of the gap of (q. Accented letters, Vietnamese included, kern against ⟨ ⟩ as their
+   letter (ụ⟩ as u⟩) where the mark is clear of the bracket; where a mark, horn or ogonek
+   reaches toward it (⟨ĭ ư⟩ Ą⟩) they are kerned, but to no smaller ink gap than their letter's.
 7. Shapes: relations and operators sit in the 600-unit cell, but ⊘ ⊛ ⊖ have ⊕'s advance (720) and are as wide and tall as
    ⊕ (within 12: the shipped ⊕ comes out 10 narrower in Black); ≺ mirrors ≻ (uprights); the 29 script characters, including ℒ, use fixed normal-script Noto Sans
    Math outlines at one H-cap/714 scale, with donor-scaled advances and base glyph class.
@@ -197,6 +199,25 @@ if kept('kern'):
             if sa and sb: gs_.append(pos[0].x_advance - sa[-1][1] + sb[0][0])
         return min(gs_)
     check(abs(gap('⟨', 'q') - gap('(', 'q')) <= 30, f'⟨q gap {gap(chr(0x27E8), "q")} vs (q {gap("(", "q")}')
+    # the accented letters, Vietnamese included, are kerned against ⟨ ⟩ (u⟩ -122, ú⟩ ụ⟩ 0 through
+    # v0.5.10, issue 13): with a mark clear of the brackets (a dot below, most marks above)
+    # exactly as their letter; with a mark, horn or ogonek that reaches toward the bracket,
+    # kerned, but to no smaller ink gap than their letter's (less 8, the smallest pair kept):
+    # ( and ) all but touch some of them (ĭ( Ą)), and the brackets must not
+    def kv(t): return run(t)[1][0].x_advance - run(t, {'kern': False})[1][0].x_advance
+    SAME = {'ú': 'u', 'ụ': 'u', 'ủ': 'u', 'ó': 'o', 'ọ': 'o', 'ẹ': 'e', 'á': 'a', 'ạ': 'a',
+            'Ú': 'U', 'Ụ': 'U', 'Ọ': 'O', 'Ệ': 'E', 'Ỵ': 'Y', 'Ạ': 'A'}
+    for v, b in SAME.items():
+        if ord(v) in cmap and ord(b) in cmap:
+            for got_t, want_t in ((v + '⟩', b + '⟩'), ('⟨' + v, '⟨' + b)):
+                check(kv(got_t) == kv(want_t) != 0, f'{got_t!r} kerned {kv(got_t)}, {want_t!r} {kv(want_t)}')
+    REACH = [('⟨', v, b) for v, b in zip('ĭìĩīïíĵȉ', 'iiiiiiji')] + \
+            [(v, '⟩', b) for v, b in zip('ưứựơớợƯỨľŕĩĄą', 'uuuoooUUlriAa')]
+    for l, r, b in REACH:
+        v = l if r == '⟩' else r
+        if not (ord(v) in cmap and ord(b) in cmap): continue
+        gv, gb = gap(l, r), (gap(b, r) if r == '⟩' else gap(l, b))
+        check(kv(l + r) != 0 and gv >= gb - 8, f'{l + r!r} kerned {kv(l + r)}, ink gap {round(gv)} vs {round(gb)} with {b}')
 
 # 7. shapes
 H = path('H'); Hb = H.bounds; CH = Hb[3]
