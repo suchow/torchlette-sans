@@ -17,8 +17,10 @@
      is drawn round again, so its hook is compared, and its dot's size and place.
    - ‼ ⁇ are two ! or two ?: the first at 0, the second one advance less an overlap
      between 0 and the gap two typed marks have; the outline is the two marks exactly.
-   - ‽ holds the whole ?, has its advance and its height, and a stem (a span over the
-     ?'s dot) from the ?'s foot up past the middle of its arc.
+   - ‽ is three contours (the hook and stem, the counter, the dot), the ?'s height and dot,
+     an advance from the ?'s to 1.6 times it; a stem over the dot from the foot to the
+     top of the arc, as wide as the !'s stem at the same height where it meets the
+     counter; the counter at least 0.2 of the ?'s advance wide.
    - ‱ holds the whole ‰ and two contours more (the ring), advance ‰'s plus the ring's
      step, the new ring a copy of the last.
    - ‧ is the middle dot, centred on the hyphen's height (within 1), its sidebearings
@@ -34,8 +36,9 @@
    small capitals of ! ? ’ ” ‰ and the em dash; under case, ⸺ ⸻ rise as the em dash does
    and ‧ as the hyphen (it stays on the hyphen's height). (Skipped on the web subset when it drops the feature.)
 4. Kerning (KERN; it comes from the kern module's INHERIT table, not from this module):
-   ‛ ‟ kern as ‘ “, ‼ ⁇ as ! ?, ⸺ ⸻ as the em dash, ℃ ℉ as ° on the left and C or F on
-   the right: a pair the model kerns gets a value of the same sign.
+   ‛ ‟ kern as ’ ” (their mirror images), ‼ ⁇ ‽ as ! ? ?, ⸺ ⸻ as the em dash, ℃ ℉ as ° on the left and C or F on
+   the right: a pair the model kerns gets a value of the same sign. ⸺ ⸻ against T A V Y J
+   kern exactly as the em dash, and under case as the em dash's case form.
 """
 import os
 import sys
@@ -174,16 +177,33 @@ for suf in ('', '.sc'):
     doubled('uni2047' + suf, 'question' + suf)
 
 for suf in ('', '.sc'):
-    n, q = 'uni203D' + suf, 'question' + suf
-    if not (have(n) and q in HAVE): continue
+    n, q, e = 'uni203D' + suf, 'question' + suf, 'exclam' + suf
+    if not (have(n) and q in HAVE and e in HAVE): continue
     p, qp = outline(n), outline(q); b, qb = p.bounds, qp.bounds
-    check(W(n) == W(q), f'{n}: advance {W(n)}, {q} {W(q)}')
-    check(area(pathops.op(qp, p, pathops.PathOp.DIFFERENCE)) < 0.005 * area(qp), f'{n}: does not hold the whole {q}')
+    check(W(q) <= W(n) <= 1.6 * W(q), f'{n}: advance {W(n)}, want from {q}\'s {W(q)} to 1.6 times it')
     check(abs(b[3] - qb[3]) <= 1 and abs(b[1] - qb[1]) <= 1, f'{n}: ink {b}, {q} {qb}')
-    cs = sorted(qp.contours, key=lambda c: c.bounds[1]); dot, hook = cs[0].bounds, cs[-1].bounds
+    cs = sorted(p.contours, key=lambda c: c.bounds[1])
+    qcs = sorted(qp.contours, key=lambda c: c.bounds[1])
+    check(len(cs) == 3, f'{n}: {len(cs)} contours, want 3 (hook and stem, the counter, the dot)')
+    if len(cs) != 3: continue
+    dot, qdot, hook = cs[0].bounds, qcs[0].bounds, qcs[-1].bounds
+    check(abs((dot[2] - dot[0]) - (qdot[2] - qdot[0])) <= 1 and abs((dot[3] - dot[1]) - (qdot[3] - qdot[1])) <= 1
+          and abs(dot[1] - qdot[1]) <= 1, f'{n}: dot {dot}, {q}\'s {qdot}')
     dcx = (dot[0] + dot[2]) / 2
-    for y in (hook[1] + 0.3 * (hook[3] - hook[1]), hook[1] + 0.55 * (hook[3] - hook[1]), hook[1] + 0.75 * (hook[3] - hook[1])):
-        check(any(a <= dcx <= c for a, c in hspans(p, y)), f'{n}: no stem over the dot (x {dcx:.0f}) at y {y:.0f}: {hspans(p, y)}')
+    # the !'s stem over the dot, from the foot to the top of the arc
+    for t in (0.05, 0.3, 0.55, 0.75, 0.95):
+        y = hook[1] + t * (hook[3] - hook[1])
+        check(any(a_ <= dcx <= c_ for a_, c_ in hspans(p, y)), f'{n}: no stem over the dot (x {dcx:.0f}) at y {y:.0f}: {hspans(p, y)}')
+    # the counter is open, and the stem beside it is the !'s, tapered as the ! is
+    cb = min(cs[1:], key=lambda c: c.bounds[3] - c.bounds[1]).bounds     # the counter, inside the outer contour
+    check(cb[1] > dot[3] and cb[2] - cb[0] >= 0.2 * W(q), f'{n}: counter {cb}, want at least {0.2 * W(q):.0f} wide')
+    es = sorted(outline(e).contours, key=lambda c: c.bounds[1])[-1].bounds
+    k = (hook[3] + 40 - hook[1]) / (es[3] - es[1])
+    for y in (cb[1] + 0.4 * (cb[3] - cb[1]), cb[1] + 0.7 * (cb[3] - cb[1])):
+        sp = [s_ for s_ in hspans(p, y) if s_[0] <= dcx <= s_[1]]
+        ew = [c_ - a_ for a_, c_ in hspans(outline(e), es[1] + (y - hook[1]) / k)]
+        check(sp and ew and abs((sp[0][1] - sp[0][0]) - ew[0]) <= 4,
+              f'{n}: stem at y {y:.0f} {sp}, want the width of {e}\'s stem there ({ew})')
 
 for suf in ('', '.sc'):
     n, s = 'uni2031' + suf, 'perthousand' + suf
@@ -277,8 +297,8 @@ if kept('case'):
 def kern(text):
     s = shape(text)
     return s[0][1] - W(s[0][0]) if len(s) == 2 else None
-KERN = [('A‛', 'A‘'), ('‟A', '“A'), ('A‟', 'A“'), ('‼J', '!J'), ('Y‼', 'Y!'),
-        ('A⁇', 'A?'), ('⸺T', '—T'), ('L⸺', 'L—'), ('⸻T', '—T'),
+KERN = [('A‛', 'A’'), ('‛A', '’A'), ('‟A', '”A'), ('A‟', 'A”'), ('‼J', '!J'), ('Y‼', 'Y!'),
+        ('A⁇', 'A?'), ('Y‽', 'Y?'), ('‽T', '?T'), ('⸺T', '—T'), ('L⸺', 'L—'), ('⸻T', '—T'),
         ('A℃', 'A°'), ('℃A', 'CA'), ('A℉', 'A°'), ('℉A', 'FA')]
 for new, ref in KERN:
     if not all(have(NAMES[ord(ch)]) for ch in new if ord(ch) in NAMES): continue
@@ -286,6 +306,20 @@ for new, ref in KERN:
     if not kr: continue
     check(kn is not None and kn != 0 and (kn > 0) == (kr > 0),
           f'KERN {new!r}: {kn}, want the sign of {ref!r} ({kr}) (needs the kern module\'s INHERIT entries)')
+
+# the dashes' edges are the em dash's, so they kern exactly as it does, under case too (where
+# the em dash's case form takes its kerning from otfeatures, after the kern module has run)
+def kern_f(text, feats):
+    b = hb.Buffer(); b.add_str(text); b.guess_segment_properties(); hb.shape(HB, b, feats)
+    gp = list(zip(b.glyph_infos, b.glyph_positions))
+    return gp[0][1].x_advance - W(GO[gp[0][0].codepoint]) if len(gp) == 2 else None
+for feats in ({},) + (({'case': 1},) if kept('case') else ()):
+    for d in ('\u2E3A', '\u2E3B'):
+        if not have(NAMES[ord(d)]): continue
+        for x in 'TAVYJ':
+            for new, ref in ((d + x, '\u2014' + x), (x + d, x + '\u2014')):
+                kn, kr = kern_f(new, feats), kern_f(ref, feats)
+                check(kn == kr, f'KERN {new!r} {feats}: {kn}, want the em dash\'s {ref!r} {kr}')
 
 print(f'punctuation {STYLE} {MODE}: {checks - len(fails)}/{checks} checks passed')
 for f in fails[:40]:

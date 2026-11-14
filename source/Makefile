@@ -69,7 +69,7 @@ LEVELS     := $(wildcard $(LEVELS_DIR))
 # $(BUILD_DIR)/modules.txt, which changes only when the selection does.
 # Greek and mathitalic are explicitly included in the approved release default.
 MODULES_OFF  :=
-# Approved release default: the exact 25 modules exercised in the combined gate.
+# Approved release default: exactly the modules exercised in the combined gate.
 MODULES_DEFAULT := codekeys cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures punctuation sigmoid supsub symbols tensordiagram ui vector
 comma        := ,
 empty        :=
@@ -119,10 +119,10 @@ WEBS   := $(foreach s,$(STYLES),$(WEB_DIR)/TorchletteSans-$(s).woff2)
 # the angle brackets and the fi/fl ligatures; the modules' phonetic modifier
 # letters, Latin Extended-C's subscript j and modifier V, miscellaneous technical
 # symbols and the supplemental arrows; the ui module's ★ ✓ ✗ (U+2605, U+2713,
-# U+2717), which the app's interface shows; the symbols module's ⬑ (U+2B11), the app's
-# reply arrow. Exact additions from the selected
+# U+2717), which the app's interface shows, and ☆ (U+2606) beside ★; the symbols
+# module's ⬑ (U+2B11), the app's reply arrow. Exact additions from the selected
 # module contracts follow below; existing ranges and math-italic inputs remain.
-UNICODES := U+0000-00FF,U+0100-024F,U+0250-02FF,U+0300-036F,U+0370-03FF,U+1E00-1EFF,U+2000-206F,U+2070-209F,U+20A0-20CF,U+2100-214F,U+2190-21FF,U+2200-22FF,U+25A0-25FF,U+27C0-27EF,U+FB00-FB06,U+1D2C-1D6A,U+1D9C-1DBF,U+2C7C-2C7D,U+2300-23FF,U+27F0-27FF,U+2900-297F,U+2605,U+2713,U+2717,U+2B11,U+1D434-1D467,U+1D6A4-1D6A5,U+1D6E2-1D71B
+UNICODES := U+0000-00FF,U+0100-024F,U+0250-02FF,U+0300-036F,U+0370-03FF,U+1E00-1EFF,U+2000-206F,U+2070-209F,U+20A0-20CF,U+2100-214F,U+2190-21FF,U+2200-22FF,U+25A0-25FF,U+27C0-27EF,U+FB00-FB06,U+1D2C-1D6A,U+1D9C-1DBF,U+2C7C-2C7D,U+2300-23FF,U+27F0-27FF,U+2900-297F,U+2605-2606,U+2713,U+2717,U+2B11,U+1D434-1D467,U+1D6A4-1D6A5,U+1D6E2-1D71B
 
 # Exact encoded contracts of the selected modules; no inferred whole blocks.
 # mathnotation: 18 additional encoded characters from the selected source contract.

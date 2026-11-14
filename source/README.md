@@ -61,8 +61,20 @@ docstring lists what it changes):
 - `mathletters`: the letters and operators of ML notation beside the double-struck capitals: ℙ ℍ 𝔼 𝟙 in
   `symbols`' thin doubled strokes, a script ℒ drawn with Torchlette's pen, ℏ, ∥ ∖ ⟂ ⟦ ⟧ ⋆, and the format-12
   cmap that 𝔼 and 𝟙 (outside the BMP) need.
-- `ui`: the interface symbols ✓ ✗ ■ □ ▶ ● ○ ★, the circled numbers ①–⑳ with Torchlette's small-cap figures,
-  and the keyboard symbols ⌘ ⌥ ⇧ ⏎ ⌫.
+- `latin_gaps`: the Dutch ij, every Pinyin vowel with its tone, the long s ſ (small
+  capitals give S), the Latin case partners Mulish left out (Ǥ Ǩ Ȟ ȩ Ƒ), the vulgar
+  fractions ⅐ to ⅞ and ↉, and stacked fractions (afrc).
+- `logic`: the turnstiles ⊢ ⊣ ⊧ ⊨ ⊬ ⊭, the modal operators ◇ ◻ and the black diamond ◆,
+  the marks ∎ ☡ ↯ ⁎ ‣ ⌑, the APL glyphs ⍳ ⍴ ⍉ ⌽, and the white trapezium ⏢; ss09, and
+  calt beside logic, turn □ into the modal box.
+- `punctuation`: the two- and three-em dashes ⸺ ⸻, the swung dash ⁓, the reversed
+  quotation marks ‛ ‟, the per ten thousand sign ‱, the interrobang ‽, the hyphenation
+  point ‧, ‼ ⁇, the reversed question mark ⸮, the two asterisks ⁑, and ℃ ℉ ℗, with small
+  capitals and case forms where the marks they are made from have them.
+- `ui`: the interface symbols ✓ ✗ ■ □ ▶ ● ○ ★, the triangles ▲ △ ▼ ▽ ◀ ◁ ▷ and their small
+  forms ▴ ▵ ▾ ▿ ◂ ◃ ▹, the shapes ☆ ▪ ▫ ◦ ◯, the dotted circle ◌ (it takes combining marks),
+  the circled numbers ①–⑳ with Torchlette's small-cap figures, and the keyboard symbols
+  ⌘ ⌥ ⇧ ⏎ ⌫.
 - `tensordiagram`: Penrose tensor-diagram glyphs (U+EE00-EE07) that join up under calt,
   and ss20 ("Tensor diagrams"), which turns an ASCII diagram in square brackets
   (`[-*-]`, `[(-*-*-)]`) into them. ss20 has its own lookups for the brackets and shares

@@ -127,7 +127,30 @@ INHERIT = {
     'IJ.sc': ('I.sc', 'J.sc'), 'uni01CD.sc': ('A.sc', 'A.sc'), 'uni0226.sc': ('A.sc', 'A.sc'),
     'germandbls.sc': ('S.sc', 'S.sc'), 'uni01D4.sc': ('U.sc', 'U.sc'), 'uni01E9.sc': ('K.sc', 'K.sc'),
     'uni021F.sc': ('H.sc', 'H.sc'), 'uni1E97.sc': ('T.sc', 'T.sc'), 'uni01E5.sc': ('G.sc', 'G.sc'),
+    # the long s (latin_gaps): f's kerning, the edge correction opening its right side
+    # where f's arm would have been
+    'longs': ('f', 'f'),
+    # the punctuation module's marks. ‛ ‟ are ’ ” mirrored: the blob high and the tail below
+    # it on both sides, as on ’ ”, where ‘ “ have the blob low; on the outlines their edges
+    # differ from ’ ”'s on each side by a third to a half as much as from ‘ “'s (Black: left
+    # 9 against 34 units, right 9 against 22), so ’ ” are the model on both sides
+    'quotereversed': ('quoteright', 'quoteright'), 'uni201F': ('quotedblright', 'quotedblright'),
+    'quotereversed.sc': ('quoteright.sc', 'quoteright.sc'), 'uni201F.sc': ('quotedblright.sc', 'quotedblright.sc'),
+    'exclamdbl': ('exclam', 'exclam'), 'uni2047': ('question', 'question'), 'uni203D': ('question', 'question'),
+    'exclamdbl.sc': ('exclam.sc', 'exclam.sc'), 'uni2047.sc': ('question.sc', 'question.sc'),
+    'uni203D.sc': ('question.sc', 'question.sc'),
+    'uni2E3A': ('emdash', 'emdash'), 'uni2E3B': ('emdash', 'emdash'),
+    'uni2E3A.sc': ('emdash.sc', 'emdash.sc'), 'uni2E3B.sc': ('emdash.sc', 'emdash.sc'),
+    'uni2E3A.case': ('emdash.case.otfeatures', 'emdash.case.otfeatures'),
+    'uni2E3B.case': ('emdash.case.otfeatures', 'emdash.case.otfeatures'),
+    'uni2103': ('degree', 'C'), 'uni2109': ('degree', 'F'),
+    'uni2053': ('emdash', 'emdash'), 'uni2027': ('periodcentered', 'periodcentered'),
+    'uni2027.case': ('periodcentered.case.otfeatures', 'periodcentered.case.otfeatures'),
 }
+# otfeatures' case forms get their kerning after this module runs (its post phase copies
+# each into every pair subtable where its source is), so as a base they count as kerned,
+# with their source's values and their own outline
+CASE_COPY = '.case.otfeatures'
 ALT_SUFFIXES = ('.ss04', '.ss05', '.ss06', '.ss07')   # X.ss0N kerns like X (when X has kerning)
 # glyph-name patterns -> (left-side base, right-side base), for families of glyphs other modules
 # add: the vector module's random forms of 171 (v_e_c_t_o_r.v01 ... and the plural) kern like the
@@ -490,6 +513,13 @@ def features(ctx):
     by_left, by_right = defaultdict(dict), defaultdict(dict)
     for (a, b), v in base.items():
         by_left[a][b] = v; by_right[b][a] = v
+    # otfeatures' case forms, kerned later as their sources: the same rows and columns here
+    later = {g: g[:-len(CASE_COPY)] for g in have
+             if g.endswith(CASE_COPY) and g not in kerned and g[:-len(CASE_COPY)] in kerned}
+    for g, s in later.items():
+        by_left[g] = by_left[s]; by_right[g] = by_right[s]
+    kerned |= set(later)
+    def base_v(a, b): return base.get((later.get(a, a), later.get(b, b)), 0)
 
     # 2. glyphs that inherit a base's kerning
     taken = _other_module_gpos_names(ctx)
@@ -594,7 +624,7 @@ def features(ctx):
             if x in newset:
                 lb = LB[x]
                 if not lb: continue
-                v = base.get((b, lb), 0) + cr.get(proxy(lb) or '', 0) + CL[x].get(proxy(b) or '', 0)
+                v = base_v(b, lb) + cr.get(proxy(lb) or '', 0) + CL[x].get(proxy(b) or '', 0)
             else:
                 v = row.get(x, 0) + cr.get(proxy(x) or '', 0)
             if v: pairs_l[g, x] = v

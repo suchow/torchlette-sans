@@ -42,6 +42,8 @@ exactly as before.
   missing ones (issue 28, see _letter_anchors): above and below ŋ ə ɓ ɗ ħ đ ð ß ẞ Ħ Ɓ
   Ɗ Ƒ ƒ Ƴ ƴ Ǥ ǥ (ү Ҽ ҽ Ҿ ҿ above), below g ø and the Greek and Cyrillic letters that
   do not descend, and the ogonek on the Latin consonants; a class Mulish gives stays.
+  And the dotted circle ◌ (ui's): above, below and ogonek anchors over its middle, the
+  above one at the lowercase vowels' height, so a mark typed after it sits as on o.
 - ccmp: a top mark right after a lining figure becomes its .case form, as Mulish's
   ccmp does after a capital (old-style and small-cap figures keep the lowercase marks).
 - GDEF: every glyph build.py and this module add (and any other module's glyph
@@ -529,6 +531,24 @@ LINING_RE = re.compile(r'^(zero|one|two|three|four|five|six|seven|eight|nine)(\.
 FIG_RE = re.compile(r'^(zero|one|two|three|four|five|six|seven|eight|nine)(\.(pnum|osf|tosf|sc|tf|ss08))*$')
 
 
+def _dotted_circle(ctx, n, A):
+    """Anchors for the dotted circle ◌ (the ui module's), the base a combining mark is shown
+    on by itself: above at the height of the lowercase vowels' above anchors (454: the
+    marks sit on it as on o), below on the baseline, and the ogonek there too when the
+    vowels have one, each over the circle's middle. In an italic the circle stands upright
+    (ui draws its pictures so), so its middle is found on the leant outline and each
+    anchor put where the reslant takes it there."""
+    K, YC = ctx.ITALIC_K, ctx.ITALIC_YC
+    xs = [x + K * (y - YC) for (x, y), _ in _onpts(ctx, n)]
+    cx = (min(xs) + max(xs)) / 2
+    vowels = [A[c] for c in 'aeiou' if c in A]
+    tops = sorted(a[TOP][1] for a in vowels if TOP in a)
+    at = lambda y: (round(cx - K * (y - YC)), y)
+    out = {TOP: at(tops[len(tops) // 2]), BOT: at(0)}
+    if any(OGON in a for a in vowels): out[OGON] = at(0)
+    return out
+
+
 def anchors_for(ctx):
     font = ctx.font
     marks, mbases, mligs, mk2 = _mark_data(font)
@@ -595,6 +615,9 @@ def anchors_for(ctx):
         return r
 
     out = {g: a for g in want if (a := resolve(g))}
+    dc = font.getBestCmap().get(0x25CC)
+    if dc and dc not in A:
+        out[dc] = _dotted_circle(ctx, dc, A)
     extra, ctx.anchors_left_out = _letter_anchors(ctx, A, marks)
     ctx.letter_anchors = extra
     for g, a in extra.items():

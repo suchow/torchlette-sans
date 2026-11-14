@@ -1,5 +1,5 @@
 """HarfBuzz check of the otfeatures module: case, cpsp, zero, mark attachment on
-build.py's glyphs and on letters Mulish left without anchors, GDEF classes and carets,
+build.py's glyphs, on letters Mulish left without anchors and on the dotted circle ◌, GDEF classes and carets,
 aalt and salt, mgrk, nalt and the grek script record. In the full font it also checks
 that every glyph but Mulish's few leftovers is reached by some text, feature or the MATH table.
 
@@ -298,6 +298,23 @@ if kept('mark'):
                 check(b[1] - 260 <= mi[3] <= -60 and b[0] <= (mi[0] + mi[2]) / 2 <= b[2],
                       f'{what}: dot {mi} not under the letter {b}')
                 check(m['adv'] == 0, f'{what}: mark advance {m["adv"]}')
+
+# the dotted circle ◌ (ui's) takes marks as a lowercase letter does: each mark (an acute, a
+# dot below, an ogonek, and the stacks ccmp and mkmk make of two) the same glyphs at the same
+# heights as on x, moved to the circle's middle, an above mark over the circle, a below one under it
+if kept('mark') and 0x25CC in tt.getBestCmap():
+    dc = tt.getBestCmap()[0x25CC]
+    db = bounds(dc); dmid = (db[0] + db[2]) / 2; dw = db[2] - db[0]
+    for marks, below in (('\u0301', False), ('\u0323', True), ('\u0328', True), ('\u0302\u0301', False), ('\u0301\u0304', False)):
+        r, rx = shape('\u25CC' + marks), shape('x' + marks)
+        what = f'dotted circle {"◌" + marks!r}: {[(x["g"], x["dx"], x["y"]) for x in r]} (on x {[(x["g"], x["y"]) for x in rx]})'
+        if r[0]['g'] != dc or [x['g'] for x in r[1:]] != [x['g'] for x in rx[1:]]: check(False, f'{what}: not as on x'); continue
+        for m, mxr in zip(r[1:], rx[1:]):
+            mi = ink(m); mx = (mi[0] + mi[2]) / 2
+            check((m['dx'] != 0 or m['y'] != 0) and m['adv'] == 0 and m['y'] == mxr['y'] and abs(mx - dmid) <= 0.25 * dw,
+                  f'{what}: {m["g"]} at {mx:.0f}, {m["y"]}; want the circle\'s middle {dmid:.0f} and x\'s height')
+            check(mi[3] <= db[1] + 30 if below else mi[1] >= db[3] - 15, f'{what}: {m["g"]} ink {mi} against the circle {db}')
+        if len(r) == 3: check(ink(r[2])[1] >= ink(r[1])[3] - 10, f'{what}: the second mark not above the first')
 
 def subset_component_only(font):
     """Conservative glyf-only dependencies, never encoded/layout/caret consumers.

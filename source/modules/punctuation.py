@@ -15,11 +15,12 @@ included):
   middle of their advance (so their sidebearings swap).
 - ‱ (U+2031, per ten thousand): ‰ with its last ring repeated at the step between its
   two lower rings; the advance grows by that step.
-- ‽ (U+203D, interrobang): the ? with the stem of a ! set on its dot (the two dots are
-  one): a straight stem of the ?'s own stem width, from where the ?'s stem ends above the
-  dot up into the arc, stopping just inside the arc's outer edge; in the heavy weights
-  its right side moves in until the hook's counter is IB_COUNTER of its width; the ?'s
-  advance.
+- ‽ (U+203D, interrobang): the ?'s hook with the !'s tapered stem standing over the dot
+  (the two dots are one), from the ?'s foot up to the top of the arc, cut flush with it.
+  The hook opens around the stem: its left terminal moves out until the white beside the
+  stem is IB_SIDE of the ?'s aperture, and its bowl moves right until the counter is
+  IB_OPEN of it, so the counter stays open in Black; the advance grows by the moves
+  (Regular 506 against the ?'s 442, Black 680 against 478).
 - ‧ (U+2027, hyphenation point): the middle dot, centred on the hyphen's height, with
   half its sidebearings.
 - ‼ ⁇ (U+203C, U+2047): two ! and two ?, the gap between them GAP_DBL of the gap two
@@ -39,8 +40,8 @@ included):
 Forms, where their models have them: small capitals (smcp and c2sc) of ‼ ⁇ ‽ ⸮ ‛ ‟ ‱
 ⸺ ⸻, made in the same way from the small capitals of ! ? ’ ” ‰ and the em dash; case
 forms (case) of ⸺ ⸻ ‧ from those of the em dash and middle dot. Every glyph gets GDEF
-class 1 (base). Kerning comes from the kern module's INHERIT table (‛ ‟ as ‘ “, ‼ ⁇ as
-! ?, the dashes as the em dash, ℃ ℉ as the degree sign on the left and C or F on the
+class 1 (base). Kerning comes from the kern module's INHERIT table (‛ ‟ as ’ ”, ‼ ⁇ ‽ as
+! ? ?, the dashes as the em dash, ℃ ℉ as the degree sign on the left and C or F on the
 right); this module adds none.
 
 Nothing existing is changed. U+2E2E, U+2E3A and U+2E3B are outside the Makefile's
@@ -53,7 +54,8 @@ from fontTools.agl import UV2AGL
 GAP_DBL = 0.75        # ‼ ⁇: the gap between the two marks, of the gap two typed marks have,
 DBL_MIN = 0.5         # but no less than this much of the lowercase stem (nor more than typed)
 TUCK = 0.5            # ℃ ℉: the white between ring and letter, of what °C / °F have unkerned
-IB_COUNTER = 0.4     # ‽: the hook's counter, at least this much of the stem's width
+IB_SIDE = 0.3         # ‽: the white between the hook's left terminal and the stem, of the ?'s aperture
+IB_OPEN = 0.65        # ‽: the counter between the stem and the bowl, of the ?'s aperture
 NARROW = 0.5          # ‧: its sidebearings, of the middle dot's
 
 
@@ -152,30 +154,69 @@ def glyphs(ctx):
     forms(0x2047, doubled, {'': ['question'], 'sc': ['question.sc']})
 
     # ---- interrobang -----------------------------------------------------------------------
-    # The ! stands on the ?'s dot: a straight stem of the ?'s own stem width, centred on the
-    # ?'s stem where it ends above the dot, run up into the arc and stopped below the arc's
-    # outer edge, so it neither shows above the arc nor fills the hook (the !'s own stem,
-    # which widens upwards, filled the hook of Black's ? and stood out above its terminal).
+    # The ?'s hook with the !'s own tapered stem standing over the dot (the two dots are one).
+    # The stem runs from the ?'s foot up to the hook's top and is cut to the arc's outer edge,
+    # so its top is flush with the arc. The hook is opened around it: its left terminal moves
+    # out until the white between terminal and stem is IB_SIDE of the ?'s aperture (the white
+    # beside the terminal's tip), and its bowl moves right until the counter between stem and
+    # bowl is IB_OPEN of that aperture. The moves are a horizontal map of the hook's points:
+    # the terminal and the bowl move whole (their strokes keep their thickness); the arc
+    # between is stretched (a horizontal stroke, it keeps its thickness too); the bowl's move
+    # fades out down to the foot, so the hook's tail still runs into the stem at the foot. The
+    # advance grows by the two moves; the heavy weights, whose ! is wide at the top, open most.
     def interrobang(src):
-        q = src[0]; p = path_of(q)
-        hook = max(_contours(p), key=lambda c: c.bounds[3])
-        y0 = hook.bounds[1]                                     # where the ?'s stem ends, above the dot
-        a, b = hspans(p, y0 + 1)[0]                              # its foot, so the stem's sides run on from it
-        top = min(vspans(p, x)[-1][1] for x in (a + 0.5, (a + b) / 2, b - 0.5)) - 1
+        q, e = src
+        qcs = _contours(path_of(q))
+        hook = max(qcs, key=lambda k: k.bounds[3]); qdot = min(qcs, key=lambda k: k.bounds[1])
+        hb, db = hook.bounds, qdot.bounds
+        cx = (db[0] + db[2]) / 2                                 # the stem stands over the dot
+        fa = hspans(hook, hb[1] + 1)[0][0]                       # the left of the ?'s foot
+        # the left terminal: its tip (the lowest ink left of the foot, in the hook's upper part)
+        # and its free rows up to where it meets the arc
+        tips = [v[0][0] for v in (vspans(hook, x) for x in range(int(hb[0]) + 1, int(fa))) if v]
+        tb = min(t for t in tips if t > hb[1] + (hb[3] - hb[1]) / 3)
+        rows, y = [], tb + 2
+        while True:
+            sp = hspans(hook, y)
+            if len(sp) < 2 or sp[0][1] > cx: break
+            rows.append((y, sp[0][1], sp[1][0])); y += 2
+        ap = rows[0][2] - rows[0][1]                             # the ?'s aperture
+        low = [r for r in rows if r[0] < (rows[0][0] + rows[-1][0]) / 2]   # the terminal's lower half
+        term_r = min(max(r[1] for r in low), fa - 1)
+        yr = max(range(int(hb[1]) + 2, int(hb[3]) - 2, 2), key=lambda y: hspans(hook, y)[-1][1])
+        inner = max(hspans(hook, yr)[-1][0], fa + 1)             # the bowl's inner edge, at its widest
+        ecs = _contours(path_of(e)); st = max(ecs, key=lambda k: k.bounds[3]); sb = st.bounds
+        k = (hb[3] + 40 - hb[1]) / (sb[3] - sb[1])               # run up past the arc, cut below
+        stem0 = transformed(st, (1, 0, 0, k, cx - (sb[0] + sb[2]) / 2, hb[1] - k * sb[1]))
 
-        def with_stem(r):
-            out = union(p, rect(a, y0, r, top))
-            holes = [c for c in _contours(out) if c.bounds[1] > y0 and c.bounds[3] < hook.bounds[3] - 1]
-            return out, (holes[0].bounds[2] - holes[0].bounds[0]) if holes else 0
-        # In the heavy weights the hook comes back close to the stem; the stem's right side
-        # moves in (never past the middle of the foot) until the counter left between them is
-        # IB_COUNTER of the stem's width (Black's would be a 25-unit slit, its small cap's shut).
-        r = b
-        out, cw = with_stem(r)
-        while cw < IB_COUNTER * (r - a) and r - 1 > (a + b) / 2:
-            r -= 1; out, cw = with_stem(r)
-        return out, W(q)
-    forms(0x203D, interrobang, {'': ['question'], 'sc': ['question.sc']})
+        def build(dl, dr):
+            def f(pt):
+                x, y = pt
+                if x <= term_r: return (x - dl, y)
+                if x < fa: return (x - dl * (fa - x) / (fa - term_r), y)
+                up = min(1, max(0, (y - hb[1]) / (yr - hb[1])))
+                return (x + dr * up * min(1, (x - fa) / (inner - fa)), y)
+            h = [k_ for k_ in _contours(path_of(q, fn=f)) if k_.bounds[3] > db[3] + 1][0]
+            s0 = stem0.bounds
+            xs = [s0[0] - 2 + i * (s0[2] - s0[0] + 4) / 40 for i in range(41)]
+            tops = [max((v[1] for v in vspans(h, x)), default=hb[1]) for x in xs]
+            under = c.poly([(xs[0], hb[1] - 10)] + list(zip(xs, tops)) + [(xs[-1], hb[1] - 10)])
+            return union(h, pathops.op(stem0, under, pathops.PathOp.INTERSECTION), qdot)
+
+        def side(out):                                           # white between terminal and stem
+            return min((s[1][0] - s[0][1]) if len(s) >= 2 else 0 for s in (hspans(out, r[0]) for r in low))
+
+        def counter(out):
+            hs = [k_ for k_ in _contours(out) if k_.bounds[1] > db[3] + 1 and k_.bounds[3] < hb[3] - 1]
+            return (hs[0].bounds[2] - hs[0].bounds[0]) if len(hs) == 1 else 0
+        dl = 0
+        while side(build(dl, 0)) < IB_SIDE * ap:
+            dl += 2; assert dl < 300, (q, 'terminal')
+        dr = 0
+        while counter(out := build(dl, dr)) < IB_OPEN * ap:
+            dr += 2; assert dr < 400, (q, 'counter')
+        return mv(out, dl), W(q) + dl + dr
+    forms(0x203D, interrobang, {'': ['question', 'exclam'], 'sc': ['question.sc', 'exclam.sc']})
 
     # ---- per ten thousand ------------------------------------------------------------------
     def per_ten_thousand(src):
