@@ -161,10 +161,19 @@ all_sc('αβγδεζηθικλμνξοπρσςτυφχψω', 'smcp', 'lowercase'
 all_sc('άέήίόύώϊϋΐΰ', 'smcp', 'accented lowercase')
 all_sc('ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ', 'c2sc', 'capital')
 all_sc('ΆΈΉΊΌΎΏΪΫ', 'c2sc', 'accented capital')
+# the symbol forms take the small capital of their Unicode uppercase, as the plain letter
+# does (issue 22); the micro sign keeps its form under smcp (a unit sign, not text)
+for sym, plain, feat in (('ϑ', 'θ', 'smcp'), ('ϕ', 'φ', 'smcp'), ('ϖ', 'π', 'smcp'), ('ϰ', 'κ', 'smcp'),
+                         ('ϱ', 'ρ', 'smcp'), ('ϵ', 'ε', 'smcp'), ('ϴ', 'Θ', 'c2sc')):
+    got, want = shape(sym, {feat: 1})[0], shape(plain, {feat: 1})[0]
+    if got != want: fail(f'{sym} U+{ord(sym):04X} under {feat}: {got}, not {plain}\'s small capital {want}')
+    checks += 1
+if 0x00B5 in cmap and shape('µ', {'smcp': 1})[0] != [cmap[0x00B5]]: fail(f'µ U+00B5 changes under smcp: {shape("µ", {"smcp": 1})[0]}')
+checks += 1
 names, _ = shape('αβγδεζηθικλμνξοπρσςτυφχψω')
 if any(n.endswith('.sc') or n.endswith('.sc.greek') for n in names): fail('small caps appear without smcp')
 checks += 1
-print('small caps: smcp and c2sc cover every Greek letter')
+print('small caps: smcp and c2sc cover every Greek letter and the symbol forms ϑ ϕ ϖ ϰ ϱ ϵ ϴ; µ stays')
 
 # 6. kerning
 for pair in ['ΤΑ', 'ΑΥ', 'Το', 'Γα', 'ΛΤ', 'Υο']:
@@ -173,6 +182,44 @@ for pair in ['ΤΑ', 'ΑΥ', 'Το', 'Γα', 'ΛΤ', 'Υο']:
     if d >= 0: fail(f'pair {pair} not kerned ({d})')
     checks += 1
 print('kerning: Commissioner\'s large Greek pairs kern')
+
+# 7. Latin against Greek, shaped as one run (issue 26): a Greek letter that is a Latin
+# one kerns against Latin letters, on both sides, as its twin does; a Greek letter that
+# is none kerns against the Latin twins as against their Greek twins (Yα as Υα)
+def kern_of(pair):
+    _, on = shape(pair, {'kern': 1}); _, off = shape(pair, {'kern': 0})
+    return on[0].x_advance - off[0].x_advance
+have = lambda s: all(ord(c) in cmap for c in s)
+TWINS = {'Α': 'A', 'Β': 'B', 'Ε': 'E', 'Ζ': 'Z', 'Η': 'H', 'Ι': 'I', 'Κ': 'K', 'Μ': 'M', 'Ν': 'N', 'Ο': 'O', 'Ρ': 'P',
+         'Τ': 'T', 'Υ': 'Y', 'Χ': 'X', 'Ϊ': 'Ï', 'Ϋ': 'Ÿ', 'ο': 'o'}
+# (not à á â ...: Mulish leaves those a's unkerned and kern.py gives them a's kerning
+# afterwards, against the Latin letters only; Τà is 0 where Tà kerns)
+PARTNERS = 'AJLOTVWYacefjortvwxyÀÝéôý'
+n_twin = nz_twin = 0
+for gr, la in TWINS.items():
+    for x in PARTNERS:
+        for mixed, model in ((gr + x, la + x), (x + gr, x + la)):
+            if not have(mixed + model): continue
+            km, k0 = kern_of(mixed), kern_of(model)
+            if km != k0: fail(f'{mixed} kerns {km}, its Latin model {model} {k0}')
+            n_twin += 1; nz_twin += bool(k0)
+            checks += 1
+if nz_twin < n_twin // 4: fail(f'only {nz_twin} of {n_twin} twin models kern: the partners test too little')
+GREEK_ONLY = 'αγδελπστυφχψωΓΔΘΛΞΠΣΦΨΩ'
+n_gr = nz_gr = 0
+for la, gr in (('A', 'Α'), ('T', 'Τ'), ('Y', 'Υ'), ('O', 'Ο'), ('P', 'Ρ'), ('o', 'ο'), ('X', 'Χ'), ('K', 'Κ')):
+    for y in GREEK_ONLY:
+        for mixed, model in ((la + y, gr + y), (y + la, y + gr)):
+            if not have(mixed + model): continue
+            km, k0 = kern_of(mixed), kern_of(model)
+            if km != k0: fail(f'{mixed} kerns {km}, its Greek model {model} {k0}')
+            n_gr += 1; nz_gr += bool(k0)
+            checks += 1
+for pair in ['AΥ', 'AΤ', 'ΑV', 'TΟ', 'Yα', 'Vο', 'Τo', 'Υa', 'Tα']:
+    if have(pair) and kern_of(pair) >= 0: fail(f'mixed pair {pair} not kerned ({kern_of(pair)})')
+    checks += 1
+print(f'kerning, Latin and Greek: {n_twin} twin pairs as their Latin models ({nz_twin} kerned), '
+      f'{n_gr} as their Greek models ({nz_gr} kerned); AΥ ΑV TΟ Yα Vο kern')
 
 if fails: sys.exit(1)
 print(f'[verify_greek OK] {STYLE} {MODE}: {checks} checks passed.')

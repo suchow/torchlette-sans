@@ -47,8 +47,11 @@ summation is decomposed first, so it keeps that outline, and Sigma is redrawn on
 baseline for Greek text. No code point that Mulish maps is remapped.
 
 Features: smcp and c2sc (GREEK_SMCP, GREEK_C2SC, placed before `main` like build.py's
-own small-cap lookups, which build.py then moves to the front of GSUB); kern
-(GREEK_KERN, GPOS, default placement). Glyph names: AGL names for the encoded glyphs
+own small-cap lookups, which build.py then moves to the front of GSUB; the symbol
+forms ϑ ϕ ϖ ϰ ϱ ϵ ϴ take the small capital of their Unicode uppercase); kern
+(GREEK_KERN, GPOS, default placement), and GREEK_CROSS_KERN, Latin letters against
+Greek ones (see _cross_kern: a Greek letter that is a Latin one kerns as it, the others
+against the Latin twins as against their Greek twins). Glyph names: AGL names for the encoded glyphs
 (alpha, sigma1, theta1, uni03F1 ...); unencoded ones end in `.greek`.
 
 Knobs (environment): GREEK_KXO, the horizontal scale over the o fit (1.025); GREEK_SB,
@@ -57,6 +60,7 @@ counter (0.62).
 """
 import math
 import os
+import unicodedata
 
 import pathops
 from fontTools.pens.transformPen import TransformPen
@@ -659,6 +663,140 @@ def glyphs(ctx):
     ctx.log(f'{len(made)} glyphs; {len(kern)} kerning pairs from Commissioner')
 
 
+# --- kerning between Latin and Greek letters (issue 26) ------------------------------
+# the code points kern.py's INHERIT_BY_CODEPOINT gives their Latin twin's kerning (the
+# capitals that share a Latin shape), when no module's GPOS text names their glyph
+KERN_INHERITS = (0x0391, 0x0392, 0x0395, 0x0396, 0x0397, 0x0399, 0x039A, 0x039C, 0x039D, 0x039F, 0x03A1, 0x03A4,
+                 0x03A5, 0x03A7)
+
+
+def _is_latin_letter(u):
+    return (u < 0x0370 or 0x1E00 <= u <= 0x1EFF) and unicodedata.category(chr(u)) in ('Lu', 'Ll', 'Lt')
+
+
+def _is_greek_letter(u):
+    return 0x0370 <= u <= 0x03FF and unicodedata.category(chr(u)) in ('Lu', 'Ll')
+
+
+def _latin_twins(glyf, cmap):
+    """Greek letter -> the Latin letter it is (the same outline): a composite of that one
+    glyph, offset no more than 8 units sideways and not at all vertically (the test
+    cyrillic's _alias_bridges applies), or a composite with exactly that Latin
+    composite's components (Ϊ is Ï's I and dieresis)."""
+    def comps(g):
+        o = glyf[g]
+        return tuple((c.glyphName, c.x, c.y) for c in o.components) if o.isComposite() else None
+    latin = {g for u, g in cmap.items() if _is_latin_letter(u) and '.' not in g}
+    by_comps = {}
+    for g in sorted(latin):
+        k = comps(g)
+        if k: by_comps.setdefault(k, g)
+    out = {}
+    for u, g in sorted(cmap.items()):
+        if not _is_greek_letter(u) or g in latin: continue
+        k = comps(g)
+        if not k: continue
+        if len(k) == 1 and k[0][0] in latin and abs(k[0][1]) <= 8 and k[0][2] == 0:
+            out[g] = k[0][0]
+        elif k in by_comps:
+            out[g] = by_comps[k]
+    return out
+
+
+def _kern_pairs(gpos, left, right):
+    """The kern feature's horizontal pair values for left x right glyphs, as a shaper applies
+    them: in each lookup the first subtable that covers the left glyph and, for format 1,
+    lists the pair (format 2 applies whenever it covers the left glyph); values add up
+    across lookups."""
+    idx = sorted({i for fr in gpos.FeatureList.FeatureRecord if fr.FeatureTag == 'kern' for i in fr.Feature.LookupListIndex})
+    xa = lambda v: (getattr(v, 'XAdvance', 0) or 0) if v else 0
+    left, right = set(left), set(right)
+    out = {}
+    for i in idx:
+        lk = gpos.LookupList.Lookup[i]
+        done, done_left = set(), set()
+        for st in lk.SubTable:
+            if lk.LookupType == 9: st = st.ExtSubTable
+            if getattr(st, 'LookupType', 2) != 2: continue
+            cov = [g for g in st.Coverage.glyphs if g in left and g not in done_left]
+            if st.Format == 1:
+                ps = dict(zip(st.Coverage.glyphs, st.PairSet))
+                for a in cov:
+                    for r in ps[a].PairValueRecord:
+                        b = r.SecondGlyph
+                        if b in right and (a, b) not in done:
+                            done.add((a, b)); out[a, b] = out.get((a, b), 0) + xa(r.Value1)
+            else:
+                c1, c2 = st.ClassDef1.classDefs, st.ClassDef2.classDefs
+                for a in cov:
+                    row = st.Class1Record[c1.get(a, 0)].Class2Record
+                    for b in right:
+                        if (a, b) in done: continue
+                        v = xa(row[c2.get(b, 0)].Value1)
+                        if v: out[a, b] = out.get((a, b), 0) + v
+                    done_left.add(a)
+    return {k: v for k, v in out.items() if v}
+
+
+def _cross_kern(ctx, greek_kern):
+    """Pairs of a Latin and a Greek letter, which neither Mulish nor Commissioner kerns.
+    A Greek letter that is a Latin one (Α Β Ε Ζ Η Ι Κ Μ Ν Ο Ρ Τ Υ Χ Ϊ Ϋ ο, found by
+    _latin_twins) kerns against Latin letters, on either side, as its twin does (ΑV as
+    AV, TΟ as TO); a Greek letter that is no Latin one kerns against the Latin twins with
+    the Greek kerning of their Greek twins (Yα as Υα, γA as γΑ). Pairs that already have
+    a value are left alone, so no kerning that existed changes.
+
+    The capitals with no Greek kerning of their own (Η Ι Ν: Commissioner kerns none of
+    them) are left out: kern.py's INHERIT_BY_CODEPOINT gives them their twin's kerning in full (against
+    punctuation too) when no module's GPOS text names them, and naming them here would
+    take that from them."""
+    font = ctx.font
+    cmap = font.getBestCmap()
+    named = {g for k in greek_kern for g in k}
+    left_to_kern = {cmap[u] for u in KERN_INHERITS if u in cmap} - named
+    twin = {g: l for g, l in _latin_twins(ctx.glyf, cmap).items() if g not in left_to_kern}   # Greek -> Latin
+    greek_of = {}
+    for g, l in sorted(twin.items()): greek_of.setdefault(l, g)   # Latin -> Greek
+    latin = sorted({g for u, g in cmap.items() if _is_latin_letter(u) and '.' not in g})
+    greek = sorted({g for u, g in cmap.items() if _is_greek_letter(u)} - set(latin))
+    lat_k = _kern_pairs(font['GPOS'].table, latin, latin)
+    existing = set(_kern_pairs(font['GPOS'].table, latin + greek, latin + greek)) | set(greek_kern)
+    out = {}
+    def add(a, b, v):
+        if v and (a, b) not in existing: out[a, b] = v
+    for g, l in twin.items():
+        for x in latin:
+            add(g, x, lat_k.get((l, x), 0)); add(x, g, lat_k.get((x, l), 0))
+    for l, gt in greek_of.items():
+        for y in greek:
+            if y in twin or y in left_to_kern: continue
+            add(l, y, greek_kern.get((gt, y), 0)); add(y, l, greek_kern.get((y, gt), 0))
+    return out, twin
+
+
+def _pairs_fea(name, pairs):
+    """{(a, b): v} as one feature-file lookup of class pairs (left glyphs with the same
+    row in one class, right glyphs with the same column in one), as cyrillic writes its
+    cross-script kerning."""
+    rows = {}
+    for (a, b), v in pairs.items(): rows.setdefault(a, {})[b] = v
+    lcls = {}
+    for a, r in rows.items(): lcls.setdefault(tuple(sorted(r.items())), []).append(a)
+    lkeys = sorted(lcls, key=lambda k: sorted(lcls[k])[0])
+    cols = {}
+    for i, k in enumerate(lkeys):
+        for b, v in k: cols.setdefault(b, []).append((i, v))
+    rcls = {}
+    for b, c in cols.items(): rcls.setdefault(tuple(c), []).append(b)
+    rkeys = sorted(rcls, key=lambda k: sorted(rcls[k])[0])
+    out = [f'@{name}_L{i} = [{" ".join(sorted(lcls[k]))}];' for i, k in enumerate(lkeys)]
+    out += [f'@{name}_R{j} = [{" ".join(sorted(rcls[k]))}];' for j, k in enumerate(rkeys)]
+    out.append(f'lookup {name} {{\n  lookupflag IgnoreMarks;')
+    out += [f'  pos @{name}_L{i} @{name}_R{j} {v};' for j, k in enumerate(rkeys) for i, v in k]
+    out.append(f'}} {name};\nfeature kern {{ lookup {name}; }} kern;\n')
+    return '\n'.join(out)
+
+
 def features(ctx):
     smcp = {
         'alpha': 'A.sc', 'beta': 'B.sc', 'gamma': 'gamma.sc.greek', 'delta': 'delta.sc.greek', 'epsilon': 'E.sc', 'zeta': 'Z.sc',
@@ -670,6 +808,11 @@ def features(ctx):
         'iotatonos': 'iotatonos.sc.greek', 'omicrontonos': 'omicrontonos.sc.greek', 'upsilontonos': 'upsilontonos.sc.greek',
         'omegatonos': 'omegatonos.sc.greek', 'iotadieresis': 'Idieresis.sc', 'upsilondieresis': 'Ydieresis.sc',
         'iotadieresistonos': 'Idieresis.sc', 'upsilondieresistonos': 'Ydieresis.sc',
+        # the symbol forms take the small capital of their Unicode uppercase (ϑ Θ, ϕ Φ,
+        # ϖ Π, ϰ Κ, ϱ Ρ, ϵ Ε), as their plain letters do (issue 22); the micro sign µ
+        # (U+00B5) keeps its form, as a unit sign (µm) is not text
+        'theta1': 'theta.sc.greek', 'phi1': 'phi.sc.greek', 'omega1': 'pi.sc.greek', 'uni03F0': 'K.sc',
+        'uni03F1': 'P.sc', 'uni03F5': 'E.sc',
     }
     c2sc = {
         'Alpha': 'A.sc', 'Beta': 'B.sc', 'Gamma': 'gamma.sc.greek', 'uni0394': 'delta.sc.greek', 'Epsilon': 'E.sc', 'Zeta': 'Z.sc',
@@ -679,6 +822,7 @@ def features(ctx):
         'Alphatonos': 'alphatonos.sc.greek', 'Epsilontonos': 'epsilontonos.sc.greek', 'Etatonos': 'etatonos.sc.greek',
         'Iotatonos': 'iotatonos.sc.greek', 'Omicrontonos': 'omicrontonos.sc.greek', 'Upsilontonos': 'upsilontonos.sc.greek',
         'Omegatonos': 'omegatonos.sc.greek', 'Iotadieresis': 'Idieresis.sc', 'Upsilondieresis': 'Ydieresis.sc',
+        'uni03F4': 'theta.sc.greek',   # ϴ, the capital theta symbol, as Θ (issue 22)
     }
     have = set(ctx.font.getGlyphOrder())
     missing = [g for m in (smcp, c2sc) for pair in m.items() for g in pair if g not in have]
@@ -690,3 +834,8 @@ def features(ctx):
     if kern:
         lines = ''.join(f'    pos {a} {b} {v};\n' for (a, b), v in sorted(kern.items()))
         ctx.gpos(f'feature kern {{\n  lookup GREEK_KERN {{\n{lines}  }} GREEK_KERN;\n}} kern;\n')
+    cross, twin = _cross_kern(ctx, kern)
+    ctx.greek_cross_kern = cross
+    if cross:
+        ctx.gpos(_pairs_fea('GREEK_CROSS_KERN', cross))
+    ctx.log(f'Latin twins of {len(twin)} Greek letters; {len(cross)} Latin-Greek kerning pairs')

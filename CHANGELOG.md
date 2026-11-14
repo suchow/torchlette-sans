@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Latin and Greek letters kern against each other where an application sets them in one run: the Greek letters that share a Latin shape (Α Β Ε Ζ Κ Μ Ο Ρ Τ Υ Χ Ϊ Ϋ ο) kern as their Latin twins, as in AΥ and TΟ, and the other Greek letters kern against those Latin letters as against their Greek twins, as in Yα.
+- smcp turns ϑ, ϕ, ϖ, ϰ, ϱ, and ϵ into the small capitals of Θ, Φ, Π, Κ, Ρ, and Ε, and c2sc turns ϴ into Θ's; the micro sign µ keeps its form.
 - The Vietnamese letters kern against Cyrillic as their base letters do, and accented letters kern against ⟨ and ⟩ no closer than their base letters.
 - The accented a's keep clear of T, V, W, and Y in the heavy weights and the italics.
 - mgrk turns Σ, Π, and Δ into the math symbols ∑, ∏, and ∆.
