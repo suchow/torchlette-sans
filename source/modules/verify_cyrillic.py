@@ -293,6 +293,27 @@ for pair in (
     d = kern_delta(pair, {})
     check(d < 0, f'cross-script pair {pair!r} ({[ hex(ord(c)) for c in pair ]}) not kerned ({d})')
 
+# Latin Extended Additional letters (the Vietnamese ones and Ḍ Ṭ Ẁ ...) kern against Cyrillic
+# as the letter whose Mulish classes they are in does, on both sides (issue 13: uТ -74, ụТ 0
+# through v0.5.10): their base letter, but on the right of ứ ừ ử ữ ự (Ứ Ự) ư's (Ư's), whose
+# horn has a class of its own. Each letter must have some nonzero pair, so the check cannot
+# pass on a font where neither is kerned (no ị ỉ: i takes no Cyrillic kerning). Mulish's
+# unkerned accented a's (á ạ ấ ...) are not here: they take no Cyrillic kerning yet.
+CYR = [chr(u) for u in range(0x0400, 0x0460) if u in cmap and unicodedata.category(chr(u)).startswith('L')]
+EXT_A = {'u': 'ụủ', 'o': 'ọỏốộớợ', 'e': 'ẹẻẽếệ', 'y': 'ỳỵỷỹ', 'd': 'ḍ', 't': 'ṭ', 'w': 'ẁ',
+         'U': 'ỤỦ', 'O': 'ỌỘỚỢ', 'E': 'ẸỆ', 'Y': 'ỲỴ', 'I': 'Ị', 'A': 'ẠẤẶ', 'D': 'Ḍ', 'T': 'Ṭ', 'W': 'Ẁ',
+         'ư': 'ứừửữự', 'Ư': 'ỨỰ'}
+for b, letters in EXT_A.items():
+    lb = {'ư': 'u', 'Ư': 'U'}.get(b, b)               # the left side of ư's forms is u's
+    for v in letters:
+        if not all(ord(c) in cmap for c in (v, b, lb)):
+            continue
+        pairs = [(v + c, b + c) for c in CYR] + [(c + v, c + lb) for c in CYR]
+        vals = [(g, kern_delta(g), w, kern_delta(w)) for g, w in pairs]
+        bad = [x for x in vals if x[1] != x[3]]
+        check(not bad and any(x[3] for x in vals),
+              f'{v} against Cyrillic: {len(bad)} pairs differ from {b}/{lb}, e.g. {bad[:3]}'
+              + ('' if any(x[3] for x in vals) else ' (no nonzero pair)'))
 for pair in ('A\u0422', '\u0422A', 'V\u0414', 'L\u0422', '\u0413O'):
     d = kern_delta(pair, {'smcp': 1, 'c2sc': 1})
     check(d < 0, f'cross-script small-cap pair {pair!r} not kerned ({d})')

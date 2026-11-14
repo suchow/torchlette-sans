@@ -56,7 +56,8 @@ Layout
 - SH4 calt + kern: inside ⟨ ⟩ a | becomes `bar.braket.mathnotation`, the bar cut to the
   brackets' height (0 to the cap height) so ⟨ψ|φ⟩ reads as one bracket; kern: Mulish's ⟨ ⟩
   stand in a 600-unit cell with 217 units each side, so ⟨ and ⟩ are kerned against every
-  Latin and Greek letter, the math letters and the bra-ket bar so the smallest ink gap
+  Latin and Greek letter (the accented Latin ones, Vietnamese included, measured on their
+  own outlines but never closer than their letter), the math letters and the bra-ket bar so the smallest ink gap
   (profiles measured every 12 units of height) is the one ( or ) leaves with Mulish's
   kerning. Figures are left out: kern.py forbids kerning the tabular default figures.
 - LG5 kern: ⟦ ⟧ against the same letters, the same way.
@@ -503,15 +504,32 @@ def features(ctx):
                  'feature calt { lookup MATHNOTATION_BRAKET; } calt;')
 
     # ---- GPOS kern: ⟨ ⟩ ⟦ ⟧ against letters, figures and the bra-ket bar -------------------------
-    kg = sorted({g for u, g in ctx.font.getBestCmap().items() if 0x41 <= u <= 0x5A or 0x61 <= u <= 0x7A
+    cm = ctx.font.getBestCmap()
+    kg = sorted({g for u, g in cm.items() if 0x41 <= u <= 0x5A or 0x61 <= u <= 0x7A
                  or 0x391 <= u <= 0x3C9 or u in (0x3D1, 0x3D5, 0x3D6, 0x3F5, 0x2113, 0x131) or 0x2100 <= u <= 0x214F and unicodedata.category(chr(u))[0] == 'L'
                  or 0x1D400 <= u <= 0x1D7FF})
-    pairs = _bracket_kerns(ctx, kg + ([bk] if bk in order else []))
+    # the accented Latin letters, each with its letter (latin_gaps' ǒ Ǩ ... copy their letter's in its post())
+    base = {g: cm[ord(c)] for u, g in cm.items() if g not in kg and g not in ctx.OWNER and (c := _latin_base(u)) and ord(c) in cm}
+    pairs = _bracket_kerns(ctx, kg + sorted(base) + ([bk] if bk in order else []), base)
     ctx.kerns = pairs
     if pairs:
         ctx.gpos('lookup MATHNOTATION_KERN {\n' + '\n'.join(f'  pos {a} {b} {v};' for (a, b), v in pairs.items()) +
                  '\n} MATHNOTATION_KERN;\nfeature kern { lookup MATHNOTATION_KERN; } kern;')
     ctx.log(f'mark: {len(anchors)} bases ({len(caps)} capitals with .case marks); kern: {len(pairs)} bracket pairs')
+
+
+def _latin_base(u):
+    """For an accented Latin letter (ú ụ ư ứ Ǎ ...), the ASCII letter its canonical decomposition
+    starts from; else None. These are kerned against ⟨ ⟩ ⟦ ⟧ (u⟩ -122 and ú⟩ ụ⟩ 0 through v0.5.10,
+    issue 13), measured on their own outlines but never closer than their letter (see _bracket_kerns)."""
+    if not (0xC0 <= u <= 0x24F or 0x1E00 <= u <= 0x1EFF) or not unicodedata.category(chr(u)).startswith('L'):
+        return None
+    while True:
+        d = unicodedata.decomposition(chr(u)).split()
+        if not d or d[0].startswith('<'):
+            break
+        u = int(d[0], 16)
+    return chr(u) if 0x41 <= u <= 0x5A or 0x61 <= u <= 0x7A else None
 
 
 def _profile(ctx, n, side, ys):
@@ -530,11 +548,19 @@ def _gap(ctx, left, right, ys):
     return min(gaps) if gaps else None
 
 
-def _bracket_kerns(ctx, glyphs):
+def _bracket_kerns(ctx, glyphs, base=None):
     """⟨ (⟦) before a glyph is kerned to leave the ink gap that ( ([) leaves before it with
-    Mulish's kerning, ⟩ (⟧) after it as ) (]) does; pairs under 8 units are dropped."""
+    Mulish's kerning, ⟩ (⟧) after it as ) (]) does; pairs under 8 units are dropped. A glyph
+    with a base letter in base (the accented ú ụ ư ĭ Ą ...) keeps at least the gap its letter
+    does: ( and ) leave some marks and ogoneks almost touching (ĭ( 0, Ą) 10 at Regular), and
+    copied to the brackets these gaps would be smaller than any plain letter's (⟨ĭ 1, Ą⟩ 0 in
+    Black, 2-D outline distances). A mark clear of the bracket leaves its letter's kerning."""
     ys = [y for y in range(-240, 760, 12)]
     out = {}
+
+    def target(ra, rb):
+        gr = _gap(ctx, ra, rb, ys)
+        return None if gr is None else gr + ctx.kern(ra, rb)
     for br, ref, before in (('uni27E8', 'parenleft', True), ('uni27E9', 'parenright', False),
                             ('uni27E6', 'bracketleft', True), ('uni27E7', 'bracketright', False)):
         if br not in ctx.font.getGlyphOrder(): continue
@@ -542,9 +568,12 @@ def _bracket_kerns(ctx, glyphs):
             if g in (br, ref): continue
             a, b = (br, g) if before else (g, br)
             ra, rb = (ref, g) if before else (g, ref)
-            gb, gr = _gap(ctx, a, b, ys), _gap(ctx, ra, rb, ys)
-            if gb is None or gr is None: continue
-            k = round(gr + ctx.kern(ra, rb) - gb)
+            gb, t = _gap(ctx, a, b, ys), target(ra, rb)
+            if gb is None or t is None: continue
+            if base and g in base:
+                tb = target(*((ref, base[g]) if before else (base[g], ref)))
+                if tb is not None: t = max(t, tb)
+            k = round(t - gb)
             if abs(k) >= 8: out[(a, b)] = k
     return out
 
