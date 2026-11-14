@@ -38,12 +38,11 @@ docstring lists what it changes):
   `doublestruck`), and the Unicode spaces and joiners.
 - `otfeatures`: case forms of the punctuation (case), capital spacing (cpsp), a
   slashed zero (zero), mark attachment on `build.py`'s glyphs and on the letters
-  Mulish left without anchors (ŋ, ə, ɓ, ɗ, g, and others, the ogonek on consonants
-  included), GDEF classes and ligature carets, and aalt and salt; dlig (the Th and th
+  Mulish left without anchors (ŋ, ə, ɓ, ɗ, g, and others, and the ogonek on
+  consonants), GDEF classes and ligature carets, and aalt and salt; dlig (the Th and th
   ligatures of ss01 and ss03); mgrk (Σ Π Δ to the symbols ∑ ∏ ∆); nalt (the whole
   numbers 1 to 20 to the circled numbers ① to ⑳); a grek script record with DFLT's
-  features;
-  and fixes to Mulish's own layout: a GDEF class for every glyph, frac only around a
+  features; and fixes to Mulish's own layout: a GDEF class for every glyph, frac only around a
   slash between digits, and locl for Romanian and the Turkic languages Mulish left out.
   By default, calt also slashes a zero that is the only digit of its number: the
   zeros in `0`, `x[0]`, and `(0)` are slashed, and those in `10` and `0.05` are plain.

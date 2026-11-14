@@ -2,19 +2,15 @@
 
 ## Unreleased
 
-- Programs that space lines by the win metrics, such as Word on Windows, no longer set lines far apart: usWinAscent and usWinDescent are 1100 and 480, enough for every glyph that text reaches, where they were 3260 and 2780.
-- Latin and Greek letters kern against each other where an application sets them in one run: the Greek letters that share a Latin shape (Α Β Ε Ζ Κ Μ Ο Ρ Τ Υ Χ Ϊ Ϋ ο) kern as their Latin twins, as in AΥ and TΟ, and the other Greek letters kern against those Latin letters as against their Greek twins, as in Yα.
-- smcp turns ϑ, ϕ, ϖ, ϰ, ϱ, and ϵ into the small capitals of Θ, Φ, Π, Κ, Ρ, and Ε, and c2sc turns ϴ into Θ's; the micro sign µ keeps its form.
-- nalt turns the whole numbers 1 to 20 into the circled numbers ① to ⑳; 21, 1.5, and 0 stay as they are.
-- Accents above and below attach to ŋ, ə, ɓ, ɗ, ħ, đ, ð, ß, and the other letters that had no place for them, and marks below attach to g, ø, and the Greek and Cyrillic letters that do not descend.
-- The ogonek attaches to the Latin consonants that do not descend, as it does to the vowels.
-- The Vietnamese letters kern against Cyrillic as their base letters do, and accented letters kern against ⟨ and ⟩ no closer than their base letters.
-- The accented a's keep clear of T, V, W, and Y in the heavy weights and the italics.
-- mgrk turns Σ, Π, and Δ into the math symbols ∑, ∏, and ∆.
-- Greek gets a grek script record with the same features as DFLT.
-- The en and em quads (U+2000, U+2001), the three-, four-, and six-per-em spaces (U+2004 to U+2006), the medium mathematical space (U+205F), the zero width no-break space (U+FEFF), and the zero width non-joiner and joiner (U+200C, U+200D), at every weight, upright and italic.
-- 111 glyphs that no character, feature, or MATH entry reached are no longer in the fonts: unused sizes of the stretchy arrows and of the wide hat, and the numerators 6, 8, and 9 that no fraction uses.
-- make dist in source/ makes the release zip and its SHA256SUMS from the committed files, the same bytes on every run.
+- Windows programs that space lines by the win metrics, such as Notepad, no longer set lines far apart: usWinAscent and usWinDescent are 1100 and 480 (they were 3260 and 2780).
+- Kerning between Latin and Greek letters where an application sets them in one run, as in AΥ, TΟ, and Yα.
+- Kerning of the Vietnamese letters against Cyrillic, and of accented letters against ⟨ and ⟩. The accented a's keep clear of T, V, W, and Y in the heavy weights and the italics.
+- Small capitals for ϑ, ϕ, ϖ, ϰ, ϱ, and ϵ (smcp) and for ϴ (c2sc). The micro sign µ keeps its form.
+- nalt: the whole numbers 1 to 20 become the circled numbers ① to ⑳.
+- mgrk: Σ, Π, and Δ become the math symbols ∑, ∏, and ∆.
+- Mark attachment: accents above and below on ŋ, ə, ɓ, ɗ, ħ, đ, ð, ß, and the other letters that had no place for them; marks below on g, ø, and the Greek and Cyrillic letters that do not descend; and the ogonek on the Latin consonants that do not descend.
+- The en and em quads (U+2000, U+2001), the three-, four-, and six-per-em spaces (U+2004 to U+2006), the medium mathematical space (U+205F), the zero width no-break space (U+FEFF), and the zero width non-joiner and joiner (U+200C, U+200D).
+- 111 glyphs that no character, feature, or MATH entry reached are removed: unused sizes of the stretchy arrows and of the wide hat, and the numerators 6, 8, and 9 that no fraction uses.
 
 ## v0.5.10 (2026-11-14)
 
