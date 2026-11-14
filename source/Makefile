@@ -70,7 +70,7 @@ LEVELS     := $(wildcard $(LEVELS_DIR))
 # Greek and mathitalic are explicitly included in the approved release default.
 MODULES_OFF  :=
 # Approved release default: the exact 25 modules exercised in the combined gate.
-MODULES_DEFAULT := codekeys cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures sigmoid supsub symbols tensordiagram ui vector
+MODULES_DEFAULT := codekeys cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures punctuation sigmoid supsub symbols tensordiagram ui vector
 comma        := ,
 empty        :=
 space        := $(empty) $(empty)
@@ -155,6 +155,8 @@ UNICODES := $(UNICODES),U+2A00-2A06
 UNICODES := $(UNICODES),U+2619,U+261C,U+261E,U+2766-2767,U+E900-E915,U+E920-E925
 # symbols: the zero width no-break space, beside the spaces and joiners U+2000-206F keeps.
 UNICODES := $(UNICODES),U+FEFF
+# punctuation: the reversed question mark and the two- and three-em dashes (Supplemental Punctuation).
+UNICODES := $(UNICODES),U+2E2E,U+2E3A-2E3B
 
 # The web subset keeps only the features in web_features.txt (what browsers apply by
 # default and what the app turns on); the .ttf keeps them all.

@@ -8,7 +8,10 @@ Verifies across every style (upright and italic, Light through Black):
 2. Complete 48-character Pinyin repertoire (24 uppercase + 24 lowercase), dotless `ǐ` (`U+01D0`),
    stacked `ü` + tone (`U+01D5..U+01DC`) clear vertical separation and round dots within `usWinAscent`,
    and 550-unit `smcp`/`c2sc` small caps for all 48 Pinyin letters.
-3. All Latin `case_mapping` pairs (`Ĳ/ĳ`, `Ǔ/ǔ`, `Ǥ/ǥ`, `Ǩ/ǩ`, `Ȟ/ȟ`, `Ȩ/ȩ`, `Ƒ/ƒ`), zero non-Greek
+3. Long s `ſ` (`U+017F`): f's contour less the crossbar's right arm (four points), f's advance,
+   height and left side, nothing right of the stem at the crossbar's height; `smcp` -> `S.sc`;
+   kerning as f on its right (`KERN`, from the kern module's `INHERIT`).
+   All Latin `case_mapping` pairs (`Ĳ/ĳ`, `Ǔ/ǔ`, `Ǥ/ǥ`, `Ǩ/ǩ`, `Ȟ/ȟ`, `Ȩ/ȩ`, `Ƒ/ƒ`), zero non-Greek
    `case_mapping` gaps in `cmap`, and 100% Latin `Ll`/`Lu` coverage in `smcp`/`c2sc`.
 4. All 20 Unicode fraction characters (`U+00BC..00BE`, `U+2150..215F`, `U+2189`) on `full` (and on
    `subset` when `U+2150-218F` is included in `UNICODES`), checking AGL names and glyph structure.
@@ -194,6 +197,43 @@ for up_cp, lo_cp, up_gn, lo_gn in REQUIRED_PAIRS:
     check(len(r_lo) == 1 and r_lo[0]['g'] == r_up[0]['g'] and r_lo[0]['g'] not in (up_gn, lo_gn),
           f'SC pair U+{up_cp:04X}/U+{lo_cp:04X}: {r_up} vs {r_lo}')
 
+# ſ (U+017F): f without the right arm of its crossbar, f's advance, left sidebearing and
+# height; smcp -> S.sc (its uppercase's small cap); it kerns as f on the right (kern's INHERIT)
+check(CMAP.get(0x017F) == 'longs', f'U+017F mapped to {CMAP.get(0x017F)}, want longs')
+if 'longs' in HAVE:
+    bf, bs = bounds('f'), bounds('longs')
+    check(HMTX['longs'][0] == HMTX['f'][0], f'longs: advance {HMTX["longs"][0]}, f {HMTX["f"][0]}')
+    check(bs[1] == bf[1] and bs[3] == bf[3] and abs(bs[0] - bf[0]) <= 1 and abs(bs[2] - bf[2]) <= 1,
+          f'longs: ink {bs}, f {bf} (stem, nub and hook are f\'s)')
+    gs_ = GLYF['longs']
+    check(not gs_.isComposite() and gs_.numberOfContours == 1 and len(gs_.coordinates) == len(GLYF['f'].coordinates) - 4,
+          f'longs: {gs_.numberOfContours} contours, {len(gs_.coordinates)} points (f has {len(GLYF["f"].coordinates)}; four go)')
+    # nothing of ſ stands right of f's stem at the crossbar's height: its ink there is the stem and the nub
+    import pathops as _po
+    from fontTools.pens.transformPen import TransformPen
+    def _path(g):
+        p = _po.Path()
+        GS[g].draw(TransformPen(p.getPen(), (1, 0, -ITALIC_K, 1, ITALIC_K * ITALIC_YC, 0))); p.simplify(); return p
+    def _hs(p, y):
+        r = _po.Path(); pen = r.getPen()
+        pen.moveTo((-3000, y - .5)); pen.lineTo((5000, y - .5)); pen.lineTo((5000, y + .5)); pen.lineTo((-3000, y + .5)); pen.closePath()
+        return sorted((c.bounds[0], c.bounds[2]) for c in _po.op(p, r, _po.PathOp.INTERSECTION).contours)
+    pf, pl = _path('f'), _path('longs')
+    stem = _hs(pf, 0.1 * bf[3])[0]
+    for y in range(int(0.45 * bf[3]), int(0.7 * bf[3]), 10):
+        sl, sf = _hs(pl, y), _hs(pf, y)
+        if len(sf) == 1 and sf[0][1] > stem[1] + 20:          # f's crossbar row
+            check(len(sl) == 1 and sl[0][1] <= stem[1] + 1.5 and abs(sl[0][0] - sf[0][0]) <= 1,
+                  f'longs: row {y}: {sl}, want f\'s nub and stem to {stem[1]:.0f} (f {sf})')
+    if kept('smcp'):
+        r_s = shape('\u017F', {'smcp': 1})
+        check([r['g'] for r in r_s] == ['S.sc'], f'longs smcp -> {[r["g"] for r in r_s]}, want S.sc')
+    # KERN (needs kern.INHERIT['longs']): f's right side, e.g. f* is opened
+    r_k, r_f = shape('\u017F*'), shape('f*')
+    k_l = r_k[0]['adv'] - HMTX['longs'][0]; k_f = r_f[0]['adv'] - HMTX['f'][0]
+    if k_f:
+        check(k_l != 0 and (k_l > 0) == (k_f > 0), f'KERN longs*: {k_l}, f* {k_f} (needs the kern module\'s INHERIT entry for longs)')
+
 # Check 550-unit small-cap height on florin.sc.latin_gaps and base small caps
 if 'florin.sc.latin_gaps' in HAVE:
     fb_sc = bounds('florin.sc.latin_gaps')
@@ -352,7 +392,7 @@ if MODE == 'full':
         sib_fonts = [TTFont(p, lazy=True) for p in sib_paths]
         sib_glyfs = [f['glyf'] for f in sib_fonts]
         owned_glyphs = sorted(
-            {'ij', 'uni01E4', 'uni01E8', 'uni021E', 'uni0229', 'uni0191'}
+            {'ij', 'longs', 'uni01E4', 'uni01E8', 'uni021E', 'uni0229', 'uni0191'}
             | {f'uni{cp:04X}' for cp in range(0x01CF, 0x01DD) if cp != 0x01D4}
             | {UV2AGL.get(cp, f'uni{cp:04X}') for cp in list(range(0x2150, 0x2160)) + [0x2189]}
             | {gn for gn in GO if '.latin_gaps' in gn}
@@ -360,6 +400,10 @@ if MODE == 'full':
         for gn in owned_glyphs:
             sigs = set()
             no_xform = True
+            missing = [s for s, f in zip(sib_styles, sib_fonts) if gn not in f.getGlyphOrder()]
+            check(not missing, f'{gn}: missing in {missing}')
+            if missing:
+                continue
             for gl in sib_glyfs:
                 g = gl[gn]
                 if g.isComposite():
@@ -375,7 +419,7 @@ if MODE == 'full':
 
 # ---- 9. Outline quality (outline_check.py) on all module simple glyphs ---------
 OWNED_CANDIDATES = sorted(
-    {'ij', 'uni01E4', 'uni01E8', 'uni021E', 'uni0229', 'uni0191'}
+    {'ij', 'longs', 'uni01E4', 'uni01E8', 'uni021E', 'uni0229', 'uni0191'}
     | {f'uni{cp:04X}' for cp in range(0x01CF, 0x01DD) if cp != 0x01D4}
     | {UV2AGL.get(cp, f'uni{cp:04X}') for cp in list(range(0x2150, 0x2160)) + [0x2189]}
     | {gn for gn in GO if '.latin_gaps' in gn}

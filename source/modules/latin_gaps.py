@@ -1,4 +1,4 @@
-"""latin_gaps: Dutch ij, complete Pinyin repertoire, Latin case-mapping partners,
+"""latin_gaps: Dutch ij, complete Pinyin repertoire, long s, Latin case-mapping partners,
 all precomposed vulgar fractions, and stacked nut fractions (`afrc`).
 
 What this module adds across all 14 styles (upright and italic, Light to Black):
@@ -19,7 +19,12 @@ What this module adds across all 14 styles (upright and italic, Light to Black):
      `uni01DB.sc.latin_gaps`, drawn with round `dot()` dieresis dots and optically
      proportioned tone marks that stay clear across Light..Black within `WIN_ASCENT`.
 
-3. All remaining Latin `case_mapping` partners and `Ƒ`/`ƒ` small cap:
+3. Long s: `ſ` (`U+017F`, `longs`), f's contour with the right arm of its crossbar taken
+   out point by point (the stem, the left nub, the hook, the advance and the sidebearings
+   are f's), wired to `S.sc` (the small cap of its uppercase S) in `smcp`. Its kerning is
+   the kern module's (`INHERIT`).
+
+4. All remaining Latin `case_mapping` partners and `Ƒ`/`ƒ` small cap:
    - `Ǥ` (`U+01E4`, capital partner of `ǥ` `U+01E5`, wired to `uni01E5.sc` in `c2sc`)
    - `Ǩ` (`U+01E8`, capital partner of `ǩ` `U+01E9`, wired to `uni01E9.sc` in `c2sc`)
    - `Ȟ` (`U+021E`, capital partner of `ȟ` `U+021F`, wired to `uni021F.sc` in `c2sc`)
@@ -27,12 +32,12 @@ What this module adds across all 14 styles (upright and italic, Light to Black):
    - `Ƒ` (`U+0191`, capital partner of `ƒ` `U+0192` `florin`) and 550-unit small cap
      `florin.sc.latin_gaps` wired into both `smcp` (for `florin`) and `c2sc` (for `uni0191`).
 
-4. All 17 missing Unicode vulgar fractions (`U+2150..U+215F` and `U+2189`), completing
+5. All 17 missing Unicode vulgar fractions (`U+2150..U+215F` and `U+2189`), completing
    all 20 Unicode fraction characters alongside `¼ ½ ¾` (`U+00BC..00BE`), using standard
    AGL production names (`onethird`, `twothirds`, `oneeighth`, `threeeighths`,
    `fiveeighths`, `seveneighths`) and `uniXXXX` names elsewhere.
 
-5. OpenType `afrc` (Alternative / Stacked Nut Fractions):
+6. OpenType `afrc` (Alternative / Stacked Nut Fractions):
    - Substitutes all 19 precomposed vulgar fractions (`¼ ½ ¾`, `⅐..⅞`, `↉`) to stacked
      nut forms, expands `⅟` (`U+215F`) before digits/subscripts, and shapes arbitrary
      1- to 4-digit `<numerator>/<denominator>` sequences (with `/` or `⁄`, across all
@@ -304,6 +309,40 @@ def _build_f_hook(ctx, f_glyph, j_glyph, min_lsb):
         joined = ctx.mv(joined, shift_x, 0)
     adv = ctx.W(f_glyph) + shift_x
     return joined, adv, shift_x
+
+
+def _build_long_s(ctx):
+    """ſ (U+017F, `longs`): f's own contour with the right arm of the crossbar taken out,
+    point by point: the arm's points (right of the stem, within the crossbar's height) and
+    the two corners where it met the stem go, and the stem's right edge runs straight
+    from the baseline to where the hook begins. The stem, the left nub of the crossbar,
+    the hook, the advance and the sidebearings are f's. f has one contour with the same
+    points at every weight, so ſ has too (variable-font compatible, as section 7 of
+    verify_latin_gaps.py checks)."""
+    from fontTools.ttLib.tables import ttProgram
+    glyf, hmtx = ctx.glyf, ctx.hmtx
+    f = glyf['f']
+    assert not f.isComposite() and f.numberOfContours == 1, 'longs: f must be one simple contour'
+    p = ctx.path_of('f'); b = p.bounds
+    s0, s1 = ctx.hspans(p, 0.1 * b[3])[0]                      # the stem, below the crossbar
+    cb0, cb1 = ctx.vspans(p, s1 + 0.5 * (s1 - s0))[0]          # the crossbar's right arm
+    coords, flags = list(f.coordinates), list(f.flags)
+    drop = [i for i, (x, y) in enumerate(coords) if cb0 - 0.5 <= y <= cb1 + 0.5 and x > s1 - 2]
+    assert len(drop) == 4 and all(flags[i] & 1 for i in drop), f'longs: crossbar arm points {[coords[i] for i in drop]}'
+    keep = [i for i in range(len(coords)) if i not in drop]
+    g = Glyph()
+    g.numberOfContours = 1
+    g.coordinates = GlyphCoordinates([coords[i] for i in keep])
+    g.flags = array('B', [flags[i] & 1 for i in keep])
+    g.endPtsOfContours = [len(keep) - 1]
+    g.program = ttProgram.Program(); g.program.fromBytecode(b'')
+    glyf['longs'] = g
+    order = ctx.font.getGlyphOrder()
+    if 'longs' not in order: ctx.font.setGlyphOrder(order + ['longs'])
+    g.recalcBounds(glyf)
+    hmtx['longs'] = (hmtx['f'][0], g.xMin)
+    ctx.GDEF_CLASS['longs'] = 1
+    ctx.map(0x017F, 'longs')
 
 
 def _frac_kern_offsets(ctx):
@@ -594,6 +633,10 @@ def glyphs(ctx):
     ctx.lg_kern['uni0191'] = ('F', None if fhook_dx > 0 else 'F')
     ctx.lg_kern[sc_florin] = ('F.sc', None if fsc_dx > 0 else 'F.sc')
 
+    # ſ (U+017F, long s): f without the right arm of its crossbar; smcp -> S.sc
+    _build_long_s(ctx)
+    ctx.lg_smcp.append(('longs', 'S.sc'))
+
     # ---- 4. All 17 missing vulgar fractions (U+2150..215F, U+2189) ----------------
     # Smooth optical weight grading for numerator figures (`w_num`) + slash breathing
     # room (`pad_num`) so heavy weights balance the top/left numerator with denominator.
@@ -799,7 +842,7 @@ def glyphs(ctx):
         ctx.afrc_vulg_pairs.append((vname, aname))
 
     ctx.log(
-        f'added 36 encoded glyphs (ij, 13 Pinyin, 5 case partners, 17 vulgar fractions), '
+        f'added 37 encoded glyphs (ij, 13 Pinyin, 5 case partners, long s, 17 vulgar fractions), '
         f'{len(ctx.lg_smcp)} smcp / {len(ctx.lg_c2sc)} c2sc mappings, and afrc stacked fractions'
     )
 
