@@ -16,7 +16,7 @@ What it adds (all GPOS, feature `kern`, no new glyphs, outlines, advances or tag
 
 2. KERN_NEW_L / KERN_NEW_R. Glyphs with no kerning of their own (the liga and ss16
    ligatures and logotypes, the ss04-ss07 alternates, a few small caps and Mulish's
-   own unkerned accented a's) kern like the letter their outer side shows: the
+   own unkerned accented a's, the Vietnamese ones included) kern like the letter their outer side shows: the
    left side like the first letter, the right side like the last (INHERIT below).
    The value is that letter's kerning (Mulish's, or the small caps' intended one),
    plus a correction, measured on the outlines, where the glyph's edge differs from
@@ -104,6 +104,14 @@ INHERIT = {
     'uni0201': ('a', 'a'), 'adieresis': ('a', 'a'), 'uni0227': ('a', 'a'), 'agrave': ('a', 'a'),
     'uni0203': ('a', 'a'), 'amacron': ('a', 'a'), 'aring': ('a', 'a'), 'aringacute': ('a', 'a'),
     'atilde': ('a', 'a'), 'uni01CD': ('A', 'A'), 'uni0226': ('A', 'A'), 'IJ': ('I', 'J'),
+    # and the Vietnamese a's (ạ ả ấ ầ ẩ ẫ ậ ắ ằ ẳ ẵ ặ; Tạ was 0 through v0.5.9). The edge
+    # correction measures each stack on its own outline, so the breve forms and ẫ keep
+    # clearer of the bars of T, V, W, Y, as ă and ã do (Regular Tẵ -56, Ta -76), while
+    # ạ ả ấ ầ ẩ ậ come out at a's value, as â does; on the right the acute of ấ and the
+    # hook of ẩ stand out, so ấY and ẩY open up as ãY does (Regular +20, aY 0)
+    'uni1EA1': ('a', 'a'), 'uni1EA3': ('a', 'a'), 'uni1EA5': ('a', 'a'), 'uni1EA7': ('a', 'a'),
+    'uni1EA9': ('a', 'a'), 'uni1EAB': ('a', 'a'), 'uni1EAD': ('a', 'a'), 'uni1EAF': ('a', 'a'),
+    'uni1EB1': ('a', 'a'), 'uni1EB3': ('a', 'a'), 'uni1EB5': ('a', 'a'), 'uni1EB7': ('a', 'a'),
     # small caps with no pairs
     'IJ.sc': ('I.sc', 'J.sc'), 'uni01CD.sc': ('A.sc', 'A.sc'), 'uni0226.sc': ('A.sc', 'A.sc'),
     'germandbls.sc': ('S.sc', 'S.sc'), 'uni01D4.sc': ('U.sc', 'U.sc'), 'uni01E9.sc': ('K.sc', 'K.sc'),

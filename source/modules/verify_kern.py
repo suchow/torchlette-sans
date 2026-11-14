@@ -10,7 +10,8 @@
    every figure at its advance and every column the same width.
 3. Ligatures and new glyphs kern like their outer letters in real text with the app's
    features (ss01 ss02 ss16 onum pnum): "Tft" as T f, "(The" as ( T, "fy." as y . ...
-   and the word marks add nothing on their built-in side.
+   and the word marks add nothing on their built-in side. The Vietnamese a's kern as a
+   (Tạ as Ta), a stacked accent never tighter than a against T V W Y.
 4. Proportional figures are kerned (7. 1' '4 under onum pnum, under pnum, under smcp),
    tabular ones in the same text are not.
 
@@ -161,6 +162,32 @@ for text, (a, b), (x, y) in SAME:
     got, want = boundary(text, a, b), pair_kern(pua, x, y)
     ok(got is not None, f'{text!r}: {a} {b} not formed')
     ok(got == want and want != 0, f'{text!r}: {a} {b} kern {got}, letters {x} {y} {want}')
+# the Vietnamese a's (ạ ả ấ ầ ẩ ẫ ậ ắ ằ ẳ ẵ ặ, unkerned through v0.5.9) kern as a: exactly
+# against marks and letters that do not reach over the accent; against T V W Y never tighter
+# than a (a stack keeps clearer of the bar, as ă and ã do), and after them never 0. The acute
+# of ấ and the hook of ẩ stand out to the right, so ấY and ẩY are looser than aY.
+VIET_A = ['uni1EA1', 'uni1EA3'] + ['uni%04X' % u for u in range(0x1EA5, 0x1EB8, 2)]
+for g in [g for g in VIET_A if g in have and 'a' in have]:
+    for x in ('period', 'comma', 'quotedblright', 'parenright', 'question', 't', 'v', 'w', 'y'):
+        if x in have:
+            got, want = pair_kern(pua, g, x), pair_kern(pua, 'a', x)
+            ok(got == want, f'{g} {x}: kern {got}, a {x} {want}')
+    for x in ('F', 'P', 'f', 'r', 'v', 'w', 'y', 'parenleft', 'quoteleft', 'quotedblleft'):
+        if x in have:
+            got, want = pair_kern(pua, x, g), pair_kern(pua, x, 'a')
+            ok(got == want, f'{x} {g}: kern {got}, {x} a {want}')
+    for x in ('T', 'V', 'W', 'Y'):
+        got, want = pair_kern(pua, x, g), pair_kern(pua, x, 'a')
+        ok(want <= got < 0, f'{x} {g}: kern {got}, {x} a {want} (expected {want}..-1)')
+        got, want = pair_kern(pua, g, x), pair_kern(pua, 'a', x)
+        ok(got >= want, f'{g} {x}: kern {got}, tighter than a {x} {want}')
+    if g in ('uni1EA5', 'uni1EA9'):
+        got, want = pair_kern(pua, g, 'Y'), pair_kern(pua, 'a', 'Y')
+        ok(got > want, f'{g} Y: kern {got}, not looser than a Y {want}')
+for text, (a, b) in (('Tạ', ('T', 'uni1EA1')), ('Vậ', ('V', 'uni1EAD')), ('Yấ', ('Y', 'uni1EA5'))):
+    if {a, b} <= have:
+        got, want = boundary(text, a, b), pair_kern(pua, a, 'a')
+        ok(got == want and want < 0, f'{text!r}: {a} {b} kern {got}, {a} a {want}')
 BUILT_IN = [('vector', 'v.vec', 'e'), ('residual', 'i', 'd_u_a_l.arch'), ('length', 'n', 'g_t.w200'), ('length', 'g_t.w200', 'h'),
             ('backward', 'b.backc', 'a'), ('forward', 'r', 'd.fwdb'), ('output', 'u', 't.out'), ('outputs', 'u', 't_s.out')]
 for text, a, b in BUILT_IN:
