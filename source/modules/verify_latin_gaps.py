@@ -19,9 +19,11 @@ Verifies across every style (upright and italic, Light through Black):
    advance; each mark where the font's anchors put it on the base (`Ǭ ǭ`'s ogonek where `Ǫ ǫ`
    have it; `Ǣ ǣ`'s macron centred on the ligature); `Ǟ ǟ Ǡ ǡ` round dots and a macron, 25 units
    clear of each other and of the letter, centred where `Ä ä` and `Ȧ ȧ` centre their marks;
-   kerning equal to the base's on both sides (with the apostrophes ’ ' ʼ: the base's outside
-   kern_apos' KERN_APOS plus the letter's own KERN_APOS value, the quote no closer to the
-   letter than to the base or than kern_apos' target); a further acute clear of the marks and over them,
+   kerning equal to the base's on both sides; with the apostrophes ’ ' ʼ, for these and every
+   other letter latin_gaps kerns as its base (its lg_kern: Ǐ ǐ Ǒ ǒ Ǔ Ǖ-ǜ Ǩ Ȟ ȩ ĳ Ǥ Ƒ too), the base's
+   kerning outside kern_apos' KERN_APOS plus the letter's own KERN_APOS value where kern_apos
+   fits the letter, the quote no closer to the letter than to the base or than kern_apos'
+   target; a further acute clear of the marks and over them,
    the dot below at the base's anchor; `smcp`/`c2sc` to composites on the small capitals, kerned
    as them.
 4. All 20 Unicode fraction characters (`U+00BC..00BE`, `U+2150..215F`, `U+2189`) on `full` (and on
@@ -413,6 +415,61 @@ def _kern_apos_lookup():
 KERN_APOS_VALS = _kern_apos_lookup()
 
 
+def _lg_kern():
+    """latin_gaps' lg_kern (glyph -> the glyphs whose right and left sides' kerning
+    _inherit_kerning copies), as its glyphs() sets it: glyphs() run with its glyph builders
+    stubbed, up to the vulgar fractions (which set no lg_kern, and stop the run at ctx.SRC_W)."""
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import latin_gaps as lg
+
+    class _Stop(Exception):
+        pass
+
+    class _Any:
+        x = y = 0
+        def __getattr__(self, n): return _Any()
+        def __getitem__(self, k): return _Any()
+        def __contains__(self, k): return False
+
+    class _Ctx:
+        glyf = _Any()
+        def W(self, g): return 0
+        @property
+        def SRC_W(self): raise _Stop
+
+    class _Unknown:                              # Ƒ's hook: whether it overhangs the left side
+        def __gt__(self, o): return True         # is the outline's; its left side is not counted
+
+    stubs = dict(_add_composite=lambda *a, **k: None, _add_simple=lambda *a, **k: None,
+                 _add_dieresis_tone=lambda *a, **k: None, _build_g_stroke=lambda c: (None, 0),
+                 _build_f_hook=lambda *a, **k: (None, 0, _Unknown()), _build_long_s=lambda c: None,
+                 _base_anchor_x=lambda *a: 0, _place=lambda *a: (0, 0))
+    saved = {k: getattr(lg, k) for k in stubs}
+    ctx = _Ctx()
+    try:
+        for k, v in stubs.items():
+            setattr(lg, k, v)
+        lg.glyphs(ctx)
+    except _Stop:
+        pass
+    finally:
+        for k, v in saved.items():
+            setattr(lg, k, v)
+    return ctx.lg_kern
+
+
+def _apos_fitted(ch):
+    """Whether kern_apos fits the letter to the apostrophes on its own outline: it decomposes
+    (canonically, step by step) to a basic Latin letter."""
+    c = ch
+    while not ('a' <= c.lower() <= 'z' and c.isascii()):
+        d = unicodedata.decomposition(c).split()
+        if not d or d[0].startswith('<'):
+            return False
+        c = chr(int(d[0], 16))
+    return c != ch
+
+
 class _Pts(BasePen):
     """An outline as a dense polyline of points (curves flattened)."""
     def __init__(self, gs):
@@ -528,29 +585,7 @@ for cp, base, base_ch, marks in COMPOSED:
     bad = [(p, kern_after(p, ch), kern_after(p, base_ch), kern_after(ch, p), kern_after(base_ch, p)) for p in KERN_PARTNERS]
     bad = [b for b in bad if b[1] != b[2] or b[3] != b[4]]
     check(not bad, f'{gn}: kerning not {base_ch!r}\'s (partner, new left, base left, new right, base right): {bad[:4]}')
-    # the apostrophes: the base's kerning outside KERN_APOS, the letter's own KERN_APOS value,
-    # and the quote no closer to the letter's outline (its marks) than to the base's or than
-    # kern_apos' target, less 3 units for its rounding to 5
-    check(KERN_APOS_VALS is not None or MODE == 'subset', 'KERN_APOS (the kern lookup of the apostrophe pairs) not found')
-    base_gn = CMAP.get(ord(base_ch))
-    for q, qg in APOS_PARTNERS.items():
-        if ord(q) not in CMAP or KERN_APOS_VALS is None:
-            continue
-        for new_t, base_t, pn, pb in ((q + ch, q + base_ch, (qg, gn), (qg, base_gn)),
-                                      (ch + q, base_ch + q, (gn, qg), (base_gn, qg))):
-            k_new, k_base = kern_after(*new_t), kern_after(*base_t)
-            a_new, a_base = KERN_APOS_VALS.get(pn, 0), KERN_APOS_VALS.get(pb, 0)
-            check(k_new is not None and k_new - a_new == k_base - a_base,
-                  f'{gn}: {new_t} kerned {k_new} ({a_new} of it KERN_APOS), {base_t} {k_base} ({a_base}): '
-                  f'not the base\'s kerning plus its own apostrophe fit')
-            d_new, d_base = closest(new_t), closest(base_t)
-            if d_new is not None and d_base is not None and NN and d_new < min(d_base, APOS_TARGET * NN) - 3:
-                # closer than that only where no apostrophe pull sets it there: ǰ's caron,
-                # wider than j, comes near the quote unkerned (as Mulish's ĵ's circumflex
-                # does), and kern_apos never loosens a pair
-                check(a_new == 0 and k_new >= k_base - a_base,
-                      f'{gn}: {new_t} {d_new:.0f} units apart ({d_new / NN:.2f} of n-n), {base_t} {d_base:.0f}, '
-                      f'kern_apos\' target {APOS_TARGET * NN:.0f}, kerned {k_new}: the quote pulled in on the marks')
+    # (the apostrophes: with every letter latin_gaps kerns as another, 4c)
     # a further mark: a combining acute stacks on the letter's top mark as it would on that mark
     # typed after the base (at the mark's mark-to-mark anchor); on Ǟ ǟ Ǡ ǡ's macron it stands
     # clear of it and over it. The dot below goes where it goes under the base (the base's
@@ -594,6 +629,47 @@ for cp, base, base_ch, marks in COMPOSED:
             bad = [(p, kern_after(p, ch, {'smcp': 1}), kern_after(p, base_ch, {'smcp': 1})) for p in 'TVYAo.']
             bad = [b for b in bad if b[1] != b[2]]
             check(not bad, f'{sc}: kerning not {base_ch!r}\'s small cap\'s: {bad[:4]}')
+
+# ---- 4c. The apostrophes beside every letter latin_gaps kerns as another ------------
+# (Ǐ ǐ Ǒ ǒ Ǔ Ǖ-ǜ Ǩ Ȟ ȩ ĳ Ǥ Ƒ and 4b's letters: the encoded glyphs of _inherit_kerning's
+# lg_kern). On a side kern_apos fits (a letter that decomposes to a basic letter, as
+# kern_apos finds them): the base's kerning outside KERN_APOS plus the letter's own KERN_APOS
+# value; on a side it does not (ĳ Ǥ Ƒ): the base's kerning as it is. And the quote no closer
+# to the letter's outline (its marks) than to the base's or than kern_apos' target, less 3
+# units for its rounding to 5
+check(KERN_APOS_VALS is not None or MODE == 'subset', 'KERN_APOS (the kern lookup of the apostrophe pairs) not found')
+LG_KERN = _lg_kern()
+check(all(f'uni{cp:04X}' in LG_KERN for cp, *_ in COMPOSED) and 'uni01D2' in LG_KERN,
+      f'latin_gaps\' lg_kern, read from its glyphs(), lacks letters it builds: {sorted(LG_KERN)}')
+GLYPH_CH = {g: chr(u) for u, g in sorted(CMAP.items(), reverse=True)}
+APOS_LETTERS = sorted((u, g) for u, g in CMAP.items() if g in LG_KERN)
+for cp, gn in APOS_LETTERS:
+    ch = chr(cp)
+    fitted = _apos_fitted(ch)
+    src_r, src_l = LG_KERN[gn]                   # the glyph whose right side, left side it takes
+    for q, qg in APOS_PARTNERS.items():
+        if ord(q) not in CMAP or KERN_APOS_VALS is None:
+            continue
+        for src, new_t, pn, mk in ((src_l, q + ch, (qg, gn), lambda b: q + b),
+                                   (src_r, ch + q, (gn, qg), lambda b: b + q)):
+            if src is None or src not in GLYPH_CH:
+                continue
+            base_t = mk(GLYPH_CH[src])
+            pb = (qg, src) if new_t[0] == q else (src, qg)
+            k_new, k_base = kern_after(*new_t), kern_after(*base_t)
+            a_new, a_base = KERN_APOS_VALS.get(pn, 0), KERN_APOS_VALS.get(pb, 0)
+            want = k_base - a_base + a_new if fitted else k_base
+            check(k_new is not None and k_base is not None and k_new == want,
+                  f'{gn}: {new_t} kerned {k_new} ({a_new} of it KERN_APOS), {base_t} {k_base} ({a_base}): '
+                  + ('not the base\'s kerning plus its own apostrophe fit' if fitted else 'not the base\'s kerning'))
+            d_new, d_base = closest(new_t), closest(base_t)
+            if d_new is not None and d_base is not None and NN and d_new < min(d_base, APOS_TARGET * NN) - 3:
+                # closer than that only where no apostrophe pull sets it there: ǰ's caron,
+                # wider than j, comes near the quote unkerned (as Mulish's ĵ's circumflex
+                # does), and kern_apos never loosens a pair
+                check(a_new == 0 and k_new >= k_base - a_base,
+                      f'{gn}: {new_t} {d_new:.0f} units apart ({d_new / NN:.2f} of n-n), {base_t} {d_base:.0f}, '
+                      f'kern_apos\' target {APOS_TARGET * NN:.0f}, kerned {k_new}: the quote pulled in on the marks')
 
 # Check 550-unit small-cap height on florin.sc.latin_gaps and base small caps
 if 'florin.sc.latin_gaps' in HAVE:
