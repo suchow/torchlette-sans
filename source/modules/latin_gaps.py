@@ -1613,10 +1613,21 @@ def post(ctx):
 
 
 def _inherit_kerning(ctx):
-    """LATIN_GAPS_KERN: each new glyph kerns as the glyphs ctx.lg_kern names for its sides."""
+    """LATIN_GAPS_KERN: each new glyph kerns as the glyphs ctx.lg_kern names for its sides.
+
+    Except kern_apos' share: kern_apos (whose features run before this post) fits every
+    letter that decomposes to a basic letter (ǒ ǖ ǡ ȯ ǹ ...) to the apostrophes on its own
+    outline, starting from its base letter's kerning without KERN_APOS, and its KERN_APOS
+    value for that pair is already in the font. Copying the base letter's effective
+    kerning, which includes the base's own KERN_APOS value, would add the pull twice
+    (’ǡ -100 where ’a is -50, the quote 0.73 of the n-n gap from the stacked marks in
+    Light). On the sides kern_apos fitted (ctx.apos_fitted) the base's KERN_APOS value
+    (ctx.apos_pairs) is left out, so the pair kerns as kern_apos computed it."""
     font = ctx.font
     gpos = font['GPOS'].table
     eff = _effective_kerning(gpos)
+    apos_fitted = getattr(ctx, 'apos_fitted', set())
+    apos_pairs = getattr(ctx, 'apos_pairs', {})
 
     by_first = defaultdict(list)
     by_second = defaultdict(list)
@@ -1632,11 +1643,17 @@ def _inherit_kerning(ctx):
         if src_first:
             for b, v in by_first.get(src_first, ()):
                 if b not in new_set:
-                    new_pairs[(g, b)] = v
+                    if (g, b) in apos_fitted:
+                        v -= apos_pairs.get((src_first, b), 0)
+                    if v:
+                        new_pairs[(g, b)] = v
         if src_second:
             for a, v in by_second.get(src_second, ()):
                 if a not in new_set:
-                    new_pairs[(a, g)] = v
+                    if (a, g) in apos_fitted:
+                        v -= apos_pairs.get((a, src_second), 0)
+                    if v:
+                        new_pairs[(a, g)] = v
 
     for ga, (src_first_a, _) in ctx.lg_kern.items():
         if not src_first_a:

@@ -24,7 +24,10 @@ What it changes:
    decomposition), kern's INHERIT glyphs (ligatures, ss16 forms) and the ss04-ss07
    alternates are fitted the same way on their own outlines, so an accent next to the
    apostrophe (café’s) limits its own pair. Values add to the kerning earlier lookups
-   give, so the lookup's place among the kern lookups does not matter.
+   give, so the lookup's place among the kern lookups does not matter. A module that
+   later copies a letter's kerning to a glyph of its own (latin_gaps' LATIN_GAPS_KERN)
+   must leave out the letter's KERN_APOS value on the sides fitted here (ctx.apos_fitted,
+   ctx.apos_pairs): that glyph has its own, and both would add up.
 
 In Regular this moves ’s from -29 to -79 and n’ from -19 to -69 units; their closest
 approaches go from 1.24 and 1.23 times the n-n gap to 0.99 and 0.99 (Italic: n’ 1.40 to
@@ -189,12 +192,14 @@ def features(ctx):
 
     pairs = {}
     show = {}
+    fitted = set()
     for a in apos:
         for g, (lb, rb) in sorted(sides.items()):
             todo = []
             if rb: todo.append((g, a, rb, a))
             if lb: todo.append((a, g, a, lb))
             for (l, r, lc, rc) in todo:
+                fitted.add((l, r))
                 k0 = base.get((l, r), base.get((lc, rc), 0))
                 k = need(l, r, k0, target)
                 if k is None or k >= 0: continue
@@ -203,6 +208,7 @@ def features(ctx):
                 pairs[l, r] = k
                 if g in letters: show[l, r] = k
     ctx.apos_pairs = pairs
+    ctx.apos_fitted = fitted     # every pair fitted here, kerned or not (latin_gaps reads it)
     ctx.apos_target = (TARGET, nn)
     if not pairs: return
     text, nl, nr = kern.pairs_fea('KERN_APOS', pairs)

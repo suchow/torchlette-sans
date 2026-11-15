@@ -3,6 +3,7 @@
 ## Unreleased
 
 - New letters: Ǟ ǟ, Ǡ ǡ, Ȯ ȯ, and Ǭ ǭ (Livonian), Ǣ ǣ (Old English), Ǯ ǯ (Skolt Sami), ǰ, Ǵ ǵ (Macedonian transliteration), and Ǹ ǹ (Pinyin), with small capitals, kerning, and room for further accents above and below, at every weight, upright and italic.
+- The apostrophe and the right single quote no longer kern twice against ǒ, ǖ, ǚ, Ǒ, Ǩ, ȩ, and the other accented letters of the same make, so the quote no longer crowds their accents.
 
 ## v0.5.12 (2026-11-15)
 

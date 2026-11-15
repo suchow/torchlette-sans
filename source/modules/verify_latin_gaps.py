@@ -19,7 +19,9 @@ Verifies across every style (upright and italic, Light through Black):
    advance; each mark where the font's anchors put it on the base (`Ǭ ǭ`'s ogonek where `Ǫ ǫ`
    have it; `Ǣ ǣ`'s macron centred on the ligature); `Ǟ ǟ Ǡ ǡ` round dots and a macron, 25 units
    clear of each other and of the letter, centred where `Ä ä` and `Ȧ ȧ` centre their marks;
-   kerning equal to the base's on both sides; a further acute clear of the marks and over them,
+   kerning equal to the base's on both sides (with the apostrophes ’ ' ʼ: the base's outside
+   kern_apos' KERN_APOS plus the letter's own KERN_APOS value, the quote no closer to the
+   letter than to the base or than kern_apos' target); a further acute clear of the marks and over them,
    the dot below at the base's anchor; `smcp`/`c2sc` to composites on the small capitals, kerned
    as them.
 4. All 20 Unicode fraction characters (`U+00BC..00BE`, `U+2150..215F`, `U+2189`) on `full` (and on
@@ -38,6 +40,7 @@ import unicodedata
 
 import uharfbuzz as hb
 from fontTools.agl import UV2AGL
+from fontTools.pens.basePen import BasePen
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.ttLib import TTFont
 
@@ -361,7 +364,103 @@ def kern_after(a, b, feats=None):
     return r[0]['adv'] - HMTX[r[0]['g']][0] if len(r) == 2 else None
 
 
-KERN_PARTNERS = ['T', 'V', 'Y', 'W', 'A', 'L', 'o', 'v', 'f', '.', ',', '\u2019', '"', '(', ')', '-']
+KERN_PARTNERS = ['T', 'V', 'Y', 'W', 'A', 'L', 'o', 'v', 'f', '.', ',', '"', '(', ')', '-']
+# the apostrophes are kern_apos' (KERN_APOS fits every letter that decomposes to a basic
+# letter on its own outline, so a stacked mark can hold the quote further off than the base
+# letter's pull). Their kerning is the base's outside KERN_APOS plus the letter's own
+# KERN_APOS value (latin_gaps must not copy the base's: the two would add up, ’ǡ -100 where
+# ’a is -50, the quote 0.6-0.7 of the n-n gap from the marks), and the quote stands no
+# closer to the letter than to the base, or than kern_apos' TARGET
+APOS_PARTNERS = {'\u2019': 'quoteright', "'": 'quotesingle', '\u02bc': 'uni02BC'}
+APOS_TARGET = 0.90                  # kern_apos.TARGET
+
+
+def _kern_apos_lookup():
+    """The pair values of KERN_APOS: the kern lookup each of whose nonzero pairs has an
+    apostrophe on one side and which kerns ’ before a (None if there is none)."""
+    gp = tt['GPOS'].table
+    idx = sorted({i for fr in gp.FeatureList.FeatureRecord if fr.FeatureTag == 'kern' for i in fr.Feature.LookupListIndex})
+    apos = set(APOS_PARTNERS.values())
+    for i in idx:
+        lk = gp.LookupList.Lookup[i]; vals = {}
+        for st in lk.SubTable:
+            s_ = st.ExtSubTable if lk.LookupType == 9 else st
+            if getattr(s_, 'LookupType', lk.LookupType) != 2:
+                vals = None; break
+            if s_.Format == 1:
+                for a, ps in zip(s_.Coverage.glyphs, s_.PairSet):
+                    for r in ps.PairValueRecord:
+                        v = (getattr(r.Value1, 'XAdvance', 0) or 0) if r.Value1 else 0
+                        vals.setdefault((a, r.SecondGlyph), v)
+            else:
+                c2 = {}
+                for b, c in s_.ClassDef2.classDefs.items():
+                    c2.setdefault(c, []).append(b)
+                for a in s_.Coverage.glyphs:
+                    rec = s_.Class1Record[s_.ClassDef1.classDefs.get(a, 0)]
+                    for c, bs in c2.items():
+                        if not c:
+                            continue
+                        v = rec.Class2Record[c].Value1
+                        v = (getattr(v, 'XAdvance', 0) or 0) if v else 0
+                        for b in bs:
+                            vals.setdefault((a, b), v)
+        if vals and vals.get(('quoteright', 'a')) and all(apos & {a, b} for (a, b), v in vals.items() if v):
+            return vals
+    return None
+
+
+KERN_APOS_VALS = _kern_apos_lookup()
+
+
+class _Pts(BasePen):
+    """An outline as a dense polyline of points (curves flattened)."""
+    def __init__(self, gs):
+        super().__init__(gs); self.pts = []; self.cur = self.start = None
+    def _seg(self, p):
+        a = self.cur; n = max(1, int(((p[0] - a[0]) ** 2 + (p[1] - a[1]) ** 2) ** 0.5 // 4))
+        for i in range(1, n + 1):
+            self.pts.append((a[0] + (p[0] - a[0]) * i / n, a[1] + (p[1] - a[1]) * i / n))
+        self.cur = p
+    def _moveTo(self, p): self.start = self.cur = p; self.pts.append(p)
+    def _lineTo(self, p): self._seg(p)
+    def _curveToOne(self, p1, p2, p3):
+        p0 = self.cur
+        for i in range(1, 17):
+            t = i / 16; m = 1 - t
+            self._seg(tuple(m ** 3 * p0[k] + 3 * m * m * t * p1[k] + 3 * m * t * t * p2[k] + t ** 3 * p3[k] for k in (0, 1)))
+    def _qCurveToOne(self, p1, p2):
+        p0 = self.cur
+        for i in range(1, 13):
+            t = i / 12; m = 1 - t
+            self._seg(tuple(m * m * p0[k] + 2 * m * t * p1[k] + t * t * p2[k] for k in (0, 1)))
+    def _closePath(self):
+        if self.cur is not None and self.start is not None and self.cur != self.start: self._seg(self.start)
+        self.cur = self.start
+    _endPath = _closePath
+
+
+_pts = {}
+
+
+def closest(text):
+    """Closest approach of the two glyphs `text` shapes to, as HarfBuzz sets them."""
+    r = shape(text)
+    if len(r) != 2:
+        return None
+    for g in (r[0]['g'], r[1]['g']):
+        if g not in _pts:
+            p = _Pts(GS); GS[g].draw(p); _pts[g] = p.pts
+    A, B = _pts[r[0]['g']], _pts[r[1]['g']]
+    if not A or not B:
+        return None
+    dx = r[1]['x'] - r[0]['x']; dy = r[1]['y'] - r[0]['y']
+    ax = max(x for x, _ in A); bx = min(x for x, _ in B)    # the facing sides (300 units in)
+    A = [p for p in A if p[0] > ax - 300]; B = [p for p in B if p[0] < bx + 300]
+    return min((x1 + dx - x0) ** 2 + (y1 + dy - y0) ** 2 for x0, y0 in A for x1, y1 in B) ** 0.5
+
+
+NN = closest('nn')
 for cp, base, base_ch, marks in COMPOSED:
     gn = f'uni{cp:04X}'
     check(CMAP.get(cp) == gn, f'U+{cp:04X} -> {CMAP.get(cp)}, want {gn}')
@@ -429,6 +528,29 @@ for cp, base, base_ch, marks in COMPOSED:
     bad = [(p, kern_after(p, ch), kern_after(p, base_ch), kern_after(ch, p), kern_after(base_ch, p)) for p in KERN_PARTNERS]
     bad = [b for b in bad if b[1] != b[2] or b[3] != b[4]]
     check(not bad, f'{gn}: kerning not {base_ch!r}\'s (partner, new left, base left, new right, base right): {bad[:4]}')
+    # the apostrophes: the base's kerning outside KERN_APOS, the letter's own KERN_APOS value,
+    # and the quote no closer to the letter's outline (its marks) than to the base's or than
+    # kern_apos' target, less 3 units for its rounding to 5
+    check(KERN_APOS_VALS is not None or MODE == 'subset', 'KERN_APOS (the kern lookup of the apostrophe pairs) not found')
+    base_gn = CMAP.get(ord(base_ch))
+    for q, qg in APOS_PARTNERS.items():
+        if ord(q) not in CMAP or KERN_APOS_VALS is None:
+            continue
+        for new_t, base_t, pn, pb in ((q + ch, q + base_ch, (qg, gn), (qg, base_gn)),
+                                      (ch + q, base_ch + q, (gn, qg), (base_gn, qg))):
+            k_new, k_base = kern_after(*new_t), kern_after(*base_t)
+            a_new, a_base = KERN_APOS_VALS.get(pn, 0), KERN_APOS_VALS.get(pb, 0)
+            check(k_new is not None and k_new - a_new == k_base - a_base,
+                  f'{gn}: {new_t} kerned {k_new} ({a_new} of it KERN_APOS), {base_t} {k_base} ({a_base}): '
+                  f'not the base\'s kerning plus its own apostrophe fit')
+            d_new, d_base = closest(new_t), closest(base_t)
+            if d_new is not None and d_base is not None and NN and d_new < min(d_base, APOS_TARGET * NN) - 3:
+                # closer than that only where no apostrophe pull sets it there: ǰ's caron,
+                # wider than j, comes near the quote unkerned (as Mulish's ĵ's circumflex
+                # does), and kern_apos never loosens a pair
+                check(a_new == 0 and k_new >= k_base - a_base,
+                      f'{gn}: {new_t} {d_new:.0f} units apart ({d_new / NN:.2f} of n-n), {base_t} {d_base:.0f}, '
+                      f'kern_apos\' target {APOS_TARGET * NN:.0f}, kerned {k_new}: the quote pulled in on the marks')
     # a further mark: a combining acute stacks on the letter's top mark as it would on that mark
     # typed after the base (at the mark's mark-to-mark anchor); on Ǟ ǟ Ǡ ǡ's macron it stands
     # clear of it and over it. The dot below goes where it goes under the base (the base's
