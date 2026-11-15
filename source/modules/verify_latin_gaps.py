@@ -15,6 +15,13 @@ Verifies across every style (upright and italic, Light through Black):
    kerning as f on its right (`KERN`, from the kern module's `INHERIT`).
    All Latin `case_mapping` pairs (`Ĳ/ĳ`, `Ǔ/ǔ`, `Ǥ/ǥ`, `Ǩ/ǩ`, `Ȟ/ȟ`, `Ȩ/ȩ`, `Ƒ/ƒ`), zero non-Greek
    `case_mapping` gaps in `cmap`, and 100% Latin `Ll`/`Lu` coverage in `smcp`/`c2sc`.
+   The composed letters `Ǟ ǟ Ǡ ǡ Ǣ ǣ Ǭ ǭ Ǯ ǯ ǰ Ǵ ǵ Ǹ ǹ Ȯ ȯ`: composites on their base with its
+   advance; each mark where the font's anchors put it on the base (`Ǭ ǭ`'s ogonek where `Ǫ ǫ`
+   have it; `Ǣ ǣ`'s macron centred on the ligature); `Ǟ ǟ Ǡ ǡ` round dots and a macron, 25 units
+   clear of each other and of the letter, centred where `Ä ä` and `Ȧ ȧ` centre their marks;
+   kerning equal to the base's on both sides; a further acute clear of the marks and over them,
+   the dot below at the base's anchor; `smcp`/`c2sc` to composites on the small capitals, kerned
+   as them.
 4. All 20 Unicode fraction characters (`U+00BC..00BE`, `U+2150..215F`, `U+2189`) on `full` (and on
    `subset` when `U+2150-218F` is included in `UNICODES`), checking AGL names and glyph structure.
 5. OpenType `afrc` stacked nut fractions (when `kept('afrc')`), verifying vertical stacking
@@ -286,6 +293,186 @@ if 'longs' in HAVE:
     if k_f:
         check(k_l != 0 and (k_l > 0) == (k_f > 0), f'KERN longs*: {k_l}, f* {k_f} (needs the kern module\'s INHERIT entry for longs)')
 
+# ---- 4b. Letters composed of a base and marks the font has ----------------------
+# (code point, base glyph, base character for kerning and marks below, marks: (glyph, rule));
+# 'top': the mark at the base's anchor less its own (the font's GPOS); 'as:<g>': where Mulish's
+# composite <g> puts it; 'ink': centred on the base's ink; Ǟ ǟ Ǡ ǡ: a '.mark' glyph of round dots
+# and a macron, as Ǖ ǖ
+COMPOSED = [
+    (0x01DE, 'A', 'A', 'stack2'), (0x01DF, 'a', 'a', 'stack2'),
+    (0x01E0, 'A', 'A', 'stack1'), (0x01E1, 'a', 'a', 'stack1'),
+    (0x01E2, 'AE', '\u00C6', [('uni0304.case', 'ink')]), (0x01E3, 'ae', '\u00E6', [('uni0304', 'ink')]),
+    (0x01EC, 'O', 'O', [('uni0328', 'as:uni01EA'), ('uni0304.case', 'top')]),
+    (0x01ED, 'o', 'o', [('uni0328', 'as:uni01EB'), ('uni0304', 'top')]),
+    (0x01EE, 'uni01B7', '\u01B7', [('uni030C.case', 'top')]), (0x01EF, 'uni0292', '\u0292', [('uni030C', 'top')]),
+    (0x01F0, 'uni0237', 'j', [('uni030C', 'top')]),
+    (0x01F4, 'G', 'G', [('acutecomb.case', 'top')]), (0x01F5, 'g', 'g', [('acutecomb', 'top')]),
+    (0x01F8, 'N', 'N', [('gravecomb.case', 'top')]), (0x01F9, 'n', 'n', [('gravecomb', 'top')]),
+    (0x022E, 'O', 'O', [('uni0307.case', 'top')]), (0x022F, 'o', 'o', [('uni0307', 'top')]),
+]
+COMPOSED_SC = {0x01DF: (0x01DE, 'A.sc'), 0x01E1: (0x01E0, 'A.sc'), 0x01E3: (0x01E2, 'AE.sc'), 0x01ED: (0x01EC, 'O.sc'),
+               0x01EF: (0x01EE, 'uni01B7.sc.african'), 0x01F0: (None, 'J.sc'), 0x01F5: (0x01F4, 'G.sc'),
+               0x01F9: (0x01F8, 'N.sc'), 0x022F: (0x022E, 'O.sc')}
+
+
+def _unslant(x, y):
+    return x - ITALIC_K * (y - ITALIC_YC)
+
+
+def _mark_records():
+    """(base anchors {base: [{class: (x, y)}]}, mark anchors {mark: (class, (x, y))} per subtable)."""
+    out = []
+    for lk in tt['GPOS'].table.LookupList.Lookup:
+        for st in lk.SubTable:
+            s = st.ExtSubTable if lk.LookupType == 9 else st
+            if getattr(s, 'LookupType', lk.LookupType) != 4:
+                continue
+            marks = {m: (r.Class, (r.MarkAnchor.XCoordinate, r.MarkAnchor.YCoordinate))
+                     for m, r in zip(s.MarkCoverage.glyphs, s.MarkArray.MarkRecord)}
+            bases = {b: [None if a is None else (a.XCoordinate, a.YCoordinate) for a in r.BaseAnchor]
+                     for b, r in zip(s.BaseCoverage.glyphs, s.BaseArray.BaseRecord)}
+            out.append((bases, marks))
+    return out
+
+
+MARK_SUBS = _mark_records()
+MARK_ANCHOR = {m: a for _b, marks in MARK_SUBS for m, (_c, a) in marks.items()}
+MK2 = {}                                     # a mark's mark-to-mark anchor for the mark above it
+for _lk in tt['GPOS'].table.LookupList.Lookup:
+    for _st in _lk.SubTable:
+        _s = _st.ExtSubTable if _lk.LookupType == 9 else _st
+        if getattr(_s, 'LookupType', _lk.LookupType) == 6:
+            for _g, _r in zip(_s.Mark2Coverage.glyphs, _s.Mark2Array.Mark2Record):
+                _a = next((a for a in _r.Mark2Anchor if a is not None), None)
+                if _a is not None:
+                    MK2.setdefault(_g, (_a.XCoordinate, _a.YCoordinate))
+
+
+def anchor_offset(base, mark):
+    for bases, marks in MARK_SUBS:
+        if base in bases and mark in marks and bases[base][marks[mark][0]] is not None:
+            (bx, by), (mx, my) = bases[base][marks[mark][0]], marks[mark][1]
+            return bx - mx, by - my
+    return None
+
+
+def kern_after(a, b, feats=None):
+    r = shape(a + b, feats)
+    return r[0]['adv'] - HMTX[r[0]['g']][0] if len(r) == 2 else None
+
+
+KERN_PARTNERS = ['T', 'V', 'Y', 'W', 'A', 'L', 'o', 'v', 'f', '.', ',', '\u2019', '"', '(', ')', '-']
+for cp, base, base_ch, marks in COMPOSED:
+    gn = f'uni{cp:04X}'
+    check(CMAP.get(cp) == gn, f'U+{cp:04X} -> {CMAP.get(cp)}, want {gn}')
+    if gn not in HAVE:
+        continue
+    g = GLYF[gn]
+    comps = g.components if g.isComposite() else []
+    check(bool(comps) and comps[0].glyphName == base and (comps[0].x, comps[0].y) == (0, 0),
+          f'{gn}: not a composite on {base}: {[(c.glyphName, c.x, c.y) for c in comps]}')
+    check(HMTX[gn][0] == HMTX[base][0], f'{gn}: advance {HMTX[gn][0]}, {base} {HMTX[base][0]}')
+    bb = bounds(gn)
+    check(bb[3] <= win_asc, f'{gn}: yMax {bb[3]} exceeds usWinAscent {win_asc}')
+    if isinstance(marks, str):
+        # Ǟ ǟ Ǡ ǡ: base, then one glyph of round dots (2 or 1) and a macron above them, each
+        # clear of the one below by 25 units, centred where Ä ä (Ȧ ȧ) centre their marks
+        mk = comps[1].glyphName if len(comps) == 2 else None
+        check(mk is not None and mk.endswith('.mark.latin_gaps'), f'{gn}: components {[c.glyphName for c in comps]}')
+        if mk:
+            pts, ends, _f = GLYF[mk].getCoordinates(GLYF)
+            cs, s0 = [], 0
+            for e in ends:
+                cs.append([tuple(pts[k]) for k in range(s0, e + 1)]); s0 = e + 1
+            nd = 2 if marks == 'stack2' else 1
+            check(len(cs) == nd + 1, f'{gn}: mark has {len(cs)} contours, want {nd} dots and a macron')
+            if len(cs) == nd + 1:
+                cs.sort(key=lambda c: min(y for _, y in c))
+                dots, mac = cs[:nd], cs[nd]
+                base_top = bounds(base)[3]
+                d_bot = min(y for c in dots for _, y in c); d_top = max(y for c in dots for _, y in c)
+                m_bot = min(y for _, y in mac)
+                check(d_bot - base_top >= 25, f'{gn}: dots {d_bot} too close to {base} ({base_top})')
+                check(m_bot - d_top >= 25, f'{gn}: macron {m_bot} too close to the dots ({d_top})')
+                for c in dots:                       # round: as wide as tall (the slant leaves circles round)
+                    w = max(x for x, _ in c) - min(x for x, _ in c); h = max(y for _, y in c) - min(y for _, y in c)
+                    check(abs(w - h) <= 3, f'{gn}: dot {w}x{h} not round')
+                ref = {('stack2', True): 'Adieresis', ('stack2', False): 'adieresis',
+                       ('stack1', True): 'uni0226', ('stack1', False): 'uni0227'}[(marks, base == 'A')]
+                rm = GLYF[ref].components[1]
+                rb = bounds(rm.glyphName)
+                ref_c = _unslant(rm.x + (rb[0] + rb[2]) / 2, rm.y + (rb[1] + rb[3]) / 2)
+                d_c = _unslant(sum(sum(x for x, _ in c) / len(c) for c in dots) / nd, (d_bot + d_top) / 2)
+                m_c = _unslant((min(x for x, _ in mac) + max(x for x, _ in mac)) / 2, (m_bot + max(y for _, y in mac)) / 2)
+                check(abs(d_c - ref_c) <= 3, f'{gn}: dots centred at {d_c:.0f}, {ref}\'s mark at {ref_c:.0f}')
+                check(abs(m_c - d_c) <= 3, f'{gn}: macron centred at {m_c:.0f}, dots at {d_c:.0f}')
+    else:
+        check([c.glyphName for c in comps[1:]] == [m for m, _ in marks], f'{gn}: marks {[c.glyphName for c in comps[1:]]}')
+        for c, (m, rule) in zip(comps[1:], marks):
+            if rule == 'top':
+                want = anchor_offset(base, m)
+                check(want is not None and abs(c.x - want[0]) <= 2 and abs(c.y - want[1]) <= 2,
+                      f'{gn}: {m} at {(c.x, c.y)}, the anchors say {want}')
+            elif rule.startswith('as:'):
+                ref = [r for r in GLYF[rule[3:]].components if r.glyphName == m]
+                check(bool(ref) and (ref[0].x, ref[0].y) == (c.x, c.y), f'{gn}: {m} at {(c.x, c.y)}, {rule[3:]} has it at {[(r.x, r.y) for r in ref]}')
+            else:                                    # centred on the whole ligature, at the anchors' height
+                mb = bounds(m)
+                mc = _unslant(c.x + (mb[0] + mb[2]) / 2, c.y + (mb[1] + mb[3]) / 2)
+                b_l = min(_unslant(x, y) for x, y in GLYF[base].getCoordinates(GLYF)[0])
+                b_r = max(_unslant(x, y) for x, y in GLYF[base].getCoordinates(GLYF)[0])
+                check(abs(mc - (b_l + b_r) / 2) <= 3, f'{gn}: {m} centred at {mc:.0f}, {base}\'s ink at {(b_l + b_r) / 2:.0f}')
+                want = anchor_offset(base, m)
+                check(want is not None and abs(c.y - want[1]) <= 2, f'{gn}: {m} at height {c.y}, the anchors say {want}')
+    # kerning: as its base on both sides (ǰ as j)
+    ch = chr(cp)
+    bad = [(p, kern_after(p, ch), kern_after(p, base_ch), kern_after(ch, p), kern_after(base_ch, p)) for p in KERN_PARTNERS]
+    bad = [b for b in bad if b[1] != b[2] or b[3] != b[4]]
+    check(not bad, f'{gn}: kerning not {base_ch!r}\'s (partner, new left, base left, new right, base right): {bad[:4]}')
+    # a further mark: a combining acute stacks on the letter's top mark as it would on that mark
+    # typed after the base (at the mark's mark-to-mark anchor); on Ǟ ǟ Ǡ ǡ's macron it stands
+    # clear of it and over it. The dot below goes where it goes under the base (the base's
+    # anchor below; read from GPOS, as HarfBuzz composes a base + U+0323 into the font's own
+    # dotted letters)
+    r = shape(ch + '\u0301')
+    tops = [cc for cc in comps[1:] if cc.glyphName != 'uni0328']
+    if len(r) == 2 and tops:
+        t = tops[-1]
+        if t.glyphName in MK2:
+            want = (t.x + MK2[t.glyphName][0] - MARK_ANCHOR['acutecomb'][0], t.y + MK2[t.glyphName][1] - MARK_ANCHOR['acutecomb'][1])
+            check(abs(r[1]['x'] - want[0]) <= 1 and abs(r[1]['y'] - want[1]) <= 1,
+                  f'{gn} + acute at {(r[1]["x"], r[1]["y"])}, {t.glyphName}\'s mark-to-mark anchor puts it at {want}')
+        else:
+            ab, lb = ink(r[1]), ink(r[0])
+            check(ab[1] - lb[3] >= 20, f'{gn} + acute: acute bottom {ab[1]} over the letter\'s top {lb[3]}')
+            tb = bounds(t.glyphName)
+            t_l, t_r = _unslant(t.x + tb[0], tb[3]), _unslant(t.x + tb[2], tb[3])
+            a_c = _unslant(r[1]['x'] + (bounds(r[1]['g'])[0] + bounds(r[1]['g'])[2]) / 2, (ab[1] + ab[3]) / 2)
+            check(t_l <= a_c <= t_r, f'{gn} + acute: acute at {a_c:.0f}, over the marks {t_l:.0f}..{t_r:.0f}')
+    else:
+        check(False, f'{gn} + acute shaped as {[x["g"] for x in r]}')
+    if anchor_offset(base, 'dotbelowcomb') is not None:
+        check(anchor_offset(gn, 'dotbelowcomb') == anchor_offset(base, 'dotbelowcomb'),
+              f'{gn}: dot below at {anchor_offset(gn, "dotbelowcomb")}, under {base} at {anchor_offset(base, "dotbelowcomb")}')
+    # small caps: smcp (and c2sc) to a composite on the small capital, its marks above it
+    if cp in COMPOSED_SC and kept('smcp'):
+        up, sc_base = COMPOSED_SC[cp]
+        r_lo = shape(ch, {'smcp': 1})
+        sc = r_lo[0]['g'] if len(r_lo) == 1 else None
+        check(sc == f'uni{(up or cp):04X}.sc.latin_gaps', f'{gn} smcp -> {[x["g"] for x in r_lo]}')
+        if up:
+            r_up = shape(chr(up), {'c2sc': 1})
+            check([x['g'] for x in r_up] == [sc], f'U+{up:04X} c2sc -> {[x["g"] for x in r_up]}, want {sc}')
+        if sc in HAVE:
+            sg = GLYF[sc]
+            check(sg.isComposite() and sg.components[0].glyphName == sc_base and HMTX[sc][0] == HMTX[sc_base][0],
+                  f'{sc}: not on {sc_base} with its advance')
+            sb, b0 = bounds(sc), bounds(sc_base)
+            check(540 <= b0[3] <= 560 and sb[3] > b0[3] + 30, f'{sc}: small cap {b0[3]}, marks to {sb[3]}')
+            bad = [(p, kern_after(p, ch, {'smcp': 1}), kern_after(p, base_ch, {'smcp': 1})) for p in 'TVYAo.']
+            bad = [b for b in bad if b[1] != b[2]]
+            check(not bad, f'{sc}: kerning not {base_ch!r}\'s small cap\'s: {bad[:4]}')
+
 # Check 550-unit small-cap height on florin.sc.latin_gaps and base small caps
 if 'florin.sc.latin_gaps' in HAVE:
     fb_sc = bounds('florin.sc.latin_gaps')
@@ -446,6 +633,7 @@ if MODE == 'full':
         owned_glyphs = sorted(
             {'ij', 'longs', 'uni01E4', 'uni01E8', 'uni021E', 'uni0229', 'uni0191'}
             | {f'uni{cp:04X}' for cp in range(0x01CF, 0x01DD) if cp != 0x01D4}
+            | {f'uni{cp:04X}' for cp, *_ in COMPOSED}
             | {UV2AGL.get(cp, f'uni{cp:04X}') for cp in list(range(0x2150, 0x2160)) + [0x2189]}
             | {gn for gn in GO if '.latin_gaps' in gn}
         )
@@ -473,6 +661,7 @@ if MODE == 'full':
 OWNED_CANDIDATES = sorted(
     {'ij', 'longs', 'uni01E4', 'uni01E8', 'uni021E', 'uni0229', 'uni0191'}
     | {f'uni{cp:04X}' for cp in range(0x01CF, 0x01DD) if cp != 0x01D4}
+    | {f'uni{cp:04X}' for cp, *_ in COMPOSED}
     | {UV2AGL.get(cp, f'uni{cp:04X}') for cp in list(range(0x2150, 0x2160)) + [0x2189]}
     | {gn for gn in GO if '.latin_gaps' in gn}
 )

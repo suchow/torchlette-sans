@@ -1,5 +1,6 @@
 """latin_gaps: Dutch ij, complete Pinyin repertoire, long s, Latin case-mapping partners,
-all precomposed vulgar fractions, and stacked nut fractions (`afrc`).
+the composed Latin Extended-B letters, all precomposed vulgar fractions, and stacked nut
+fractions (`afrc`).
 
 What this module adds across all 14 styles (upright and italic, Light to Black):
 
@@ -31,6 +32,24 @@ What this module adds across all 14 styles (upright and italic, Light to Black):
    - `ȩ` (`U+0229`, lowercase partner of `Ȩ` `U+0228`, wired to `uni0228.sc` in `smcp`)
    - `Ƒ` (`U+0191`, capital partner of `ƒ` `U+0192` `florin`) and 550-unit small cap
      `florin.sc.latin_gaps` wired into both `smcp` (for `florin`) and `c2sc` (for `uni0191`).
+
+4b. Letters composed of a base letter and marks the font already has, with 550-unit small
+   caps (`uniXXXX.sc.latin_gaps`, through `smcp` and `c2sc`), each kerned as its base
+   (`LATIN_GAPS_KERN`) and anchored as its base for further marks (post, `_composed_anchors`):
+   - `Ǟ ǟ` (`U+01DE/01DF`) and `Ǡ ǡ` (`U+01E0/01E1`): A/a with diaeresis + macron and dot
+     above + macron, built as `Ǖ ǖ` are (section 2: round dots, the macron above them, the
+     same gaps), centred where `Ä ä` and `Ȧ ȧ` put their marks; capitals from the `.case` marks.
+   - `Ǣ ǣ` (`U+01E2/01E3`): Æ/æ with the macron centred over the whole ligature.
+   - `Ǭ ǭ` (`U+01EC/01ED`): Mulish's `Ǫ ǫ` (the ogonek where it puts it) with the macron.
+   - `Ǯ ǯ` (`U+01EE/01EF`): the african module's `Ʒ ʒ` (`uni01B7`, `uni0292`; that module
+     runs first) with the caron over the middle of the top fifth's ink (otfeatures' anchor rule
+     for them), set in post() at the anchors otfeatures gives them; their small cap is on
+     `uni01B7.sc.african`, which has no anchors, by the same rule.
+   - `ǰ` (`U+01F0`): dotless j with the caron, as Mulish builds `ĵ`; `smcp` gives `J.sc` + caron.
+   - `Ǵ ǵ` (`U+01F4/01F5`), `Ǹ ǹ` (`U+01F8/01F9`), `Ȯ ȯ` (`U+022E/022F`): G/g, N/n, O/o with
+     the acute, grave and dot above.
+   Marks sit at the base's anchors (base anchor less the mark's), and on a small cap where
+   build.py's accented small caps of that base put their marks (`COMPOSED`, `COMPOSED_SC`).
 
 5. All 17 missing Unicode vulgar fractions (`U+2150..U+215F` and `U+2189`), completing
    all 20 Unicode fraction characters alongside `¼ ½ ¾` (`U+00BC..00BE`), using standard
@@ -152,28 +171,32 @@ def _scale_about(ctx, path, sx, sy, cx, cy):
     return ctx.transformed(path, (sx, 0, 0, sy, cx - sx * cx, cy - sy * cy))
 
 
-def _add_dieresis_tone(ctx, name, base_name, tone_mark, adv, is_upper, is_sc=False, cp=None):
+def _add_dieresis_tone(ctx, name, base_name, tone_mark, adv, is_upper, is_sc=False, cp=None,
+                       ref=('Udieresis', 'udieresis', 'Uacute.sc'), dot_mark='uni0308'):
     """Build base + dedicated unencoded dieresis+tone mark glyph as an unscaled 2-component
-    composite so contour/point signatures stay 100% weight-invariant across all 14 styles."""
+    composite so contour/point signatures stay 100% weight-invariant across all 14 styles.
+    `ref` names the accented capital, lowercase and small cap whose mark's offset gives the
+    centre (U's for the Pinyin ü); `dot_mark` 'uni0307' makes one round dot (the dot above)
+    in place of the dieresis's two."""
     base_p = ctx.path_of(base_name)
     _bx0, _by0, _bx1, by1 = base_p.bounds
 
-    # Horizontal anchor matches Udieresis / udieresis / Uacute.sc
+    # Horizontal anchor matches Udieresis / udieresis / Uacute.sc (or ref's)
     if is_upper:
-        cx = ctx.glyf['Udieresis'].components[1].x
-        dier_src = ctx.path_of('uni0308.case')
+        cx = ctx.glyf[ref[0]].components[1].x
+        dier_src = ctx.path_of(dot_mark + '.case')
     elif is_sc:
-        cx = ctx.glyf['Uacute.sc'].components[1].x
-        dier_src = ctx.path_of('uni0308')
+        cx = ctx.glyf[ref[2]].components[1].x
+        dier_src = ctx.path_of(dot_mark)
     else:
-        cx = ctx.glyf['udieresis'].components[1].x
-        dier_src = ctx.path_of('uni0308')
+        cx = ctx.glyf[ref[1]].components[1].x
+        dier_src = ctx.path_of(dot_mark)
 
     # Measure Mulish/build.py's rounded dieresis dot radius and half-separation
     contours = sorted([c.bounds for c in dier_src.contours], key=lambda b: b[0])
     c_left, c_right = contours[0], contours[-1]
     r_src = (c_left[3] - c_left[1]) / 2.0
-    dx_src = ((c_right[0] + c_right[2]) - (c_left[0] + c_left[2])) / 4.0
+    dx_src = ((c_right[0] + c_right[2]) - (c_left[0] + c_left[2])) / 4.0   # 0 for one dot
 
     # Slightly compact round dots so stacked tone mark sits comfortably within WIN_ASCENT
     dot_scale = 0.84 if is_upper else 0.86
@@ -222,7 +245,7 @@ def _add_dieresis_tone(ctx, name, base_name, tone_mark, adv, is_upper, is_sc=Fal
         tone_float,
         t_ends,
         t_flags,
-        [(cx - dx_dot, cy_dot), (cx + dx_dot, cy_dot)],
+        [(cx - dx_dot, cy_dot), (cx + dx_dot, cy_dot)] if len(contours) > 1 else [(cx, cy_dot)],
         r_dot,
         name,
     )
@@ -352,6 +375,267 @@ def _build_long_s(ctx):
     hmtx['longs'] = (hmtx['f'][0], g.xMin)
     ctx.GDEF_CLASS['longs'] = 1
     ctx.map(0x017F, 'longs')
+
+
+# ---- 4b. Letters composed of a base and marks the font has (Latin Extended-B) ---------
+# (code point, base, [(mark, rule)], kerning source); the rule says where a mark goes:
+# 'top'           at the base's anchor of the mark's class, as Mulish composes (base anchor
+#                 less the mark's own anchor), read from the font's mark-to-base lookups;
+#                 for a small capital (no anchors yet in the glyphs phase), where build.py's
+#                 own accented small capitals of that base put the same class of mark;
+# 'as:<glyph>'    where Mulish's composite <glyph> puts this mark (Ǭ ǭ: Ǫ ǫ's ogonek);
+# 'ink'           centred over the base's ink (Ǣ ǣ: over the whole ligature), at the
+#                 height the anchor rule gives;
+# 'band'          over the middle of the ink of the base's top fifth (Ʒ ʒ and their small
+#                 capital, which Mulish does not anchor: otfeatures' rule for them).
+# Ǟ ǟ Ǡ ǡ (STACKED) are built as Ǖ ǖ are (_add_dieresis_tone): round dots and the macron
+# above them with that module's gaps. (Mulish's own stacked marks uni03080304 and
+# uni03070304, which its Ȫ ȫ Ȱ ȱ use, keep Mulish's square dots and stand close together
+# in the heavy weights.)
+STACKED = [
+    # (capital, lowercase, dot mark, the accented A, a and small A whose mark gives the centre)
+    (0x01DE, 0x01DF, 'uni0308', ('Adieresis', 'adieresis', 'Adieresis.sc')),    # Ǟ ǟ
+    (0x01E0, 0x01E1, 'uni0307', ('uni0226', 'uni0227', 'uni0226.sc')),          # Ǡ ǡ
+]
+COMPOSED = [
+    (0x01E2, 'AE', [('uni0304.case', 'ink')], 'AE'),               # Ǣ
+    (0x01E3, 'ae', [('uni0304', 'ink')], 'ae'),                    # ǣ
+    (0x01EC, 'O', [('uni0328', 'as:uni01EA'), ('uni0304.case', 'top')], 'O'),   # Ǭ
+    (0x01ED, 'o', [('uni0328', 'as:uni01EB'), ('uni0304', 'top')], 'o'),        # ǭ
+    (0x01EE, 'uni01B7', [('uni030C.case', 'band')], 'uni01B7'),    # Ǯ (the african module's Ʒ)
+    (0x01EF, 'uni0292', [('uni030C', 'band')], 'uni0292'),         # ǯ (its ʒ)
+    (0x01F0, 'uni0237', [('uni030C', 'top')], 'j'),                # ǰ: dotless j, as Mulish's ĵ
+    (0x01F4, 'G', [('acutecomb.case', 'top')], 'G'),               # Ǵ
+    (0x01F5, 'g', [('acutecomb', 'top')], 'g'),                    # ǵ
+    (0x01F8, 'N', [('gravecomb.case', 'top')], 'N'),               # Ǹ
+    (0x01F9, 'n', [('gravecomb', 'top')], 'n'),                    # ǹ
+    (0x022E, 'O', [('uni0307.case', 'top')], 'O'),                 # Ȯ
+    (0x022F, 'o', [('uni0307', 'top')], 'o'),                      # ȯ
+]
+# Small capitals: (lowercase, uppercase or None, small-cap base, [(lowercase mark, rule)]);
+# ǰ has no precomposed capital, so smcp alone reaches its small capital (J.sc + caron).
+COMPOSED_SC = [
+    (0x01E3, 0x01E2, 'AE.sc', [('uni0304', 'ink')]),
+    (0x01ED, 0x01EC, 'O.sc', [('uni0328', 'as:uni01EA.sc'), ('uni0304', 'top')]),
+    (0x01EF, 0x01EE, 'uni01B7.sc.african', [('uni030C', 'band')]),
+    (0x01F0, None, 'J.sc', [('uni030C', 'top')]),
+    (0x01F5, 0x01F4, 'G.sc', [('acutecomb', 'top')]),
+    (0x01F9, 0x01F8, 'N.sc', [('gravecomb', 'top')]),
+    (0x022F, 0x022E, 'O.sc', [('uni0307', 'top')]),
+]
+# the marks above that build.py's accented small capitals use: where they sit on a small
+# capital is where a new mark above goes on it
+SC_TOP_MARKS = {'acutecomb', 'gravecomb', 'uni0302', 'uni0303', 'uni0304', 'uni0306', 'uni0307', 'uni0308',
+                'uni030A', 'uni030B', 'uni030C'}
+
+
+def _mark_subtables(ctx):
+    """The font's mark-to-base subtables (format 1), in lookup order."""
+    out = []
+    for lk in ctx.font['GPOS'].table.LookupList.Lookup:
+        for st in lk.SubTable:
+            s = st.ExtSubTable if lk.LookupType == 9 else st
+            if getattr(s, 'LookupType', lk.LookupType) == 4:
+                out.append(s)
+    return out
+
+
+def _mark_anchor(ctx, mark):
+    """The mark's own mark-to-base anchor (x, y), from the first subtable that has it."""
+    for s in _mark_subtables(ctx):
+        if mark in s.MarkCoverage.glyphs:
+            a = s.MarkArray.MarkRecord[s.MarkCoverage.glyphs.index(mark)].MarkAnchor
+            return a.XCoordinate, a.YCoordinate
+    raise KeyError(f'latin_gaps: no mark anchor for {mark}')
+
+
+def _anchor_offset(ctx, base, mark):
+    """Where the mark goes on the base by the font's anchors: the offset of its component
+    (the base's anchor of the mark's class less the mark's own anchor), or None."""
+    for s in _mark_subtables(ctx):
+        if base in s.BaseCoverage.glyphs and mark in s.MarkCoverage.glyphs:
+            mr = s.MarkArray.MarkRecord[s.MarkCoverage.glyphs.index(mark)]
+            ba = s.BaseArray.BaseRecord[s.BaseCoverage.glyphs.index(base)].BaseAnchor[mr.Class]
+            if ba is not None:
+                return ba.XCoordinate - mr.MarkAnchor.XCoordinate, ba.YCoordinate - mr.MarkAnchor.YCoordinate
+    return None
+
+
+def _sc_offset(ctx, sc_base, mark):
+    """Where build.py's accented small capitals of sc_base put a mark above (the commonest
+    placement of their marks' anchors), as the offset of `mark`'s component; or None."""
+    seen = defaultdict(int)
+    for n in ctx.font.getGlyphOrder():
+        g = ctx.glyf[n]
+        if not g.isComposite() or len(g.components) != 2 or g.components[0].glyphName != sc_base:
+            continue
+        m = g.components[1]
+        if m.glyphName in SC_TOP_MARKS and m.glyphName != n:
+            ax, ay = _mark_anchor(ctx, m.glyphName)
+            seen[(m.x + ax, m.y + ay)] += 1
+    if not seen:
+        return None
+    (x, y), _ = max(seen.items(), key=lambda kv: (kv[1], kv[0]))
+    ax, ay = _mark_anchor(ctx, mark)
+    return x - ax, y - ay
+
+
+def _sc_dy(ctx):
+    """How far build.py raises a lowercase mark above on a small capital (80: 550 - 470)."""
+    c = ctx.glyf['Oacute.sc'].components[1]
+    return c.y + _mark_anchor(ctx, c.glyphName)[1] - _mark_anchor(ctx, 'acutecomb')[1]
+
+
+def _place(ctx, base, mark, rule, is_sc):
+    """The (x, y) offset of `mark`'s component on `base` by `rule` (see COMPOSED)."""
+    if rule.startswith('as:'):
+        ref = ctx.glyf[rule[3:]]
+        c = next(c for c in ref.components if c.glyphName == mark)
+        assert ref.components[0].glyphName == base, f'latin_gaps: {rule[3:]} is not built on {base}'
+        return c.x, c.y
+    if rule == 'top':
+        off = _sc_offset(ctx, base, mark) if is_sc else _anchor_offset(ctx, base, mark)
+        assert off is not None, f'latin_gaps: no place for {mark} on {base}'
+        return off
+    ax, ay = _mark_anchor(ctx, mark)
+    if is_sc:
+        dy = _sc_dy(ctx) + _mark_anchor(ctx, 'acutecomb')[1] - ay
+    else:
+        dy = 0
+    p = ctx.path_of(base)
+    x0, y0, x1, y1 = p.bounds
+    if rule == 'ink':
+        cx = (x0 + x1) / 2
+        if not is_sc:
+            off = _anchor_offset(ctx, base, mark)
+            dy = off[1] if off else 0
+    elif rule == 'band':
+        b = ctx.clip(p, (-3000, y1 - 0.2 * (y1 - y0), 5000, y1 + 1)).bounds
+        cx = (b[0] + b[2]) / 2
+    else:
+        raise ValueError(f'latin_gaps: unknown mark rule {rule!r}')
+    return round(cx - ax), dy
+
+
+def _build_composed(ctx):
+    """Ǟ ǟ Ǡ ǡ Ǣ ǣ Ǭ ǭ Ǯ ǯ ǰ Ǵ ǵ Ǹ ǹ Ȯ ȯ and their small capitals, each a composite of the
+    base letter and marks the font has (COMPOSED, COMPOSED_SC); smcp and c2sc reach the small
+    capitals, and each letter kerns as its base (post)."""
+    ctx.lg_composed = []
+    ctx.lg_band = []          # (glyph, component index): marks post() sets at the finished anchors
+    for cp_up, cp_lo, dot_mark, ref in STACKED:
+        gn_up, gn_lo = f'uni{cp_up:04X}', f'uni{cp_lo:04X}'
+        gn_sc = f'{gn_up}.sc.{SUF}'
+        _add_dieresis_tone(ctx, gn_up, 'A', 'uni0304.case', ctx.W('A'), is_upper=True, cp=cp_up, ref=ref, dot_mark=dot_mark)
+        _add_dieresis_tone(ctx, gn_lo, 'a', 'uni0304', ctx.W('a'), is_upper=False, cp=cp_lo, ref=ref, dot_mark=dot_mark)
+        _add_dieresis_tone(ctx, gn_sc, 'A.sc', 'uni0304', ctx.W('A.sc'), is_upper=False, is_sc=True, ref=ref, dot_mark=dot_mark)
+        ctx.lg_smcp.append((gn_lo, gn_sc))
+        ctx.lg_c2sc.append((gn_up, gn_sc))
+        for gn, src in ((gn_up, 'A'), (gn_lo, 'a'), (gn_sc, 'A.sc')):
+            ctx.lg_kern[gn] = (src, src)
+            ctx.lg_composed.append(gn)
+    for cp, base, marks, kern_src in COMPOSED:
+        gn = f'uni{cp:04X}'
+        parts = [(base, 0, 0)] + [(m, *_place(ctx, base, m, rule, False)) for m, rule in marks]
+        _add_composite(ctx, gn, parts, ctx.W(base), cp=cp)
+        ctx.lg_band += [(gn, i + 1) for i, (_m, rule) in enumerate(marks) if rule == 'band']
+        ctx.lg_kern[gn] = (kern_src, kern_src)
+        ctx.lg_composed.append(gn)
+    for lo, up, sc_base, marks in COMPOSED_SC:
+        gn = f'uni{up or lo:04X}.sc.{SUF}'
+        parts = [(sc_base, 0, 0)] + [(m, *_place(ctx, sc_base, m, rule, True)) for m, rule in marks]
+        _add_composite(ctx, gn, parts, ctx.W(sc_base))
+        ctx.lg_smcp.append((f'uni{lo:04X}', gn))
+        if up:
+            ctx.lg_c2sc.append((f'uni{up:04X}', gn))
+        ctx.lg_kern[gn] = (sc_base, sc_base)
+        ctx.lg_composed.append(gn)
+
+
+def _composed_anchors(ctx):
+    """Mark-to-base anchors for the composed letters (post: on the finished, reslanted
+    font): each takes its base letter's anchors in every mark-to-base subtable that anchors
+    the base, but its anchor above is its top mark's mark-to-mark anchor, so a further mark
+    above stacks on its marks as it would on the same marks typed after the base (for Ǟ ǟ
+    Ǡ ǡ, whose dots and macron are one glyph, uni0304's mark-to-mark anchor carried to where
+    their macron stands). The small capital of Ǯ has none: the african module's Ʒ.sc has no
+    anchors. Ǯ ǯ's caron is first moved to the anchors otfeatures has given Ʒ ʒ."""
+    font, glyf = ctx.font, ctx.glyf
+    gpos = font['GPOS'].table
+    subs = _mark_subtables(ctx)
+    mk2 = {}
+    for lk in gpos.LookupList.Lookup:
+        for st in lk.SubTable:
+            s = st.ExtSubTable if lk.LookupType == 9 else st
+            if getattr(s, 'LookupType', lk.LookupType) != 6:
+                continue
+            for g, r in zip(s.Mark2Coverage.glyphs, s.Mark2Array.Mark2Record):
+                a = next((a for a in r.Mark2Anchor if a is not None), None)
+                if a is not None and g not in mk2:
+                    mk2[g] = (a.XCoordinate, a.YCoordinate)
+
+    def top_class(s):
+        for m in ('acutecomb', 'acutecomb.case'):
+            if m in s.MarkCoverage.glyphs:
+                return s.MarkArray.MarkRecord[s.MarkCoverage.glyphs.index(m)].Class
+        return None
+
+    def anchors_of(g):
+        """{subtable index: BaseRecord} of every subtable anchoring g."""
+        return {i: s.BaseArray.BaseRecord[s.BaseCoverage.glyphs.index(g)]
+                for i, s in enumerate(subs) if g in s.BaseCoverage.glyphs}
+
+    # Ǯ ǯ: the caron at Ʒ ʒ's anchor as otfeatures has set it on the finished font (the glyphs
+    # phase put it by the same rule, before the anchors existed, and so to a few units)
+    for gn, i in ctx.lg_band:
+        c = glyf[gn].components
+        off = _anchor_offset(ctx, c[0].glyphName, c[i].glyphName)
+        if off is not None:
+            c[i].x, c[i].y = off
+            glyf[gn].recalcBounds(glyf)
+            ctx.hmtx[gn] = (ctx.hmtx[gn][0], glyf[gn].xMin)
+    order = {g: i for i, g in enumerate(font.getGlyphOrder())}
+    ctx.lg_composed_tops = {}
+    for gn in ctx.lg_composed:
+        comps = glyf[gn].components
+        base = comps[0].glyphName
+        tops = [c for c in comps[1:] if c.glyphName != 'uni0328']
+        top = None
+        if tops:
+            t = tops[-1]
+            if t.glyphName in mk2:
+                ax, ay = mk2[t.glyphName]
+                top = (t.x + ax, t.y + ay)
+            else:   # Ǟ ǟ Ǡ ǡ's dots and macron: the macron's mark-to-mark anchor, carried to where
+                # the macron stands in the glyph (its top contour), from where uni0304 stands
+                proxy = 'uni0304' if t.glyphName.endswith('.sc.latin_gaps.mark') or base.islower() else 'uni0304.case'
+                ax, ay = mk2[proxy]
+                tb = max((c.bounds for c in ctx.path_of(t.glyphName).contours), key=lambda b: b[3])
+                pb = ctx.path_of(proxy).bounds
+                top = (round(t.x + (tb[0] + tb[2] - pb[0] - pb[2]) / 2 + ax), round(t.y + tb[3] - pb[3] + ay))
+            ctx.lg_composed_tops[gn] = top
+        for i, rec in anchors_of(base).items():
+            s = subs[i]
+            tc = top_class(s)
+            new = []
+            for c, a in enumerate(rec.BaseAnchor):
+                if a is None:
+                    new.append(None)
+                    continue
+                b = type(a)()
+                b.Format = 1
+                if c == tc and top is not None:
+                    b.XCoordinate, b.YCoordinate = top
+                else:
+                    b.XCoordinate, b.YCoordinate = a.XCoordinate + comps[0].x, a.YCoordinate + comps[0].y
+                new.append(b)
+            r2 = type(rec)()
+            r2.BaseAnchor = new
+            pairs = list(zip(s.BaseCoverage.glyphs, s.BaseArray.BaseRecord)) + [(gn, r2)]
+            pairs.sort(key=lambda p: order[p[0]])
+            s.BaseCoverage.glyphs = [p[0] for p in pairs]
+            s.BaseArray.BaseRecord = [p[1] for p in pairs]
+            s.BaseArray.BaseCount = len(pairs)
 
 
 def _frac_kern_offsets(ctx):
@@ -646,6 +930,9 @@ def glyphs(ctx):
     _build_long_s(ctx)
     ctx.lg_smcp.append(('longs', 'S.sc'))
 
+    # Ǟ ǟ Ǡ ǡ Ǣ ǣ Ǭ ǭ Ǯ ǯ ǰ Ǵ ǵ Ǹ ǹ Ȯ ȯ: base letters and marks the font has, + small caps
+    _build_composed(ctx)
+
     # ---- 4. All 17 missing vulgar fractions (U+2150..215F, U+2189) ----------------
     # Smooth optical weight grading for numerator figures (`w_num`) + slash breathing
     # room (`pad_num`) so heavy weights balance the top/left numerator with denominator.
@@ -851,7 +1138,8 @@ def glyphs(ctx):
         ctx.afrc_vulg_pairs.append((vname, aname))
 
     ctx.log(
-        f'added 37 encoded glyphs (ij, 13 Pinyin, 5 case partners, long s, 17 vulgar fractions), '
+        f'added 54 encoded glyphs (ij, 13 Pinyin, 5 case partners, long s, 17 composed letters, '
+        f'17 vulgar fractions), '
         f'{len(ctx.lg_smcp)} smcp / {len(ctx.lg_c2sc)} c2sc mappings, and afrc stacked fractions'
     )
 
@@ -1158,13 +1446,11 @@ def _g1fix_inplace(g):
     g.coordinates = GlyphCoordinates(c)
 
 
-def _finalize_deterministic_outlines(ctx):
-    """Write weight-invariant quadratic contours across upright and italic masters."""
+def _finalize_dier_marks(ctx):
+    """Stacked dieresis (or dot) + tone marks: exact tone polygon + 8-point off-curve circles."""
     glyf = ctx.glyf
     k_sl = ctx.ITALIC_K if ctx.ITALIC else 0.0
     yc_sl = ctx.ITALIC_YC
-
-    # 1. Stacked dieresis + tone marks: exact tone polygon + two 8-point off-curve circles
     for mk_gn, (tone_float, t_ends, t_flags, dot_centers, r_dot, parent_gn) in ctx.lg_dier_marks.items():
         coords = [(round(x + k_sl * (y - yc_sl)), round(y)) for x, y in tone_float]
         flags = list(t_flags)
@@ -1190,6 +1476,16 @@ def _finalize_deterministic_outlines(ctx):
         pg = glyf[parent_gn]
         pg.recalcBounds(glyf)
         ctx.hmtx[parent_gn] = (ctx.hmtx[parent_gn][0], pg.xMin)
+
+
+def _finalize_deterministic_outlines(ctx):
+    """Write weight-invariant quadratic contours across upright and italic masters."""
+    glyf = ctx.glyf
+    k_sl = ctx.ITALIC_K if ctx.ITALIC else 0.0
+    yc_sl = ctx.ITALIC_YC
+
+    # 1. Stacked dieresis (or dot) + tone marks
+    _finalize_dier_marks(ctx)
 
     # 2. Stacked nut figures: exact scaled Mulish .dnom quadratics with non-deleting midpoint snap
     for gn, (sc_coords, d_ends, d_flags, dx, y_base) in ctx.lg_quad_figs.items():
@@ -1309,8 +1605,15 @@ def _finalize_deterministic_outlines(ctx):
 
 
 def post(ctx):
-    """Finalize weight-invariant quadratic outlines and emit LATIN_GAPS_KERN."""
+    """Finalize weight-invariant quadratic outlines, anchor the composed letters and emit
+    LATIN_GAPS_KERN."""
     _finalize_deterministic_outlines(ctx)
+    _composed_anchors(ctx)
+    _inherit_kerning(ctx)
+
+
+def _inherit_kerning(ctx):
+    """LATIN_GAPS_KERN: each new glyph kerns as the glyphs ctx.lg_kern names for its sides."""
     font = ctx.font
     gpos = font['GPOS'].table
     eff = _effective_kerning(gpos)

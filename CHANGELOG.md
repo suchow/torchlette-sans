@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- New letters: Ǟ ǟ, Ǡ ǡ, Ȯ ȯ, and Ǭ ǭ (Livonian), Ǣ ǣ (Old English), Ǯ ǯ (Skolt Sami), ǰ, Ǵ ǵ (Macedonian transliteration), and Ǹ ǹ (Pinyin), with small capitals, kerning, and room for further accents above and below, at every weight, upright and italic.
+
 ## v0.5.12 (2026-11-15)
 
 Letters for African languages such as Ewe, Akan, Hausa, and Fula: Ɔ ɔ, Ɛ ɛ, Ǝ ǝ, Ɣ ɣ, Ɩ ɩ, Ʊ ʊ, Ʋ ʋ, Ʒ ʒ, Ƙ ƙ, Ƥ ƥ, Ƭ ƭ, Ɲ ɲ, Ɖ ɖ, Ƀ ƀ, Ɨ ɨ, Ʉ ʉ, Ƿ ƿ, Ʇ ʇ, and Ꞌ ꞌ, with small capitals, kerning, and accents above and below, at every weight, upright and italic.
