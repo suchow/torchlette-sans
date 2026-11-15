@@ -108,6 +108,55 @@ import unicodedata
 for feat, cat in (('smcp', 'Ll'), ('c2sc', 'Lu')):
     miss = [chr(u) for u, n in sorted(cm.items()) if unicodedata.category(chr(u)) in (cat, 'Lt') and shape(FT, chr(u), {feat: 1}) == shape(FT, chr(u), {})]
     print(feat, 'leaves', len(miss), 'letters unmapped:', ' '.join(miss))
+# issue 50: build.py's small capital of a capital that is a letter and a bar overlay (Đ Ð Ŧ:
+# U+0335 or U+0336) has the bar across its stem, where the capital has it: its middle within the
+# small cap's height, at the capital's bar's height times the small-cap height over the cap
+# height (within BAR_TOL), its top not above the small-cap height, and the stem inside it.
+import pathops
+GS_ = f.getGlyphSet(); BAR_TOL = 12
+def outline(n):
+    p = pathops.Path(); GS_[n].draw(p.getPen(glyphSet=GS_)); return p
+def band(x0, y0, x1, y1):
+    p = pathops.Path(); pen = p.getPen()
+    pen.moveTo((x0, y0)); pen.lineTo((x1, y0)); pen.lineTo((x1, y1)); pen.lineTo((x0, y1)); pen.closePath(); return p
+def bar_of(full, base):
+    """The ink of full that base lacks, row by row: the rows where it is at least 6 units
+    wide (not the slivers rounding leaves along an italic stem). (y0, y1, x0, x1) or None."""
+    d = pathops.op(outline(full), outline(base), pathops.PathOp.DIFFERENCE)
+    if not list(d.contours): return None
+    b = d.bounds; rows = []
+    for y in range(int(b[1]), int(b[3]) + 1):
+        cs = [c.bounds for c in pathops.op(d, band(b[0] - 1, y, b[2] + 1, y + 1), pathops.PathOp.INTERSECTION).contours]
+        if sum(c[2] - c[0] for c in cs) >= 6: rows.append((y, min(c[0] for c in cs), max(c[2] for c in cs)))
+    if not rows: return None
+    return rows[0][0], rows[-1][0] + 1, min(r[1] for r in rows), max(r[2] for r in rows)
+CAP_H, SC_H_ = outline('H').bounds[3], outline('H.sc').bounds[3]
+bar_checks = bar_fails = 0; bar_seen = []
+for u, cap in sorted(cm.items()):
+    g_ = f['glyf'][cap]
+    if unicodedata.category(chr(u)) != 'Lu' or not g_.isComposite() or len(g_.components) != 2: continue
+    base, mark = g_.components[0].glyphName, g_.components[1].glyphName
+    if mark.split('.')[0] not in ('uni0335', 'uni0336') or base + '.sc' not in f['glyf']: continue
+    cb = bar_of(cap, base)
+    want = (cb[0] + cb[1]) / 2 * SC_H_ / CAP_H
+    for ch, feat in ((chr(u), 'c2sc'), (chr(u).lower(), 'smcp')):
+        if ord(ch) not in cm: continue
+        sc = shape(FT, ch, {feat: 1})[0]
+        if sc not in (cap + '.sc', cm[ord(ch)]): continue   # a module's own small cap (Ұ Ӿ: cyrillic)
+        bar_checks += 1; sb = bar_of(sc, base + '.sc') if sc == cap + '.sc' else None
+        if not sb:
+            bar_fails += 1; print('FAIL bar', ch, feat, sc, 'no bar beside', base + '.sc'); continue
+        y0, y1, x0, x1 = sb; yc = (y0 + y1) / 2
+        stems = [c.bounds for c in pathops.op(outline(base + '.sc'), band(x0, yc - 0.5, x1, yc + 0.5), pathops.PathOp.INTERSECTION).contours]
+        crosses = any(x0 + 1 < s[0] and s[2] < x1 - 1 for s in stems)
+        bar_seen.append(f'{ch} {yc:.0f}/{want:.0f}')
+        if not (0 < yc < SC_H_ and y1 <= SC_H_ and abs(yc - want) <= BAR_TOL and crosses):
+            bar_fails += 1
+            print(f'FAIL bar {ch} {feat} {sc}: bar {y0:.0f}..{y1:.0f}, middle {yc:.0f} (want {want:.0f} +- {BAR_TOL}, '
+                  f'small-cap height {SC_H_:.0f}), crosses the stem: {crosses}')
+print(f'small-cap bars (Đ Ð Ŧ): {bar_checks} checked, {bar_fails} fail (middle/want: {", ".join(bar_seen)})')
+if not bar_checks and any(n in cm.values() for n in ('Dcroat', 'Tbar')): bar_fails += 1; print('FAIL bar: no barred capital found')
+fails += bar_fails
 if EXTRA:
     for t, fe in [('Ångström, Čapek, Dvořák', {'smcp': 1, 'c2sc': 1}), ('(3/4) 97.2%!', {'smcp': 1}), ('áäâ', {'ss04': 1}), ('ýÿ', {'ss06': 1}), ('ťţ', {'ss07': 1})]:
         print(t, fe, shape(FT, t, fe))

@@ -1124,8 +1124,9 @@ for d in DIGITS + ['seven.sc.ss08']:
 SC_SYMBOLS = SC_PUNCT + ['hyphen', 'endash', 'emdash', 'quotesingle', 'quotedbl', 'quoteleft', 'quoteright', 'quotedblleft', 'quotedblright']
 
 # accented letters: composites of the .sc base and the lowercase-height marks, raised
-# from the x-height to the small-cap height; overlays (Ł, Đ) and simple glyphs (Ø, Æ,
-# Œ, Þ ...) are drawn from the heavier instance like the plain letters.
+# from the x-height to the small-cap height; a bar overlay (Đ Ð Ŧ) crosses the .sc base's
+# stem; the slash overlay (Ł) and simple glyphs (Ø, Æ, Œ, Þ ...) are drawn from the
+# heavier instance like the plain letters.
 cmap_ = font.getBestCmap()
 def ink(n):
     g = glyf[n]; g.recalcBounds(glyf); return g.xMin, g.xMax
@@ -1152,9 +1153,15 @@ for u in list(range(0xC0, 0x100)) + list(range(0x100, 0x250)) + list(range(0x1E0
     if g.isComposite() and g.components[0].glyphName + '.sc' in glyf.glyphs:
         base = g.components[0].glyphName
         cx0, cx1 = ink(base); sx0, sx1 = ink(base + '.sc')
-        comps = []
+        comps = []; bars = []
         for c in g.components[1:]:
             m = c.glyphName.split('.case')[0]
+            # issue 50: the overlays (U+0335-0338) before the height test, which took Đ Ð Ŧ's
+            # bar (uni0335, drawn at đ's ascender) for a mark above. A bar crosses the small
+            # cap's stem: the heavier instance's capital's bar at small-cap size (its height
+            # and length the capital's times SC_SCALE, SC_H / 705), moved with the stem.
+            if m in ('uni0335', 'uni0336'): bars.append(c.glyphName); continue
+            if m in ('uni0337', 'uni0338'): break      # a slash (Ł): draw the letter instead
             if m not in glyf.glyphs: break
             mg = glyf[m]; mg.recalcBounds(glyf)
             if mg.yMin >= 300: dy = SC_H - XH          # top mark: from the x-height to the small-cap height
@@ -1170,6 +1177,14 @@ for u in list(range(0xC0, 0x100)) + list(range(0x100, 0x250)) + list(range(0x1E0
                 x_sc = round((sx0 + sx1) / 2 + (c.x + mark_anchor_x(c.glyphName) - (cx0 + cx1) / 2) * SC_SCALE - mark_anchor_x(m))
             comps.append((m, x_sc, dy + round(c.y * SC_SCALE)))
         else:
+            built = True
+            if bars:                                   # an outline: the small cap and its bar, as african's Ɖ
+                p = path_of(base + '.sc'); dx = sx0 - sc_path(base).bounds[0]   # the stem: D.sc and T.sc keep the left edge
+                for k in sc_font['glyf'][cap].components:
+                    if k.glyphName in bars:
+                        p = union(p, transformed(sc_path(k.glyphName), (1, 0, 0, 1, dx + k.x * SC_SCALE, k.y * SC_SCALE)))
+                add(name, p, W(base + '.sc'))
+        if built and not bars:
             from fontTools.ttLib.tables._g_l_y_f import GlyphComponent, Glyph
             new = Glyph(); new.numberOfContours = -1; new.components = []
             for gn, x, y in [(base + '.sc', 0, 0)] + comps:
@@ -1178,7 +1193,6 @@ for u in list(range(0xC0, 0x100)) + list(range(0x100, 0x250)) + list(range(0x1E0
             glyf[name] = new; hmtx[name] = (W(base + '.sc'), 0)
             if name not in font.getGlyphOrder(): font.setGlyphOrder(font.getGlyphOrder() + [name])
             new.recalcBounds(glyf); hmtx[name] = (W(base + '.sc'), new.xMin)
-            built = True
     if not built:
         if cap not in sc_gs: continue
         add(name, sc_path(cap), sc_font['hmtx'][cap][0] * SC_SCALE + 2 * SC_TRACK); sc_respace(name)

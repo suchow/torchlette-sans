@@ -4,6 +4,7 @@
 
 - New letters: Ǟ ǟ, Ǡ ǡ, Ȯ ȯ, and Ǭ ǭ (Livonian), Ǣ ǣ (Old English), Ǯ ǯ (Skolt Sami), ǰ, Ǵ ǵ (Macedonian transliteration), and Ǹ ǹ (Pinyin), with small capitals, kerning, and room for further accents above and below, at every weight, upright and italic.
 - A fix to kerning shipped since v0.4.0: after the letters built from a base letter and accents (ǒ, ǐ, ǔ, ǖ, ǘ, ǚ, ǜ, their capitals, Ǩ, Ȟ, ȩ, and the others of that kind), the apostrophe and the right single quote were kerned twice and crowded the accent. They are now kerned as after the base letter.
+- The small capitals of Đ, Ð, and Ŧ (and of đ, ð, and ŧ under smcp) have their bar across the stem, where they had it above the letter.
 
 ## v0.5.12 (2026-11-15)
 

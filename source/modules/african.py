@@ -56,8 +56,8 @@ Small capitals: each pair has one, which smcp gives for the lowercase and c2sc f
 (<capital>.sc.african), drawn by the same rule from the small capitals of the models (C.sc,
 Ɓ's uni0181.sc, Eng.sc ...) or, where build.py has none (З Ӡ Ω Đ, and ɓ for Ƙ's hook), from
 build.py's sc_path, the heavier instance at small-cap size, as build.py draws its own. (Ɖ.sc is
-D.sc with the bar measured on sc_path('Dcroat'): build.py's Dcroat.sc carries Đ's bar above
-the D, as a top mark.)
+D.sc with the bar measured on sc_path('Dcroat'), the same outline as build.py's Dcroat.sc,
+which since issue 50 puts the heavier instance's bar across D.sc's stem in the same way.)
 
 Every glyph gets GDEF class 1 (base). Kerning (post): each letter kerns on each side as the
 letter whose side it has (KERN), its small capital as the models' small capitals: the letter is
