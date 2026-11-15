@@ -12,13 +12,19 @@
      the model's, after the bounding boxes are aligned (in an italic, the least over shifts
      of up to a unit across: the build rounds the slanted points);
    - heights: the flat-topped capitals end at the H's cap height, the round ones at the
-     O's overshoot or Ƴ's (Ƙ), within 2; the x-height letters at the x or o, the ascenders
+     O's overshoot (Ƙ's hook too), within 2; the x-height letters at the x or o, the ascenders
      with ɓ's hook (ƙ ƭ ƥ) at ɓ's top, ƀ at b's; the descenders no deeper than the deepest
      of p, y and j (ɲ ɖ ʒ ɣ ƥ ƿ ʇ), within 2;
    - stems: the stem of each letter made on another is that letter's, measured at a
      stated height, within 2 (Ƙ ƙ Ƥ ƥ Ɲ ɲ Ƀ ƀ Ɨ ɨ Ʉ ʉ Ɩ ɩ Ƿ ƿ ɖ);
    - bars: ƀ's is ħ's bar's weight; Ƀ Ɨ Ʉ Đ's; ɨ ʉ đ's, within 2;
    - counters: Ɣ ɣ have their loop (two contours), ɛ Ɛ Ɔ ɔ Ʊ ʊ Ʋ ʋ one contour.
+   - Ƙ's hook (and its small capital's), against K: it reaches past the end of K's arm by at
+     least HOOK_REACH of the cap height and curls down past it to at least HOOK_DROP below its
+     top, the two together at least HOOK_SIZE, its stroke at the top at least HOOK_W of K's
+     arm's weight.
+   - Ꞌ (and its small capital): from the cap height down at least SALT_MIN of it, as wide as the
+     straight quote; Ꞌ at least SALT_X times as long as ꞌ (the straight quote).
    - Noto Sans's Ɣ ɣ Ʋ ʋ (and the small capitals Ɣ Ʋ): the weight of the left arm across it
      (Ɣ ɣ, between 0.55 and 0.75 of the height) or of the left stem (Ʋ ʋ, at half the height) is
      the model's (V v U u, V.sc U.sc), within 3; the sidebearings are the model's, within 1
@@ -34,7 +40,8 @@
    ɨ before a mark above (or below, then above) is its dotless form, ɨ alone keeps its dot;
    the capitals take the .case acute and tilde (ccmp). Ɣ ɣ take the dot below under the loop.
 4. Kerning, on the full font: a side made as its model's kerns as the model does
-   (Tɔ as To, VƆ as VO, ƔA as VA, ƙo as ko, ƀo as bo, Ɲa as Na, Ʉ, as U, ...).
+   (Tɔ as To, VƆ as VO, ƔA as VA, ƙo as ko, ƀo as bo, Ɲa as Na, Ʉ, as U, ƘT as XT ...); Ƙ's
+   hook stays CLEAR units off T Y V W Z and the quotes after it.
 """
 import os
 import sys
@@ -52,6 +59,9 @@ ITALIC = 'Italic' in STYLE
 K, YC = (0.1587 if ITALIC else 0.0), 252
 WIN_ASCENT, WIN_DESCENT = 1100, 480
 LOOP_W, LOOP_H, OVER = 0.25, 0.7, 16
+HOOK_REACH, HOOK_DROP, HOOK_SIZE, HOOK_W = 0.10, 0.15, 0.30, 0.7
+SALT_MIN, SALT_X = 0.65, 1.5
+CLEAR = 10
 
 tt = TTFont(PATH)
 GO = tt.getGlyphOrder(); HAVE = set(GO)
@@ -164,7 +174,7 @@ if all(have(chr(c)) for c in CPS):
     check(cap - 2 <= top('Ʋ') <= cap + OVER, f'Ʋ: top {top("Ʋ"):.0f}, cap height {cap:.0f}')
     check(xh - 2 <= top('ʋ') <= xh + OVER, f'ʋ: top {top("ʋ"):.0f}, x-height {xh:.0f}')
     check(bot('Ɣ') >= bot('y') - 2, f'Ɣ: bottom {bot("Ɣ"):.0f}, deeper than y ({bot("y"):.0f})')
-    check(abs(top('Ƙ') - top('Ƴ')) <= 2, f'Ƙ: top {top("Ƙ"):.0f}, Ƴ {top("Ƴ"):.0f}')
+    check(abs(top('Ƙ') - otop) <= 2, f'Ƙ: top {top("Ƙ"):.0f}, O {otop:.0f}')
     check(abs(top('Ɣ') - cap) <= 2 and abs(top('Ʇ') - cap) <= 2, f'Ɣ Ʇ: tops {top("Ɣ"):.0f} {top("Ʇ"):.0f}, cap {cap:.0f}')
     for ch in 'ɔɛɣɩʊɲɨʉ':
         check(min(abs(top(ch) - xh), abs(top(ch) - xo)) <= 2 or (ch == 'ɨ' and abs(top(ch) - top('i')) <= 2),
@@ -235,6 +245,55 @@ if all(have(chr(c)) for c in CPS):
                 check(cb[2] - cb[0] >= LOOP_W * b_ and cb[3] - cb[1] >= LOOP_H * b_,
                       f'{g}: the loop\'s counter {cb[2] - cb[0]:.0f} x {cb[3] - cb[1]:.0f}, arm {b_:.0f}')
 
+    # Ƙ's hook, against K (and the small capitals', against K.sc), H the cap height: it reaches
+    # past the end of K's arm by HOOK_REACH of H and curls down past it to HOOK_DROP of H below
+    # its top, the two together HOOK_SIZE (v0.5.12's, Ƴ's arm-end, reached 0.02-0.11 and dropped
+    # 0.09-0.19, together 0.21 at most, and read as K at 17 px; ɓ's hook, 1.25 times, reaches
+    # 0.11-0.22 and drops 0.18-0.30, together 0.40 or more), its stroke at the top HOOK_W of the
+    # weight of K's arm (between 0.70 and 0.80 of H, across it) or more
+    def clipped(p, box):
+        r = pathops.Path(); pen = r.getPen()
+        pen.moveTo((box[0], box[1])); pen.lineTo((box[2], box[1])); pen.lineTo((box[2], box[3])); pen.lineTo((box[0], box[3])); pen.closePath()
+        return pathops.op(p, r, pathops.PathOp.INTERSECTION)
+
+    def hook(gq, gk, H):
+        q, k = outline(gq), outline(gk)
+        kx = clipped(k, (-3000, 0.6 * H, 5000, 5000)).bounds[2]
+        qx = clipped(q, (-3000, 0.6 * H, 5000, 5000)).bounds[2]
+        t = q.bounds[3]
+        past = clipped(q, (kx, 0.5 * H, 5000, 5000))
+        drop = t - past.bounds[1] if abs(past.area) > 0 else 0
+        tb = clipped(q, (-3000, t - 1.5, 5000, 5000)).bounds
+        xa = (tb[0] + tb[2]) / 2
+        apex = vspans(q, xa)[-1]
+        a, b = hspans(k, 0.70 * H)[-1], hspans(k, 0.80 * H)[-1]
+        dx = (b[0] + b[1] - a[0] - a[1]) / 2
+        arm = (a[1] - a[0]) * 0.1 * H / (dx * dx + (0.1 * H) ** 2) ** 0.5
+        return (qx - kx) / H, drop / H, apex[1] - apex[0], arm
+    hooks = [(G('Ƙ'), 'K', cap)]
+    if 'uni0198.sc.african' in HAVE and 'K.sc' in HAVE: hooks.append(('uni0198.sc.african', 'K.sc', outline('H.sc').bounds[3]))
+    for gq, gk, H in hooks:
+        reach, drop, wq, wk = hook(gq, gk, H)
+        check(reach >= HOOK_REACH and drop >= HOOK_DROP and reach + drop >= HOOK_SIZE,
+              f'{gq}: hook reaches {reach:.3f} of the cap height past {gk}\'s arm (want {HOOK_REACH}), drops {drop:.3f} '
+              f'(want {HOOK_DROP}; together {HOOK_SIZE})')
+        check(wq >= HOOK_W * wk, f'{gq}: hook {wq:.0f} at its top, {gk}\'s arm {wk:.0f}')
+    # Ꞌ is the straight quote lengthened: from the cap height (the small capital's: its height)
+    # down to at least SALT_MIN of it, as wide as the quote; the capital at least SALT_X times as
+    # long as ꞌ (the quote; smcp and c2sc give both the same small capital, so only the capital
+    # has ꞌ beside it to be told from: v0.5.12's was 1.45 times as long, 0.55-0.62 of the cap
+    # height, hard to tell from ꞌ at 17 px)
+    def length(g):
+        b = outline(g).bounds
+        return b[3] - b[1], b[2] - b[0], b[3]
+    salt = [(G('Ꞌ'), G('ꞌ'), cap, SALT_X)]
+    if 'uniA78B.sc.african' in HAVE and 'quotesingle.sc' in HAVE:
+        salt.append(('uniA78B.sc.african', 'quotesingle.sc', outline('H.sc').bounds[3], 0))
+    for gu, gl, H, x in salt:
+        (lu, wu, tu), (ll, wl, tl) = length(gu), length(gl)
+        check(lu >= SALT_MIN * H and lu >= x * ll and abs(wu - wl) <= 2 and abs(tu - H) <= 2,
+              f'{gu}: {lu:.0f} long ({lu / H:.2f} of its cap height, {lu / ll:.2f} of {gl}), {wu:.0f} wide ({gl} {wl:.0f}), top {tu:.0f}')
+
     # ---- 3. forms ---------------------------------------------------------------------
     sc_h = outline('H.sc').bounds[3] if 'H.sc' in HAVE else None
     for up, low in PAIRS:
@@ -259,8 +318,18 @@ if all(have(chr(c)) for c in CPS):
     if MODE == 'full' and kept('kern'):
         for new, old in (('Tɔ', 'To'), ('VƆ', 'VO'), ('ƔA', 'VA'), ('ƙo', 'ko'), ('ƀo', 'bo'), ('Ɲa', 'Na'),
                          ('Ʉ,', 'U,'), ('ɣo', 'vo'), ('Ɛ.', 'C.'), ('Tɛ', 'Tc'), ('Ƭa', 'Ta'), ('ɖo', 'do'),
-                         ('Ƀa', 'Ba'), ('AƐ', 'AC'), ('YƎ', 'YZ')):
+                         ('Ƀa', 'Ba'), ('AƐ', 'AC'), ('YƎ', 'YZ'), ('ƘT', 'XT'), ('Ƙo', 'Xo')):
             check(kern(new) == kern(old), f'{new!r} kerned {kern(new)}, {old!r} {kern(old)}')
+    # Ƙ's hook stays CLEAR units off the capitals and quotes that reach out at the top (not Ƭ,
+    # whose own hook faces it, 8-19 units off: no orthography has both)
+    if MODE == 'full':
+        for nxt in 'TYVWZ’"\'':
+            if not G(nxt): continue
+            s = shape('Ƙ' + nxt)
+            if len(s) != 2: continue
+            a = outline(s[0][0]); b = moved(outline(s[1][0]), (1, 0, 0, 1, s[0][1] - CLEAR, 0))
+            ov = abs(pathops.op(a, b, pathops.PathOp.INTERSECTION).area)
+            check(ov == 0, f'Ƙ{nxt}: the hook comes within {CLEAR} units of {nxt} ({ov:.0f} square units)')
 
 # ɨ is soft-dotted: before a mark above (or a mark below, then one above) ccmp gives its
 # dotless form, which keeps its advance and has no ink above the dotless i's top

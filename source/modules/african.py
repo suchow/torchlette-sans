@@ -20,8 +20,10 @@ letters lean with its letters once build.py reslants it, the turned and mirrored
   runs up into ɓ's ascender and hook.
 - Ƥ (U+01A4): P with Ɓ's hook, moved over as Ɓ's B is. Ƭ (U+01AC): T whose bar ends on the left
   in Ɓ's hook, its outer edge where the bar ended.
-- Ƙ (U+0198): K whose upper arm ends in Ƴ's hooked arm, turned to the K's arm's slope and scaled
-  to its weight.
+- Ƙ (U+0198): K whose upper arm ends in ɓ's hook (as ƙ's stem does), KH_F times as large, its
+  stroke thinned back to the arm's weight, its stem turned to the arm's slope, slid along the
+  arm until its top is the O's overshoot above the cap height: the arm curls over to the right
+  and down, unmistakably not K's at text size (Ƴ's flatter arm-end, used before, was not).
 - Ʋ ʋ Ɣ ɣ (U+01B2, U+028B, U+0194, U+0263): not drawn here but Noto Sans's, fitted (BORROW):
   Noto's outline mapped vertically by the line through its x-height or cap height and the
   bottom of its y (ɣ), o (ʋ) or O (Ɣ Ʋ) onto Torchlette's, so the descender and overshoot are
@@ -46,12 +48,13 @@ letters lean with its letters once build.py reslants it, the turned and mirrored
 - Ƿ ƿ (U+01F7, U+01BF): wynn: P and p, the top of the bowl kept, its right side running down
   in a curve into a straight stroke (of the bowl's side weight) that meets the stem at WY_MEET
   of the cap height (Ƿ) or TT_DEPTH of the x-height (ƿ).
-- Ꞌ ꞌ (U+A78B, U+A78C): saltillo: ꞌ is the straight quote, Ꞌ the quote SALT_K times as long
-  (from the cap height down); ı's sidebearings, as letters.
+- Ꞌ ꞌ (U+A78B, U+A78C): saltillo: ꞌ is the straight quote; Ꞌ the quote lengthened from the cap
+  height down to SALT_L of it (Noto Sans's Ꞌ is about 0.7 of its cap height), so 1.6 to 1.8
+  times as long as ꞌ, its width and taper kept; ı's sidebearings, as letters.
 
 Small capitals: each pair has one, which smcp gives for the lowercase and c2sc for the capital
 (<capital>.sc.african), drawn by the same rule from the small capitals of the models (C.sc,
-Ɓ's uni0181.sc, Eng.sc, Ƴ's uni01B3.sc ...) or, where build.py has none (З Ӡ Ω Đ), from
+Ɓ's uni0181.sc, Eng.sc ...) or, where build.py has none (З Ӡ Ω Đ, and ɓ for Ƙ's hook), from
 build.py's sc_path, the heavier instance at small-cap size, as build.py draws its own. (Ɖ.sc is
 D.sc with the bar measured on sc_path('Dcroat'): build.py's Dcroat.sc carries Đ's bar above
 the D, as a top mark.)
@@ -80,7 +83,8 @@ SUF = 'african'
 UPS_W = 1.06          # ʊ: its ink this much of the o's ink width
 TT_DEPTH = 0.12       # ƿ: where the diagonal meets the stem, of the x-height above the baseline
 WY_MEET = 0.30        # Ƿ: where the diagonal meets the stem, of the cap height
-SALT_K = 1.45         # Ꞌ: its length, of the straight quote's (ꞌ is the straight quote)
+KH_F = 1.25           # Ƙ: the hook's size, of ɓ's (its stroke thinned back to the arm's weight)
+SALT_L = 0.70         # Ꞌ: its length, of the cap height (ꞌ is the straight quote, about 0.39 of it)
 BAR_UC = 1.0          # Ɨ Ʉ: the bar beyond each stem, of Đ's bar beyond its stem on the left
 BAR_LC = 0.6          # ʉ: the bar beyond each stem, of đ's bar beyond its stem
 BAR_B = 0.30         # Ƀ: the bar runs into the lower counter no further than this much of its width
@@ -283,12 +287,13 @@ def glyphs(ctx):
     pair(0x019D, 0x0272, f'{_name(0x019D)}.sc.{SUF}')
 
     # ---- hooks ------------------------------------------------------------------------------
-    def asc_hook(src):
+    def asc_hook(src, bowl_top=None):
         """ɓ's hook: its outline above where its stem stops being straight (the hook may begin
         low: in Black the stem bends from just above the bowl), with 40 units of the straight
-        stem below; the stem's span and the height where the hook begins."""
-        p = P(src)
-        y = o_top + 12
+        stem below; the stem's span and the height where the hook begins. src: a glyph name
+        or a path (whose bowl's top is bowl_top)."""
+        p = P(src) if isinstance(src, str) else src
+        y = (o_top if bowl_top is None else bowl_top) + 12
         s = hs(p, y)[0]
         while y < 900:
             q = hs(p, y + 2)
@@ -397,34 +402,47 @@ def glyphs(ctx):
     borrow(0x01B2); borrow(0x01B2, '.sc'); borrow(0x028B)
     pair(0x01B2, 0x028B, f'{_name(0x01B2)}.sc.{SUF}')
 
-    # Ƙ: K's upper arm ending in Ƴ's hooked arm, turned to the K's arm and as wide
+    # Ƙ: K's upper arm ending in ɓ's hook, turned to the K's arm and as heavy
     def arm(p, y0, y1):
         a, b = hs(p, y0)[-1], hs(p, y1)[-1]
         ca, cb = (a[0] + a[1]) / 2, (b[0] + b[1]) / 2
         ang = math.atan2(cb - ca, y1 - y0)                    # from the vertical, positive leaning right
         perp = (a[1] - a[0]) * math.cos(ang)
         return (ca, y0), ang, perp
-    for kn, yn, sfx in (('K', 'uni01B3', ''), ('K.sc', 'uni01B3.sc', '.sc')):
-        H_ = P(kn).bounds[3]
-        (kc, ky), ka, kw = arm(P(kn), 0.70 * H_, 0.80 * H_)
-        (yc, yy), ya, yw = arm(P(yn), 0.70 * H_, 0.80 * H_)
-        lo = hs(P(yn), 0.68 * H_)
-        piece = clip(P(yn), ((lo[0][1] + lo[-1][0]) / 2, 0.68 * H_, BIG, BIG))
-        th = ka - ya                                          # turn the piece clockwise by this
-        k_ = kw / yw
+    for kn, sfx in (('K', ''), ('K.sc', '.sc')):
+        K_ = P(kn); H_ = K_.bounds[3]
+        (kc, ky), ka, kw = arm(K_, 0.70 * H_, 0.80 * H_)
+        # ɓ's hook (the small cap's from the heavier instance at small-cap size, as build.py
+        # draws its small capitals), its straight stem run on downwards
+        bq = P('uni0253') if not sfx else c.sc_path('uni0253')
+        bo = P('o').bounds[3] if not sfx else c.sc_path('o').bounds[3]
+        piece, (s0, s1), hy = asc_hook(bq, bo)
+        d_ = (s1 - s0) * (KH_F - 1) / KH_F / 2                # the hook KH_F times ɓ's, its stroke thinned
+        c.log(f'Ƙ{sfx}: ɓ hook from {hy:.0f}, bowl top {bo:.0f}, stem {s0:.1f}-{s1:.1f}, thinned {d_:.1f}')
+        # back to the arm's weight; the stem run on below by a rect just into the thinned piece's
+        # straight stem (higher, its straight edge would stand off the curve where it begins)
+        piece = union(offset(piece, -d_), rect(s0 + d_, hy - 400, s1 - d_, hy - 40 + d_ + 6))
+        k_ = kw / (s1 - s0) * KH_F
+        th = ka                                               # the stem turned to the arm's slope
         co, si = math.cos(th) * k_, math.sin(th) * k_
-        piece = tf(piece, (co, -si, si, co, 0, 0))
-        px, py = co * yc + si * yy, -si * yc + co * yy        # where (yc, yy) went
+        sx, sy = (s0 + s1) / 2, hy
+        piece = tf(piece, (co, -si, si, co, 0, 0))             # clockwise
+        px, py = co * sx + si * sy, -si * sx + co * sy
         piece = mv(piece, kc - px, ky - py)
-        # slide along K's arm so its top is Ƴ's
-        top = piece.bounds[3]
-        t_ = (P(yn).bounds[3] - top) / math.cos(ka)
+        # slide along K's arm until its top is the overshoot above the cap height
+        top_want = H_ + (P('O' + sfx).bounds[3] - P('H' + sfx).bounds[3])
+        t_ = (top_want - piece.bounds[3]) / math.cos(ka)
         piece = mv(piece, t_ * math.sin(ka), t_ * math.cos(ka))
-        cut = piece.bounds[1] + 30
+        yj = ky + t_ * math.cos(ka)                           # where the hook's straight stem began
+        cut = yj - 0.06 * H_ * (1 + math.cos(ka))
+        piece = clip(piece, (-BIG, cut - 1, BIG, BIG))
         ks1 = stem(kn)[1]
-        pk = union(clip(P(kn), (-BIG, -BIG, BIG, cut)), clip(P(kn), (-BIG, -BIG, ks1 + 2, BIG)), piece)
+        pk = union(clip(K_, (-BIG, -BIG, BIG, cut)), clip(K_, (-BIG, -BIG, ks1 + 2, BIG)), piece)
         nm = _name(0x0198) + (f'.sc.{SUF}' if sfx else '')
-        adv = max(W(kn), round(pk.bounds[2] + sb(kn)[1]))
+        # the hook ends a T's bar's sidebearing from the advance (K's leg reaches past its own,
+        # in Black by 46 units): the right side kerns as X's, whose top reaches out too (K's
+        # kerning, -31 to -37 against T, would run T's bar into the hook)
+        adv = max(W(kn), round(pk.bounds[2] + sb('T' + sfx)[1]))
         put(nm, pk, adv, *(() if sfx else (0x0198,)))
     pair(0x0198, 0x0199, f'{_name(0x0198)}.sc.{SUF}')
 
@@ -584,10 +602,13 @@ def glyphs(ctx):
 
     # ---- Ꞌ ꞌ: saltillo: the straight quote; the capital longer -----------------------------
     put(_name(0xA78C), *fit(P('quotesingle'), *sb('dotlessi')), cp=0xA78C)
-    qb = P('quotesingle').bounds
-    put(_name(0xA78B), *fit(scale(P('quotesingle'), 1, SALT_K, 0, qb[3]), *sb('dotlessi')), cp=0xA78B)
-    qb = P('quotesingle.sc').bounds
-    put(f'{_name(0xA78B)}.sc.{SUF}', *fit(scale(P('quotesingle.sc'), 1, SALT_K, 0, qb[3]), *sb('I.sc')))
+
+    def long_quote(q, H):
+        """The straight quote q lengthened from its top down to SALT_L of the cap height H."""
+        qb = q.bounds
+        return scale(q, 1, SALT_L * H / (qb[3] - qb[1]), 0, qb[3])
+    put(_name(0xA78B), *fit(long_quote(P('quotesingle'), P('H').bounds[3]), *sb('dotlessi')), cp=0xA78B)
+    put(f'{_name(0xA78B)}.sc.{SUF}', *fit(long_quote(P('quotesingle.sc'), P('H.sc').bounds[3]), *sb('I.sc')))
     pair(0xA78B, 0xA78C, f'{_name(0xA78B)}.sc.{SUF}')
 
     c.log(f'{len(c.af_made)} glyphs')
@@ -667,7 +688,7 @@ KERN = {
     0x01B1: (['U'], ['U']), 0x028A: (['u'], ['u']),
     0x01B2: (['U'], ['U']), 0x028B: (['u'], ['o']),
     0x01B7: (['uni04E0', 'Z'], ['uni04E0', 'Z']), 0x0292: (['uni04E1', 'z'], ['uni04E1', 'z']),
-    0x0198: (['K'], ['K']), 0x0199: (['k'], ['k']),
+    0x0198: (['K'], ['X']), 0x0199: (['k'], ['k']),     # Ƙ: the hook out on the right, as X's arm
     0x01A4: (['uni0181', None], ['P']), 0x01A5: (['p'], ['p']),
     0x01AC: (['uni018A', None], ['T']), 0x01AD: (['t'], ['t']),
     0x019D: (['N'], ['N']), 0x0272: (['n'], ['n']),
