@@ -9,7 +9,8 @@
    the build draws them), each against the glyphs it is made from:
    - the turned and mirrored letters are their models' outlines turned or mirrored, the
      copied ones their models' (Ɔ ɔ Ǝ Ɛ ɛ Ʇ ʇ Ʒ ʒ ǝ Ɖ): the ink differs by under 1.5% of
-     the model's, after the bounding boxes are aligned;
+     the model's, after the bounding boxes are aligned (in an italic, the least over shifts
+     of up to a unit across: the build rounds the slanted points);
    - heights: the flat-topped capitals end at the H's cap height, the round ones at the
      O's overshoot or Ƴ's (Ƙ), within 2; the x-height letters at the x or o, the ascenders
      with ɓ's hook (ƙ ƭ ƥ) at ɓ's top, ƀ at b's; the descenders no deeper than the deepest
@@ -31,7 +32,7 @@
    which is a glyph of its own with ink no taller than the small-cap H's (but for hooks and
    tails above and below it); the case partners are each other's (Unicode).
    ɨ before a mark above (or below, then above) is its dotless form, ɨ alone keeps its dot;
-   the capitals take the .case acute and tilde (ccmp).
+   the capitals take the .case acute and tilde (ccmp). Ɣ ɣ take the dot below under the loop.
 4. Kerning, on the full font: a side made as its model's kerns as the model does
    (Tɔ as To, VƆ as VO, ƔA as VA, ƙo as ko, ƀo as bo, Ɲa as Na, Ʉ, as U, ...).
 """
@@ -108,11 +109,18 @@ def moved(p, m):
 
 
 def same(p, q):
-    """The ink p and q do not share, after their boxes are aligned, of q's ink."""
+    """The ink p and q do not share, after their boxes are aligned, of q's ink. In an italic the
+    unslanted box ends at sheared-back points the build rounded after slanting, which a turned
+    or mirrored outline has at other heights, so the boxes can be a unit out across: the
+    least over horizontal shifts of up to a unit (a thin italic ʇ is 2.25% of t one unit out
+    and 0.65% aligned, every point within a unit of t's turned)."""
     a, b = p.bounds, q.bounds
-    q = moved(q, (1, 0, 0, 1, a[0] - b[0], a[1] - b[1]))
-    d = pathops.op(p, q, pathops.PathOp.XOR)
-    return abs(d.area) / max(1, abs(q.area))
+    best = None
+    for dx in ((-1, -0.5, 0, 0.5, 1) if ITALIC else (0,)):
+        r = moved(q, (1, 0, 0, 1, a[0] - b[0] + dx, a[1] - b[1]))
+        d = abs(pathops.op(p, r, pathops.PathOp.XOR).area) / max(1, abs(r.area))
+        best = d if best is None else min(best, d)
+    return best
 
 
 # ---- 1. coverage ----------------------------------------------------------------------
@@ -262,6 +270,19 @@ if kept('ccmp') and 0x0268 in CMAP:
         check(g0 != CMAP[0x0268] and W(g0) == W(CMAP[0x0268]) and outline(g0).bounds[3] <= outline('dotlessi').bounds[3] + 2,
               f'soft dot {txt!r}: {g0}')
     check(shape('\u0268')[0][0] == CMAP[0x0268], 'soft dot: ɨ alone keeps its dot')
+# Ɣ ɣ take the dot below under their loop at every weight (a light weight's thin loop once
+# left room for it beside the loop, outside the letter): its top below the loop's bottom
+if kept('mark') and 'dotbelowcomb' in HAVE:
+    for cp in (0x0194, 0x0263):
+        if cp not in CMAP: continue
+        b = hb.Buffer(); b.add_str(chr(cp) + '\u0323'); b.guess_segment_properties(); hb.shape(HB, b, {})
+        gi, ps = b.glyph_infos, b.glyph_positions
+        ok = len(gi) == 2 and GO[gi[1].codepoint] == 'dotbelowcomb'
+        if ok:
+            lb = outline(CMAP[cp]).bounds
+            m = moved(outline('dotbelowcomb'), (1, 0, 0, 1, ps[0].x_advance + ps[1].x_offset - K * ps[1].y_offset, ps[1].y_offset)).bounds
+            ok = m[3] < lb[1] and lb[0] <= (m[0] + m[2]) / 2 <= lb[2]
+        check(ok, f'{chr(cp)}\u0323: the dot below is not under the loop')
 # the capitals take the .case marks above, as Mulish's Latin capitals do (ccmp)
 if kept('ccmp') and 'acutecomb.case' in HAVE:
     for cp in CPS:

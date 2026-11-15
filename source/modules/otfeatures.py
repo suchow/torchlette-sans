@@ -396,12 +396,18 @@ def _letter_anchors(ctx, A, marks):
     g_side = max([e for e in range(0, 200, 2) if clear(py, yx, yy, e)] or [0])
     ctx.below_gaps = (g_below, g_side)
 
-    def bottom(g, x0):
+    def bottom(g, x0, on_foot=False):
         """On the baseline at x0 if the dot below keeps Mulish's white (y's dot beside its
         tail) from the outline there and has no ink under it; else under the middle of the
         nearest foot where it does, or the nearest such x (within a third of the ink's
-        width); else under the descender, as far below it as u's dot is below the u."""
+        width; with on_foot, only an x over the letter's ink on the baseline, from its first
+        foot to its last); else under the descender, as far below it as u's dot is below
+        the u. (on_foot: a letter of its own shape whose descender is under x0, Ɣ's loop:
+        the light weights' thin loop leaves room for the dot outside it, beside the letter,
+        where the heavier weights' put it under the loop.)"""
         p = ctx.path_of(g); b = p.bounds
+        feet = ctx.hspans(p, 1)
+        lo, hi = (feet[0][0], max(c for _, c in feet)) if feet else (b[0], b[2])
 
         def open_(x):
             u = ctx.clip(p, (x + dbox[0] - g_side, -3000, x + dbox[2] + g_side, dbox[1])).bounds
@@ -413,7 +419,7 @@ def _letter_anchors(ctx, A, marks):
             if open_(x): return (x, 0)
         for d in range(2, int((b[2] - b[0]) / 3) + 1, 2):
             for x in (x0 - d, x0 + d):
-                if open_(x): return (x, 0)
+                if (not on_foot or lo <= x <= hi) and open_(x): return (x, 0)
         return (x0, b[1] - g_below - dbox[3])
 
     def gap(p, m, x, y, top=0):
@@ -497,7 +503,7 @@ def _letter_anchors(ctx, A, marks):
         x0 = get(g, TOP)[0] if (ctx.path_of(g).bounds[1] < -30 and has(g, TOP)) else geo.get(BOT, (None,))[0]
         if x0 is not None and not has(g, BOT):
             if ctx.path_of(g).bounds[1] < -30 and 0x0400 <= u_ <= 0x052F: left_out.append(chr(u_)); continue
-            put(g, BOT, bottom(g, x0))
+            put(g, BOT, bottom(g, x0, on_foot=True))
     # the ogonek: hung where Mulish hangs it on the same kind of foot, its right edge at
     # FOOT_Y less the inset Mulish leaves on that kind, in this style: a stem (i u a I), a
     # bowl, whose ink draws in towards the baseline (o e O U), or a flat or slanted foot
