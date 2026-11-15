@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.5.12 (2026-11-15)
 
 - New letters: Ɔ ɔ, Ɛ ɛ, Ǝ ǝ, Ɣ ɣ, Ɩ ɩ, Ʊ ʊ, Ʋ ʋ, Ʒ ʒ, Ƙ ƙ, Ƥ ƥ, Ƭ ƭ, Ɲ ɲ, Ɖ ɖ, Ƀ ƀ, Ɨ ɨ, Ʉ ʉ, Ƿ ƿ, Ʇ ʇ, and Ꞌ ꞌ, with small capitals, kerning, and accents above and below.
 
