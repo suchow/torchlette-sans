@@ -26,8 +26,9 @@ What it changes:
    apostrophe (café’s) limits its own pair. Values add to the kerning earlier lookups
    give, so the lookup's place among the kern lookups does not matter. A module that
    later copies a letter's kerning to a glyph of its own (latin_gaps' LATIN_GAPS_KERN)
-   must leave out the letter's KERN_APOS value on the sides fitted here (ctx.apos_fitted,
-   ctx.apos_pairs): that glyph has its own, and both would add up.
+   must leave out the letter's KERN_APOS value on the sides fitted here (this module's
+   FITTED and PAIRS, which features() sets; read through sys.modules['tsmod_kern_apos'],
+   as each module's ctx is its own): that glyph has its own, and both would add up.
 
 In Regular this moves ’s from -29 to -79 and n’ from -19 to -69 units; their closest
 approaches go from 1.24 and 1.23 times the n-n gap to 0.99 and 0.99 (Italic: n’ 1.40 to
@@ -58,6 +59,11 @@ MIN_K = 5
 APOS = ('quoteright', 'quotesingle', 'uni02BC')
 GLYPH_OVERRIDE = {'uni02BC'}   # its sidebearings (see glyphs()): an edit to the shared font
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+# set by features() for the modules whose post copies kerning (latin_gaps): every pair
+# fitted here, kerned or not, and KERN_APOS's values. Module attributes, not ctx ones:
+# build.py gives each module a ctx of its own, so another module cannot see this one's.
+FITTED = None
+PAIRS = None
 
 
 class _Pts(BasePen):
@@ -208,7 +214,8 @@ def features(ctx):
                 pairs[l, r] = k
                 if g in letters: show[l, r] = k
     ctx.apos_pairs = pairs
-    ctx.apos_fitted = fitted     # every pair fitted here, kerned or not (latin_gaps reads it)
+    global FITTED, PAIRS
+    FITTED, PAIRS = frozenset(fitted), dict(pairs)     # latin_gaps reads them (see FITTED)
     ctx.apos_target = (TARGET, nn)
     if not pairs: return
     text, nl, nr = kern.pairs_fea('KERN_APOS', pairs)

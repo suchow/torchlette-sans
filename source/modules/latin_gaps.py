@@ -66,6 +66,7 @@ What this module adds across all 14 styles (upright and italic, Light to Black):
      axis in italic styles.
 """
 import math
+import sys
 from array import array
 from collections import defaultdict
 import pathops
@@ -1621,13 +1622,22 @@ def _inherit_kerning(ctx):
     value for that pair is already in the font. Copying the base letter's effective
     kerning, which includes the base's own KERN_APOS value, would add the pull twice
     (’ǡ -100 where ’a is -50, the quote 0.73 of the n-n gap from the stacked marks in
-    Light). On the sides kern_apos fitted (ctx.apos_fitted) the base's KERN_APOS value
-    (ctx.apos_pairs) is left out, so the pair kerns as kern_apos computed it."""
+    Light). On the sides kern_apos fitted (its FITTED) the base's KERN_APOS value (its
+    PAIRS) is left out, so the pair kerns as kern_apos computed it. They are read from the
+    kern_apos module as the build loaded it (tsmod_kern_apos), not from ctx: build.py gives
+    each module a ctx of its own, and kern_apos' attributes on its ctx are not on this one.
+    Without kern_apos in the build there is no KERN_APOS and nothing to leave out."""
     font = ctx.font
     gpos = font['GPOS'].table
     eff = _effective_kerning(gpos)
-    apos_fitted = getattr(ctx, 'apos_fitted', set())
-    apos_pairs = getattr(ctx, 'apos_pairs', {})
+    kern_apos = sys.modules.get('tsmod_kern_apos')
+    if kern_apos is None:
+        apos_fitted, apos_pairs = frozenset(), {}
+    elif kern_apos.FITTED is None or kern_apos.PAIRS is None:
+        raise SystemExit('latin_gaps: kern_apos is in the build but its features() has not '
+                         'recorded FITTED and PAIRS before this post')
+    else:
+        apos_fitted, apos_pairs = kern_apos.FITTED, kern_apos.PAIRS
 
     by_first = defaultdict(list)
     by_second = defaultdict(list)
