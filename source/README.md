@@ -64,6 +64,12 @@ docstring lists what it changes):
 - `latin_gaps`: the Dutch ij, every Pinyin vowel with its tone, the long s ſ (small
   capitals give S), the Latin case partners Mulish left out (Ǥ Ǩ Ȟ ȩ Ƒ), the vulgar
   fractions ⅐ to ⅞ and ↉, and stacked fractions (afrc).
+- `african`: the letters of African orthographies that Mulish lacks, 19 case pairs:
+  Ɔ ɔ, Ɛ ɛ, Ǝ ǝ, Ɣ ɣ, Ɩ ɩ, Ʊ ʊ, Ʋ ʋ, Ʒ ʒ, Ƙ ƙ, Ƥ ƥ, Ƭ ƭ, Ɲ ɲ, Ɖ ɖ, Ƀ ƀ, Ɨ ɨ, Ʉ ʉ, Ƿ ƿ,
+  Ʇ ʇ and Ꞌ ꞌ, with small capitals (smcp, c2sc), kerning (each side as the letter it is
+  made from) and accents above and below (the anchors are `otfeatures`'). Ɣ ɣ Ʋ ʋ are Noto
+  Sans's, fitted to each weight (see "Greek sources"); the others are drawn at each weight
+  from Mulish's own letters, hooks, tails and bars.
 - `logic`: the turnstiles ⊢ ⊣ ⊧ ⊨ ⊬ ⊭, the modal operators ◇ ◻ and the black diamond ◆,
   the marks ∎ ☡ ↯ ⁎ ‣ ⌑, the APL glyphs ⍳ ⍴ ⍉ ⌽, and the white trapezium ⏢; ss09, and
   calt beside logic, turn □ into the modal box.
@@ -165,6 +171,37 @@ The parent-to-subset commands above are documented provenance; this integration
 preparation did not replay that derivation. The preserved width-pinned intermediate
 has SHA256 `fb1bc89025e8f37048b2dcc2702a0dd86d86fd088fec32963b9451209d1ea9d2`.
 
+The `african` module takes Ɣ ɣ Ʋ ʋ from Noto Sans too, from eight static weights
+vendored here as build inputs (the module's docstring says how each is fitted):
+
+- `notosans/NotoSans-AfricanSubset-<weight>.ttf`, for ExtraLight, Light, Regular, Medium,
+  SemiBold, Bold, ExtraBold and Black: Noto Sans version 2.005 (name ID 0 "Copyright 2015
+  Google LLC. All Rights Reserved."; its license file: Copyright 2018 The Noto Project
+  Authors (github.com/googlei18n/noto-fonts)), SIL Open Font License 1.1 (name IDs 13
+  and 14; `notosans/OFL.txt`, and `licenses/NotoSans-AfricanSubset-OFL.txt` in the
+  release; no Reserved Font Name). Each is TeX Live 2025's
+  `texmf-dist/fonts/truetype/google/noto/NotoSans-<weight>.ttf` (the `noto` package; its
+  license is `texmf-dist/doc/fonts/noto/LICENSE_OFL.txt`) subset to those four letters
+  and the nine Latin letters the fitting measures, with fontTools 4.68.0:
+
+      pyftsubset NotoSans-<weight>.ttf --unicodes=U+0048,U+004F,U+0055,U+0056,U+006F,U+0075,U+0076,U+0078,U+0079,U+0194,U+01B2,U+0263,U+028B \
+        --layout-features='' --name-IDs='*' --glyph-names --notdef-outline --no-hinting \
+        --output-file='notosans/NotoSans-AfricanSubset-<weight>.ttf'
+
+  The command was replayed on the TeX Live files: each vendored subset is its output byte
+  for byte. SHA256 of each subset and of its parent:
+
+  | weight     | subset                                                             | parent `NotoSans-<weight>.ttf`                                     |
+  |------------|--------------------------------------------------------------------|--------------------------------------------------------------------|
+  | ExtraLight | `fb8eb509353c7f31415c8bdc6227e43a9e8c863d283e69901cfd70f4d90c4616` | `a63efedb825a74ece7902ec1b26fcb991bf4a49d848ee76c23f5365620538ddd` |
+  | Light      | `437bd2e96c765b7cfefba5e9e210b02d4fcec699555bf4821d58a433f21d1cf9` | `193cf399bcc7105760398f727e41952bebe4a4f8e2a8ea49f3181ec0fb4a2368` |
+  | Regular    | `69debc1f8d60071a961aa2d2a99b05ecf71233a7ebe1ab652dc71f897b6887a9` | `9cb49a54e520423033f9727be2e53e4805a60656deb09c219740d8e5f3e033ac` |
+  | Medium     | `a6fd9fdc09863b52e7b385d7b5d85a76b0d0c3897b7aad0ff2d2f3bbc2dc6d82` | `30ca1a9e9caae1ea676ba5fe3aec1b852c5f57c5455bc61742fcf3ed3a75053e` |
+  | SemiBold   | `8c6c6223ae259731945f49c9735e2c77a92afb8a4ef4afe5120a3b03d7429b7e` | `b7296d4d83afb96e2ba11459c677cfec948eebe871c0b84e4851eec186816c30` |
+  | Bold       | `5dc7e76f65ce595df9b0dd45f893cf8269387cc5b2723056b6535ce9e1dca11d` | `4439dc44113d49beb0abfdc0def48719deda6f163f3337122ea509c90eed1d0d` |
+  | ExtraBold  | `f5f3e68bfa18155fe12eab7ea039083ff20df3580ec52662c527cff0646fee9c` | `b372de8c32a14452c6cdf94da6948e5cffff6f11e8453e42a71140e81687cdb1` |
+  | Black      | `084454750ef9767020d6f77086819dec378518db5321e770070dd8b723b507fe` | `2059bc762f958866a4e58b7c202396af5c8557382a9e34dbbd82f978499a8b1b` |
+
 Both fonts' own names stay out of Torchlette Sans; the OFL permits the derivation,
 and the copyright notices above are the attribution it asks for.
 
@@ -188,8 +225,8 @@ and the copyright notices above are the attribution it asks for.
 - `fontbakery_gate.py`: judges a fontbakery run from its exit status and report;
   `verify_fontbakery_gate.py` is its test.
 - `modules/`: the modules (see above) and their checks, `modules/verify_<name>.py`.
-- `commissioner/`, `notosans/`: the Greek module's source fonts and their licenses
-  (see "Greek sources").
+- `commissioner/`, `notosans/`: the Greek and african modules' source fonts and their
+  licenses (see "Greek sources").
 - `web_features.txt`: the OpenType features the web font keeps; `webfeatures.py`
   reads it for the checks.
 - `Makefile`: runs the steps with pinned tool versions.

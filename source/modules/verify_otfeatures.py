@@ -16,6 +16,7 @@ import uharfbuzz as hb
 from fontTools.ttLib import TTFont
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.pens.pointInsidePen import PointInsidePen
+from fontTools.pens.transformPen import TransformPen
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from webfeatures import kept   # noqa: E402
 
@@ -235,8 +236,11 @@ gp = tt['GPOS'].table
 
 def base_anchor(glyph, cls_mark):
     for lk in gp.LookupList.Lookup:
-        if lk.LookupType != 4: continue
+        if lk.LookupType not in (4, 9): continue
         for st in lk.SubTable:
+            if lk.LookupType == 9:                  # an extension (fontTools promotes a lookup whose offsets overflow)
+                st = st.ExtSubTable
+                if st.LookupType != 4: continue
             if glyph in st.BaseCoverage.glyphs and cls_mark in st.MarkCoverage.glyphs:
                 mr = st.MarkArray.MarkRecord[st.MarkCoverage.glyphs.index(cls_mark)]
                 a = st.BaseArray.BaseRecord[st.BaseCoverage.glyphs.index(glyph)].BaseAnchor[mr.Class]
@@ -263,8 +267,13 @@ check(agree >= 150, f'only {agree} precomposed small caps and alternates compare
 # letter's ink from left to right, an above mark sits on the letter's top, a dot below
 # under its foot (or its descender), and an ogonek hangs from its foot, joined to it.
 NEW_TOP = 'ŋəɓɗħđðßƴǥƒƁƊĦƑƳǤẞ'
+# and the african module's letters, when built (ɖ, whose mark stands over the bowl as on d,
+# below the ascender's top, and Ɨ, whose italic acute overhangs its top as Í's does, in AF_LIKE
+# below)
+NEW_TOP += 'ɛɔǝɣʋʊʒɲƥƿɩɨʉƙƭƀƐƆƎƔƲƱƷƉƘƬƤǷƝɃƖɄ'
 NEW_BOT = ('ŋəɓɗħđðßƴǥƒgøƁƊĦƑƳǤẞ' + 'αδεικλνοπστυωθΓΔΛΞΠΣΦΨΩΑΟ'
            + 'ГЖИКМНТУХЧЫгжикхчыэѳҠһәө')
+NEW_BOT += 'ɛɔǝɣʋʊʒɖƙƭɲƀɨɩʉƿƐƆƎƔƲƱƷƉƘƬƤǷƝɃƗƖɄ'
 NEW_OGON = 'bcdfhklmnprstvwxzBCDFGHKLMNPRSTVWXZ'
 _mk_anchor = {}
 for lk in gp.LookupList.Lookup:
@@ -298,6 +307,52 @@ if kept('mark'):
                 check(b[1] - 260 <= mi[3] <= -60 and b[0] <= (mi[0] + mi[2]) / 2 <= b[2],
                       f'{what}: dot {mi} not under the letter {b}')
                 check(m['adv'] == 0, f'{what}: mark advance {m["adv"]}')
+    # the african module's letters (when built) take the marks above as their models do: on
+    # ɖ and ƙ where d and k have them (from the glyph's origin; a hook may lift the mark), on
+    # ɣ Ɣ over the v-shape's opening as on v and V (from the middle of the advance, which is
+    # v's; Ɨ ɨ as I ı, centred too), on ɛ Ɛ over the ink's middle as on o O, on the turned ɔ Ɔ and the mirrored Ǝ where
+    # c C E have them, mirrored across the ink (and the dot below under them so); each at its
+    # model's height, or up to AF_LIFT higher where the letter's top called for more white
+    # (an ascender's hook: up to 80)
+    AF_LIKE = (('ɖ', 'd', 'origin'), ('ƙ', 'k', 'origin'), ('ɣ', 'v', 'advmid'), ('Ɣ', 'V', 'advmid'),
+               ('Ɨ', 'I', 'advmid'), ('ɨ', 'ı', 'advmid'),
+               ('ɛ', 'o', 'ink'), ('Ɛ', 'O', 'ink'), ('ɔ', 'c', 'mirror'), ('Ɔ', 'C', 'mirror'), ('Ǝ', 'E', 'mirror'))
+    AF_LIFT = 16
+    AF_K = 0.1587 if 'Italic' in STYLE else 0.0
+    _mk_anchor_xy = {}
+    for lk in gp.LookupList.Lookup:
+        for st in lk.SubTable:
+            if lk.LookupType == 9: st = st.ExtSubTable
+            if getattr(st, 'LookupType', lk.LookupType) == 4 and hasattr(st, 'MarkCoverage'):
+                for g, r_ in zip(st.MarkCoverage.glyphs, st.MarkArray.MarkRecord):
+                    _mk_anchor_xy.setdefault(g, (r_.MarkAnchor.XCoordinate, r_.MarkAnchor.YCoordinate))
+
+    def _upright_bounds(g):
+        p = BoundsPen(GS); GS[g].draw(TransformPen(p, (1, 0, -AF_K, 1, AF_K * 252, 0))); return p.bounds
+    for ch, model, how in AF_LIKE:
+        if ord(ch) not in _cm: continue
+        for mk in ('́', '̀', '̂', '̌', '̄', '̃', '̣'):
+            below = mk == '̣'
+            if below and how != 'mirror': continue
+            r = shape(ch + mk)
+            what = f'african {ch}{mk} as {model}{mk}: {[(x["g"], x["dx"], x["y"]) for x in r]}'
+            if len(r) != 2: check(False, f'{what}: composed'); continue
+            base, m = r
+            ma = base_anchor(_cm[ord(model)], m['g'])
+            if ma is None: check(False, f'{what}: {model} has no anchor for {m["g"]}'); continue
+            nx = m['x'] - base['x']
+            bn, bm = bounds(base['g']), bounds(_cm[ord(model)])
+            if how == 'origin': d = nx - ma[0]
+            elif how == 'advmid': d = (nx - base['adv'] / 2) - (ma[0] - tt['hmtx'][_cm[ord(model)]][0] / 2)
+            elif how == 'ink': d = (nx - (bn[0] + bn[2]) / 2) - (ma[0] - (bm[0] + bm[2]) / 2)
+            else:                                   # the anchors: the new one's from its ink's left, the model's from its right
+                k = _mk_anchor_xy.get(m['g'], (0, 0))   # (on the upright outlines: an italic's sheared back)
+                un, um = _upright_bounds(base['g']), _upright_bounds(_cm[ord(model)])
+                an, am = (nx + k[0], m['y'] + k[1]), (ma[0] + k[0], ma[1] + k[1])
+                d = (an[0] - AF_K * (an[1] - 252) - un[0]) - (um[2] - (am[0] - AF_K * (am[1] - 252)))
+            check(abs(d) <= (4 if how == 'origin' else 15), f'{what}: mark {d:+.0f} across from where {model} has it')
+            hi = 6 if below else 80 if how == 'origin' else AF_LIFT
+            check(ma[1] - 6 <= m['y'] <= ma[1] + hi, f'{what}: mark at y {m["y"]}, on {model} {ma[1]}')
 
 # the dotted circle ◌ (ui's) takes marks as a lowercase letter does: each mark (an acute, a
 # dot below, an ogonek, and the stacks ccmp and mkmk make of two) the same glyphs at the same

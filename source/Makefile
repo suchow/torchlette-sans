@@ -48,7 +48,8 @@ FB     := uv run -q --no-project --python 3.12 --with fontbakery==1.1.0 fontbake
 VF     := mulish/Mulish[wght].ttf
 VFI    := mulish/Mulish-Italic[wght].ttf
 VF_DEP := $(wildcard mulish/*.ttf)
-# the greek module's source fonts (see README, "Greek sources")
+# the greek and african modules' source fonts (see README, "Greek sources"); notosans/*.ttf
+# holds the african module's NotoSans-AfricanSubset-<weight>.ttf
 REF_DEP := $(wildcard commissioner/*.ttf notosans/*.ttf notosansmath/*.ttf notosansmath/OFL.txt)
 NORMAL_HELPER_DEPS := $(sort $(wildcard modules/_*.py mathitalic_references.py))
 
@@ -70,7 +71,7 @@ LEVELS     := $(wildcard $(LEVELS_DIR))
 # Greek and mathitalic are explicitly included in the approved release default.
 MODULES_OFF  :=
 # Approved release default: exactly the modules exercised in the combined gate.
-MODULES_DEFAULT := codekeys currency cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures punctuation sigmoid supsub symbols tensordiagram ui vector
+MODULES_DEFAULT := african codekeys currency cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures punctuation sigmoid supsub symbols tensordiagram ui vector
 comma        := ,
 empty        :=
 space        := $(empty) $(empty)
@@ -157,6 +158,8 @@ UNICODES := $(UNICODES),U+2619,U+261C,U+261E,U+2766-2767,U+E900-E915,U+E920-E925
 UNICODES := $(UNICODES),U+FEFF
 # punctuation: the reversed question mark and the two- and three-em dashes (Supplemental Punctuation).
 UNICODES := $(UNICODES),U+2E2E,U+2E3A-2E3B
+# african: the saltillo Ꞌ ꞌ and the turned T Ʇ (Latin Extended-D); its other 35 letters are in U+0100-024F and U+0250-02FF.
+UNICODES := $(UNICODES),U+A78B-A78C,U+A7B1
 
 # The web subset keeps only the features in web_features.txt (what browsers apply by
 # default and what the app turns on); the .ttf keeps them all.

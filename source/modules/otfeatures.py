@@ -337,11 +337,25 @@ def _composite(ctx, n, A, marks, mk2, delta, resolve):
 # in the new one (the slide that best covers the new outline, as _fit does for ligatures).
 DRAWN_ON = {0x0253: 'b', 0x0257: 'd', 0x0111: 'd', 0x0127: 'h', 0x014B: 'n', 0x01B4: 'y', 0x01E5: 'g',
             0x0192: 'f', 0x00F8: 'o', 0x0181: 'B', 0x018A: 'D', 0x0126: 'H', 0x0191: 'F', 0x01B3: 'Y',
-            0x01E4: 'G', 0x04AF: 'v'}
+            0x01E4: 'G', 0x04AF: 'v',
+            # the african module's letters made on a Mulish letter
+            0x0256: 'd', 0x0199: 'k', 0x01AD: 't', 0x01A5: 'b', 0x01BF: 'p', 0x0272: 'n', 0x0180: 'b',
+            0x0268: 'i', 0x0289: 'u', 0x0189: 'D', 0x0198: 'K', 0x01AC: 'T', 0x01A4: 'P',
+            0x01F7: 'P', 0x019D: 'N', 0x0243: 'B', 0x0197: 'I', 0x0244: 'U'}
+# the same for glyphs of no code point: the african module's dotless ɨ, which its ccmp gives
+# before a mark above
+DRAWN_ON_GLYPH = {'uni0268.dotless.african': 'ı'}
+# letters that are a Mulish letter turned or mirrored (the african module's Ɔ ɔ Ǝ): that
+# letter's anchors mirrored across its ink (c's above anchor stands over its round's centre, to
+# the right of the ink's middle; ɔ's over its own, to the left)
+MIRRORED = {0x0186: 'C', 0x0254: 'c', 0x018E: 'E'}
 # letters of their own shape: above and below by the outline (_geometric's rule, the capitals'
 # above anchor at the cap height for the .case marks); ə takes the anchors Mulish gave ә, a
-# composite of it
-OWN_SHAPE = (0x00DF, 0x1E9E, 0x00F0, 0x0259, 0x0067, 0x04BC, 0x04BD, 0x04BE, 0x04BF)
+# composite of it. Then the african module's letters whose model's anchors would not fit them
+# (Ɛ ɛ ǝ Ɣ ɣ Ʋ ʋ Ɩ ɩ Ʊ ʊ Ʒ ʒ Ʇ ʇ; Ɩ ɩ: the dot below under t's foot, as ṭ has it).
+OWN_SHAPE = (0x00DF, 0x1E9E, 0x00F0, 0x0259, 0x0067, 0x04BC, 0x04BD, 0x04BE, 0x04BF,
+             0x0190, 0x025B, 0x01DD, 0x0194, 0x0263, 0x01B2, 0x028B, 0x0196, 0x0269,
+             0x01B1, 0x028A, 0x01B7, 0x0292, 0xA7B1, 0x0287)
 # the consonants that take an ogonek: g j q Q are left out (their descender or tail is where
 # the ogonek hangs), y as a vowel as Mulish leaves it; a letter whose foot descends (J, in
 # Torchlette) is left out when measured
@@ -439,10 +453,11 @@ def _letter_anchors(ctx, A, marks):
         return max(range(best - 8, best + 9, 2), key=score)
     cap_y = A.get(gl('H'), {}).get(TOP, (0, 705))[1]
     # letters drawn on a Mulish letter
-    for u_, src_ch in DRAWN_ON.items():
-        g, src = cmap.get(u_), gl(src_ch)
+    for u_, src_ch in list(DRAWN_ON.items()) + list(DRAWN_ON_GLYPH.items()):
+        g, src = (cmap.get(u_) if isinstance(u_, int) else (u_ if u_ in have else None)), gl(src_ch)
         if not g or not src or src not in A: continue
         dx = slide(g, src); sa = A[src]
+        if not isinstance(u_, int): u_ = ord(src_ch)            # a glyph of no code point: its model's
         lower = unicodedata.category(chr(u_)) == 'Ll'
         if TOP in sa:
             x, y = sa[TOP][0] + dx, sa[TOP][1]
@@ -450,6 +465,14 @@ def _letter_anchors(ctx, A, marks):
         x0 = sa[BOT][0] + dx if BOT in sa else (sa[TOP][0] + dx if TOP in sa else None)
         if 0x0400 <= u_ <= 0x052F and ctx.path_of(g).bounds[1] < -30: left_out.append(chr(u_)); continue
         if x0 is not None and not has(g, BOT): put(g, BOT, bottom(g, x0))
+    # letters turned or mirrored: the model's anchors mirrored across the ink
+    for u_, src_ch in MIRRORED.items():
+        g, src = cmap.get(u_), gl(src_ch)
+        if not g or not src or src not in A: continue
+        bg, bs = ctx.path_of(g).bounds, ctx.path_of(src).bounds
+        sa = A[src]; mx = lambda x: bg[0] + (bs[2] - x)
+        if TOP in sa: put(g, TOP, lift(g, (mx(sa[TOP][0]), sa[TOP][1]), unicodedata.category(chr(u_)) == 'Lu'))
+        if BOT in sa: put(g, BOT, bottom(g, mx(sa[BOT][0])))
     # letters of their own shape
     comp_of = {}
     for n in A:
