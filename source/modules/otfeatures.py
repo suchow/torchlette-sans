@@ -295,6 +295,37 @@ def _from_capital(ctx, sc, cap, A):
     return out
 
 
+def _bar_strokes(ctx, marks):
+    """The short stroke (U+0335) typed after a small cap whose capital has a barred form (D
+    of Đ Ð, T of Ŧ): the stroke across the stem as build.py draws the barred small cap's bar
+    (issue 52; issue 50 made those small caps outlines, from which the anchor was learned).
+    The bar is the ink the barred small cap has beyond its base, row by row (rows at least 6
+    units wide, not the slivers rounding leaves along an italic stem); the stroke's middle
+    is put on the bar's. {glyph: (x, y)} for the base's small cap and the barred one."""
+    if 'uni0335' not in marks or marks['uni0335'][0] != ASC: return {}
+    op, D = ctx.pathops.op, ctx.pathops.PathOp.DIFFERENCE
+    sx0, sy0, sx1, sy1 = ctx.path_of('uni0335').bounds; ax, ay = marks['uni0335'][1]
+    out = {}
+    for u, cap in sorted(ctx.font.getBestCmap().items()):
+        g = ctx.glyf[cap]
+        if not g.isComposite() or len(g.components) != 2 or not unicodedata.name(chr(u), '').startswith('LATIN CAPITAL'): continue
+        base, bar = g.components[0].glyphName, g.components[1].glyphName
+        if bar not in ('uni0335.case', 'uni0336.case'): continue
+        sc, bsc = cap + '.sc', base + '.sc'
+        if sc not in ctx.glyf.glyphs or bsc not in ctx.glyf.glyphs or ctx.glyf[sc].isComposite(): continue
+        d = op(ctx.path_of(sc), ctx.path_of(bsc), D)
+        if not list(d.contours): continue
+        b = d.bounds; rows = []
+        for y in range(math.floor(b[1]), math.ceil(b[3])):
+            cs = [c.bounds for c in ctx.clip(d, (b[0] - 1, y, b[2] + 1, y + 1)).contours]
+            if sum(c[2] - c[0] for c in cs) >= 6: rows.append((y, min(c[0] for c in cs), max(c[2] for c in cs)))
+        if not rows: continue
+        bx, by = (min(r[1] for r in rows) + max(r[2] for r in rows)) / 2, (rows[0][0] + rows[-1][0] + 1) / 2
+        a = (round(bx - (sx0 + sx1) / 2 + ax), round(by - (sy0 + sy1) / 2 + ay))
+        out[sc] = a; out.setdefault(bsc, a)
+    return out
+
+
 def _stack_delta(ctx, A, marks, mk2):
     """How far Mulish sets a precomposed glyph's anchor beyond its mark's mark-to-mark
     anchor (the median over its own composites), above and below."""
@@ -614,6 +645,7 @@ def anchors_for(ctx):
         learned.setdefault(b.glyphName, {}).setdefault(c, []).append((m.x + mx, m.y + my))
     med = lambda v: sorted(v)[len(v) // 2]
     ctx.learned = sum(len(v) for v in learned.values())
+    bar_stroke = {g: a for g, a in _bar_strokes(ctx, marks).items() if g in want}
     cache = {}
 
     def resolve(n):
@@ -640,6 +672,8 @@ def anchors_for(ctx):
         if n in learned:
             r = dict(r or {})
             for c, pts in learned[n].items(): r[c] = (med([p[0] for p in pts]), med([p[1] for p in pts]))
+        if n in bar_stroke and ASC not in (r or {}):
+            r = dict(r or {}); r[ASC] = bar_stroke[n]
         cache[n] = r
         return r
 

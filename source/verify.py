@@ -131,7 +131,7 @@ def bar_of(full, base):
     if not rows: return None
     return rows[0][0], rows[-1][0] + 1, min(r[1] for r in rows), max(r[2] for r in rows)
 CAP_H, SC_H_ = outline('H').bounds[3], outline('H.sc').bounds[3]
-bar_checks = bar_fails = 0; bar_seen = []
+bar_checks = bar_fails = 0; bar_seen = []; bar_at = {}
 for u, cap in sorted(cm.items()):
     g_ = f['glyf'][cap]
     if unicodedata.category(chr(u)) != 'Lu' or not g_.isComposite() or len(g_.components) != 2: continue
@@ -149,14 +149,35 @@ for u, cap in sorted(cm.items()):
         y0, y1, x0, x1 = sb; yc = (y0 + y1) / 2
         stems = [c.bounds for c in pathops.op(outline(base + '.sc'), band(x0, yc - 0.5, x1, yc + 0.5), pathops.PathOp.INTERSECTION).contours]
         crosses = any(x0 + 1 < s[0] and s[2] < x1 - 1 for s in stems)
-        bar_seen.append(f'{ch} {yc:.0f}/{want:.0f}')
+        bar_seen.append(f'{ch} {yc:.0f}/{want:.0f}'); bar_at.setdefault(base, (sc, sb))
         if not (0 < yc < SC_H_ and y1 <= SC_H_ and abs(yc - want) <= BAR_TOL and crosses):
             bar_fails += 1
             print(f'FAIL bar {ch} {feat} {sc}: bar {y0:.0f}..{y1:.0f}, middle {yc:.0f} (want {want:.0f} +- {BAR_TOL}, '
                   f'small-cap height {SC_H_:.0f}), crosses the stem: {crosses}')
 print(f'small-cap bars (Đ Ð Ŧ): {bar_checks} checked, {bar_fails} fail (middle/want: {", ".join(bar_seen)})')
 if not bar_checks and any(n in cm.values() for n in ('Dcroat', 'Tbar')): bar_fails += 1; print('FAIL bar: no barred capital found')
-fails += bar_fails
+# issue 52: the short stroke typed after the small cap of a barred capital's letter (smcp d or t,
+# then U+0335) crosses the stem as the precomposed small cap's bar (Đ.sc Ŧ.sc) does: the
+# stroke's middle within STROKE_TOL of the bar's, both ways.
+STROKE_TOL = 6; rcm = {}; st_checks = st_fails = 0; st_seen = []
+for u, n_ in cm.items(): rcm.setdefault(n_, u)
+for base, (sc, (y0, y1, x0, x1)) in sorted(bar_at.items()):
+    if base not in rcm or ord(chr(rcm[base]).lower()) not in cm: continue
+    b_ = hb.Buffer(); b_.add_str(chr(rcm[base]).lower() + '\u0335'); b_.guess_segment_properties(); hb.shape(FT, b_, {'smcp': 1})
+    names = [FT.get_glyph_name(i.codepoint) for i in b_.glyph_infos]; pos = b_.glyph_positions
+    st_checks += 1
+    if len(names) != 2 or names[0] != base + '.sc':
+        st_fails += 1; print('FAIL stroke', chr(rcm[base]).lower(), '+ U+0335 smcp ->', names); continue
+    mb = outline(names[1]).bounds
+    mx = pos[0].x_advance + pos[1].x_offset + (mb[0] + mb[2]) / 2; my = pos[1].y_offset + (mb[1] + mb[3]) / 2
+    bx, by = pos[0].x_offset + (x0 + x1) / 2, pos[0].y_offset + (y0 + y1) / 2
+    st_seen.append(f'{chr(rcm[base]).lower()}+U+0335 ({mx:.0f},{my:.0f})/({bx:.0f},{by:.0f})')
+    if abs(mx - bx) > STROKE_TOL or abs(my - by) > STROKE_TOL:
+        st_fails += 1
+        print(f'FAIL stroke {chr(rcm[base]).lower()} + U+0335 smcp: middle ({mx:.0f}, {my:.0f}), {sc}\'s bar\'s ({bx:.0f}, {by:.0f}) +- {STROKE_TOL}')
+print(f'typed strokes on the small caps (smcp d t + U+0335): {st_checks} checked, {st_fails} fail (middle/bar\'s: {", ".join(st_seen)})')
+if not st_checks and bar_at: st_fails += 1; print('FAIL stroke: no small cap checked')
+fails += bar_fails + st_fails
 if EXTRA:
     for t, fe in [('Ångström, Čapek, Dvořák', {'smcp': 1, 'c2sc': 1}), ('(3/4) 97.2%!', {'smcp': 1}), ('áäâ', {'ss04': 1}), ('ýÿ', {'ss06': 1}), ('ťţ', {'ss07': 1})]:
         print(t, fe, shape(FT, t, fe))
