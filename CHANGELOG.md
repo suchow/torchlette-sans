@@ -3,7 +3,7 @@
 ## v0.5.13 (2026-11-16)
 
 - New letters: Ǟ ǟ, Ǡ ǡ, Ȯ ȯ, and Ǭ ǭ for Livonian; Ǣ ǣ for Old English; Ǯ ǯ for Skolt Sami; Ǵ ǵ for Macedonian transliteration; Ǹ ǹ for Pinyin; and ǰ for transliterating Iranian and other languages. All have small capitals, kerning, and accents above and below, at every weight, upright and italic.
-- Kerning fixed: from v0.4.0 to v0.5.12, the apostrophe and the right single quote after letters built from a base letter and accents (ǒ, ǐ, ǔ, ǖ, ǘ, ǚ, ǜ, their capitals, Ǩ, Ȟ, ȩ, and others like them) were kerned twice and came too close to the accent. They are now kerned as after the base letter.
+- Kerning fixed: from v0.4.0 to v0.5.12, the apostrophe and the right single quote beside Ǐ, Ǒ, ǒ, Ǔ, Ǖ, ǖ, Ǘ, ǘ, Ǚ, ǚ, Ǜ, ǜ, Ǩ, Ȟ, and ȩ were kerned twice and came too close to the accent. They are now kerned as they are beside the base letter.
 - The small capitals of Đ, Ð, and Ŧ, and of đ, ð, and ŧ under smcp, have their bar across the stem. From v0.2.0 to v0.5.12, the bar sat above the letter.
 
 ## v0.5.12 (2026-11-15)
