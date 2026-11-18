@@ -85,6 +85,13 @@ MIN_K = 10                # smaller model values are dropped
 MAX_K = 60                # and larger ones capped
 ROUND = 5
 CLEAR_CAPS = ('T', 'V', 'W', 'Y')   # capitals whose arms and bars reach over an accent
+CROSS_TWINS = {'А': 'A', 'В': 'B', 'Е': 'E', 'К': 'K', 'М': 'M', 'Н': 'H',
+               'О': 'O', 'Р': 'P', 'С': 'C', 'Т': 'T', 'Х': 'X',
+               'а': 'a', 'е': 'e', 'о': 'o', 'р': 'p', 'с': 'c', 'х': 'x',
+               'Α': 'A', 'Β': 'B', 'Ε': 'E', 'Ζ': 'Z', 'Η': 'H', 'Ι': 'I',
+               'Κ': 'K', 'Μ': 'M', 'Ν': 'N', 'Ο': 'O', 'Ρ': 'P', 'Τ': 'T',
+               'Υ': 'Y', 'Χ': 'X'}
+CROSS_CLEAR = 'ГЃҐУЎӮӰӲ'
 CLEAR_RATIO = 0.40        # an accented letter's clearance from them, at least this much of its base's
 CLEAR_MAX = 150           # most the floor adds to a correction
 CLEAR_STEP, CLEAR_CELL = 4, 50   # outline sampling and search grid for the clearance
@@ -537,6 +544,16 @@ def features(ctx):
         if u in cmap and cmap[u] != b and b in have: inherit.setdefault(cmap[u], (b, b))
     inherit = {g: s for g, s in inherit.items() if g not in kerned and g not in taken}
 
+    # Earlier modules generate cross-script pairs separately from the source GPOS.
+    # Add them only after selecting inherited glyphs, so their partners do not
+    # change which glyphs qualify for inheritance.
+    earlier = {name: module_ctx for name, _, module_ctx in ctx.MODULES_RUN}
+    for module, attr in (('cyrillic', 'cyr_cross_kern'), ('greek', 'greek_cross_kern')):
+        for (a, b), v in getattr(earlier.get(module), attr, {}).items():
+            base[a, b] = base.get((a, b), 0) + v
+            by_left[a][b] = base[a, b]
+            by_right[b][a] = base[a, b]
+
     def resolve(g, side):
         """The kerned glyph whose `side` kerning g takes (following chains), or None."""
         seen = set()
@@ -553,9 +570,12 @@ def features(ctx):
     core = set('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') & have
     core |= {c + '.sc' for c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' if c + '.sc' in have}
     core |= {p for p in CORE_PUNCT if p in have}
+    twins = {cmap[ord(c)]: b for c, b in CROSS_TWINS.items()
+             if ord(c) in cmap and b in core}
     def proxy(x):
         """The glyph whose outline stands for x in edge corrections, or None."""
         if x in core: return x
+        if x in twins: return twins[x]
         if x in inherit:
             return None
         stem, dot, suf = x.partition('.')
@@ -598,12 +618,13 @@ def features(ctx):
     for g in new:
         for sb, C, on_right in ((LB[g], CL, True), (RB[g], CR, False)):
             if not sb or not accented(g, sb): continue
-            for c in CLEAR_CAPS:
+            for c in (*CLEAR_CAPS, *(cmap[ord(ch)] for ch in CROSS_CLEAR if ord(ch) in cmap),
+                      *(g for g, twin in twins.items() if twin in CLEAR_CAPS)):
                 if c not in have: continue
                 pair, ref = ((c, g), (c, sb)) if on_right else ((g, c), (sb, c))
                 k0 = base.get(ref, 0)
                 floor = CLEAR_RATIO * model.clearance(*ref, k0)
-                d0 = d = C[g].get(c, 0)
+                d0 = d = C[g].get(c, C[g].get(proxy(c) or '', 0))
                 while model.clearance(*pair, k0 + d) < floor and d < d0 + CLEAR_MAX: d += ROUND
                 if d != d0:
                     C[g][c] = d; floors[pair] = (d0, d)
@@ -626,7 +647,7 @@ def features(ctx):
                 if not lb: continue
                 v = base_v(b, lb) + cr.get(proxy(lb) or '', 0) + CL[x].get(proxy(b) or '', 0)
             else:
-                v = row.get(x, 0) + cr.get(proxy(x) or '', 0)
+                v = row.get(x, 0) + cr.get(x, cr.get(proxy(x) or '', 0))
             if v: pairs_l[g, x] = v
     # new glyph on the right, an existing glyph on the left
     for g in new:
@@ -636,7 +657,7 @@ def features(ctx):
         cl = CL[g]
         for x in universe:
             if x in newset or x in tab: continue
-            v = col.get(x, 0) + cl.get(proxy(x) or '', 0)
+            v = col.get(x, 0) + cl.get(x, cl.get(proxy(x) or '', 0))
             if v: pairs_r[x, g] = v
 
     # 3. figures

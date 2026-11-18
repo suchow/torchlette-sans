@@ -227,11 +227,27 @@ def clearance(a, b, k):
 
 
 for g in [g for g in ACC_A if g in have and 'a' in have]:
-    for c in [c for c in ('T', 'V', 'W', 'Y') if c in have]:
+    cross_caps = [tt.getBestCmap()[ord(ch)] for ch in 'ГЃҐУЎӮӰӲТΤ' if ord(ch) in tt.getBestCmap()]
+    for c in [c for c in ('T', 'V', 'W', 'Y', *cross_caps) if c in have]:
         for l, r, base in ((c, g, (c, 'a')), (g, c, ('a', c))):
             floor = 0.40 * clearance(*base, pair_kern(pua, *base))
             got = clearance(l, r, pair_kern(pua, l, r))
             ok(got >= floor - 3, f'{l} {r}: {got:.0f} units from the outline, under 0.40 of {base[0]} {base[1]}\'s ({floor:.0f}); kern {pair_kern(pua, l, r)}')
+# Cross-script pairs must inherit the base pair even when the accent changes its edge.
+cmap = tt.getBestCmap()
+for ch in 'ТГУΤ':
+    if ord(ch) not in cmap: continue
+    c = cmap[ord(ch)]
+    for g in [g for g in ACC_A if g in have]:
+        for a, b, x, y in ((c, g, c, 'a'), (g, c, 'a', c)):
+            want, got = pair_kern(pua, x, y), pair_kern(pua, a, b)
+            if want and ch in 'ТΤ':
+                ok(got != 0, f'{a} {b}: missing inherited pair (base {want}, got {got})')
+for ch in 'ТΤ':
+    if ord(ch) in cmap and 'uni01CD' in have:
+        c = cmap[ord(ch)]
+        want, got = pair_kern(pua, 'A', c), pair_kern(pua, 'uni01CD', c)
+        if want: ok(got != 0, f'uni01CD {c}: missing inherited pair (base {want})')
 for text, (a, b) in (('Yă', ('Y', 'abreve')), ('Yẵ', ('Y', 'uni1EB5')), ('Yặ', ('Y', 'uni1EB7')), ('ấY', ('uni1EA5', 'Y'))):
     if {a, b} <= have:
         got = boundary(text, a, b)
