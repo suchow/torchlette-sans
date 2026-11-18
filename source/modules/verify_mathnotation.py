@@ -211,8 +211,8 @@ if kept('kern'):
         if ord(v) in cmap and ord(b) in cmap:
             for got_t, want_t in ((v + '⟩', b + '⟩'), ('⟨' + v, '⟨' + b)):
                 check(kv(got_t) == kv(want_t) != 0, f'{got_t!r} kerned {kv(got_t)}, {want_t!r} {kv(want_t)}')
-    REACH = [('⟨', v, b) for v, b in zip('ĭìĩīïíĵȉ', 'iiiiiiji')] + \
-            [(v, '⟩', b) for v, b in zip('ưứựơớợƯỨľŕĩĄą', 'uuuoooUUlriAa')]
+    REACH = [('⟨', v, b) for v, b in zip('ĭìĩīïíĵȉǐ', 'iiiiiijii')] + \
+            [(v, '⟩', b) for v, b in zip('ưứựơớợƯỨľŕĩĄąǐ', 'uuuoooUUlriAai')]
     for l, r, b in REACH:
         v = l if r == '⟩' else r
         if not (ord(v) in cmap and ord(b) in cmap): continue
