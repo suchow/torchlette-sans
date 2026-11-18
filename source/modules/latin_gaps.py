@@ -1611,6 +1611,41 @@ def post(ctx):
     _finalize_deterministic_outlines(ctx)
     _composed_anchors(ctx)
     _inherit_kerning(ctx)
+    _fit_bracket_kerning(ctx)
+
+
+def _fit_bracket_kerning(ctx):
+    """Fit owned accented letters after their outlines and inherited pairs are final."""
+    mathnotation = sys.modules.get('tsmod_mathnotation')
+    if mathnotation is None:
+        return
+    cmap = ctx.font.getBestCmap()
+    base = {g: cmap[ord(c)] for u, g in cmap.items()
+            if g in ctx.lg_kern and (c := mathnotation._latin_base(u)) and ord(c) in cmap}
+    desired = mathnotation._bracket_kerns(ctx, sorted(base), base)
+    current = _effective_kerning(ctx.font['GPOS'].table)
+    pairs = {}
+    for g in base:
+        for br, before in (('uni27E8', True), ('uni27E9', False),
+                           ('uni27E6', True), ('uni27E7', False)):
+            if br not in ctx.font.getGlyphOrder():
+                continue
+            pair = (br, g) if before else (g, br)
+            delta = desired.get(pair, 0) - current.get(pair, 0)
+            if delta:
+                pairs[pair] = delta
+    if not pairs:
+        return
+    lines = ['languagesystem DFLT dflt; languagesystem latn dflt;',
+             'lookup LATIN_GAPS_BRACKET_KERN {', '  lookupflag IgnoreMarks;']
+    lines.extend(f'  pos {a} {b} {v};' for (a, b), v in sorted(pairs.items()))
+    lines.extend(['} LATIN_GAPS_BRACKET_KERN;',
+                  'feature kern { lookup LATIN_GAPS_BRACKET_KERN; } kern;'])
+    tmp = TTFont()
+    tmp.setGlyphOrder(ctx.font.getGlyphOrder())
+    addOpenTypeFeaturesFromString(tmp, '\n'.join(lines) + '\n', tables=['GPOS'])
+    ctx._merge_table(ctx.font['GPOS'].table, tmp['GPOS'].table)
+    ctx.log(f'bracket kerning: fitted {len(base)} accented letters, adjusted {len(pairs)} pairs')
 
 
 def _inherit_kerning(ctx):
