@@ -548,19 +548,26 @@ def _gap(ctx, left, right, ys):
     return min(gaps) if gaps else None
 
 
-def _bracket_kerns(ctx, glyphs, base=None):
+BRACKET_MIN_K = 8
+
+
+def _bracket_kerns(ctx, glyphs, base=None, kern_of=None, min_k=BRACKET_MIN_K):
     """⟨ (⟦) before a glyph is kerned to leave the ink gap that ( ([) leaves before it with
     Mulish's kerning, ⟩ (⟧) after it as ) (]) does; pairs under 8 units are dropped. A glyph
     with a base letter in base (the accented ú ụ ư ĭ Ą ...) keeps at least the gap its letter
     does: ( and ) leave some marks and ogoneks almost touching (ĭ( 0, Ą) 10 at Regular), and
     copied to the brackets these gaps would be smaller than any plain letter's (⟨ĭ 1, Ą⟩ 0 in
-    Black, 2-D outline distances). A mark clear of the bracket leaves its letter's kerning."""
+    Black, 2-D outline distances). A mark clear of the bracket leaves its letter's kerning.
+    kern_of(a, b) supplies the reference pair kerning (default: ctx.kern); min_k is the minimum
+    absolute adjustment kept (default: BRACKET_MIN_K; 0 keeps every measured pair, including 0,
+    while unmeasured pairs stay absent)."""
     ys = [y for y in range(-240, 760, 12)]
     out = {}
+    kern_fn = ctx.kern if kern_of is None else kern_of
 
     def target(ra, rb):
         gr = _gap(ctx, ra, rb, ys)
-        return None if gr is None else gr + ctx.kern(ra, rb)
+        return None if gr is None else gr + kern_fn(ra, rb)
     for br, ref, before in (('uni27E8', 'parenleft', True), ('uni27E9', 'parenright', False),
                             ('uni27E6', 'bracketleft', True), ('uni27E7', 'bracketright', False)):
         if br not in ctx.font.getGlyphOrder(): continue
@@ -574,7 +581,7 @@ def _bracket_kerns(ctx, glyphs, base=None):
                 tb = target(*((ref, base[g]) if before else (base[g], ref)))
                 if tb is not None: t = max(t, tb)
             k = round(t - gb)
-            if abs(k) >= 8: out[(a, b)] = k
+            if abs(k) >= min_k: out[(a, b)] = k
     return out
 
 

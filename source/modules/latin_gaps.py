@@ -1611,6 +1611,66 @@ def post(ctx):
     _finalize_deterministic_outlines(ctx)
     _composed_anchors(ctx)
     _inherit_kerning(ctx)
+    _fit_bracket_kerning(ctx)
+
+
+def _resolve_bracket_kern(pair, base_pair, measured, current, min_k=8):
+    """Target bracket kerning for `pair` from unthresholded `measured` values and `current` GPOS.
+
+    Unmeasured pairs stay absent from `measured` and never copy `current[base_pair]`.
+    When both `pair` and `base_pair` are measured and match before thresholding, keep
+    `current[base_pair]` so pre- vs. post-reslant rounding does not drift clear-mark letters.
+    Otherwise apply `min_k` to `measured[pair]`.
+    """
+    if pair not in measured:
+        return 0
+    raw = measured[pair]
+    if base_pair in measured and raw == measured[base_pair]:
+        return current.get(base_pair, 0)
+    return raw if abs(raw) >= min_k else 0
+
+
+def _fit_bracket_kerning(ctx):
+    """Fit owned accented letters after their outlines and inherited pairs are final."""
+    mathnotation = sys.modules.get('tsmod_mathnotation')
+    if mathnotation is None:
+        return
+    cmap = ctx.font.getBestCmap()
+    base = {g: cmap[ord(c)] for u, g in cmap.items()
+            if g in ctx.lg_kern and (c := mathnotation._latin_base(u)) and ord(c) in cmap}
+    if not base:
+        return
+    current = _effective_kerning(ctx.font['GPOS'].table)
+    glyphs = sorted(set(base) | set(base.values()))
+    min_k = getattr(mathnotation, 'BRACKET_MIN_K', 8)
+    measured = mathnotation._bracket_kerns(
+        ctx, glyphs, base, kern_of=lambda a, b: current.get((a, b), 0), min_k=0
+    )
+    order = set(ctx.font.getGlyphOrder())
+    pairs = {}
+    for g, b in base.items():
+        for br, before in (('uni27E8', True), ('uni27E9', False),
+                           ('uni27E6', True), ('uni27E7', False)):
+            if br not in order:
+                continue
+            pair = (br, g) if before else (g, br)
+            base_pair = (br, b) if before else (b, br)
+            want = _resolve_bracket_kern(pair, base_pair, measured, current, min_k)
+            delta = want - current.get(pair, 0)
+            if delta:
+                pairs[pair] = delta
+    if not pairs:
+        return
+    lines = ['languagesystem DFLT dflt; languagesystem latn dflt;',
+             'lookup LATIN_GAPS_BRACKET_KERN {', '  lookupflag IgnoreMarks;']
+    lines.extend(f'  pos {a} {b} {v};' for (a, b), v in sorted(pairs.items()))
+    lines.extend(['} LATIN_GAPS_BRACKET_KERN;',
+                  'feature kern { lookup LATIN_GAPS_BRACKET_KERN; } kern;'])
+    tmp = TTFont()
+    tmp.setGlyphOrder(ctx.font.getGlyphOrder())
+    addOpenTypeFeaturesFromString(tmp, '\n'.join(lines) + '\n', tables=['GPOS'])
+    ctx._merge_table(ctx.font['GPOS'].table, tmp['GPOS'].table)
+    ctx.log(f'bracket kerning: fitted {len(base)} accented letters, adjusted {len(pairs)} pairs')
 
 
 def _inherit_kerning(ctx):
