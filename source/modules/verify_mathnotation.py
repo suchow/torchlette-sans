@@ -224,6 +224,42 @@ if kept('kern'):
         if not (ord(v) in cmap and ord(b) in cmap): continue
         gv, gb = gap(l, r), (gap(b, r) if r == '⟩' else gap(l, b))
         check(kv(l + r) != 0 and gv >= gb - 8, f'{l + r!r} kerned {kv(l + r)}, ink gap {round(gv)} vs {round(gb)} with {b}')
+    # Fallback decision in latin_gaps._resolve_bracket_kern and min_k=0 measurement in
+    # mathnotation._bracket_kerns: unmeasured pairs stay absent and never copy a base kern;
+    # sub-threshold pairs copy current[base_pair] only when raw measured values match.
+    import importlib.util
+    _mn_spec = importlib.util.spec_from_file_location('_verify_mathnotation_mod', os.path.join(HERE, 'mathnotation.py'))
+    _mn = importlib.util.module_from_spec(_mn_spec); _mn_spec.loader.exec_module(_mn)
+    _lg_spec = importlib.util.spec_from_file_location('_verify_latin_gaps_mod', os.path.join(HERE, 'latin_gaps.py'))
+    _lg = importlib.util.module_from_spec(_lg_spec); _lg_spec.loader.exec_module(_lg)
+    _rk, _mk = _lg._resolve_bracket_kern, _mn.BRACKET_MIN_K
+    _p, _bp = ('uni27E8', 'uni01D0'), ('uni27E8', 'i')
+    check(_rk(_p, _bp, {}, {_bp: -8}, _mk) == 0, 'unmeasured pair copied base kern (base unmeasured)')
+    check(_rk(_p, _bp, {_bp: -7}, {_bp: -8}, _mk) == 0, 'unmeasured pair copied base kern (base sub-threshold)')
+    check(_rk(_p, _bp, {_bp: -40}, {_bp: -40}, _mk) == 0, 'unmeasured pair copied base kern (base measured)')
+    check(_rk(_p, _bp, {_p: -2, _bp: -7}, {_bp: -8}, _mk) == 0, 'sub-threshold reaching pair copied base kern')
+    check(_rk(_p, _bp, {_p: 0, _bp: -7}, {_bp: -8}, _mk) == 0, 'zero-kern reaching pair copied base kern')
+    check(_rk(_p, _bp, {_p: 5, _bp: -7}, {_bp: -8}, _mk) == 0, 'positive sub-threshold pair copied base kern')
+    check(_rk(_p, _bp, {_p: -7, _bp: -7}, {_bp: -8}, _mk) == -8, 'clear-mark pair did not keep base kern at threshold')
+    check(_rk(_p, _bp, {_p: -99, _bp: -99}, {_bp: -100}, _mk) == -100, 'clear-mark pair did not keep base kern')
+    check(_rk(_p, _bp, {_p: -40, _bp: -100}, {_bp: -100}, _mk) == -40, 'reaching pair did not keep fitted kern')
+    check(_rk(_p, _bp, {_p: -4, _bp: -100}, {_bp: -100}, _mk) == 0, 'sub-threshold reaching pair was not dropped')
+    class _StubFont:
+        def getGlyphOrder(self): return ['uni27E8', 'parenleft', 'a', 'acc', 'empty']
+    class _StubCtx:
+        font = _StubFont()
+        def path_of(self, n): return n
+        def W(self, n): return 600
+        def kern(self, a, b): return 0
+        def hspans(self, p, y):
+            if p == 'empty' or y != 0: return []
+            return {'uni27E8': [(0, 400)], 'parenleft': [(0, 400)], 'a': [(100, 300)], 'acc': [(96, 300)]}[p]
+    _raw = _mn._bracket_kerns(_StubCtx(), ['a', 'acc', 'empty'], {'acc': 'a', 'empty': 'a'}, min_k=0)
+    _def = _mn._bracket_kerns(_StubCtx(), ['a', 'acc', 'empty'], {'acc': 'a', 'empty': 'a'})
+    _kof = _mn._bracket_kerns(_StubCtx(), ['a', 'acc', 'empty'], {'acc': 'a', 'empty': 'a'}, kern_of=lambda a, b: -20)
+    check(_raw == {('uni27E8', 'a'): 0, ('uni27E8', 'acc'): 4}, f'_bracket_kerns(min_k=0) unexpected map: {_raw}')
+    check(_def == {}, f'_bracket_kerns default threshold kept sub-threshold pairs: {_def}')
+    check(_kof == {('uni27E8', 'a'): -20, ('uni27E8', 'acc'): -16}, f'_bracket_kerns(kern_of) unexpected map: {_kof}')
 
 # 7. shapes
 H = path('H'); Hb = H.bounds; CH = Hb[3]
