@@ -1622,16 +1622,26 @@ def _fit_bracket_kerning(ctx):
     cmap = ctx.font.getBestCmap()
     base = {g: cmap[ord(c)] for u, g in cmap.items()
             if g in ctx.lg_kern and (c := mathnotation._latin_base(u)) and ord(c) in cmap}
-    desired = mathnotation._bracket_kerns(ctx, sorted(base), base)
+    if not base:
+        return
     current = _effective_kerning(ctx.font['GPOS'].table)
+    glyphs = sorted(set(base) | set(base.values()))
+    desired = mathnotation._bracket_kerns(
+        ctx, glyphs, base, kern_of=lambda a, b: current.get((a, b), 0)
+    )
+    order = set(ctx.font.getGlyphOrder())
     pairs = {}
-    for g in base:
+    for g, b in base.items():
         for br, before in (('uni27E8', True), ('uni27E9', False),
                            ('uni27E6', True), ('uni27E7', False)):
-            if br not in ctx.font.getGlyphOrder():
+            if br not in order:
                 continue
             pair = (br, g) if before else (g, br)
-            delta = desired.get(pair, 0) - current.get(pair, 0)
+            base_pair = (br, b) if before else (b, br)
+            want = (current.get(base_pair, 0)
+                    if desired.get(pair, 0) == desired.get(base_pair, 0)
+                    else desired.get(pair, 0))
+            delta = want - current.get(pair, 0)
             if delta:
                 pairs[pair] = delta
     if not pairs:
