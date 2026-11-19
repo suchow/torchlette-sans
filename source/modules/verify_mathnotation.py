@@ -206,11 +206,17 @@ if kept('kern'):
     # ( and ) all but touch some of them (ĭ( Ą)), and the brackets must not
     def kv(t): return run(t)[1][0].x_advance - run(t, {'kern': False})[1][0].x_advance
     SAME = {'ú': 'u', 'ụ': 'u', 'ủ': 'u', 'ó': 'o', 'ọ': 'o', 'ẹ': 'e', 'á': 'a', 'ạ': 'a',
-            'Ú': 'U', 'Ụ': 'U', 'Ọ': 'O', 'Ệ': 'E', 'Ỵ': 'Y', 'Ạ': 'A'}
+            'Ú': 'U', 'Ụ': 'U', 'Ọ': 'O', 'Ệ': 'E', 'Ỵ': 'Y', 'Ạ': 'A',
+            'ȯ': 'o', 'Ȯ': 'O'}
     for v, b in SAME.items():
         if ord(v) in cmap and ord(b) in cmap:
             for got_t, want_t in ((v + '⟩', b + '⟩'), ('⟨' + v, '⟨' + b)):
                 check(kv(got_t) == kv(want_t) != 0, f'{got_t!r} kerned {kv(got_t)}, {want_t!r} {kv(want_t)}')
+    if 0x27E6 in cmap and 0x27E7 in cmap:
+        for v, b in (('ȯ', 'o'), ('Ȯ', 'O')):
+            if ord(v) in cmap and ord(b) in cmap:
+                for got_t, want_t in ((v + '⟧', b + '⟧'), ('⟦' + v, '⟦' + b)):
+                    check(kv(got_t) == kv(want_t), f'{got_t!r} kerned {kv(got_t)}, {want_t!r} {kv(want_t)}')
     REACH = [('⟨', v, b) for v, b in zip('ĭìĩīïíĵȉǐ', 'iiiiiijii')] + \
             [(v, '⟩', b) for v, b in zip('ưứựơớợƯỨľŕĩĄąǐ', 'uuuoooUUlriAai')]
     for l, r, b in REACH:
