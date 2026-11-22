@@ -41,7 +41,7 @@ jobs:
     timeout-minutes: 120
     steps:
       # Fetch depth 2 on pull_request and push brings HEAD^1 locally without cloning
-      # binary history; multi-commit pushes fetch only the single previous commit on demand.
+      # binary history; multi-commit pushes deepen HEAD in bounded steps to prove ancestry.
       - uses: actions/checkout@v4
         with:
           fetch-depth: ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && 2 || 1 }}

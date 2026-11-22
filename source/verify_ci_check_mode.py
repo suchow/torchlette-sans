@@ -450,17 +450,68 @@ def test_pushes(tmp: Path) -> None:
     d = mode.decide(str(co), event_name="push", push_before_sha=b0, push_after_sha=c3, push_forced="false", allow_fetch=True)
     check(d.compare and d.changed_fonts == ("fonts/ttf/Regular.ttf",), "push multi-commit with fonts change compares", str(d))
 
-    # 6. Multi-commit push where fetch fails (broken remote or nonexistent SHA) -> fails closed
+    # 6. Multi-commit push where deepen fetch fails (broken remote or nonexistent SHA) -> fails closed
     co_broken = shallow_checkout(bare_uri, case_dir / "co_broken", "+refs/heads/main:refs/remotes/origin/main", "refs/remotes/origin/main", depth=2)
     git(co_broken, "remote", "set-url", "origin", (case_dir / "missing.git").resolve().as_uri())
     d = mode.decide(str(co_broken), event_name="push", push_before_sha=b0, push_after_sha=c3, push_forced="false", allow_fetch=True)
-    check(d.compare and "failed to fetch" in d.reason, "push fetch failure fails closed", str(d))
+    check(d.compare and "failed to deepen" in d.reason, "push deepen failure fails closed", str(d))
 
     co_badsha = shallow_checkout(bare_uri, case_dir / "co_badsha", "+refs/heads/main:refs/remotes/origin/main", "refs/remotes/origin/main", depth=2)
     d = mode.decide(str(co_badsha), event_name="push", push_before_sha="a" * 40, push_after_sha=c3, push_forced="false", allow_fetch=True)
     check(d.compare, "push nonexistent before SHA fails closed", str(d))
 
-    # 7. Fail-closed push anomalies
+    # 7. Shallow push ancestry proof: fetchable non-ancestor fails closed, deepen budget fails closed,
+    #    and real multi-commit ancestor succeeds while keeping older history shallow
+    case_dir = tmp / "push_shallow_ancestry"
+    _, bare_uri, work, _ = make_origin_and_work(case_dir)
+    for i in range(6):
+        write(work, f"source/hist_{i}.py", f"{i}\n")
+        commit_all(work, f"hist {i}")
+    b_anc = git(work, "rev-parse", "HEAD")
+    # Unrelated sibling commit with identical fonts/, reachable on origin (fetchable by SHA)
+    git(work, "checkout", "-b", "side_same_fonts", b_anc)
+    write(work, "source/side_same.py", "side\n")
+    side_same = commit_all(work, "Side branch with identical fonts")
+    git(work, "push", "origin", "side_same_fonts")
+
+    git(work, "checkout", "main")
+    write(work, "source/m1.py", "1\n")
+    commit_all(work, "m1")
+    write(work, "source/m2.py", "2\n")
+    commit_all(work, "m2")
+    write(work, "source/m3.py", "3\n")
+    m3 = commit_all(work, "m3")
+    git(work, "push", "origin", "main")
+
+    # Fetchable non-ancestor with identical fonts/ on a shallow checkout -> must fail closed
+    co_nonanc = shallow_checkout(bare_uri, case_dir / "co_nonanc", "+refs/heads/main:refs/remotes/origin/main", "refs/remotes/origin/main", depth=2)
+    d = mode.decide(str(co_nonanc), event_name="push", push_before_sha=side_same, push_after_sha=m3, push_forced="false", allow_fetch=True)
+    check(d.compare and "not an ancestor" in d.reason, "push shallow fetchable non-ancestor fails closed", str(d))
+
+    # Non-ancestor when repo stays shallow after bounded deepen -> fails closed
+    co_nonanc_sh = shallow_checkout(bare_uri, case_dir / "co_nonanc_sh", "+refs/heads/main:refs/remotes/origin/main", "refs/remotes/origin/main", depth=2)
+    d = mode.decide(str(co_nonanc_sh), event_name="push", push_before_sha=side_same, push_after_sha=m3, push_forced="false", allow_fetch=True, deepen_steps=(2,))
+    check(
+        d.compare and "could not be proven an ancestor" in d.reason and git(co_nonanc_sh, "rev-parse", "--is-shallow-repository") == "true",
+        "push shallow non-ancestor within deepen budget fails closed",
+        str(d),
+    )
+
+    # Real ancestor when deepen budget is too small to reach it -> fails closed
+    co_budget = shallow_checkout(bare_uri, case_dir / "co_budget", "+refs/heads/main:refs/remotes/origin/main", "refs/remotes/origin/main", depth=2)
+    d = mode.decide(str(co_budget), event_name="push", push_before_sha=b_anc, push_after_sha=m3, push_forced="false", allow_fetch=True, deepen_steps=(1,))
+    check(d.compare and "could not be proven an ancestor" in d.reason, "push deepen budget exhausted fails closed", str(d))
+
+    # Real ancestor 3 commits back proven via --deepen=4 while keeping older history shallow
+    co_proven = shallow_checkout(bare_uri, case_dir / "co_proven", "+refs/heads/main:refs/remotes/origin/main", "refs/remotes/origin/main", depth=2)
+    d = mode.decide(str(co_proven), event_name="push", push_before_sha=b_anc, push_after_sha=m3, push_forced="false", allow_fetch=True, deepen_steps=(4,))
+    check(
+        not d.compare and d.base_ref == b_anc and git(co_proven, "rev-parse", "--is-shallow-repository") == "true",
+        "push real ancestor proven while remaining shallow",
+        str(d),
+    )
+
+    # 8. Fail-closed push anomalies
     case_dir = tmp / "push_anomalies"
     _, bare_uri, work, b0 = make_origin_and_work(case_dir)
     write(work, "source/build.py", "build-v2\n")
