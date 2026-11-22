@@ -228,6 +228,7 @@ def test_pull_requests(tmp: Path) -> None:
     check(d.compare and d.changed_fonts == ("fonts/build.py",), "pr fonts renamed in compares", str(d))
 
     def chmod_font(w: Path) -> None:
+        os.chmod(w / "fonts/ttf/Regular.ttf", 0o755)
         git(w, "update-index", "--chmod=+x", "fonts/ttf/Regular.ttf")
         git(w, "commit", "-m", "Chmod font")
 
@@ -310,8 +311,11 @@ def test_pull_requests(tmp: Path) -> None:
     write(work, "source/p3.txt", "3\n")
     p3 = commit_all(work, "p3")
     git(work, "checkout", "main")
+    write(work, "source/p1.txt", "1\n")
+    p1 = commit_all(work, "p1")
     git(work, "merge", "--no-ff", "-m", "Octopus", "p2", "p3")
-    d = mode.decide(str(work), event_name="pull_request", checkout_ref="refs/pull/99/merge", pr_base_sha=b0, pr_head_sha=p3)
+    check(len(git(work, "rev-list", "--parents", "-n", "1", "HEAD").split()) == 4, "pr octopus fixture has 3 parents")
+    d = mode.decide(str(work), event_name="pull_request", checkout_ref="refs/pull/99/merge", pr_base_sha=p1, pr_head_sha=p3)
     check(d.compare, "pr octopus merge fails closed", str(d))
     _ = p2
 
