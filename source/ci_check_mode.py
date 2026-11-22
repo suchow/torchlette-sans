@@ -21,6 +21,7 @@ import sys
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 ZERO_SHA = "0" * 40
 PR_MERGE_REF_RE = re.compile(r"^refs/pull/[0-9]+/merge$")
+DEFAULT_DEEPEN_STEPS = (4, 8, 16)
 
 
 @dataclass(frozen=True)
@@ -58,6 +59,24 @@ def _has_commit_and_tree(repo: str, sha: str) -> bool:
         _git(repo, "cat-file", "-e", f"{sha}^{{commit}}").returncode == 0
         and _git(repo, "cat-file", "-e", f"{sha}^{{tree}}").returncode == 0
     )
+
+
+def _is_ancestor(repo: str, ancestor: str, descendant: str = "HEAD") -> bool:
+    if not _has_commit_and_tree(repo, ancestor):
+        return False
+    return _git(repo, "merge-base", "--is-ancestor", ancestor, descendant).returncode == 0
+
+
+def _is_shallow(repo: str) -> bool | None:
+    proc = _git(repo, "rev-parse", "--is-shallow-repository")
+    if proc.returncode != 0:
+        return None
+    out = proc.stdout.strip()
+    if out == "true":
+        return True
+    if out == "false":
+        return False
+    return None
 
 
 def _head_with_parents(repo: str) -> list[str] | None:
@@ -144,6 +163,7 @@ def _decide_push(
     push_forced: str,
     remote: str,
     allow_fetch: bool,
+    deepen_steps: tuple[int, ...] = DEFAULT_DEEPEN_STEPS,
 ) -> Decision:
     if push_forced.strip().lower() != "false":
         return Decision(
@@ -160,46 +180,45 @@ def _decide_push(
     parts = _head_with_parents(repo)
     if parts is None or parts[0] != push_after_sha:
         return Decision(True, "checked-out HEAD does not match push after SHA")
-    parents = parts[1:]
 
-    shallow_proc = _git(repo, "rev-parse", "--is-shallow-repository")
-    if shallow_proc.returncode != 0:
-        return Decision(True, "unable to determine repository shallow status")
-    is_shallow = shallow_proc.stdout.strip() == "true"
-
-    fetched_before = False
-    if not _has_commit_and_tree(repo, push_before_sha):
+    if not _is_ancestor(repo, push_before_sha, "HEAD"):
+        shallow = _is_shallow(repo)
+        if shallow is None:
+            return Decision(True, "unable to determine repository shallow status")
+        if not shallow:
+            return Decision(
+                True,
+                f"previous push commit {push_before_sha} is not an ancestor of HEAD",
+            )
         if not allow_fetch or not remote:
-            return Decision(True, f"previous push commit {push_before_sha} is not present locally")
-        fetch = _git(repo, "fetch", "--no-tags", "--depth=1", remote, push_before_sha)
-        if fetch.returncode != 0:
-            return Decision(True, f"failed to fetch previous push commit {push_before_sha}")
-        fh = _git(repo, "rev-parse", "--verify", "--quiet", "FETCH_HEAD^{commit}")
-        if fh.returncode != 0 or fh.stdout.strip() != push_before_sha:
             return Decision(
                 True,
-                f"fetched commit did not match previous push commit {push_before_sha}",
+                f"previous push commit {push_before_sha} is not proven an ancestor of HEAD locally",
             )
-        if not _has_commit_and_tree(repo, push_before_sha):
-            return Decision(
-                True,
-                f"fetched previous push commit {push_before_sha} failed object validation",
-            )
-        fetched_before = True
-
-    if not is_shallow:
-        anc = _git(repo, "merge-base", "--is-ancestor", push_before_sha, "HEAD")
-        if anc.returncode != 0:
-            return Decision(True, f"previous push commit {push_before_sha} is not an ancestor of HEAD")
-    elif not fetched_before:
-        is_first_parent = bool(parents and parents[0] == push_before_sha)
-        if not is_first_parent:
-            anc = _git(repo, "merge-base", "--is-ancestor", push_before_sha, "HEAD")
-            if anc.returncode != 0:
+        for step in deepen_steps:
+            if step <= 0:
+                continue
+            fetch = _git(repo, "fetch", "--no-tags", f"--deepen={step}", remote, push_after_sha)
+            if fetch.returncode != 0:
                 return Decision(
                     True,
-                    f"local previous push commit {push_before_sha} could not be validated as an ancestor of HEAD",
+                    f"failed to deepen push commit {push_after_sha} to prove ancestry of {push_before_sha}",
                 )
+            if _is_ancestor(repo, push_before_sha, "HEAD"):
+                break
+            shallow = _is_shallow(repo)
+            if shallow is None:
+                return Decision(True, "unable to determine repository shallow status after deepen")
+            if not shallow:
+                return Decision(
+                    True,
+                    f"previous push commit {push_before_sha} is not an ancestor of HEAD",
+                )
+        else:
+            return Decision(
+                True,
+                f"previous push commit {push_before_sha} could not be proven an ancestor of HEAD",
+            )
 
     return _diff_fonts(repo, push_before_sha, "source-only push")
 
@@ -216,6 +235,7 @@ def decide(
     push_forced: str = "",
     remote: str = "origin",
     allow_fetch: bool = True,
+    deepen_steps: tuple[int, ...] = DEFAULT_DEEPEN_STEPS,
 ) -> Decision:
     if event_name == "pull_request":
         return _decide_pull_request(
@@ -232,6 +252,7 @@ def decide(
             push_forced=push_forced,
             remote=remote,
             allow_fetch=allow_fetch,
+            deepen_steps=deepen_steps,
         )
     return Decision(True, f"event {event_name or 'unknown'} defaults to full comparison")
 
