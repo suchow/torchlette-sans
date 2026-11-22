@@ -1,11 +1,13 @@
 # Torchlette Sans: the checks of source/Makefile, run here and not on a laptop.
 #
 # check   a clean rebuild of the release (the fourteen .ttf, their woff2, and the variable
-#         font), uploaded as release-rebuild. Pull requests that do not touch fonts/ run
-#         make release-rebuild; pull requests that touch fonts/, non-PR events, and runs
-#         with missing or ambiguous base refs run the full byte comparison (make check).
-# verify  the HarfBuzz checks of all fourteen styles and their web subsets, then the
-#         fontbakery gate (make verify); the fontbakery report is kept as an artifact
+#         font), uploaded as release-rebuild. Pull requests and non-forced pushes that do
+#         not touch fonts/ run make release-rebuild; runs that touch fonts/, manual
+#         workflow_dispatch runs, and runs with missing, unfetchable, or ambiguous base
+#         refs run the full byte comparison (make check).
+# verify  fast CI decision-logic tests (source/verify_ci_check_mode.py), the HarfBuzz
+#         checks of all fourteen styles and their web subsets, and the fontbakery gate
+#         (make verify); the fontbakery report is kept as an artifact
 #
 # The Makefile pins Python 3.12 and every tool through uv, so the jobs need only uv.
 # make check-web and the lesson prose that make verify shapes need the torchlette
@@ -38,11 +40,11 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 120
     steps:
-      # Fetch depth 2 on pull_request brings both parents of refs/pull/<n>/merge so
-      # HEAD^1 vs. HEAD diffs only the PR's net changes without cloning binary history.
+      # Fetch depth 2 on pull_request and push brings HEAD^1 locally without cloning
+      # binary history; multi-commit pushes fetch only the single previous commit on demand.
       - uses: actions/checkout@v4
         with:
-          fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 1 }}
+          fetch-depth: ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && 2 || 1 }}
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
@@ -52,86 +54,12 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           CHECKOUT_REF: ${{ github.ref }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          set -euo pipefail
-
-          compare=true
-          reason="defaulting to full comparison"
-
-          is_sha() {
-            [[ "${1:-}" =~ ^[0-9a-f]{40}$ ]]
-          }
-
-          if [ "${EVENT_NAME:-}" != "pull_request" ]; then
-            reason="event ${EVENT_NAME:-unknown} is not pull_request"
-          elif ! is_sha "${BASE_SHA:-}" || ! is_sha "${HEAD_SHA:-}"; then
-            reason="missing or invalid pull_request base/head SHA"
-          else
-            parents=$(git rev-list --parents -n 1 HEAD 2>/dev/null || true)
-            base_ref=""
-
-            if [ -z "$parents" ]; then
-              reason="unable to read HEAD parents"
-            else
-              set -- $parents
-              case "${CHECKOUT_REF:-}" in
-                refs/pull/*/merge)
-                  if [ "$#" -eq 3 ] && is_sha "$1" && is_sha "$2" && is_sha "$3" \
-                     && [ "$1" != "$HEAD_SHA" ] && [ "$3" = "$HEAD_SHA" ] \
-                     && git cat-file -e "${2}^{commit}" 2>/dev/null \
-                     && git cat-file -e "${2}^{tree}" 2>/dev/null; then
-                    base_ref="$2"
-                    if [ "$2" != "$BASE_SHA" ]; then
-                      echo "Note: PR merge parent $2 differs from event base SHA $BASE_SHA; diffing against merge parent."
-                    fi
-                  else
-                    reason="PR merge commit parents are missing or ambiguous"
-                  fi
-                  ;;
-                *)
-                  if [ "$#" -ge 1 ] && [ "$1" = "$HEAD_SHA" ] \
-                     && git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null \
-                     && git cat-file -e "${BASE_SHA}^{tree}" 2>/dev/null; then
-                    merge_bases=$(git merge-base --all "$BASE_SHA" HEAD 2>/dev/null || true)
-                    if [ -z "$merge_bases" ]; then
-                      reason="base ref $BASE_SHA has no local merge-base"
-                    else
-                      set -- $merge_bases
-                      if [ "$#" -eq 1 ] && is_sha "$1" \
-                         && git cat-file -e "${1}^{commit}" 2>/dev/null \
-                         && git cat-file -e "${1}^{tree}" 2>/dev/null; then
-                        base_ref="$1"
-                      else
-                        reason="base ref $BASE_SHA has ambiguous merge-bases ($# found)"
-                      fi
-                    fi
-                  else
-                    reason="checked-out ref ${CHECKOUT_REF:-unknown} has missing or ambiguous base ref"
-                  fi
-                  ;;
-              esac
-            fi
-
-            if [ -n "$base_ref" ]; then
-              if fonts_diff=$(git diff --no-renames --name-only "$base_ref" HEAD -- fonts); then
-                if [ -n "$fonts_diff" ]; then
-                  reason="fonts/ changed relative to $base_ref"
-                  echo "Changed files under fonts/:"
-                  printf '%s\n' "$fonts_diff"
-                else
-                  compare=false
-                  reason="source-only PR (fonts/ unchanged relative to $base_ref)"
-                fi
-              else
-                reason="git diff against $base_ref failed"
-              fi
-            fi
-          fi
-
-          echo "compare=$compare ($reason)"
-          echo "compare=$compare" >> "$GITHUB_OUTPUT"
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          PUSH_AFTER_SHA: ${{ github.event.after }}
+          PUSH_FORCED: ${{ github.event.forced }}
+        run: python3 source/ci_check_mode.py --github-output "$GITHUB_OUTPUT"
       - name: Rebuild release and compare when required
         env:
           COMPARE: ${{ steps.compare.outputs.compare }}
@@ -158,6 +86,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Verify CI release-check decision logic
+        run: python3 source/verify_ci_check_mode.py
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
