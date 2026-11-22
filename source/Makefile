@@ -2,6 +2,7 @@
 #
 #   make release  the release files in ../fonts: ttf/ (the fourteen .ttf), webfonts/ (the same fonts as
 #                 woff2) and variable/ (the wght/ital variable font, .ttf and .woff2, under both names)
+#   make release-rebuild  clean rebuild of the release in BUILD_DIR/release without comparing with ../fonts
 #   make check    clean rebuild of the release in BUILD_DIR, compared with ../fonts (release.py compare)
 #   make check-web  clean rebuild of the app's subset woff2 in BUILD_DIR, compared byte for byte with WEB_REF
 #   make          build/TorchletteSans-<style>.ttf for each of STYLES (seven weights, upright and italic) and the app's subset woff2 in WEB_DIR
@@ -204,7 +205,7 @@ endif
 SUBSET_FLAGS = --unicodes='$(UNICODES)' --layout-features='$(WEB_FEATURES)' --name-IDs='*' --name-languages='*' \
 	--notdef-outline --recalc-average-width --no-hinting --flavor=woff2
 
-.PHONY: all ttf verify fontbakery release check check-web dist deliver deliver-dirs clean FORCE
+.PHONY: all ttf verify fontbakery release release-rebuild check check-web dist deliver deliver-dirs clean FORCE
 all: $(WEBS)
 ttf: $(TTFS)
 
@@ -292,12 +293,15 @@ release: release.py $(TTFS) $(VAR_DIR)/TorchletteSans-Variable.ttf
 	done
 	@ls -l $(RELEASE_DIR)/ttf $(RELEASE_DIR)/webfonts $(RELEASE_DIR)/variable
 
+# A clean rebuild of the release in BUILD_DIR/release without comparing with RELEASE_DIR.
+release-rebuild:
+	rm -rf $(BUILD_DIR)
+	$(MAKE) --no-print-directory release RELEASE_DIR=$(BUILD_DIR)/release
+
 # A clean rebuild of the release in BUILD_DIR, compared file by file with RELEASE_DIR:
 # the .ttf and the variable font byte for byte, the woff2 byte for byte or, for the web
 # fonts of v0.5.7 and before (written with the time of writing), table by table.
-check:
-	rm -rf $(BUILD_DIR)
-	$(MAKE) --no-print-directory release RELEASE_DIR=$(BUILD_DIR)/release
+check: release-rebuild
 	$(PY) release.py compare $(BUILD_DIR)/release $(RELEASE_DIR)
 
 # A clean rebuild of the app's subset woff2 in BUILD_DIR, compared byte for byte with
