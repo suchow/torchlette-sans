@@ -56,6 +56,8 @@ letters lean with its letters once build.py reslants it, the turned and mirrored
   both smcp and c2sc select them. The default forms remain in ordinary capital text.
 - Ɵ ɵ (U+019F, U+0275): O and o with a bar across the counter. Ʌ ʌ
   (U+0245, U+028C): V and v turned, with sidebearings exchanged.
+- Ɠ ɠ (U+0193, U+0260): G and single-storey g with a right-facing hook on
+  the upper right. The hook comes from ɓ, mirrored and fitted to each outline.
 
 Small capitals: each pair has one, which smcp gives for the lowercase and c2sc for the capital
 (<capital>.sc.african), drawn by the same rule from the small capitals of the models (C.sc,
@@ -349,6 +351,28 @@ def glyphs(ctx):
         put(nm, pt, W(Tn), *(() if sfx else (0x01AC,)))
     pair(0x01A4, 0x01A5, f'{_name(0x01A4)}.sc.{SUF}')
     pair(0x01AC, 0x01AD, f'{_name(0x01AC)}.sc.{SUF}')
+
+    # Ɠ ɠ: mirror ɓ's hook to point right. Extend the right side of the
+    # letter into the hook; the top lies above the cap or x-height.
+    def right_hook(base, piece, span, top, join_y):
+        q = P(base)
+        a, b = hs(q, join_y)[-1]
+        reflected = mir(piece, span[0] + span[1])
+        dx = round(b - span[1])
+        dy = round(top - reflected.bounds[3])
+        reflected = mv(reflected, dx, dy)
+        y0, y1 = sorted((join_y, reflected.bounds[1]))
+        p = union(q, reflected, rect(a, y0 - 2, b, y1 + 2))
+        return fit(p, *sb(base))
+
+    put(_name(0x0193), *right_hook('G', hk, hk_s, P('H').bounds[3] * 1.12,
+                                  P('H').bounds[3] * 0.78), cp=0x0193)
+    put(_name(0x0260), *right_hook('g', hk, hk_s, P('H').bounds[3], xh * 0.80), cp=0x0260)
+    sc_hook, sc_span, _ = asc_hook(c.sc_path('uni0253'), P('O.sc').bounds[3])
+    sc_h = P('H.sc').bounds[3]
+    put(f'{_name(0x0193)}.sc.{SUF}',
+        *right_hook('G.sc', sc_hook, sc_span, sc_h * 1.12, sc_h * 0.78))
+    pair(0x0193, 0x0260, f'{_name(0x0193)}.sc.{SUF}')
 
     # ---- Ɣ ɣ Ʋ ʋ: Noto Sans's letters, fitted -----------------------------------------------
     # Each is Noto's outline mapped onto Torchlette's: vertically by the line through two knots
@@ -755,6 +779,7 @@ KERN = {
     0x0244: (['U'], ['U']), 0x0289: (['u'], ['u']),
     0x019F: (['O'], ['O']), 0x0275: (['o'], ['o']),
     0x0245: (['A'], ['A']), 0x028C: ([None], [None]),
+    0x0193: (['G'], [None]), 0x0260: (['g'], [None]),
     0x0189: (['Dcroat'], ['Dcroat']), 0x0256: (['d'], ['d']),
     0x01F7: (['P'], ['P']), 0x01BF: (['p'], ['p']),
     0xA78B: ([None], [None]), 0xA78C: ([None], [None]),
