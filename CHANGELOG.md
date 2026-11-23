@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.5.14 (unreleased)
+## v0.5.14 (2026-11-23)
 
 - Accented Latin letters now have kerning against Cyrillic and Greek capitals, with clearance for accents. Some browsers do not apply kerning across script boundaries.
 - Adjusted bracket kerning for accented Latin letters to preserve clearance around their marks, including ǐ beside ⟩.
