@@ -75,7 +75,8 @@ PAIRS = [(0x0186, 0x0254), (0x018E, 0x01DD), (0x0190, 0x025B), (0x0194, 0x0263),
          (0x01B1, 0x028A), (0x01B2, 0x028B), (0x01B7, 0x0292), (0x0198, 0x0199), (0x01A4, 0x01A5),
          (0x01AC, 0x01AD), (0x019D, 0x0272), (0x0243, 0x0180), (0x01F7, 0x01BF), (0xA78B, 0xA78C),
          (0xA7B1, 0x0287), (0x0189, 0x0256), (0x0197, 0x0268), (0x0244, 0x0289)]
-CPS = [c for p in PAIRS for c in p]
+CLICKS = list(range(0x01C0, 0x01C4))
+CPS = [c for p in PAIRS for c in p] + CLICKS
 
 
 def check(cond, msg):
@@ -149,6 +150,23 @@ for cp in CPS:
     lo, hi = min(lo, gb.yMin), max(hi, gb.yMax)
 
 have = lambda ch: G(ch) in HAVE if G(ch) else False
+for cp in CLICKS:
+    ch = chr(cp)
+    if not have(ch): continue
+    g = G(ch)
+    for feature in ('smcp', 'c2sc'):
+        if not kept(feature): continue
+        shaped = shape(ch, {feature: 1})
+        check(len(shaped) == 1 and shaped[0][0] == g + '.sc.african',
+              f'{ch} {feature}: {shaped}')
+        if len(shaped) == 1:
+            check(GDEF.get(shaped[0][0]) == 1, f'{ch} {feature}: missing GDEF base class')
+    p = outline(g)
+    if cp == 0x01C1:
+        spans = hspans(p, 0.5 * outline(G('H')).bounds[3])
+        check(len(spans) == 2 and spans[1][0] > spans[0][1], f'{ch}: stems do not have a gap')
+    if cp == 0x01C3:
+        check(ncont(p) == 2, f'{ch}: dot and stem are not separate contours')
 if all(have(chr(c)) for c in CPS):
     # ---- 2. construction --------------------------------------------------------------
     def turned(g):
