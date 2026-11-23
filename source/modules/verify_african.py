@@ -398,9 +398,10 @@ if kept('mark'):
                     base, ink = result
                     offset = (ink[0] + ink[2] - base[0] - base[2]) / 2
                     if mark == '\u0301':
-                        ref_char = 'I' if feature == 'c2sc' else 'ı'
-                        ref_name = 'I.sc' if feature else CMAP.get(ord(ref_char))
-                        ref = marked(ref_char + mark, feature, ref_name, glyph)
+                        # I + acute composes before c2sc; dotless i stays decomposed.
+                        ref_feature = 'smcp' if feature else None
+                        ref_name = 'I.sc' if feature else CMAP.get(ord('ı'))
+                        ref = marked('ı' + mark, ref_feature, ref_name, glyph)
                         ok = ref is not None
                         if ref:
                             rb, ri = ref
