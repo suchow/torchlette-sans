@@ -54,6 +54,8 @@ letters lean with its letters once build.py reslants it, the turned and mirrored
 - ǀ ǁ ǂ ǃ (U+01C0–01C3): uncased click letters, with stems measured from l, text
   sidebearings, and a dot on ǃ. Small-cap forms use I.sc's stem and H.sc's height;
   both smcp and c2sc select them. The default forms remain in ordinary capital text.
+- Ɵ ɵ (U+019F, U+0275): O and o with a bar across the counter. Ʌ ʌ
+  (U+0245, U+028C): V and v turned, with sidebearings exchanged.
 
 Small capitals: each pair has one, which smcp gives for the lowercase and c2sc for the capital
 (<capital>.sc.african), drawn by the same rule from the small capitals of the models (C.sc,
@@ -520,6 +522,28 @@ def glyphs(ctx):
     l_, r_ = sb('u')
     put(_name(0x0289), *fit(p, l_ - e, r_ - e), cp=0x0289)
 
+    # Barred O: each bar joins the two sides of its own O, at the counter's
+    # middle. Its weight follows the corresponding D with stroke.
+    for base, cp, bar_src in (('O', 0x019F, P('Dcroat')),
+                              ('O.sc', None, c.sc_path('Dcroat')),
+                              ('o', 0x0275, P('dcroat'))):
+        q = P(base); bb = q.bounds
+        height = (bb[1] + bb[3]) / 2
+        y0, y1, _, _ = bar_of(bar_src, bar_src.bounds[0] + 5, None) if base != 'o' else dcb
+        thickness = y1 - y0
+        spans = hs(q, height)
+        p = union(q, rect(spans[0][0], height - thickness / 2,
+                          spans[-1][1], height + thickness / 2))
+        name = f'{_name(0x019F)}.sc.{SUF}' if base == 'O.sc' else _name(cp)
+        put(name, p, W(base), *(() if cp is None else (cp,)))
+    pair(0x019F, 0x0275, f'{_name(0x019F)}.sc.{SUF}')
+
+    # Turn V through 180 degrees in its own advance, as for Ɔ.
+    for base, cp in (('V', 0x0245), ('v', 0x028C), ('V.sc', None)):
+        name = f'{_name(0x0245)}.sc.{SUF}' if cp is None else _name(cp)
+        put(name, *turned(base), *(() if cp is None else (cp,)))
+    pair(0x0245, 0x028C, f'{_name(0x0245)}.sc.{SUF}')
+
     # ---- Ɩ ɩ: a stem with t's foot ---------------------------------------------------------
     t = P('t')
     ts0, ts1 = hs(t, 300)[0]
@@ -729,6 +753,8 @@ KERN = {
     0x0243: (['Dcroat'], ['B']), 0x0180: (['hbar'], ['b']),
     0x0197: (['Dcroat'], ['Hbar']), 0x0268: (['hbar'], ['dcroat']),
     0x0244: (['U'], ['U']), 0x0289: (['u'], ['u']),
+    0x019F: (['O'], ['O']), 0x0275: (['o'], ['o']),
+    0x0245: (['A'], ['A']), 0x028C: ([None], [None]),
     0x0189: (['Dcroat'], ['Dcroat']), 0x0256: (['d'], ['d']),
     0x01F7: (['P'], ['P']), 0x01BF: (['p'], ['p']),
     0xA78B: ([None], [None]), 0xA78C: ([None], [None]),

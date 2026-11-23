@@ -74,7 +74,8 @@ fails, checks = [], 0
 PAIRS = [(0x0186, 0x0254), (0x018E, 0x01DD), (0x0190, 0x025B), (0x0194, 0x0263), (0x0196, 0x0269),
          (0x01B1, 0x028A), (0x01B2, 0x028B), (0x01B7, 0x0292), (0x0198, 0x0199), (0x01A4, 0x01A5),
          (0x01AC, 0x01AD), (0x019D, 0x0272), (0x0243, 0x0180), (0x01F7, 0x01BF), (0xA78B, 0xA78C),
-         (0xA7B1, 0x0287), (0x0189, 0x0256), (0x0197, 0x0268), (0x0244, 0x0289)]
+         (0xA7B1, 0x0287), (0x0189, 0x0256), (0x0197, 0x0268), (0x0244, 0x0289),
+         (0x019F, 0x0275), (0x0245, 0x028C)]
 CLICKS = list(range(0x01C0, 0x01C4))
 CPS = [c for p in PAIRS for c in p] + CLICKS
 
@@ -181,6 +182,14 @@ if all(have(chr(c)) for c in CPS):
                       ('ʒ', outline(G('ӡ'))), ('ǝ', outline(G('ə'))), ('Ɖ', outline(G('Đ'))), ('ꞌ', outline(G("'")))):
         d = same(outline(G(ch)), model)
         check(d < 0.015, f'{ch}: differs from its model by {d:.2%}')
+    for ch, model in (('Ʌ', 'V'), ('ʌ', 'v')):
+        d = same(outline(G(ch)), turned(G(model)))
+        check(d < 0.015, f'{ch}: differs from turned {model} by {d:.2%}')
+    for ch, model in (('Ɵ', 'O'), ('ɵ', 'o')):
+        p, q = outline(G(ch)), outline(G(model))
+        y = (q.bounds[1] + q.bounds[3]) / 2
+        check(len(hspans(q, y)) == 2 and len(hspans(p, y)) == 1,
+              f'{ch}: bar does not cross {model} counter')
     top = lambda ch: outline(G(ch)).bounds[3]
     bot = lambda ch: outline(G(ch)).bounds[1]
     cap, otop, xh, xo = top('H'), top('O'), top('x'), top('o')
