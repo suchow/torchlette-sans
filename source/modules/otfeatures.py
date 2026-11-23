@@ -387,7 +387,7 @@ MIRRORED = {0x0186: 'C', 0x0254: 'c', 0x018E: 'E'}
 OWN_SHAPE = (0x00DF, 0x1E9E, 0x00F0, 0x0259, 0x0067, 0x04BC, 0x04BD, 0x04BE, 0x04BF,
              0x0190, 0x025B, 0x01DD, 0x0194, 0x0263, 0x01B2, 0x028B, 0x0196, 0x0269,
              0x01B1, 0x028A, 0x01B7, 0x0292, 0xA7B1, 0x0287,
-             0x019F, 0x0275, 0x0245, 0x028C)
+             0x019F, 0x0275, 0x0245, 0x028C, 0x0193, 0x0260)
 # the consonants that take an ogonek: g j q Q are left out (their descender or tail is where
 # the ogonek hangs), y as a vowel as Mulish leaves it; a letter whose foot descends (J, in
 # Torchlette) is left out when measured
@@ -536,7 +536,7 @@ def _letter_anchors(ctx, A, marks):
         if x0 is not None and not has(g, BOT):
             if ctx.path_of(g).bounds[1] < -30 and 0x0400 <= u_ <= 0x052F: left_out.append(chr(u_)); continue
             put(g, BOT, bottom(g, x0, on_foot=True))
-    for cp in (0x019F, 0x0245):
+    for cp in (0x0193, 0x019F, 0x0245):
         name = cmap.get(cp)
         g = f'{name}.sc.african' if name else None
         if not g or g not in have: continue
