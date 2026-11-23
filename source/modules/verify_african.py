@@ -370,6 +370,27 @@ if kept('mark') and 'dotbelowcomb' in HAVE:
             m = moved(outline('dotbelowcomb'), (1, 0, 0, 1, ps[0].x_advance + ps[1].x_offset - K * ps[1].y_offset, ps[1].y_offset)).bounds
             ok = m[3] < lb[1] and lb[0] <= (m[0] + m[2]) / 2 <= lb[2]
         check(ok, f'{chr(cp)}\u0323: the dot below is not under the loop')
+# Check visible mark ink, not just GPOS anchor coordinates. Undo the italic shear
+# before comparing centres, as outline() does for both base and mark.
+if kept('mark'):
+    for cp in CLICKS:
+        if cp not in CMAP: continue
+        for feature in (None, 'smcp', 'c2sc'):
+            if feature and not kept(feature): continue
+            for mark, glyph, above in (('\u0301', 'acutecomb', True), ('\u0323', 'dotbelowcomb', False)):
+                if glyph not in HAVE: continue
+                b = hb.Buffer(); b.add_str(chr(cp) + mark); b.guess_segment_properties()
+                hb.shape(HB, b, {feature: 1} if feature else {})
+                gi, ps = b.glyph_infos, b.glyph_positions
+                expected = CMAP[cp] + '.sc.african' if feature else CMAP[cp]
+                ok = len(gi) == 2 and GO[gi[0].codepoint] == expected and GO[gi[1].codepoint] == glyph
+                if ok:
+                    base = outline(expected).bounds
+                    ink = moved(outline(glyph), (1, 0, 0, 1,
+                        ps[0].x_advance + ps[1].x_offset - K * ps[1].y_offset, ps[1].y_offset)).bounds
+                    ok = abs((ink[0] + ink[2] - base[0] - base[2]) / 2) <= 3
+                    ok = ok and (ink[1] > base[3] if above else ink[3] < base[1])
+                check(ok, f'{chr(cp)} {feature or "default"} {glyph}: mark not centred and clear')
 # the capitals take the .case marks above, as Mulish's Latin capitals do (ccmp)
 if kept('ccmp') and 'acutecomb.case' in HAVE:
     for cp in CPS:
