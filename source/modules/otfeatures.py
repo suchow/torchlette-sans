@@ -535,6 +535,15 @@ def _letter_anchors(ctx, A, marks):
         if x0 is not None and not has(g, BOT):
             if ctx.path_of(g).bounds[1] < -30 and 0x0400 <= u_ <= 0x052F: left_out.append(chr(u_)); continue
             put(g, BOT, bottom(g, x0, on_foot=True))
+    # The uncased click letters and their small capitals take marks above and below.
+    # Place anchors from each outline rather than from punctuation of a similar shape.
+    for cp in range(0x01C0, 0x01C4):
+        name = cmap.get(cp)
+        for g in (name, f'{name}.sc.african' if name else None):
+            if not g or g not in have: continue
+            geo = _geometric(ctx, g)
+            if TOP in geo: put(g, TOP, lift(g, geo[TOP], False))
+            if BOT in geo: put(g, BOT, bottom(g, geo[BOT][0], on_foot=True))
     # the ogonek: hung where Mulish hangs it on the same kind of foot, its right edge at
     # FOOT_Y less the inset Mulish leaves on that kind, in this style: a stem (i u a I), a
     # bowl, whose ink draws in towards the baseline (o e O U), or a flat or slanted foot

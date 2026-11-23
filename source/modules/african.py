@@ -51,6 +51,9 @@ letters lean with its letters once build.py reslants it, the turned and mirrored
 - Ꞌ ꞌ (U+A78B, U+A78C): saltillo: ꞌ is the straight quote; Ꞌ the quote lengthened from the cap
   height down to SALT_L of it (Noto Sans's Ꞌ is about 0.7 of its cap height), so 1.6 to 1.8
   times as long as ꞌ, its width and taper kept; ı's sidebearings, as letters.
+- ǀ ǁ ǂ ǃ (U+01C0–01C3): uncased click letters, with stems measured from l, text
+  sidebearings, and a dot on ǃ. Small-cap forms use I.sc's stem and H.sc's height;
+  both smcp and c2sc select them. The default forms remain in ordinary capital text.
 
 Small capitals: each pair has one, which smcp gives for the lowercase and c2sc for the capital
 (<capital>.sc.african), drawn by the same rule from the small capitals of the models (C.sc,
@@ -610,6 +613,37 @@ def glyphs(ctx):
     put(_name(0xA78B), *fit(long_quote(P('quotesingle'), P('H').bounds[3]), *sb('dotlessi')), cp=0xA78B)
     put(f'{_name(0xA78B)}.sc.{SUF}', *fit(long_quote(P('quotesingle.sc'), P('H.sc').bounds[3]), *sb('I.sc')))
     pair(0xA78B, 0xA78C, f'{_name(0xA78B)}.sc.{SUF}')
+
+    # Uncased clicks: the same construction at letter and small-cap height. The double
+    # stem's gap grows with the stem, so it remains open in the heaviest weight.
+    def clicks(stem_name, height, dot_name, sides):
+        s0, s1 = hs(P(stem_name), height * 0.5)[0]
+        t = s1 - s0
+        left, right = sides
+        bar = rect(0, 0, t, height)
+        gap = max(45, 0.65 * t)
+        double = union(bar, mv(bar, t + gap, 0))
+        # Two short bars cross the stem, higher and closer than an equals sign.
+        arm = max(60, 0.8 * t)
+        thick = max(20, 0.70 * t)
+        y1, y2 = height * 0.34, height * 0.63
+        cross = union(bar, rect(-arm, y1 - thick / 2, t + arm, y1 + thick / 2),
+                      rect(-arm, y2 - thick / 2, t + arm, y2 + thick / 2))
+        dot = P(dot_name); db = dot.bounds
+        dp = mv(dot, (t - (db[2] - db[0])) / 2 - db[0], -db[1])
+        dot_top = db[3] - db[1]
+        bang = union(rect(0, dot_top + max(55, 0.45 * t), t, height), dp)
+        return [fit(p, left, right) for p in (bar, double, cross, bang)]
+
+    full = clicks('l', P('H').bounds[3], 'period', sb('l'))
+    small = clicks('I.sc', P('H.sc').bounds[3], 'period', sb('I.sc'))
+    for cp, normal, sc in zip(range(0x01C0, 0x01C4), full, small):
+        name = _name(cp)
+        sc_name = f'{name}.sc.{SUF}'
+        put(name, *normal, cp=cp)
+        put(sc_name, *sc)
+        c.af_smcp.append((name, sc_name))
+        c.af_c2sc.append((name, sc_name))
 
     c.log(f'{len(c.af_made)} glyphs')
 
