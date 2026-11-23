@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.14 (unreleased)
+
+- Accented Latin letters now have kerning against Cyrillic and Greek capitals, with clearance for accents. Some browsers do not apply kerning across script boundaries.
+- Adjusted bracket kerning for accented Latin letters to preserve clearance around their marks, including ǐ beside ⟩.
+
 ## v0.5.13 (2026-11-16)
 
 - New letters: Ǟ ǟ, Ǡ ǡ, Ȯ ȯ, and Ǭ ǭ for Livonian; Ǣ ǣ for Old English; Ǯ ǯ for Skolt Sami; Ǵ ǵ for Macedonian transliteration; Ǹ ǹ for Pinyin; and ǰ for transliterating Iranian and other languages. All have small capitals, kerning, and accents above and below, at every weight, upright and italic.
