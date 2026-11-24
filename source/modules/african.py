@@ -522,15 +522,26 @@ def glyphs(ctx):
     l_, r_ = sb('u')
     put(_name(0x0289), *fit(p, l_ - e, r_ - e), cp=0x0289)
 
-    # Barred O: each bar joins the two sides of its own O, at the counter's
-    # middle. Its weight follows the corresponding D with stroke.
+    # Barred O: capitals follow D with stroke. The lowercase bar is fitted to
+    # o's inner counter and measured from its horizontal bowl strokes.
     for base, cp, bar_src in (('O', 0x019F, P('Dcroat')),
                               ('O.sc', None, c.sc_path('Dcroat')),
-                              ('o', 0x0275, P('dcroat'))):
+                              ('o', 0x0275, None)):
         q = P(base); bb = q.bounds
         height = (bb[1] + bb[3]) / 2
-        y0, y1, _, _ = bar_of(bar_src, bar_src.bounds[0] + 5, None) if base != 'o' else dcb
-        thickness = y1 - y0
+        if base == 'o':
+            vertical = vs(q, (bb[0] + bb[2]) / 2)
+            assert len(vertical) == 2, 'barred o: expected two bowl spans'
+            bottom, top = vertical
+            inner_bottom, inner_top = bottom[1], top[0]
+            counter_height = inner_top - inner_bottom
+            assert counter_height > 0, 'barred o: closed source counter'
+            bowl_stroke = min(bottom[1] - bottom[0], top[1] - top[0])
+            thickness = min(0.88 * bowl_stroke, 0.45 * counter_height)
+            height = (inner_bottom + inner_top) / 2
+        else:
+            y0, y1, _, _ = bar_of(bar_src, bar_src.bounds[0] + 5, None)
+            thickness = y1 - y0
         spans = hs(q, height)
         p = union(q, rect(spans[0][0], height - thickness / 2,
                           spans[-1][1], height + thickness / 2))
