@@ -1,12 +1,13 @@
 # Torchlette Sans: the checks of source/Makefile, run here and not on a laptop.
 #
 # check   a clean rebuild of the release (the fourteen .ttf, their woff2, and the variable
-#         font), uploaded as release-rebuild. Pull requests and non-forced pushes that do
-#         not touch fonts/ run make release-rebuild; runs that touch fonts/, manual
+#         font), uploaded as release-rebuild. Pull requests that do not touch fonts/
+#         run make release-rebuild; runs that touch fonts/, manual
 #         workflow_dispatch runs, and runs with missing, unfetchable, or ambiguous base
 #         refs run the full byte comparison (make check).
-# verify  fast CI decision-logic tests (source/verify_ci_check_mode.py), the HarfBuzz
-#         checks of all fourteen styles and their web subsets, and the fontbakery gate
+# verify  manual diagnostics only: CI decision-logic tests
+#         (source/verify_ci_check_mode.py), the HarfBuzz checks of all fourteen styles
+#         and their web subsets, and the fontbakery gate
 #         (make verify); the fontbakery report is kept as an artifact
 #
 # The Makefile pins Python 3.12 and every tool through uv, so the jobs need only uv.
@@ -17,8 +18,6 @@
 name: ci
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -40,11 +39,11 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 120
     steps:
-      # Fetch depth 2 on pull_request and push brings HEAD^1 locally without cloning
-      # binary history; multi-commit pushes deepen HEAD in bounded steps to prove ancestry.
+      # Fetch depth 2 on pull_request brings HEAD^1 locally without cloning
+      # binary history. Manual runs use the full comparison decision.
       - uses: actions/checkout@v4
         with:
-          fetch-depth: ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && 2 || 1 }}
+          fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 1 }}
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
@@ -80,6 +79,7 @@ jobs:
           if-no-files-found: ignore
 
   verify:
+    if: github.event_name == 'workflow_dispatch'
     # The checks test what the fonts do, not their bytes, so Linux will do; the old
     # fonts job in the torchlette repository ran them there on four styles.
     runs-on: ubuntu-latest
