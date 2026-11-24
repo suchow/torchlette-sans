@@ -56,8 +56,6 @@ letters lean with its letters once build.py reslants it, the turned and mirrored
   both smcp and c2sc select them. The default forms remain in ordinary capital text.
 - Ɵ ɵ (U+019F, U+0275): O and o with a bar across the counter. Ʌ ʌ
   (U+0245, U+028C): V and v turned, with sidebearings exchanged.
-- Ɠ ɠ (U+0193, U+0260): G and single-storey g with a right-facing hook on
-  the upper right. The hook comes from ɓ and is fitted to each outline.
 
 Small capitals: each pair has one, which smcp gives for the lowercase and c2sc for the capital
 (<capital>.sc.african), drawn by the same rule from the small capitals of the models (C.sc,
@@ -351,58 +349,6 @@ def glyphs(ctx):
         put(nm, pt, W(Tn), *(() if sfx else (0x01AC,)))
     pair(0x01A4, 0x01A5, f'{_name(0x01A4)}.sc.{SUF}')
     pair(0x01AC, 0x01AD, f'{_name(0x01AC)}.sc.{SUF}')
-
-    # Ɠ ɠ: ɓ's hook points right already. Find the rightmost upper shoulder;
-    # a fixed-height slice can intersect only the left side of G.
-    def right_hook(base, piece, hook_y, top, height):
-        q = P(base)
-        samples = [(y, s[-1]) for y in (height * i / 100 for i in range(65, 91, 2))
-                   if (s := hs(q, y))]
-        join_y, (a, b) = max(samples, key=lambda item: item[1][1])
-        # Fit both edges at a splice inside the extracted straight stem. Matching
-        # only the right edge left a width discontinuity in ɠ.
-        splice = hook_y - 20
-        h0, h1 = hs(piece, splice)[0]
-        sx = (b - a) / (h1 - h0)
-        dy = round(top - piece.bounds[3])
-        hook = tf(clip(piece, (-BIG, splice, BIG, BIG)),
-                  (sx, 0, 0, 1, a - sx * h0, dy))
-        # Overlap the fitted splice and shoulder by two units at each end.
-        x0, x1 = a, b
-        assert x1 > x0, f'{base}: hook stem misses the shoulder'
-        y0, y1 = sorted((join_y, splice + dy))
-        bridge = rect(x0, y0 - 2, x1, y1 + 2)
-        assert abs(pathops.op(bridge, q, pathops.PathOp.INTERSECTION).area) > 0, f'{base}: bridge misses shoulder'
-        assert abs(pathops.op(bridge, hook, pathops.PathOp.INTERSECTION).area) > 0, f'{base}: bridge misses hook'
-        p = union(q, hook, bridge)
-        return fit(p, *sb(base))
-
-    def capital_hook(base, piece, span, hook_y, top, height):
-        # Preserve rebuild4's hook outline and translation. Only the bridge
-        # changes: it reaches inside the hook's measured straight stem.
-        q = P(base)
-        samples = [(y, s[-1]) for y in (height * i / 100 for i in range(65, 91, 2))
-                   if (s := hs(q, y))]
-        join_y, (_, shoulder_right) = max(samples, key=lambda item: item[1][1])
-        dx = round(shoulder_right - span[1])
-        dy = round(top - piece.bounds[3])
-        hook = mv(piece, dx, dy)
-        splice = hook_y - 20
-        h0, h1 = hs(piece, splice)[0]
-        y0, y1 = sorted((join_y, splice + dy))
-        bridge = rect(h0 + dx, y0 - 2, h1 + dx, y1 + 2)
-        assert abs(pathops.op(bridge, q, pathops.PathOp.INTERSECTION).area) > 0, f'{base}: bridge misses shoulder'
-        assert abs(pathops.op(bridge, hook, pathops.PathOp.INTERSECTION).area) > 0, f'{base}: bridge misses hook'
-        return fit(union(q, hook, bridge), *sb(base))
-
-    put(_name(0x0193), *capital_hook('G', hk, hk_s, hk_y, P('H').bounds[3] * 1.12,
-                                    P('H').bounds[3]), cp=0x0193)
-    put(_name(0x0260), *right_hook('g', hk, hk_y, P('H').bounds[3], xh), cp=0x0260)
-    sc_hook, sc_span, sc_y = asc_hook(c.sc_path('uni0253'), P('O.sc').bounds[3])
-    sc_h = P('H.sc').bounds[3]
-    put(f'{_name(0x0193)}.sc.{SUF}',
-        *capital_hook('G.sc', sc_hook, sc_span, sc_y, sc_h * 1.12, sc_h))
-    pair(0x0193, 0x0260, f'{_name(0x0193)}.sc.{SUF}')
 
     # ---- Ɣ ɣ Ʋ ʋ: Noto Sans's letters, fitted -----------------------------------------------
     # Each is Noto's outline mapped onto Torchlette's: vertically by the line through two knots
@@ -809,7 +755,6 @@ KERN = {
     0x0244: (['U'], ['U']), 0x0289: (['u'], ['u']),
     0x019F: (['O'], ['O']), 0x0275: (['o'], ['o']),
     0x0245: (['A'], ['A']), 0x028C: ([None], [None]),
-    0x0193: (['G'], [None]), 0x0260: (['g'], [None]),
     0x0189: (['Dcroat'], ['Dcroat']), 0x0256: (['d'], ['d']),
     0x01F7: (['P'], ['P']), 0x01BF: (['p'], ['p']),
     0xA78B: ([None], [None]), 0xA78C: ([None], [None]),

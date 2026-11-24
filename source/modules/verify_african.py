@@ -75,7 +75,7 @@ PAIRS = [(0x0186, 0x0254), (0x018E, 0x01DD), (0x0190, 0x025B), (0x0194, 0x0263),
          (0x01B1, 0x028A), (0x01B2, 0x028B), (0x01B7, 0x0292), (0x0198, 0x0199), (0x01A4, 0x01A5),
          (0x01AC, 0x01AD), (0x019D, 0x0272), (0x0243, 0x0180), (0x01F7, 0x01BF), (0xA78B, 0xA78C),
          (0xA7B1, 0x0287), (0x0189, 0x0256), (0x0197, 0x0268), (0x0244, 0x0289),
-         (0x019F, 0x0275), (0x0245, 0x028C), (0x0193, 0x0260)]
+         (0x019F, 0x0275), (0x0245, 0x028C)]
 CLICKS = list(range(0x01C0, 0x01C4))
 CPS = [c for p in PAIRS for c in p] + CLICKS
 
@@ -190,35 +190,6 @@ if all(have(chr(c)) for c in CPS):
         y = (q.bounds[1] + q.bounds[3]) / 2
         check(len(hspans(q, y)) == 2 and len(hspans(p, y)) == 1,
               f'{ch}: bar does not cross {model} counter')
-    for ch, model in (('Ɠ', 'H'), ('ɠ', 'x')):
-        check(outline(G(ch)).bounds[3] > outline(G(model)).bounds[3],
-              f'{ch}: hook does not rise above {model}')
-    # Test the hook's location and direction in the unslanted outlines, including
-    # the small cap. Identify the supporting stem before selecting the lower
-    # span: a second span there can be the hook's returning terminal tip.
-    for name, model, height in ((G('Ɠ'), G('G'), outline(G('H')).bounds[3]),
-                                (G('ɠ'), G('g'), outline(G('x')).bounds[3]),
-                                ('uni0193.sc.african', 'G.sc', outline('H.sc').bounds[3])):
-        if name not in HAVE: continue
-        p = outline(name); b = p.bounds
-        upper = hspans(p, b[3] - 0.03 * height)
-        lower = hspans(p, b[3] - 0.20 * height)
-        source = outline(model)
-        dx = b[0] - source.bounds[0]
-        supports = [(s[-1][0] + dx, s[-1][1] + dx)
-                    for y in (height * i / 100 for i in range(65, 91, 2))
-                    if (s := hspans(source, y))]
-        support = max(supports, key=lambda s: s[1]) if supports else None
-        ux = lx = stem_x = None
-        ok = bool(upper and lower and support)
-        if ok:
-            stem_x = sum(support) / 2
-            selected = min(lower, key=lambda s: max(s[0] - stem_x, stem_x - s[1], 0))
-            ux = (upper[-1][0] + upper[-1][1]) / 2
-            lx = sum(selected) / 2
-            ok = ux > (b[0] + b[2]) / 2 and ux > lx
-        check(ok, f'{name}: hook direction: upper={upper}, lower={lower}, '
-                  f'support={support}, stem_x={stem_x}, ux={ux}, lx={lx}, centre={(b[0] + b[2]) / 2}')
     top = lambda ch: outline(G(ch)).bounds[3]
     bot = lambda ch: outline(G(ch)).bounds[1]
     cap, otop, xh, xo = top('H'), top('O'), top('x'), top('o')
@@ -364,7 +335,7 @@ if all(have(chr(c)) for c in CPS):
             g = a[0][0]
             check(GDEF.get(g) == 1, f'{g}: GDEF class {GDEF.get(g)}')
             bb = outline(g).bounds
-            if U not in 'ƘƲƝƔꞋƓ':
+            if U not in 'ƘƲƝƔꞋ':
                 check(bb[3] <= sc_h + 15, f'{g}: top {bb[3]:.0f}, above the small-cap height {sc_h:.0f}')
 
     # ---- 4. kerning --------------------------------------------------------------------
