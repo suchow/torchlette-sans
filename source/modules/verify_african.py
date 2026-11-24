@@ -194,20 +194,31 @@ if all(have(chr(c)) for c in CPS):
         check(outline(G(ch)).bounds[3] > outline(G(model)).bounds[3],
               f'{ch}: hook does not rise above {model}')
     # Test the hook's location and direction in the unslanted outlines, including
-    # the small cap. Compare its top to the stem below the hook.
-    for name, height in ((G('Ɠ'), outline(G('H')).bounds[3]),
-                         (G('ɠ'), outline(G('x')).bounds[3]),
-                         ('uni0193.sc.african', outline('H.sc').bounds[3])):
+    # the small cap. Identify the supporting stem before selecting the lower
+    # span: a second span there can be the hook's returning terminal tip.
+    for name, model, height in ((G('Ɠ'), G('G'), outline(G('H')).bounds[3]),
+                                (G('ɠ'), G('g'), outline(G('x')).bounds[3]),
+                                ('uni0193.sc.african', 'G.sc', outline('H.sc').bounds[3])):
         if name not in HAVE: continue
         p = outline(name); b = p.bounds
         upper = hspans(p, b[3] - 0.03 * height)
         lower = hspans(p, b[3] - 0.20 * height)
-        ok = bool(upper and lower)
+        source = outline(model)
+        dx = b[0] - source.bounds[0]
+        supports = [(s[-1][0] + dx, s[-1][1] + dx)
+                    for y in (height * i / 100 for i in range(65, 91, 2))
+                    if (s := hspans(source, y))]
+        support = max(supports, key=lambda s: s[1]) if supports else None
+        ux = lx = stem_x = None
+        ok = bool(upper and lower and support)
         if ok:
+            stem_x = sum(support) / 2
+            selected = min(lower, key=lambda s: max(s[0] - stem_x, stem_x - s[1], 0))
             ux = (upper[-1][0] + upper[-1][1]) / 2
-            lx = (lower[-1][0] + lower[-1][1]) / 2
+            lx = sum(selected) / 2
             ok = ux > (b[0] + b[2]) / 2 and ux > lx
-        check(ok, f'{name}: hook is not on the right and curling right')
+        check(ok, f'{name}: hook direction: upper={upper}, lower={lower}, '
+                  f'support={support}, stem_x={stem_x}, ux={ux}, lx={lx}, centre={(b[0] + b[2]) / 2}')
     top = lambda ch: outline(G(ch)).bounds[3]
     bot = lambda ch: outline(G(ch)).bounds[1]
     cap, otop, xh, xo = top('H'), top('O'), top('x'), top('o')
