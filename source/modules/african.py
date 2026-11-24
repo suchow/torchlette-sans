@@ -354,11 +354,16 @@ def glyphs(ctx):
 
     # Ɠ ɠ: ɓ's hook points right already. Find the rightmost upper shoulder;
     # a fixed-height slice can intersect only the left side of G.
-    def right_hook(base, piece, hook_y, top, height):
+    def right_hook(base, piece, hook_y, top, height, stem_model=None):
         q = P(base)
         samples = [(y, s[-1]) for y in (height * i / 100 for i in range(65, 91, 2))
                    if (s := hs(q, y))]
         join_y, (a, b) = max(samples, key=lambda item: item[1][1])
+        if stem_model:
+            # G's shoulder span can include most of its bowl at heavy weights.
+            # Its hook takes a capital stem's width, independently of that span.
+            m0, m1 = hs(P(stem_model), height * 0.5)[0]
+            a = b - (m1 - m0)
         # Fit both edges at a splice inside the extracted straight stem. Matching
         # only the right edge left a width discontinuity in ɠ.
         splice = hook_y - 20
@@ -367,10 +372,14 @@ def glyphs(ctx):
         dy = round(top - piece.bounds[3])
         hook = tf(clip(piece, (-BIG, splice, BIG, BIG)),
                   (sx, 0, 0, 1, a - sx * h0, dy))
+        if stem_model:
+            # A low hook splice must not project below the shoulder as a spur.
+            hook = clip(hook, (-BIG, join_y, BIG, BIG))
         # Overlap the fitted splice and shoulder by two units at each end.
         x0, x1 = a, b
         assert x1 > x0, f'{base}: hook stem misses the shoulder'
-        y0, y1 = sorted((join_y, splice + dy))
+        hook_bottom = max(join_y, splice + dy) if stem_model else splice + dy
+        y0, y1 = sorted((join_y, hook_bottom))
         bridge = rect(x0, y0 - 2, x1, y1 + 2)
         assert abs(pathops.op(bridge, q, pathops.PathOp.INTERSECTION).area) > 0, f'{base}: bridge misses shoulder'
         assert abs(pathops.op(bridge, hook, pathops.PathOp.INTERSECTION).area) > 0, f'{base}: bridge misses hook'
@@ -378,12 +387,12 @@ def glyphs(ctx):
         return fit(p, *sb(base))
 
     put(_name(0x0193), *right_hook('G', hk, hk_y, P('H').bounds[3] * 1.12,
-                                  P('H').bounds[3]), cp=0x0193)
+                                  P('H').bounds[3], 'H'), cp=0x0193)
     put(_name(0x0260), *right_hook('g', hk, hk_y, P('H').bounds[3], xh), cp=0x0260)
     sc_hook, _, sc_y = asc_hook(c.sc_path('uni0253'), P('O.sc').bounds[3])
     sc_h = P('H.sc').bounds[3]
     put(f'{_name(0x0193)}.sc.{SUF}',
-        *right_hook('G.sc', sc_hook, sc_y, sc_h * 1.12, sc_h))
+        *right_hook('G.sc', sc_hook, sc_y, sc_h * 1.12, sc_h, 'H.sc'))
     pair(0x0193, 0x0260, f'{_name(0x0193)}.sc.{SUF}')
 
     # ---- Ɣ ɣ Ʋ ʋ: Noto Sans's letters, fitted -----------------------------------------------
