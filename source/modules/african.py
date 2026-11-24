@@ -523,7 +523,8 @@ def glyphs(ctx):
     put(_name(0x0289), *fit(p, l_ - e, r_ - e), cp=0x0289)
 
     # Barred O: capitals follow D with stroke. The lowercase bar is fitted to
-    # o's inner counter and measured from its horizontal bowl strokes.
+    # o's inner counter: 0.88 times the mean top and bottom arch thickness,
+    # capped at 45% of the counter height to preserve white on both sides.
     for base, cp, bar_src in (('O', 0x019F, P('Dcroat')),
                               ('O.sc', None, c.sc_path('Dcroat')),
                               ('o', 0x0275, None)):
@@ -536,7 +537,7 @@ def glyphs(ctx):
             inner_bottom, inner_top = bottom[1], top[0]
             counter_height = inner_top - inner_bottom
             assert counter_height > 0, 'barred o: closed source counter'
-            bowl_stroke = min(bottom[1] - bottom[0], top[1] - top[0])
+            bowl_stroke = ((bottom[1] - bottom[0]) + (top[1] - top[0])) / 2
             thickness = min(0.88 * bowl_stroke, 0.45 * counter_height)
             height = (inner_bottom + inner_top) / 2
         else:
