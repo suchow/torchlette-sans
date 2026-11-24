@@ -193,6 +193,21 @@ if all(have(chr(c)) for c in CPS):
     for ch, model in (('Ɠ', 'H'), ('ɠ', 'x')):
         check(outline(G(ch)).bounds[3] > outline(G(model)).bounds[3],
               f'{ch}: hook does not rise above {model}')
+    # Test the hook's location and direction in the unslanted outlines, including
+    # the small cap. Compare its top to the stem below the hook.
+    for name, height in ((G('Ɠ'), outline(G('H')).bounds[3]),
+                         (G('ɠ'), outline(G('x')).bounds[3]),
+                         ('uni0193.sc.african', outline('H.sc').bounds[3])):
+        if name not in HAVE: continue
+        p = outline(name); b = p.bounds
+        upper = hspans(p, b[3] - 0.03 * height)
+        lower = hspans(p, b[3] - 0.20 * height)
+        ok = bool(upper and lower)
+        if ok:
+            ux = (upper[-1][0] + upper[-1][1]) / 2
+            lx = (lower[-1][0] + lower[-1][1]) / 2
+            ok = ux > (b[0] + b[2]) / 2 and ux > lx
+        check(ok, f'{name}: hook is not on the right and curling right')
     top = lambda ch: outline(G(ch)).bounds[3]
     bot = lambda ch: outline(G(ch)).bounds[1]
     cap, otop, xh, xo = top('H'), top('O'), top('x'), top('o')
