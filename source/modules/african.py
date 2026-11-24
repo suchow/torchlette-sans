@@ -57,7 +57,7 @@ letters lean with its letters once build.py reslants it, the turned and mirrored
 - Ɵ ɵ (U+019F, U+0275): O and o with a bar across the counter. Ʌ ʌ
   (U+0245, U+028C): V and v turned, with sidebearings exchanged.
 - Ɠ ɠ (U+0193, U+0260): G and single-storey g with a right-facing hook on
-  the upper right. The hook comes from ɓ, mirrored and fitted to each outline.
+  the upper right. The hook comes from ɓ and is fitted to each outline.
 
 Small capitals: each pair has one, which smcp gives for the lowercase and c2sc for the capital
 (<capital>.sc.african), drawn by the same rule from the small capitals of the models (C.sc,
@@ -352,26 +352,27 @@ def glyphs(ctx):
     pair(0x01A4, 0x01A5, f'{_name(0x01A4)}.sc.{SUF}')
     pair(0x01AC, 0x01AD, f'{_name(0x01AC)}.sc.{SUF}')
 
-    # Ɠ ɠ: mirror ɓ's hook to point right. Extend the right side of the
-    # letter into the hook; the top lies above the cap or x-height.
-    def right_hook(base, piece, span, top, join_y):
+    # Ɠ ɠ: ɓ's hook points right already. Find the rightmost upper shoulder;
+    # a fixed-height slice can intersect only the left side of G.
+    def right_hook(base, piece, span, top, height):
         q = P(base)
-        a, b = hs(q, join_y)[-1]
-        reflected = mir(piece, span[0] + span[1])
+        samples = [(y, s[-1]) for y in (height * i / 100 for i in range(65, 91, 2))
+                   if (s := hs(q, y))]
+        join_y, (a, b) = max(samples, key=lambda item: item[1][1])
         dx = round(b - span[1])
-        dy = round(top - reflected.bounds[3])
-        reflected = mv(reflected, dx, dy)
-        y0, y1 = sorted((join_y, reflected.bounds[1]))
-        p = union(q, reflected, rect(a, y0 - 2, b, y1 + 2))
+        dy = round(top - piece.bounds[3])
+        hook = mv(piece, dx, dy)
+        y0, y1 = sorted((join_y, hook.bounds[1]))
+        p = union(q, hook, rect(a, y0 - 2, b, y1 + 2))
         return fit(p, *sb(base))
 
     put(_name(0x0193), *right_hook('G', hk, hk_s, P('H').bounds[3] * 1.12,
-                                  P('H').bounds[3] * 0.78), cp=0x0193)
-    put(_name(0x0260), *right_hook('g', hk, hk_s, P('H').bounds[3], xh * 0.80), cp=0x0260)
+                                  P('H').bounds[3]), cp=0x0193)
+    put(_name(0x0260), *right_hook('g', hk, hk_s, P('H').bounds[3], xh), cp=0x0260)
     sc_hook, sc_span, _ = asc_hook(c.sc_path('uni0253'), P('O.sc').bounds[3])
     sc_h = P('H.sc').bounds[3]
     put(f'{_name(0x0193)}.sc.{SUF}',
-        *right_hook('G.sc', sc_hook, sc_span, sc_h * 1.12, sc_h * 0.78))
+        *right_hook('G.sc', sc_hook, sc_span, sc_h * 1.12, sc_h))
     pair(0x0193, 0x0260, f'{_name(0x0193)}.sc.{SUF}')
 
     # ---- Ɣ ɣ Ʋ ʋ: Noto Sans's letters, fitted -----------------------------------------------
