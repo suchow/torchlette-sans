@@ -2237,6 +2237,8 @@ def post(ctx):
                   + list(range(0x0391, 0x03AA)) + list(range(0x03B1, 0x03CA))
                   + [0x03D1, 0x03D5, 0x03D6, 0x03F0, 0x03F1, 0x03F5]
                   + [0x2102, 0x210D, 0x210F, 0x2112, 0x2115, 0x2119, 0x211A, 0x211D, 0x2124, 0x1D53C])
+    # Newly completed script lowercase; preserve existing letters and their values.
+    letter_cps += list(tuple(range(0x1D4B6, 0x1D4BA)) + (0x1D4BB,) + tuple(range(0x1D4BD, 0x1D4C4)) + tuple(range(0x1D4C5, 0x1D4D0)))
     for cp in letter_cps:
         g = cmap.get(cp)
         if not g or g not in order_set:
