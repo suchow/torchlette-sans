@@ -71,8 +71,8 @@ LEVELS     := $(wildcard $(LEVELS_DIR))
 # $(BUILD_DIR)/modules.txt, which changes only when the selection does.
 # Greek and mathitalic are explicitly included in the approved release default.
 MODULES_OFF  :=
-# Approved release default: exactly the modules exercised in the combined gate.
-MODULES_DEFAULT := african codekeys currency cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures punctuation sigmoid supsub symbols tensordiagram ui vector
+# Approved release default modules.
+MODULES_DEFAULT := african boxdrawing codekeys currency cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures punctuation sigmoid supsub symbols tensordiagram ui vector
 comma        := ,
 empty        :=
 space        := $(empty) $(empty)
@@ -127,6 +127,8 @@ WEBS   := $(foreach s,$(STYLES),$(WEB_DIR)/TorchletteSans-$(s).woff2)
 UNICODES := U+0000-00FF,U+0100-024F,U+0250-02FF,U+0300-036F,U+0370-03FF,U+1E00-1EFF,U+2000-206F,U+2070-209F,U+20A0-20CF,U+2100-214F,U+2190-21FF,U+2200-22FF,U+25A0-25FF,U+27C0-27EF,U+FB00-FB06,U+1D2C-1D6A,U+1D9C-1DBF,U+2C7C-2C7D,U+2300-23FF,U+27F0-27FF,U+2900-297F,U+2605-2606,U+2713,U+2717,U+2B11,U+1D434-1D467,U+1D6A4-1D6A5,U+1D6E2-1D71B
 
 # Exact encoded contracts of the selected modules; no inferred whole blocks.
+# boxdrawing: 19 light, rounded, heavy, and double line characters.
+UNICODES := $(UNICODES),U+2500-2503,U+250C,U+2510,U+2514,U+2518,U+251C,U+2524,U+252C,U+2534,U+253C,U+2550-2551,U+256D-2570
 # mathnotation: 18 additional encoded characters from the selected source contract.
 UNICODES := $(UNICODES),U+1D49C,U+1D49E-1D49F,U+1D4A2,U+1D4A5-1D4A6,U+1D4A9-1D4AC,U+1D4AE-1D4B5
 # fraktur: 47 additional encoded characters from the selected source contract.

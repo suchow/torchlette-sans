@@ -138,6 +138,24 @@ caret slope and italic angle are kept; the names, OS/2 and head style bits and t
 family "Torchlette Sans"; each other weight is a legacy family of its own with a
 Regular and an Italic.
 
+## Box drawing
+
+The `boxdrawing` module adds 19 light, rounded, heavy, and double line characters.
+Each has a 600-unit advance in all fourteen styles. The cell spans x = 0..600
+and y = -250..750, with its junction at (300, 250). Light strokes use the style's
+minus thickness (`BAR`); heavy strokes use twice that thickness. Double lines
+have two `BAR` strokes separated by a `BAR` white gap. Rounded corners have a
+150-unit centreline radius. The drawings remain upright in italic styles.
+The existing 130-unit spark-line blocks are unchanged.
+
+Adjacent drawing cells require a 600-unit horizontal pitch, zero letter spacing,
+and no justification or inserted spacing. Vertical joins require a 1000-unit
+baseline pitch: use `line-height: 1` with this 1000-UPM font. The current font
+metrics span 1255 units. A 1255-unit baseline pitch leaves 255-unit gaps between
+vertical strokes.
+Other line heights and terminal-imposed cell dimensions may also leave gaps or
+overlaps. Use a dedicated drawing container with explicit spacing.
+
 ## Greek sources
 
 The `greek` module imports its letters from two other OFL fonts, vendored here as
