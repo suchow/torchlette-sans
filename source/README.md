@@ -223,6 +223,15 @@ vendored here as build inputs (the module's docstring says how each is fitted):
 Both fonts' own names stay out of Torchlette Sans; the OFL permits the derivation,
 and the copyright notices above are the attribution it asks for.
 
+## Double-struck lowercase
+
+The initial lowercase set contains b, c, d, o, p, and q. The b, d, o, p, and q
+outlines use each style's lowercase contours. The c outline uses the lightest
+Mulish master fitted to the target style's ink bounds. Hairline weight is measured
+from the straight ascenders of b and d. Bowls and doubled stems preserve the
+original vertical bounds, including the p and q descenders. Noto Sans Math provides
+the doubled-stroke placement reference. Capital and digit construction is unchanged.
+
 ## Mathematical script sources
 
 The script alphabet contains 52 letters imported from Noto Sans Math Regular at a
