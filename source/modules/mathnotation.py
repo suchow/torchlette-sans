@@ -287,6 +287,9 @@ def _braket(c, put):
     put(None, c.clip(bar, (-1000, br[1], 3000, br[3])), c.W('bar'), name=f'bar.braket.{SUF}')
 
 
+DS_LOWER_SET = [(0x1D553, 'b'), (0x1D554, 'c'), (0x1D555, 'd'),
+                (0x1D560, 'o'), (0x1D561, 'p'), (0x1D562, 'q')]
+
 DS_SET = [(0x1D538, 'A'), (0x1D539, 'B'), (0x1D53B, 'D'), (0x1D53D, 'F'), (0x1D53E, 'G'), (0x1D540, 'I'),
           (0x1D541, 'J'), (0x1D542, 'K'), (0x1D543, 'L'), (0x1D544, 'M'), (0x1D546, 'O'), (0x1D54A, 'S'),
           (0x1D54B, 'T'), (0x1D54C, 'U'), (0x1D54D, 'V'), (0x1D54E, 'W'), (0x1D54F, 'X'), (0x1D550, 'Y'),
@@ -303,6 +306,10 @@ def _doublestruck(c, put):
         put(cp, ds[base][0], round(ds[base][1]))
     s_ = c.ds_strokes
     c.log(f"double-struck: hairline {s_['t']:.1f}, gap {s_['g']:.1f}, doubled stroke {s_['D']:.1f}, crescent {s_['DR']:.1f}")
+    symbols = _sibling('symbols', 'tsmod_symbols_lowercase_for_mathnotation')
+    lower = symbols.doublestruck_lowercase(c, [base for _, base in DS_LOWER_SET])
+    for cp, base in DS_LOWER_SET:
+        put(cp, lower[base][0], lower[base][1])
 
 
 def _area(p):

@@ -1456,3 +1456,135 @@ def doublestruck(c, which=None):
     for k in (which or table):
         table[k]()
     return out
+
+
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'o', 'p', 'q')):
+    """Six lowercase prototypes using style contours, a fitted light-master c, and lowercase stem measurements.
+
+    The capital/digit builder and its ds_strokes record are independent of this path.
+    Bowls use hairline rings with straight inlines; stems use closed doubled bands.
+    """
+    width = lambda span: span[1] - span[0]
+    mid = lambda span: (span[0] + span[1]) / 2
+    median = lambda values: sorted(values)[len(values) // 2]
+    rect, union, diff = c.rect, c.union, c.diff
+    intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'o', 'p', 'q')}
+    # Straight ascender rows avoid both the bowl and the shoulder join.
+    stems = []
+    for base in ('b', 'd'):
+        p = paths[base]
+        for frac in (0.70, 0.80, 0.90):
+            y = c.XH + frac * (p.bounds[3] - c.XH)
+            spans = c.hspans(p, y)
+            if len(spans) != 1:
+                raise ValueError(f'double-struck lowercase {base}: ambiguous ascender at {y}')
+            stems.append(width(spans[0]))
+    stem = median(stems)
+    if stem <= 0:
+        raise ValueError('double-struck lowercase: nonpositive stem')
+    # The median Regular b/d ascender measure is 66 units (b=66, d=65).
+    u = stem / 66.0
+    t = (66.0 * NOTO_T / NOTO_STEM) * (u if u <= 1 else u ** 0.5)
+    gap = t * NOTO_G / NOTO_T
+    doubled = 2 * t + gap
+    depth = doubled * NOTO_DR / NOTO_D
+
+    def contours(p):
+        result = []
+        for contour in p.contours:
+            q = pathops.Path(); contour.draw(q.getPen()); result.append(q)
+        return sorted(result, key=lambda q: -(q.bounds[2] - q.bounds[0]) * (q.bounds[3] - q.bounds[1]))
+
+    def eroded(p, amount):
+        stroke = pathops.Path(p)
+        stroke.stroke(2 * amount, pathops.LineCap.ROUND_CAP, pathops.LineJoin.ROUND_JOIN, 4)
+        stroke.convertConicsToQuads(); stroke.simplify()
+        return diff(p, stroke)
+
+    def ring(p):
+        return diff(p, eroded(p, t))
+
+    def rail(outline, x, y):
+        spans = c.vspans(outline, x + t / 2)
+        below = [s for s in spans if s[1] < y]
+        above = [s for s in spans if s[0] > y]
+        if not below or not above:
+            raise ValueError(f'double-struck lowercase: no bowl edges for rail at {(x, y)}')
+        lo, hi = max(below, key=lambda s: s[1]), min(above, key=lambda s: s[0])
+        r = rect(x, mid(lo), x + t, mid(hi))
+        for edge in (lo, hi):
+            end = c.clip(r, (-3000, edge[0], 3000, edge[1]))
+            if not intersect(end, outline).area:
+                raise ValueError('double-struck lowercase: rail does not overlap both bowl edges')
+        return r
+
+    out = {}
+    for base in which:
+        if base not in paths:
+            raise ValueError(f'double-struck lowercase: unsupported {base}')
+        p = paths[base]; bounds = p.bounds
+        if base == 'c':
+            # Fit the designer's lightest c, preserving its open terminals.
+            q = _master(c)['path']('c'); qb = q.bounds
+            sx, sy = (bounds[2] - bounds[0]) / (qb[2] - qb[0]), (bounds[3] - bounds[1]) / (qb[3] - qb[1])
+            q = c.transformed(q, (sx, 0, 0, sy, bounds[0] - sx * qb[0], bounds[1] - sy * qb[1]))
+            # Offset a filled contour to the measured lowercase hairline thickness.
+            ym = (bounds[1] + bounds[3]) / 2
+            spans = c.hspans(q, ym)
+            if len(spans) != 1:
+                raise ValueError('double-struck lowercase c: ambiguous left stroke')
+            delta = (t - width(spans[0])) / 2
+            if delta < 0:
+                q = eroded(q, -delta)
+            elif delta > 0:
+                stroke = pathops.Path(q)
+                stroke.stroke(2 * delta, pathops.LineCap.ROUND_CAP, pathops.LineJoin.ROUND_JOIN, 4)
+                stroke.convertConicsToQuads(); stroke.simplify(); q = union(q, stroke)
+            qb = q.bounds
+            sx, sy = (bounds[2] - bounds[0]) / (qb[2] - qb[0]), (bounds[3] - bounds[1]) / (qb[3] - qb[1])
+            outline = c.transformed(q, (sx, 0, 0, sy, bounds[0] - sx * qb[0], bounds[1] - sy * qb[1]))
+            x = bounds[0] + depth - t
+            if x + t >= bounds[2]:
+                raise ValueError('double-struck lowercase c: rail exceeds ink width')
+            result = union(outline, rail(outline, x, ym))
+        else:
+            cs = contours(p)
+            if len(cs) != 2:
+                raise ValueError(f'double-struck lowercase {base}: expected one counter')
+            outer, counter = cs
+            cb = counter.bounds; ym = (cb[1] + cb[3]) / 2
+            outline = ring(outer); parts = [outline]; cuts = []
+            if base == 'o':
+                xl, xr = bounds[0] + depth - t, bounds[2] - depth
+                if xr - (xl + t) <= t:
+                    raise ValueError('double-struck lowercase o: insufficient centre clearance')
+                parts.extend((rail(outline, xl, ym), rail(outline, xr, ym)))
+            else:
+                left = base in ('b', 'p')
+                if base in ('b', 'd'):
+                    sample_y = c.XH + 0.8 * (bounds[3] - c.XH)
+                    y0, y1 = 0, bounds[3]
+                else:
+                    sample_y = bounds[1] * 0.7
+                    y0, y1 = bounds[1], c.XH
+                spans = c.hspans(p, sample_y)
+                if len(spans) != 1:
+                    raise ValueError(f'double-struck lowercase {base}: ambiguous straight stem')
+                xc = mid(spans[0])
+                band = rect(xc - doubled / 2, y0, xc + doubled / 2, y1)
+                cut = rect(xc - gap / 2, y0 + t, xc + gap / 2, y1 - t)
+                x = bounds[2] - depth if left else bounds[0] + depth - t
+                clearance = x - (xc + doubled / 2) if left else (xc - doubled / 2) - (x + t)
+                if clearance <= t:
+                    raise ValueError(f'double-struck lowercase {base}: insufficient bowl clearance')
+                if not intersect(band, outline).area:
+                    raise ValueError(f'double-struck lowercase {base}: stem does not overlap bowl')
+                parts.extend((band, rail(outline, x, ym))); cuts.append(cut)
+            result = diff(union(*parts), union(*cuts)) if cuts else union(*parts)
+        rb = result.bounds
+        if abs(rb[1] - bounds[1]) > 0.1 or abs(rb[3] - bounds[3]) > 0.1:
+            raise ValueError(f'double-struck lowercase {base}: vertical bounds changed')
+        result = c.mv(result, bounds[0] - rb[0])
+        out[base] = (result, c.W(base) + (rb[2] - rb[0]) - (bounds[2] - bounds[0]))
+    return out
