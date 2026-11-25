@@ -1,0 +1,53 @@
+/* The v0.3 expansion keeps the literary book's paper, ink and typographic grid. */
+.v03 .chapter-title { font-size: 27pt; line-height: 1.1; font-weight: 500; margin: 0 0 18pt; letter-spacing: -.015em; }
+.v03 .deck { font-size: 11pt; line-height: 1.48; max-width: 100%; margin: 0 0 22pt; }
+.v03 .spec-sample { line-height: 1.6; margin: 8pt 0 18pt; overflow-wrap: anywhere; --ss: "ss01" 0, "ss02" 0, "ss16" 0; }
+.intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:30pt; margin:36pt 0; }
+.intro-grid > div { display:flex; flex-direction:column; gap:8pt; }
+.big-stat { font-size:64pt; font-weight:300; line-height:1.05; }
+.glyphcards { display:grid; grid-template-columns:repeat(6,1fr); gap:8pt 5pt; }
+.glyphcards.cols8 { grid-template-columns:repeat(8,1fr); gap:5pt 4pt; }
+.glyphcard { min-width:0; text-align:center; border-top:.5pt solid var(--rule); padding-top:4pt; height:86pt; }
+.glyphcard svg { width:100%; height:60pt; fill:var(--ink); }
+.glyphlabel { font-size:5.7pt; line-height:1.15; overflow-wrap:anywhere; font-feature-settings:normal; font-variant-numeric:lining-nums; color:var(--ink2); }
+.atlas { padding-top:.95in; }
+.atlas .chapter-title { font-size:17pt; margin-bottom:8pt; }
+.atlas-range { font-size:8pt; color:var(--ink2); margin-bottom:12pt; }
+.atlas .glyphcard { height:57pt; padding-top:2pt; }
+.atlas .glyphcard svg { height:40pt; }
+.atlas .glyphlabel { font-size:4.9pt; line-height:1.05; }
+.feature-row { padding:12pt 0 7pt; border-top:.5pt solid var(--rule); }
+.feature-row h3 { font-size:9pt; font-weight:600; margin:0 0 8pt; }
+.feature-pair { display:grid; grid-template-columns:1fr 1fr; gap:18pt; }
+.feature-pair .spec-sample { margin:2pt 0 0; line-height:1.3; font-size:18pt!important; }
+.feature-pair .lab { font-size:6pt; }
+.context-grid .spec-sample { margin:0 0 16pt; line-height:1.3; }
+.math-specimens { display:flex; flex-direction:column; gap:30pt; }
+.math-specimens math { font-family:"Torchlette Sans",math; font-size:27pt; }
+.v03 .missing { color:#a00; }
+.repertoire-grid { display:grid; grid-template-columns:repeat(12,1fr); gap:7pt 3pt; }
+.repertoire-grid > div { display:flex;flex-direction:column;align-items:center;gap:2pt; }
+.repertoire-grid span { font-size:18pt;line-height:1.2; }
+.repertoire-grid small { font-size:5pt;line-height:1.1;color:var(--ink2);font-variant-numeric:lining-nums; }
+.ornament-selections { display:grid; grid-template-columns:repeat(7,1fr);gap:20pt 8pt; }
+.ornament-selection { display:flex;flex-direction:column;align-items:center;gap:6pt; }
+.ornament-glyph { font-size:34pt;line-height:1.25; }
+.v03 .feature-row .spec-sample { overflow-wrap:normal; }
+.v03 .chapter-title { letter-spacing:0; }
+.native-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:30pt 16pt; }
+.native-grid > div { border-top:.5pt solid var(--rule);padding-top:16pt;text-align:center;min-width:0; }
+.native-grid math { font-family:"Torchlette Sans",math;font-size:25pt;margin-bottom:18pt; }
+.native-grid.horizontal { grid-template-columns:repeat(2,1fr);gap:26pt; }
+.native-grid.horizontal math { font-size:27pt; }
+#v03-contents { display:grid;grid-template-columns:1fr 1fr;column-gap:24pt;row-gap:0; }
+#v03-contents a { display:flex;justify-content:space-between;gap:8pt;padding:8pt 0;border-bottom:.5pt solid var(--rule);font-size:9pt;line-height:1.3;color:var(--ink);text-decoration:none; }
+#v03-contents b { font-weight:400;color:var(--ink2); }
+/* Catalogue pairs expose the named low-level switch without inherited numeric defaults. */
+.feature-pair .spec-sample { font-variant-numeric:normal; }
+.alternate-row { display:flex;gap:18pt; padding:10pt 0;border-top:.5pt solid var(--rule); }
+.alt-cell { display:flex;flex-direction:column;align-items:center;min-width:36pt;gap:6pt;font-variant-numeric:normal; }
+.alt-cell span { font-size:30pt;line-height:1.2; }
+.alt-cell small { font-size:6pt;color:var(--ink2); }
+.alternate-row { gap:8pt; }
+
+.v03 .spec-sample { white-space: pre-wrap; }

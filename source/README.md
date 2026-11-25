@@ -272,6 +272,25 @@ other stylistic sets, the cvNN, case, cpsp, zero, aalt, salt, sups, subs, frac a
 the rest are in the .ttf only. The tool versions are pinned, so each woff2 is
 byte-identical on every build.
 
+## Web specimen
+
+`specimen/build_sans.py` uses the Python standard library to write `index.html`
+and `sans.css` into an existing output directory. From `source/`, run:
+
+    python3 specimen/build_sans.py /path/to/output
+
+`SANS_OUT` can supply the output directory; the positional argument takes precedence.
+The version label, release download link, and font cache queries use `VERSION`
+with the Makefile release-tag convention: `0.514` becomes `0.5.14`.
+Use `--version 0.5.13` to reproduce the earlier release metadata.
+
+The builder reads `specimen-v03.html`, `specimen.css`, `specimen-v03.css`, and
+`sans-src/ml-formulas.html` relative to its own directory. `specimen-v03.html` is
+a frozen generated snapshot used as input. Preserve its line layout: the builder
+selects sections by line number. Supply matching released WOFF2 files in the output
+directory’s `fonts/` folder and `/heart.png` at the host site root. Font delivery
+and PDF generation are separate steps.
+
 ## Check
 
     make verify
