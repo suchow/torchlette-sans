@@ -21,7 +21,7 @@
    letter (ụ⟩ as u⟩) where the mark is clear of the bracket; where a mark, horn or ogonek
    reaches toward it (⟨ĭ ư⟩ Ą⟩) they are kerned, but to no smaller ink gap than their letter's.
 7. Shapes: relations and operators sit in the 600-unit cell, but ⊘ ⊛ ⊖ have ⊕'s advance (720) and are as wide and tall as
-   ⊕ (within 12: the shipped ⊕ comes out 10 narrower in Black); ≺ mirrors ≻ (uprights); the 29 script characters, including ℒ, use fixed normal-script Noto Sans
+   ⊕ (within 12: the shipped ⊕ comes out 10 narrower in Black); ≺ mirrors ≻ (uprights); the 52 script characters, including ℒ, use fixed normal-script Noto Sans
    Math outlines at one H-cap/714 scale, with donor-scaled advances and base glyph class.
    Donor-affine versus saved bounds are diagnostics, not equality claims across the ordinary
    rounding/G1/once-italic finishing stages. Those stages are checked separately.
@@ -101,6 +101,7 @@ OPS = [0x225C, 0x225D, 0x2250, 0x2259, 0x2AEB, 0x2298, 0x229B, 0x2296, 0x229E, 0
 SCRIPT = [0x1D49C, 0x212C, 0x1D49E, 0x1D49F, 0x2130, 0x2131, 0x1D4A2, 0x210B, 0x2110, 0x1D4A5, 0x1D4A6, 0x2112, 0x2133,
           0x1D4A9, 0x1D4AA, 0x1D4AB, 0x1D4AC, 0x211B, 0x1D4AE, 0x1D4AF, 0x1D4B0, 0x1D4B1, 0x1D4B2, 0x1D4B3,
           0x1D4B4, 0x1D4B5, 0x212F, 0x210A, 0x2134]
+SCRIPT += list(tuple(range(0x1D4B6, 0x1D4BA)) + (0x1D4BB,) + tuple(range(0x1D4BD, 0x1D4C4)) + tuple(range(0x1D4C5, 0x1D4D0)))
 DS = [0x1D538, 0x1D539, 0x1D53B, 0x1D53D, 0x1D53E, 0x1D540, 0x1D541, 0x1D542, 0x1D543, 0x1D544, 0x1D546,
       0x1D54A, 0x1D54B, 0x1D54C, 0x1D54D, 0x1D54E, 0x1D54F, 0x1D550, 0x1D7D8] + list(range(0x1D7DA, 0x1D7E2))
 ALL = OPS + SCRIPT + DS
@@ -284,8 +285,8 @@ if g_of(0x227A) and g_of(0x227B) and not ITALIC:            # a sheared pair is 
 # contour-count laws. Ordinary finishing changes geometry; raw affine bounds below
 # are diagnostics only, without an invented saved-outline tolerance or PASS claim.
 SCRIPT_DONOR_SHA256 = '3f495fe933c06786e4d5f6d86b8ee70b6753a68ee3b9d87528726de0f6e2c47d'
-check(len(SCRIPT) == 29 and len(set(SCRIPT)) == 29 and 0x2112 in SCRIPT,
-      'fixed script repertoire must contain all 29 characters, including ℒ')
+check(len(SCRIPT) == 52 and len(set(SCRIPT)) == 52 and 0x2112 in SCRIPT,
+      'fixed script repertoire must contain all 52 characters, including ℒ')
 donor_resource = os.path.join(os.path.dirname(HERE), 'notosansmath', 'NotoSansMath-Regular.ttf')
 with open(donor_resource, 'rb') as donor_file:
     donor_bytes = donor_file.read()

@@ -59,7 +59,7 @@ docstring lists what it changes):
   apply by default, picks the default mark or one of the ten for each occurrence;
   `"rand" N` selects form N. Safari ignores rand and shows the default.
 - `mathletters`: the letters and operators of ML notation beside the double-struck capitals: ℙ ℍ 𝔼 𝟙 in
-  `symbols`' thin doubled strokes, a script ℒ drawn with Torchlette's pen, ℏ, ∥ ∖ ⟂ ⟦ ⟧ ⋆, and the format-12
+  `symbols`' thin doubled strokes, the complete script alphabet from Noto Sans Math Regular, ℏ, ∥ ∖ ⟂ ⟦ ⟧ ⋆, and the format-12
   cmap that 𝔼 and 𝟙 (outside the BMP) need.
 - `latin_gaps`: the Dutch ij, every Pinyin vowel with its tone, the long s ſ (small
   capitals give S), the Latin case partners Mulish left out (Ǥ Ǩ Ȟ ȩ Ƒ), the vulgar
@@ -222,6 +222,14 @@ vendored here as build inputs (the module's docstring says how each is fitted):
 
 Both fonts' own names stay out of Torchlette Sans; the OFL permits the derivation,
 and the copyright notices above are the attribution it asks for.
+
+## Mathematical script sources
+
+The script alphabet contains 52 letters imported from Noto Sans Math Regular at a
+fixed donor weight across styles. The outlines are scaled uniformly to the capital
+height. Legacy Letterlike Symbols mappings are included; unassigned holes in
+Mathematical Alphanumeric Symbols remain unmapped. The ordinary italic transform
+is applied once.
 
 ## Files
 

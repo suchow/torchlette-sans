@@ -31,7 +31,7 @@ Operators
   the italic as ui keeps its circles.
 
 Letters
-- ML7 script capitals and legacy ℯ ℊ ℴ: complete existing Noto Sans Math Regular
+- ML7 complete script capitals and lowercase: complete existing Noto Sans Math Regular
   outlines, scaled uniformly to the current H cap height. Original donor advances,
   sidebearings and ink placement share that same global scale. The donor weight is fixed across styles. Italics receive the build's
   existing final oblique transform. No script skeleton is traced or stroked.
@@ -396,7 +396,7 @@ def _script(c, put):
                 if name not in c.made: c.made.append(name)
             else:
                 put(cp, path, advance)
-    c.log('29 script glyphs: direct Noto Sans Math Regular outlines; fixed donor weight')
+    c.log(f'{len(SCRIPT_CODEPOINTS)} script glyphs: direct Noto Sans Math Regular outlines; fixed donor weight')
 
 
 # ------------------------------------------------------------------------------ features
@@ -585,8 +585,12 @@ def _bracket_kerns(ctx, glyphs, base=None, kern_of=None, min_k=BRACKET_MIN_K):
     return out
 
 
+SCRIPT_LOWER_ADDITIONS = tuple(range(0x1D4B6, 0x1D4BA)) + (0x1D4BB,) + tuple(range(0x1D4BD, 0x1D4C4)) + tuple(range(0x1D4C5, 0x1D4D0))
+
 # Direct existing-font script repertoire; complete donor outlines, never medial tracing.
 SCRIPT_CODEPOINTS = (119964, 8492, 119966, 119967, 8496, 8497, 119970, 8459, 8464, 119973, 119974, 8466, 8499, 119977, 119978, 119979, 119980, 8475, 119982, 119983, 119984, 119985, 119986, 119987, 119988, 119989, 8495, 8458, 8500)
+
+SCRIPT_CODEPOINTS += SCRIPT_LOWER_ADDITIONS
 
 # Existing mapped glyphs are intentionally replaced, including mathletters' former ℒ.
 GLYPH_OVERRIDE = {f'u{cp:04X}' if cp > 0xFFFF else f'uni{cp:04X}' for cp in SCRIPT_CODEPOINTS}
