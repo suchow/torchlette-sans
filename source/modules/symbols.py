@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w')):
-    """Fifteen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'z')):
+    """Sixteen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'z')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,62 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base in ('v', 'w'):
+        if base == 'z':
+            from fontTools.pens.recordingPen import RecordingPen
+            p = pathops.Path(p); p.simplify(fix_winding=True)
+            if any(abs(p.bounds[j] - bounds[j]) > .1 for j in (1, 3)):
+                raise ValueError('double-struck lowercase z: canonical vertical bounds changed')
+            record = RecordingPen(); p.draw(record)
+            vertices = []
+            for verb, points in record.value:
+                if verb in ('moveTo', 'lineTo'):
+                    vertices.append(points[0])
+                elif verb != 'closePath':
+                    raise ValueError('double-struck lowercase z: expected straight polygon')
+            if len(vertices) != 10 or len(list(p.contours)) != 1 or bounds[1] != 0:
+                raise ValueError('double-struck lowercase z: unexpected source polygon')
+            height = bounds[3]
+            edges = list(zip(vertices, vertices[1:] + vertices[:1]))
+            horizontal = [(a, b) for a, b in edges if abs(a[1] - b[1]) < .01]
+            top_edges = [(a, b) for a, b in horizontal if abs(a[1] - height) < .1]
+            bottom_edges = [(a, b) for a, b in horizontal if abs(a[1]) < .1]
+            inner_edges = [(a, b) for a, b in horizontal if .1 < a[1] < height - .1]
+            if len(top_edges) != 1 or len(bottom_edges) != 1 or len(inner_edges) != 2:
+                raise ValueError('double-struck lowercase z: ambiguous terminal roles')
+            top_span = sorted(point[0] for point in top_edges[0])
+            bottom_span = sorted(point[0] for point in bottom_edges[0])
+            low, high = sorted(edge[0][1] for edge in inner_edges)
+            if low <= 0 or high >= height or low >= high:
+                raise ValueError('double-struck lowercase z: invalid clear body interval')
+            ys = [low + f * (high - low) for f in (.25, .5, .75)]
+            rows = [c.hspans(p, y) for y in ys]
+            if any(len(row) != 1 for row in rows):
+                raise ValueError('double-struck lowercase z: ambiguous diagonal')
+            k = (mid(rows[-1][0]) - mid(rows[0][0])) / (ys[-1] - ys[0])
+            xzero = mid(rows[0][0]) - k * ys[0]
+            if k <= 0 or abs(mid(rows[1][0]) - (xzero + k * ys[1])) > 1:
+                raise ValueError('double-struck lowercase z: invalid rising diagonal')
+            def diagonal(normal_width, y0, y1):
+                dx = normal_width * math.hypot(1, k) / 2
+                xa, xb = xzero + k * y0, xzero + k * y1
+                q = pathops.Path(); pen = q.getPen()
+                pen.moveTo((xa - dx, y0)); pen.lineTo((xa + dx, y0))
+                pen.lineTo((xb + dx, y1)); pen.lineTo((xb - dx, y1)); pen.closePath()
+                return q
+            band = c.clip(diagonal(doubled, 0, height), (bounds[0], 0, bounds[2], height))
+            top = rect(top_span[0], height - t, top_span[1], height)
+            bottom = rect(bottom_span[0], 0, bottom_span[1], t)
+            if not intersect(band, top).area or not intersect(band, bottom).area:
+                raise ValueError('double-struck lowercase z: disconnected terminal')
+            slot = c.clip(diagonal(gap, t, height - t),
+                          (bounds[0] + t, t, bounds[2] - t, height - t))
+            ink = union(band, top, bottom)
+            if not slot.area or abs(diff(slot, ink).area) > .01:
+                raise ValueError('double-struck lowercase z: unenclosed diagonal slot')
+            result = diff(ink, slot)
+            if len(list(result.contours)) != 2:
+                raise ValueError('double-struck lowercase z: expected one closed slot')
+        elif base in ('v', 'w'):
             from fontTools.pens.recordingPen import RecordingPen
             # Source heavy italics contain crossing diagonal ledges. Measure the
             # same filled outline as the final overlap cleanup, without changing

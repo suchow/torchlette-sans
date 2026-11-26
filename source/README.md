@@ -225,7 +225,7 @@ and the copyright notices above are the attribution it asks for.
 
 ## Double-struck lowercase
 
-The initial lowercase set contains b, c, d, h, i, j, l, m, n, o, p, q, u, v, and w.
+The initial lowercase set contains b, c, d, h, i, j, l, m, n, o, p, q, u, v, w, and z.
 The b, d, o, p, and q outlines use each style's lowercase contours. The c outline
 uses the lightest Mulish master fitted to the target style's ink bounds. Hairline weight is measured
 from the straight ascenders of b and d. Bowls and doubled stems preserve the
@@ -255,6 +255,11 @@ Their construction uses measured source lines and the lowercase stroke dimension
 The middle hairline of w preserves its source angle. The right-hand pair is
 translated horizontally to join it.
 The source baseline and terminal heights are preserved, including w's central terminal.
+
+The z form has a doubled diagonal and hairline horizontal terminals. The diagonal
+uses its measured source centreline and the lowercase stroke dimensions. The top
+and bottom terminals retain their separate source lengths. The slot is closed
+inside both terminals.
 
 ## Mathematical script sources
 
