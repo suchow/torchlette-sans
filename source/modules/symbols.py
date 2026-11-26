@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'j', 'l', 'o', 'p', 'q')):
-    """Nine lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q')):
+    """Twelve lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'j', 'l', 'o', 'p', 'q'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'i', 'j', 'l', 'o', 'p', 'q')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,118 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'j', 'l', 'o', 'p', 'q'
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base in ('i', 'j', 'l'):
+        if base in ('h', 'm', 'n'):
+            from fontTools.pens.basePen import BasePen
+
+            class ShoulderPen(BasePen):
+                def __init__(self):
+                    super().__init__(None)
+                    self.segments = []
+                    self.point = None
+
+                def _moveTo(self, point):
+                    self.point = point
+
+                def _lineTo(self, point):
+                    self.segments.append(('L', self.point, point))
+                    self.point = point
+
+                def _qCurveToOne(self, control, point):
+                    self.segments.append(('Q', self.point, control, point))
+                    self.point = point
+
+                def _curveToOne(self, a, b, point):
+                    raise ValueError(f'double-struck lowercase {base}: expected quadratic shoulders')
+
+                def _closePath(self):
+                    pass
+
+            pen = ShoulderPen()
+            p.draw(pen)
+            segments = pen.segments
+            arches = []
+            for i in range(1, len(segments) - 4):
+                chain = segments[i:i + 4]
+                before, after = segments[i - 1], segments[i + 4]
+                if (before[0] != 'L' or after[0] != 'L'
+                        or any(s[0] != 'Q' for s in chain)
+                        or abs(before[1][1]) > 1 or abs(after[-1][1]) > 1):
+                    continue
+                # The counter arch connects two baseline-reaching inner edges.
+                # Italic rounding can leave these edges about 1.3 units off vertical.
+                if max(abs(s[1][0] - s[-1][0]) for s in (before, after)) > 2:
+                    raise ValueError(f'double-struck lowercase {base}: nonvertical counter edge')
+                if chain[0][1][0] > chain[-1][-1][0]:
+                    chain = [('Q', s[-1], s[2], s[1]) for s in reversed(chain)]
+                if any(s[1][0] > s[2][0] + 2 or s[2][0] > s[-1][0] + 2 for s in chain):
+                    raise ValueError(f'double-struck lowercase {base}: nonmonotone shoulder')
+                arches.append(chain)
+            arches.sort(key=lambda chain: chain[0][1][0])
+            if len(arches) != (2 if base == 'm' else 1):
+                raise ValueError(f'double-struck lowercase {base}: unexpected counter arches')
+            low = min(point[1] for chain in arches for point in (chain[0][1], chain[-1][-1]))
+            rows = [sorted(c.hspans(p, low * f)) for f in (0.3, 0.5, 0.7)]
+            count = len(arches) + 1
+            if any(len(row) != count for row in rows):
+                raise ValueError(f'double-struck lowercase {base}: ambiguous lower stems')
+            centres = [median([mid(row[j]) for row in rows]) for j in range(count)]
+            parts, cuts = [], []
+            tops = [c.XH] + [0] * (count - 1)
+            if base == 'h':
+                tops[0] = bounds[3]
+            # Explicit fitted copies retain the actual counter's quadratic profile.
+            # Each arch has its own endpoint heights; no global splice row is used.
+            for j, chain in enumerate(arches):
+                x0, x1 = chain[0][1][0], chain[-1][-1][0]
+                y0 = min(chain[0][1][1], chain[-1][-1][1])
+                yt = max(point[1] for s in chain for point in s[1:])
+                # Each source shoulder has its own outer crown, including m's
+                # two arches. Ascender lines are excluded from this measure.
+                crown = max(point[1] for s in segments if s[0] == 'Q'
+                            for point in s[1:] if x0 <= point[0] <= x1)
+                left, right = centres[j], centres[j + 1]
+                if right - left <= doubled + t or yt <= y0 or crown - t <= y0:
+                    raise ValueError(f'double-struck lowercase {base} arch {j}: shoulder clearance exhausted')
+                splice = y0 - t
+
+                def profile(inset):
+                    sx = (right - left - 2 * inset) / (x1 - x0)
+                    sy = (crown - inset - y0) / (yt - y0)
+                    def fitpoint(point):
+                        return (left + inset + sx * (point[0] - x0), y0 + sy * (point[1] - y0))
+                    q = pathops.Path(); qp = q.getPen()
+                    start = fitpoint(chain[0][1]); end = fitpoint(chain[-1][-1])
+                    qp.moveTo((start[0], splice))
+                    qp.lineTo(start)
+                    for s in chain:
+                        qp.qCurveTo(fitpoint(s[2]), fitpoint(s[-1]))
+                    qp.lineTo((end[0], splice))
+                    qp.closePath()
+                    return q
+
+                shoulder = diff(profile(0), profile(t))
+                if not shoulder.area:
+                    raise ValueError(f'double-struck lowercase {base} arch {j}: empty shoulder')
+                parts.append(shoulder)
+                # The right stem finishes inside the arch's tangent region.
+                tops[j] = max(tops[j], y0 + (chain[0][1][1] - y0) * (crown - y0) / (yt - y0) + t)
+                tops[j + 1] = max(tops[j + 1],
+                                  y0 + (chain[-1][-1][1] - y0) * (crown - y0) / (yt - y0) + t)
+            shoulders = tuple(parts)
+            bands = []
+            for j, xc in enumerate(centres):
+                band = rect(xc - doubled / 2, 0, xc + doubled / 2, tops[j])
+                cuts.append(rect(xc - gap / 2, t, xc + gap / 2, tops[j] - t))
+                bands.append(band)
+                parts.append(band)
+            slots = union(*cuts)
+            for j, shoulder in enumerate(shoulders):
+                for k in (j, j + 1):
+                    if (not intersect(shoulder, bands[k]).area
+                            or not intersect(diff(shoulder, slots), diff(bands[k], slots)).area):
+                        raise ValueError(f'double-struck lowercase {base} arch {j}: disconnected stem {k}')
+            result = diff(union(*parts), slots)
+        elif base in ('i', 'j', 'l'):
             cs = contours(p)
             stem_path = min(cs, key=lambda q: q.bounds[1])
             sb = stem_path.bounds
