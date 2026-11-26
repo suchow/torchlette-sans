@@ -225,7 +225,7 @@ and the copyright notices above are the attribution it asks for.
 
 ## Double-struck lowercase
 
-The initial lowercase set contains b, c, d, i, l, o, p, and q. The b, d, o, p, and q
+The initial lowercase set contains b, c, d, i, j, l, o, p, and q. The b, d, o, p, and q
 outlines use each style's lowercase contours. The c outline uses the lightest
 Mulish master fitted to the target style's ink bounds. Hairline weight is measured
 from the straight ascenders of b and d. Bowls and doubled stems preserve the
@@ -234,6 +234,11 @@ the doubled-stroke placement reference. Capital and digit construction is unchan
 The i and l stems are closed doubled bands. During construction, the i dot expands
 around its source centre using Noto Sans Math's dot-to-stem proportion. The outline
 includes a central opening. Its vertical extent may exceed the source dot's extent.
+
+The j body follows the light-master hook construction used for capital J, fitted
+to j's own descender bounds. Its added rail overlaps the measured hook stroke.
+During construction, its hollow dot expands around j's source centre using the
+same sizing rule as i.
 
 ## Mathematical script sources
 
