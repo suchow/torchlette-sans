@@ -1458,18 +1458,18 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'l', 'o', 'p', 'q')):
-    """Eight lowercase forms using style contours, a fitted light-master c, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'j', 'l', 'o', 'p', 'q')):
+    """Nine lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
-    Bowls use hairline rings with straight inlines; stems use closed doubled bands.
+    Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
     """
     width = lambda span: span[1] - span[0]
     mid = lambda span: (span[0] + span[1]) / 2
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'i', 'l', 'o', 'p', 'q')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'i', 'j', 'l', 'o', 'p', 'q')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'l', 'o', 'p', 'q')):
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base in ('i', 'l'):
+        if base in ('i', 'j', 'l'):
             cs = contours(p)
             stem_path = min(cs, key=lambda q: q.bounds[1])
             sb = stem_path.bounds
@@ -1532,11 +1532,48 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'l', 'o', 'p', 'q')):
             if len(rows) != 1:
                 raise ValueError(f'double-struck lowercase {base}: ambiguous stem')
             xc = mid(rows[0])
-            result = diff(rect(xc - doubled / 2, sb[1], xc + doubled / 2, sb[3]),
-                          rect(xc - gap / 2, sb[1] + t, xc + gap / 2, sb[3] - t))
-            if base == 'i':
+            if base == 'j':
+                # Follow the capital-J construction with j's own hook and dot.
+                master_body = min(contours(_master(c)['path']('j')), key=lambda q: q.bounds[1])
+                target = (sb[0] - (doubled - width(rows[0])) / 2, sb[1], sb[2], sb[3])
+                def fit_body(q):
+                    qb = q.bounds
+                    sx = (target[2] - target[0]) / (qb[2] - qb[0])
+                    sy = (target[3] - target[1]) / (qb[3] - qb[1])
+                    return c.transformed(q, (sx, 0, 0, sy, target[0] - sx * qb[0], target[1] - sy * qb[1]))
+                body = fit_body(master_body)
+                straight_y = c.XH / 2
+                spans = c.hspans(body, straight_y)
+                if len(spans) != 1:
+                    raise ValueError('double-struck lowercase j: ambiguous hairline stem')
+                delta = (t - width(spans[0])) / 2
+                if delta < 0:
+                    body = eroded(body, -delta)
+                elif delta > 0:
+                    stroke = pathops.Path(body)
+                    stroke.stroke(2 * delta, pathops.LineCap.ROUND_CAP, pathops.LineJoin.ROUND_JOIN, 4)
+                    stroke.convertConicsToQuads(); stroke.simplify()
+                    body = union(body, stroke)
+                body = fit_body(body)
+                xr = c.hspans(body, straight_y)[-1][1]
+                rail_x = xr - doubled
+                hook_spans = [v for v in c.vspans(body, rail_x + t / 2) if v[1] < 0]
+                if not hook_spans:
+                    raise ValueError('double-struck lowercase j: rail misses hook')
+                hook = max(hook_spans, key=lambda v: v[1])
+                rail = rect(rail_x, mid(hook), rail_x + t, sb[3])
+                if not intersect(rail, body).area:
+                    raise ValueError('double-struck lowercase j: rail has no hook overlap')
+                result = union(body, rail, rect(rail_x, sb[3] - t, xr, sb[3]))
+                slot_spans = c.hspans(result, straight_y)
+                if len(slot_spans) != 2 or slot_spans[1][0] - slot_spans[0][1] <= 0:
+                    raise ValueError('double-struck lowercase j: slot is not open')
+            else:
+                result = diff(rect(xc - doubled / 2, sb[1], xc + doubled / 2, sb[3]),
+                              rect(xc - gap / 2, sb[1] + t, xc + gap / 2, sb[3] - t))
+            if base in ('i', 'j'):
                 if len(cs) != 2:
-                    raise ValueError('double-struck lowercase i: expected stem and dot')
+                    raise ValueError(f'double-struck lowercase {base}: expected stem and dot')
                 dot = max(cs, key=lambda q: q.bounds[1]); db = dot.bounds
                 dx, dy = (db[0] + db[2]) / 2, (db[1] + db[3]) / 2
                 # Noto's dot/stem envelope ratio is 176/173. Grow the source dot
@@ -1544,7 +1581,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'l', 'o', 'p', 'q')):
                 diameter = max(db[2] - db[0], db[3] - db[1], doubled * 176 / 173)
                 inside = diameter - 2 * t
                 if inside < gap or dy - diameter / 2 <= sb[3] + t:
-                    raise ValueError('double-struck lowercase i: dot clearance exhausted')
+                    raise ValueError(f'double-struck lowercase {base}: dot clearance exhausted')
                 def dot_profile(size):
                     sx, sy = size / (db[2] - db[0]), size / (db[3] - db[1])
                     return c.transformed(dot, (sx, 0, 0, sy, dx - sx * dx, dy - sy * dy))
@@ -1643,7 +1680,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'l', 'o', 'p', 'q')):
                 parts.extend((band, rail(outline, x, ym))); cuts.append(cut)
             result = diff(union(*parts), union(*cuts)) if cuts else union(*parts)
         rb = result.bounds
-        if abs(rb[1] - bounds[1]) > 0.1 or (base != 'i' and abs(rb[3] - bounds[3]) > 0.1):
+        if abs(rb[1] - bounds[1]) > 0.1 or (base not in ('i', 'j') and abs(rb[3] - bounds[3]) > 0.1):
             raise ValueError(f'double-struck lowercase {base}: vertical bounds changed')
         result = c.mv(result, bounds[0] - rb[0])
         out[base] = (result, c.W(base) + (rb[2] - rb[0]) - (bounds[2] - bounds[0]))
