@@ -268,7 +268,8 @@ slot continues through the crossing.
 
 The y form doubles its upper-left diagonal. The right arm and curved descender
 follow the outside edge of the source outline as a hairline. The diagonal slot
-is closed above the baseline. Construction preserves the source descender depth.
+is closed above the baseline. At the junction, the doubled arm is trimmed to the
+source right edge. Construction preserves the source descender depth.
 
 ## Mathematical script sources
 

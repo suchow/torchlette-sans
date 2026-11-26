@@ -1624,6 +1624,21 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
                 qp.lineTo((xb+dx,y1)); qp.lineTo((xb-dx,y1)); qp.closePath(); return q
             band = diagonal(doubled,0,height)
             slot = diagonal(gap,t,height-t)
+            # The doubled arm must stop at the measured outside rising edge.
+            # An unbounded baseline cap projects beyond it as a small spur.
+            def rising_inside(inset):
+                dx = inset * math.hypot(1, right_slope)
+                x0 = attachment[0] - attachment[1] * right_slope - dx
+                x1 = x0 + right_slope * height
+                q = pathops.Path(); qp = q.getPen()
+                qp.moveTo((-3000, 0)); qp.lineTo((x0, 0))
+                qp.lineTo((x1, height)); qp.lineTo((-3000, height)); qp.closePath()
+                return q
+            outside_limit = rising_inside(0)
+            band = intersect(band, outside_limit)
+            slot = intersect(slot, rising_inside(t))
+            if abs(diff(band, outside_limit).area) > .01:
+                raise ValueError('double-struck lowercase y: arm projects beyond rising edge')
             if not intersect(band,hairline).area:
                 raise ValueError('double-struck lowercase y: disconnected arm/descender junction')
             ink = union(band,hairline)
