@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'x', 'y', 'z')):
-    """Eighteen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'x', 'y', 'z')):
+    """Nineteen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'x', 'y', 'z')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'x', 'y', 'z')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,88 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base == 'y':
+        if base == 'k':
+            from fontTools.pens.recordingPen import RecordingPen
+            p = pathops.Path(p); p.simplify(fix_winding=True)
+            record = RecordingPen(); p.draw(record)
+            vertices = []
+            for verb, points in record.value:
+                if verb in ('moveTo', 'lineTo'): vertices.append(points[0])
+                elif verb != 'closePath':
+                    raise ValueError('double-struck lowercase k: expected straight source')
+            if len(vertices) not in (11, 13) or len(list(p.contours)) != 1:
+                raise ValueError('double-struck lowercase k: unexpected source polygon')
+            height = bounds[3]
+            if bounds[1] != 0 or any(abs(p.bounds[j]-bounds[j]) > .1 for j in (1,3)):
+                raise ValueError('double-struck lowercase k: canonical vertical bounds changed')
+            edges = list(zip(vertices, vertices[1:]+vertices[:1]))
+            horizontal = [(a,b) for a,b in edges if abs(a[1]-b[1]) < .01 and .1<a[1]<height-.1]
+            if not horizontal:
+                raise ValueError('double-struck lowercase k: missing arm terminal')
+            armheight = max(a[1] for a,b in horizontal)
+            steps = [(a,b) for a,b in horizontal if a[1]<armheight-.1 and abs(a[0]-b[0])<3]
+            if ((len(vertices)==13 and (len(steps)!=2 or any(abs(abs(a[0]-b[0])-2)>.01 for a,b in steps)))
+                    or (len(vertices)==11 and steps)):
+                raise ValueError('double-struck lowercase k: unexpected junction steps')
+            stem_rows = [c.hspans(p,armheight+f*(height-armheight)) for f in (.3,.5,.7)]
+            if any(len(row)!=1 for row in stem_rows):
+                raise ValueError('double-struck lowercase k: ambiguous ascender')
+            xc = median([mid(row[0]) for row in stem_rows])
+            stemright = median([row[0][1] for row in stem_rows])
+            junctions = [pt for pt in vertices if 0<pt[1]<armheight and abs(pt[0]-stemright)<4]
+            forks = [pt for pt in vertices if 0<pt[1]<armheight and pt[0]>stemright+4]
+            if len(junctions)!=(4 if len(vertices)==13 else 2) or len(forks)!=1:
+                raise ValueError('double-struck lowercase k: ambiguous fork roles')
+            lower = min(pt[1] for pt in junctions); upper = max(pt[1] for pt in junctions)
+            fork = forks[0]
+            if not 0<lower<fork[1]<upper<armheight<height:
+                raise ValueError('double-struck lowercase k: invalid junction order')
+            ys = [fork[1]+f*(armheight-fork[1]) for f in (.4,.6,.8)]
+            arm_rows = [c.hspans(p,y) for y in ys]
+            lowys = [lower*f for f in (.25,.5,.75)]
+            leg_rows = [c.hspans(p,y) for y in lowys]
+            if any(len(row)!=2 for row in arm_rows+leg_rows):
+                raise ValueError('double-struck lowercase k: ambiguous diagonal spans')
+            armline = ((arm_rows[0][-1][0],ys[0]),(arm_rows[-1][-1][0],ys[-1]))
+            legline = ((mid(leg_rows[0][-1]),lowys[0]),(mid(leg_rows[-1][-1]),lowys[-1]))
+            def slope(line): return (line[1][0]-line[0][0])/(line[1][1]-line[0][1])
+            def at(line,y): return line[0][0]+slope(line)*(y-line[0][1])
+            if (slope(armline)<=0 or slope(legline)>=0
+                    or abs(at(armline,ys[1])-arm_rows[1][-1][0])>1
+                    or abs(at(legline,lowys[1])-mid(leg_rows[1][-1]))>1):
+                raise ValueError('double-struck lowercase k: nonlinear or reversed diagonal')
+            def polygon(points):
+                q=pathops.Path(); qp=q.getPen(); qp.moveTo(points[0])
+                for pt in points[1:]: qp.lineTo(pt)
+                qp.closePath(); return q
+            def strip(line,w,y0,y1):
+                dx=w*math.hypot(1,slope(line))/2
+                a,b=at(line,y0),at(line,y1)
+                return polygon([(a-dx,y0),(a+dx,y0),(b+dx,y1),(b-dx,y1)])
+            def below_arm(inset):
+                # Inside is right/below the upper-left ascending arm edge.
+                dx=inset*math.hypot(1,slope(armline))
+                return polygon([(at(armline,0)+dx,0),(3000,0),(3000,armheight),
+                                (at(armline,armheight)+dx,armheight)])
+            stem=rect(xc-doubled/2,0,xc+doubled/2,height)
+            stemslot=rect(xc-gap/2,t,xc+gap/2,height-t)
+            armcentre=tuple((pt[0]+t*math.hypot(1,slope(armline))/2,pt[1]) for pt in armline)
+            arm=c.clip(strip(armcentre,t,0,armheight),(xc,0,3000,armheight))
+            leg=intersect(c.clip(strip(legline,doubled,0,armheight),(xc,0,3000,armheight)),below_arm(0))
+            legslot=intersect(c.clip(strip(legline,gap,t,armheight-t),
+                                     (xc+doubled/2+t,t,3000,armheight-t)),below_arm(t))
+            if not intersect(stem,arm).area or not intersect(arm,leg).area:
+                raise ValueError('double-struck lowercase k: disconnected fork')
+            ink=union(stem,arm,leg)
+            if any(not slot.area or abs(diff(slot,ink).area)>.01 for slot in (stemslot,legslot)):
+                raise ValueError('double-struck lowercase k: unenclosed slot')
+            slots=union(stemslot,legslot)
+            result=diff(ink,slots)
+            if (len(list(result.contours))!=3 or intersect(stemslot,legslot).area
+                    or not intersect(diff(stem,slots),diff(arm,slots)).area
+                    or not intersect(diff(arm,slots),diff(leg,slots)).area):
+                raise ValueError('double-struck lowercase k: slot closure or fork join failed')
+        elif base == 'y':
             from fontTools.pens.basePen import BasePen
 
             class TailPen(BasePen):

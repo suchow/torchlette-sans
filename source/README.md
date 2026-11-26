@@ -225,7 +225,7 @@ and the copyright notices above are the attribution it asks for.
 
 ## Double-struck lowercase
 
-The initial lowercase set contains b, c, d, h, i, j, l, m, n, o, p, q, u, v, w, x, y, and z.
+The initial lowercase set contains b, c, d, h, i, j, k, l, m, n, o, p, q, u, v, w, x, y, and z.
 The b, d, o, p, and q outlines use each style's lowercase contours. The c outline
 uses the lightest Mulish master fitted to the target style's ink bounds. Hairline weight is measured
 from the straight ascenders of b and d. Bowls and doubled stems preserve the
@@ -270,6 +270,11 @@ The y form doubles its upper-left diagonal. The right arm and curved descender
 follow the outside edge of the source outline as a hairline. The diagonal slot
 is closed above the baseline. At the junction, the doubled arm is trimmed to the
 source right edge. Construction preserves the source descender depth.
+
+The k form doubles its vertical stem and lower diagonal. Its upper arm is a
+hairline following the source upper edge. The lower diagonal follows its measured
+source centreline. Separate closed slots stop inside the stem and arm edges.
+Construction preserves the source ascender and arm-terminal heights.
 
 ## Mathematical script sources
 
