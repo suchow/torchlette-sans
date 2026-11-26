@@ -252,7 +252,8 @@ retains a separate baseline foot. Construction preserves the source vertical bou
 The v form doubles its descending left diagonal. The w form doubles its first
 and third diagonals, counted from left to right. The other diagonals are hairlines.
 Their construction uses measured source lines and the lowercase stroke dimensions.
-The middle hairline of w connects the fitted band corners.
+The middle hairline of w preserves its source angle. The right-hand pair is
+translated horizontally to join it.
 The source baseline and terminal heights are preserved, including w's central terminal.
 
 ## Mathematical script sources

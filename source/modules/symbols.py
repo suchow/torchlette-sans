@@ -1609,16 +1609,22 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
                 # terminal height is this lowercase w's own central terminal.
                 end0 = line_x(doubled_lines[0], 0) + doubled / 2 * math.hypot(1, slope(doubled_lines[0]))
                 end1 = line_x(doubled_lines[1], height) - doubled / 2 * math.hypot(1, slope(doubled_lines[1]))
-                x0 = end0
-                for _ in range(16):
-                    k = (end1 - x0) / height
-                    x0 = end0 - t * math.hypot(1, k)
-                if abs(x0 + t * math.hypot(1, (end1 - x0) / height) - end0) > .001:
-                    raise ValueError('double-struck lowercase w: corner fit did not converge')
-                thin_edge = ((x0, 0), (end1, height))
-                wd = t * math.hypot(1, slope(thin_edge))
+                k = slope(centres[1])
+                wd = t * math.hypot(1, k)
+                x0 = end0 - wd
+                top = x0 + k * height
+                shift = top - end1
+                # Preserve the source ascending angle and translate the entire
+                # right pair to meet the middle hairline.
+                bands[1] = c.mv(bands[1], shift)
+                slots[1] = c.mv(slots[1], shift)
+                edge = shifted(edge, shift)
+                right_thin = c.mv(right_thin, shift)
+                thin_edge = ((x0, 0), (top, height))
+                if abs(slope(thin_edge) - k) > 1e-9:
+                    raise ValueError('double-struck lowercase w: middle source slope changed')
                 middle = strip(shifted(thin_edge, wd / 2), t)
-                parts.append(middle)
+                parts = bands + [right_thin, middle]
                 slots[0] = intersect(slots[0], side(thin_edge, True))
                 slots[1] = intersect(slots[1], side(shifted(thin_edge, wd), False))
             if not intersect(bands[-1], right_thin).area:
