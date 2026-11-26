@@ -1592,6 +1592,10 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'o', 'p', 'q')):
                 sy = (bowl_top - bowl_bottom) / (cb[3] - cb[1])
                 bowl = c.transformed(counter, (sx, 0, 0, sy,
                                      bowl_left - sx * cb[0], bowl_bottom - sy * cb[1]))
+                # A source counter has hole winding; the fitted bowl is now a
+                # filled outer shape before erosion and needs outer winding.
+                if bowl.clockwise != outer.clockwise:
+                    bowl.reverse()
                 outline = ring(bowl)
                 parts = [outline]
                 band = rect(xc - doubled / 2, y0, xc + doubled / 2, y1)
