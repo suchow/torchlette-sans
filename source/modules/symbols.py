@@ -1579,10 +1579,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
             if any(len(row) != count for row in rows):
                 raise ValueError(f'double-struck lowercase {base}: ambiguous lower stems')
             centres = [median([mid(row[j]) for row in rows]) for j in range(count)]
-            parts, cuts = [], []
-            tops = [c.XH] + [0] * (count - 1)
-            if base == 'h':
-                tops[0] = bounds[3]
+            parts, receivers = [], []
             # Explicit fitted copies retain the actual counter's quadratic profile.
             # Each arch has its own endpoint heights; no global splice row is used.
             for j, chain in enumerate(arches):
@@ -1599,10 +1596,12 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
                 splice = y0 - t
 
                 def profile(inset):
-                    sx = (right - left - 2 * inset) / (x1 - x0)
+                    edge_left = left + doubled / 2 - t + inset
+                    edge_right = right + doubled / 2 - inset
+                    sx = (edge_right - edge_left) / (x1 - x0)
                     sy = (crown - inset - y0) / (yt - y0)
                     def fitpoint(point):
-                        return (left + inset + sx * (point[0] - x0), y0 + sy * (point[1] - y0))
+                        return (edge_left + sx * (point[0] - x0), y0 + sy * (point[1] - y0))
                     q = pathops.Path(); qp = q.getPen()
                     start = fitpoint(chain[0][1]); end = fitpoint(chain[-1][-1])
                     qp.moveTo((start[0], splice))
@@ -1613,28 +1612,34 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
                     qp.closePath()
                     return q
 
-                shoulder = diff(profile(0), profile(t))
+                outside = profile(0)
+                shoulder = diff(outside, profile(t))
                 if not shoulder.area:
                     raise ValueError(f'double-struck lowercase {base} arch {j}: empty shoulder')
                 parts.append(shoulder)
-                # The right stem finishes inside the arch's tangent region.
-                tops[j] = max(tops[j], y0 + (chain[0][1][1] - y0) * (crown - y0) / (yt - y0) + t)
-                tops[j + 1] = max(tops[j + 1],
-                                  y0 + (chain[-1][-1][1] - y0) * (crown - y0) / (yt - y0) + t)
+                # Continue the receiving stem only inside this shoulder's outer
+                # silhouette. Both rails follow the curve across their full width;
+                # a rectangular top cap would protrude beside the descending arch.
+                silhouette = union(outside, rect(left, 0, right + doubled / 2, splice))
+                rails = []
+                for k, x in enumerate((right - doubled / 2, right + doubled / 2 - t)):
+                    r = intersect(rect(x, 0, x + t, crown), silhouette)
+                    if not intersect(r, shoulder).area:
+                        raise ValueError(f'double-struck lowercase {base} arch {j}: disconnected receiving rail {k}')
+                    rails.append(r)
+                receiver = union(*rails, rect(right - doubled / 2, 0, right + doubled / 2, t))
+                receivers.append(receiver)
             shoulders = tuple(parts)
-            bands = []
-            for j, xc in enumerate(centres):
-                band = rect(xc - doubled / 2, 0, xc + doubled / 2, tops[j])
-                cuts.append(rect(xc - gap / 2, t, xc + gap / 2, tops[j] - t))
-                bands.append(band)
-                parts.append(band)
-            slots = union(*cuts)
+            first = centres[0]
+            first_top = bounds[3] if base == 'h' else c.XH
+            first_band = diff(rect(first - doubled / 2, 0, first + doubled / 2, first_top),
+                              rect(first - gap / 2, t, first + gap / 2, first_top - t))
+            bands = [first_band] + receivers
             for j, shoulder in enumerate(shoulders):
                 for k in (j, j + 1):
-                    if (not intersect(shoulder, bands[k]).area
-                            or not intersect(diff(shoulder, slots), diff(bands[k], slots)).area):
+                    if not intersect(shoulder, bands[k]).area:
                         raise ValueError(f'double-struck lowercase {base} arch {j}: disconnected stem {k}')
-            result = diff(union(*parts), slots)
+            result = union(*parts, *bands)
         elif base in ('i', 'j', 'l'):
             cs = contours(p)
             stem_path = min(cs, key=lambda q: q.bounds[1])
