@@ -129,8 +129,8 @@ UNICODES := U+0000-00FF,U+0100-024F,U+0250-02FF,U+0300-036F,U+0370-03FF,U+1E00-1
 # Exact encoded contracts of the selected modules; no inferred whole blocks.
 # boxdrawing: 19 light, rounded, heavy, and double line characters.
 UNICODES := $(UNICODES),U+2500-2503,U+250C,U+2510,U+2514,U+2518,U+251C,U+2524,U+252C,U+2534,U+253C,U+2550-2551,U+256D-2570
-# Initial double-struck lowercase slice: b, c, d, o, p, q.
-UNICODES := $(UNICODES),U+1D553-1D555,U+1D55A-1D55B,U+1D55D,U+1D560-1D562
+# Double-struck lowercase: b, c, d, h, i, j, l, m, n, o, p, q.
+UNICODES := $(UNICODES),U+1D553-1D555,U+1D559-1D55B,U+1D55D-1D562
 # Assigned script lowercase additions; Unicode holes remain unmapped.
 UNICODES := $(UNICODES),U+1D4B6-1D4B9,U+1D4BB,U+1D4BD-1D4C3,U+1D4C5-1D4CF
 
