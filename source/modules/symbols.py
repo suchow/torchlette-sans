@@ -1596,7 +1596,16 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'o', 'p', 'q')):
                 # filled outer shape before erosion and needs outer winding.
                 if bowl.clockwise != outer.clockwise:
                     bowl.reverse()
-                outline = ring(bowl)
+                # Define the opening explicitly: stroke erosion can leave a
+                # filled middle for these fitted counter profiles.
+                bb = bowl.bounds
+                bw, bh = bb[2] - bb[0], bb[3] - bb[1]
+                if min(bw, bh) <= 2 * t:
+                    raise ValueError(f'double-struck lowercase {base}: no inset opening')
+                ix, iy = (bw - 2 * t) / bw, (bh - 2 * t) / bh
+                inner = c.transformed(bowl, (ix, 0, 0, iy,
+                                      bb[0] + t - ix * bb[0], bb[1] + t - iy * bb[1]))
+                outline = diff(bowl, inner)
                 parts = [outline]
                 band = rect(xc - doubled / 2, y0, xc + doubled / 2, y1)
                 cut = rect(xc - gap / 2, y0 + t, xc + gap / 2, y1 - t)
