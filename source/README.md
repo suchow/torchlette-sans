@@ -225,7 +225,7 @@ and the copyright notices above are the attribution it asks for.
 
 ## Double-struck lowercase
 
-The initial lowercase set contains b, c, d, h, i, j, l, m, n, o, p, q, u, v, w, and z.
+The initial lowercase set contains b, c, d, h, i, j, l, m, n, o, p, q, u, v, w, x, and z.
 The b, d, o, p, and q outlines use each style's lowercase contours. The c outline
 uses the lightest Mulish master fitted to the target style's ink bounds. Hairline weight is measured
 from the straight ascenders of b and d. Bowls and doubled stems preserve the
@@ -260,6 +260,11 @@ The z form has a doubled diagonal and hairline horizontal terminals. The diagona
 uses its measured source centreline and the lowercase stroke dimensions. The top
 and bottom terminals retain their separate source lengths. The slot is closed
 inside both terminals.
+
+The x form doubles its descending diagonal and uses a hairline for the rising
+diagonal. Straight centrelines connect the source terminal centres. They
+approximate the source's small optical offsets near the crossing. The diagonal
+slot continues through the crossing.
 
 ## Mathematical script sources
 

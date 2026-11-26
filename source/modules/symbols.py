@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'z')):
-    """Sixteen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'x', 'z')):
+    """Seventeen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'z')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'x', 'z')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,82 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base == 'z':
+        if base == 'x':
+            from fontTools.pens.recordingPen import RecordingPen
+            p = pathops.Path(p); p.simplify(fix_winding=True)
+            if any(abs(p.bounds[j] - bounds[j]) > .1 for j in (1, 3)):
+                raise ValueError('double-struck lowercase x: canonical vertical bounds changed')
+            record = RecordingPen(); p.draw(record)
+            vertices = []
+            for verb, points in record.value:
+                if verb in ('moveTo', 'lineTo'):
+                    vertices.append(points[0])
+                elif verb != 'closePath':
+                    raise ValueError('double-struck lowercase x: expected straight source')
+            if len(vertices) != 12 or len(list(p.contours)) != 1 or bounds[1] != 0:
+                raise ValueError('double-struck lowercase x: unexpected source polygon')
+            height = bounds[3]
+            feet = sorted(pt for pt in vertices if abs(pt[1]) < .01)
+            heads = sorted(pt for pt in vertices if abs(pt[1] - height) < .01)
+            crossing = [pt for pt in vertices if .01 < pt[1] < height - .01]
+            if len(feet) != 4 or len(heads) != 4 or len(crossing) != 4:
+                raise ValueError('double-struck lowercase x: invalid terminal/crossing roles')
+            centre = lambda a, b: ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
+            descending = (centre(heads[0], heads[1]), centre(feet[2], feet[3]))
+            rising = (centre(feet[0], feet[1]), centre(heads[2], heads[3]))
+            low, high = min(pt[1] for pt in crossing), max(pt[1] for pt in crossing)
+            if not 0 < low < high < height:
+                raise ValueError('double-struck lowercase x: invalid crossing interval')
+            def slope(line):
+                return (line[1][0] - line[0][0]) / (line[1][1] - line[0][1])
+            if slope(descending) >= 0 or slope(rising) <= 0:
+                raise ValueError('double-struck lowercase x: invalid diagonal directions')
+            residual = 0
+            for j, line in enumerate((descending, rising)):
+                a, b = line
+                for upper in (False, True):
+                    ys = [high + f * (height - high) if upper else f * low for f in (.25, .5, .75)]
+                    for y in ys:
+                        spans = c.hspans(p, y)
+                        if len(spans) != 2:
+                            raise ValueError('double-struck lowercase x: ambiguous source limbs')
+                        idx = (0 if upper else 1) if j == 0 else (1 if upper else 0)
+                        pt = (mid(spans[idx]), y)
+                        distance = abs((b[0] - a[0]) * (pt[1] - a[1])
+                                       - (b[1] - a[1]) * (pt[0] - a[0])) / math.dist(a, b)
+                        residual = max(residual, distance)
+            # Thin-slice offsets reach 2.5282 units; one-unit strip measurements
+            # reach 2.5473. The 3.25-unit bound includes a rounding allowance.
+            if residual > 3.25:
+                raise ValueError(f'double-struck lowercase x: optical limb residual {residual:.4f} exceeds 3.25')
+            def diagonal(line, normal_width, y0, y1):
+                k = slope(line); a = line[0]
+                x0 = a[0] + (y0 - a[1]) * k
+                x1 = a[0] + (y1 - a[1]) * k
+                dx = normal_width * math.hypot(1, k) / 2
+                q = pathops.Path(); pen = q.getPen()
+                pen.moveTo((x0 - dx, y0)); pen.lineTo((x0 + dx, y0))
+                pen.lineTo((x1 + dx, y1)); pen.lineTo((x1 - dx, y1)); pen.closePath()
+                return q
+            band = diagonal(descending, doubled, 0, height)
+            hairline = diagonal(rising, t, 0, height)
+            slot = diagonal(descending, gap, t, height - t)
+            ink = union(band, hairline)
+            if not slot.area or abs(diff(slot, ink).area) > .01:
+                raise ValueError('double-struck lowercase x: unenclosed continuous slot')
+            result = diff(ink, slot)
+            remaining_band = diff(band, slot)
+            for j, region in enumerate(((0, low), (high, height))):
+                arm = c.clip(hairline, (-3000, region[0], 5000, region[1]))
+                if not diff(arm, slot).area:
+                    raise ValueError(f'double-struck lowercase x: missing rising arm {j}')
+            for j, region in enumerate(((0, high), (low, height))):
+                arm = c.clip(hairline, (-3000, region[0], 5000, region[1]))
+                if not intersect(diff(arm, slot), remaining_band).area:
+                    raise ValueError(f'double-struck lowercase x: detached rising arm {j}')
+            if len(list(result.contours)) != 2:
+                raise ValueError('double-struck lowercase x: expected one closed crossing slot')
+        elif base == 'z':
             from fontTools.pens.recordingPen import RecordingPen
             p = pathops.Path(p); p.simplify(fix_winding=True)
             if any(abs(p.bounds[j] - bounds[j]) > .1 for j in (1, 3)):
