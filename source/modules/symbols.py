@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u')):
-    """Thirteen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w')):
+    """Fifteen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,99 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base == 'u':
+        if base in ('v', 'w'):
+            from fontTools.pens.recordingPen import RecordingPen
+            record = RecordingPen(); p.draw(record)
+            vertices = []
+            for verb, points in record.value:
+                if verb in ('moveTo', 'lineTo'):
+                    vertices.append(points[0])
+                elif verb != 'closePath':
+                    raise ValueError(f'double-struck lowercase {base}: expected straight source polygon')
+            expected = 6 if base == 'v' else 12
+            if len(vertices) != expected + 1 or len(list(p.contours)) != 1:
+                raise ValueError(f'double-struck lowercase {base}: unexpected source polygon')
+            height = bounds[3]
+            count = 2 if base == 'v' else 4
+            terminal_indices = (1, 2, 4, 5) if base == 'v' else (1, 2, 4, 5, 7, 8)
+            baseline_indices = (0, 6) if base == 'v' else (0, 9, 10, 12)
+            if (any(abs(vertices[j][1] - height) > .1 for j in terminal_indices)
+                    or any(abs(vertices[j][1]) > .1 for j in baseline_indices)):
+                raise ValueError(f'double-struck lowercase {base}: unexpected terminal roles')
+            lower = vertices[3][1] if base == 'v' else max(vertices[3][1], vertices[6][1])
+            upper = height if base == 'v' else vertices[11][1]
+            if upper <= lower:
+                raise ValueError(f'double-struck lowercase {base}: no separated diagonal interval')
+            ys = [lower + (upper - lower) * f for f in (.25, .5, .75)]
+            rows = [sorted(c.hspans(p, y)) for y in ys]
+            if bounds[1] != 0 or any(len(row) != count for row in rows):
+                raise ValueError(f'double-struck lowercase {base}: invalid diagonal geometry')
+            def line_x(line, y):
+                a, b = line
+                return a[0] + (y - a[1]) * (b[0] - a[0]) / (b[1] - a[1])
+            centres = [((mid(rows[0][j]), ys[0]), (mid(rows[-1][j]), ys[-1])) for j in range(count)]
+            for j, line in enumerate(centres):
+                if abs(line_x(line, ys[1]) - mid(rows[1][j])) > 1:
+                    raise ValueError(f'double-struck lowercase {base}: diagonal {j} is not linear')
+            for j, line in enumerate(centres):
+                direction = line[1][0] - line[0][0]
+                if (direction >= 0 if j % 2 == 0 else direction <= 0):
+                    raise ValueError(f'double-struck lowercase {base}: diagonal {j} has wrong slope')
+            def polygon(points):
+                q = pathops.Path(); pen = q.getPen(); pen.moveTo(points[0])
+                for pt in points[1:]: pen.lineTo(pt)
+                pen.closePath(); return q
+            def slope(line):
+                return (line[1][0] - line[0][0]) / (line[1][1] - line[0][1])
+            def strip(line, normal_width, y0=0, y1=None):
+                y1 = height if y1 is None else y1
+                dx = normal_width * math.hypot(1, slope(line)) / 2
+                a, b = line_x(line, y0), line_x(line, y1)
+                return polygon([(a - dx, y0), (a + dx, y0), (b + dx, y1), (b - dx, y1)])
+            def side(line, left):
+                a, b = line_x(line, -3000), line_x(line, 3000)
+                edge = -5000 if left else 5000
+                return polygon([(edge, -3000), (a, -3000), (b, 3000), (edge, 3000)])
+            def shifted(line, dx):
+                return tuple((pt[0] + dx, pt[1]) for pt in line)
+            doubled_lines = [centres[0]] + ([centres[2]] if base == 'w' else [])
+            bands = [strip(line, doubled) for line in doubled_lines]
+            slots = [strip(line, gap, t, height - t) for line in doubled_lines]
+            # Preserve the source's right outside edge; measure its actual slope.
+            edge = ((rows[0][-1][1], ys[0]), (rows[-1][-1][1], ys[-1]))
+            dx = t * math.hypot(1, slope(edge))
+            right_thin = strip(shifted(edge, -dx / 2), t)
+            slots[-1] = intersect(slots[-1], side(shifted(edge, -dx), True))
+            parts = bands + [right_thin]
+            if base == 'w':
+                # Join the source-derived doubled bands corner to corner. The
+                # terminal height is this lowercase w's own central terminal.
+                end0 = line_x(doubled_lines[0], 0) + doubled / 2 * math.hypot(1, slope(doubled_lines[0]))
+                end1 = line_x(doubled_lines[1], height) - doubled / 2 * math.hypot(1, slope(doubled_lines[1]))
+                x0 = end0
+                for _ in range(16):
+                    k = (end1 - x0) / height
+                    x0 = end0 - t * math.hypot(1, k)
+                if abs(x0 + t * math.hypot(1, (end1 - x0) / height) - end0) > .001:
+                    raise ValueError('double-struck lowercase w: corner fit did not converge')
+                thin_edge = ((x0, 0), (end1, height))
+                wd = t * math.hypot(1, slope(thin_edge))
+                middle = strip(shifted(thin_edge, wd / 2), t)
+                parts.append(middle)
+                slots[0] = intersect(slots[0], side(thin_edge, True))
+                slots[1] = intersect(slots[1], side(shifted(thin_edge, wd), False))
+            if not intersect(bands[-1], right_thin).area:
+                raise ValueError(f'double-struck lowercase {base}: detached right hairline')
+            if base == 'w' and any(not intersect(band, middle).area for band in bands):
+                raise ValueError('double-struck lowercase w: detached middle hairline')
+            ink = intersect(union(*parts), side(edge, True))
+            for j, slot in enumerate(slots):
+                if not slot.area or not intersect(slot, ink).area:
+                    raise ValueError(f'double-struck lowercase {base}: empty diagonal slot {j}')
+            result = diff(ink, union(*slots))
+            if len(list(result.contours)) != len(slots) + 1:
+                raise ValueError(f'double-struck lowercase {base}: diagonal slots or joins are not closed')
+        elif base == 'u':
             from fontTools.pens.basePen import BasePen
 
             class LowerPen(BasePen):

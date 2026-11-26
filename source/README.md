@@ -225,9 +225,9 @@ and the copyright notices above are the attribution it asks for.
 
 ## Double-struck lowercase
 
-The initial lowercase set contains b, c, d, h, i, j, l, m, n, o, p, q, and u. The b, d, o, p, and q
-outlines use each style's lowercase contours. The c outline uses the lightest
-Mulish master fitted to the target style's ink bounds. Hairline weight is measured
+The initial lowercase set contains b, c, d, h, i, j, l, m, n, o, p, q, u, v, and w.
+The b, d, o, p, and q outlines use each style's lowercase contours. The c outline
+uses the lightest Mulish master fitted to the target style's ink bounds. Hairline weight is measured
 from the straight ascenders of b and d. Bowls and doubled stems preserve the
 original vertical bounds, including the p and q descenders. Noto Sans Math provides
 the doubled-stroke placement reference. Capital and digit construction is unchanged.
@@ -248,6 +248,12 @@ the source shoulder heights and h ascender.
 The u form has two doubled stems. Its lower connection follows the source
 lower-curve profiles. The left stem slot has a curved bottom; the right stem
 retains a separate baseline foot. Construction preserves the source vertical bounds.
+
+The v form doubles its descending left diagonal. The w form doubles its first
+and third diagonals, counted from left to right. The other diagonals are hairlines.
+Their construction uses measured source lines and the lowercase stroke dimensions.
+The middle hairline of w connects the fitted band corners.
+The source baseline and terminal heights are preserved, including w's central terminal.
 
 ## Mathematical script sources
 
