@@ -1526,6 +1526,13 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
         p = paths[base]; bounds = p.bounds
         if base in ('v', 'w'):
             from fontTools.pens.recordingPen import RecordingPen
+            # Source heavy italics contain crossing diagonal ledges. Measure the
+            # same filled outline as the final overlap cleanup, without changing
+            # the source path or its bounds/advance contract.
+            p = pathops.Path(p)
+            p.simplify(fix_winding=True)
+            if abs(p.bounds[1] - bounds[1]) > .1 or abs(p.bounds[3] - bounds[3]) > .1:
+                raise ValueError(f'double-struck lowercase {base}: canonical vertical bounds changed')
             record = RecordingPen(); p.draw(record)
             vertices = []
             for verb, points in record.value:
@@ -1537,6 +1544,15 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
             if len(vertices) != expected + 1 or len(list(p.contours)) != 1:
                 raise ValueError(f'double-struck lowercase {base}: unexpected source polygon')
             height = bounds[3]
+            # Boolean canonicalization may rotate or reverse the contour. Anchor
+            # the role order at the left baseline corner, then the left terminal.
+            feet = [j for j, point in enumerate(vertices) if abs(point[1]) <= .1]
+            if not feet:
+                raise ValueError(f'double-struck lowercase {base}: missing baseline corner')
+            start = min(feet, key=lambda j: vertices[j][0])
+            vertices = vertices[start:] + vertices[:start]
+            if abs(vertices[1][1] - height) > .1:
+                vertices = vertices[:1] + list(reversed(vertices[1:]))
             count = 2 if base == 'v' else 4
             terminal_indices = (1, 2, 4, 5) if base == 'v' else (1, 2, 4, 5, 7, 8)
             baseline_indices = (0, 6) if base == 'v' else (0, 9, 10, 12)
