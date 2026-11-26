@@ -225,7 +225,7 @@ and the copyright notices above are the attribution it asks for.
 
 ## Double-struck lowercase
 
-The initial lowercase set contains b, c, d, h, i, j, l, m, n, o, p, and q. The b, d, o, p, and q
+The initial lowercase set contains b, c, d, h, i, j, l, m, n, o, p, q, and u. The b, d, o, p, and q
 outlines use each style's lowercase contours. The c outline uses the lightest
 Mulish master fitted to the target style's ink bounds. Hairline weight is measured
 from the straight ascenders of b and d. Bowls and doubled stems preserve the
@@ -243,8 +243,11 @@ same sizing rule as i.
 The h, n, and m forms use doubled vertical bands joined by thin shoulders. Each
 shoulder follows its own source counter-arch profile, fitted between the bands.
 Separate inner and outer profiles define its thickness. Construction preserves
-the source shoulder heights and h ascender. Built-font joins and text-size openings
-await specimen review.
+the source shoulder heights and h ascender.
+
+The u form has two doubled stems. Its lower connection follows the source
+lower-curve profiles. The left stem slot has a curved bottom; the right stem
+retains a separate baseline foot. Construction preserves the source vertical bounds.
 
 ## Mathematical script sources
 

@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q')):
-    """Twelve lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u')):
+    """Thirteen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,100 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base in ('h', 'm', 'n'):
+        if base == 'u':
+            from fontTools.pens.basePen import BasePen
+
+            class LowerPen(BasePen):
+                def __init__(self):
+                    super().__init__(None)
+                    self.segments = []
+                    self.point = None
+
+                def _moveTo(self, point):
+                    self.point = point
+
+                def _lineTo(self, point):
+                    self.segments.append(('L', self.point, point)); self.point = point
+
+                def _qCurveToOne(self, control, point):
+                    self.segments.append(('Q', self.point, control, point)); self.point = point
+
+                def _curveToOne(self, a, b, point):
+                    raise ValueError('double-struck lowercase u: expected quadratic source')
+
+                def _closePath(self):
+                    pass
+
+            pen = LowerPen(); p.draw(pen)
+            segments = pen.segments
+            chains = []
+            nseg = len(segments)
+            for i in range(nseg):
+                chain = [segments[(i + j) % nseg] for j in range(4)]
+                before, after = segments[(i - 1) % nseg], segments[(i + 4) % nseg]
+                if (all(q[0] == 'Q' for q in chain) and before[0] == after[0] == 'L'):
+                    if chain[0][1][0] > chain[-1][-1][0]:
+                        chain = [('Q', q[-1], q[2], q[1]) for q in reversed(chain)]
+                    if any(q[1][0] > q[2][0] + 2 or q[2][0] > q[-1][0] + 2 for q in chain):
+                        raise ValueError('double-struck lowercase u: nonmonotone lower arch')
+                    chains.append(chain)
+            if len(chains) != 2:
+                raise ValueError('double-struck lowercase u: expected two lower quadratic arches')
+            chains.sort(key=lambda chain: min(pt[1] for q in chain for pt in q[1:]))
+            outer_chain, inner_chain = chains
+            bottom = min(pt[1] for q in outer_chain for pt in q[1:])
+            inside_bottom = min(pt[1] for q in inner_chain for pt in q[1:])
+            if abs(bottom - bounds[1]) > .1 or inside_bottom <= bottom:
+                raise ValueError('double-struck lowercase u: invalid lower arch roles')
+            straight = max(inner_chain[0][1][1], inner_chain[-1][-1][1])
+            rows = [sorted(c.hspans(p, straight + f * (bounds[3] - straight))) for f in (.3, .5, .7)]
+            if any(len(row) != 2 for row in rows):
+                raise ValueError('double-struck lowercase u: ambiguous upper stems')
+            left, right = [median([mid(row[j]) for row in rows]) for j in range(2)]
+            if right - left <= doubled + t:
+                raise ValueError('double-struck lowercase u: lower counter clearance exhausted')
+            xleft, xright = left - doubled / 2, right - doubled / 2 + t
+            # Fit the two actual source boundaries independently. The exterior
+            # retains its overshoot; the explicit interior reserves a hairline.
+            def lower_profile(chain, inset):
+                a, b = chain[0][1], chain[-1][-1]
+                low = min(pt[1] for q in chain for pt in q[1:])
+                high = max(a[1], b[1])
+                target_low = bottom + inset
+                target_high = max(outer_chain[0][1][1], outer_chain[-1][-1][1])
+                if high <= low or target_high <= target_low:
+                    raise ValueError('double-struck lowercase u: invalid lower profile height')
+                sx = (xright - xleft - inset) / (b[0] - a[0])
+                sy = (target_high - target_low) / (high - low)
+                def fitpoint(pt):
+                    return (xleft + inset + sx * (pt[0] - a[0]), target_low + sy * (pt[1] - low))
+                q = pathops.Path(); qp = q.getPen()
+                start = fitpoint(a); end = fitpoint(b)
+                qp.moveTo((start[0], bounds[3])); qp.lineTo(start)
+                for seg in chain:
+                    qp.qCurveTo(fitpoint(seg[2]), fitpoint(seg[-1]))
+                qp.lineTo((end[0], bounds[3])); qp.closePath()
+                return q
+            exterior = lower_profile(outer_chain, 0)
+            interior = lower_profile(inner_chain, t)
+            bowl = diff(exterior, interior)
+            if not bowl.area:
+                raise ValueError('double-struck lowercase u: empty lower connection')
+            rails = []
+            for j, x in enumerate((xleft, left + doubled / 2 - t)):
+                r = intersect(rect(x, bottom, x + t, bounds[3]), exterior)
+                if not intersect(r, bowl).area:
+                    raise ValueError(f'double-struck lowercase u: disconnected left rail {j}')
+                rails.append(r)
+            left_stem = union(*rails, rect(xleft, bounds[3] - t, left + doubled / 2, bounds[3]))
+            right_stem = diff(rect(right - doubled / 2, 0, right + doubled / 2, bounds[3]),
+                              rect(right - gap / 2, t, right + gap / 2, bounds[3] - t))
+            if not intersect(bowl, right_stem).area:
+                raise ValueError('double-struck lowercase u: disconnected right stem')
+            result = union(bowl, left_stem, right_stem)
+            if len(list(result.contours)) != 3:
+                raise ValueError('double-struck lowercase u: expected two closed slots')
+        elif base in ('h', 'm', 'n'):
             from fontTools.pens.basePen import BasePen
 
             class ShoulderPen(BasePen):
