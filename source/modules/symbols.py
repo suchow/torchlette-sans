@@ -1554,8 +1554,9 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'o', 'p', 'q')):
                 raise ValueError(f'double-struck lowercase {base}: expected one counter')
             outer, counter = cs
             cb = counter.bounds; ym = (cb[1] + cb[3]) / 2
-            outline = ring(outer); parts = [outline]; cuts = []
+            parts = []; cuts = []
             if base == 'o':
+                outline = ring(outer); parts = [outline]
                 xl, xr = bounds[0] + depth - t, bounds[2] - depth
                 if xr - (xl + t) <= t:
                     raise ValueError('double-struck lowercase o: insufficient centre clearance')
@@ -1572,6 +1573,27 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'o', 'p', 'q')):
                 if len(spans) != 1:
                     raise ValueError(f'double-struck lowercase {base}: ambiguous straight stem')
                 xc = mid(spans[0])
+                # The remote half contains only the bowl, clear of the ascender
+                # or descender. Read its actual vertical extrema before fitting
+                # the source counter's smooth profile to a separate bowl.
+                split = (cb[0] + cb[2]) / 2
+                remote = c.clip(outer, (split, -3000, 3000, 3000) if left
+                                else (-3000, -3000, split, 3000))
+                if not remote.area:
+                    raise ValueError(f'double-struck lowercase {base}: missing remote bowl')
+                bowl_bottom, bowl_top = remote.bounds[1], remote.bounds[3]
+                bowl_left, bowl_right = (xc, bounds[2]) if left else (bounds[0], xc)
+                if bowl_right <= bowl_left or cb[2] <= cb[0] or cb[3] <= cb[1]:
+                    raise ValueError(f'double-struck lowercase {base}: invalid bowl profile')
+                # This prototype preserves the source counter's curve profile,
+                # not the original outer bowl: its stem-side half is concealed
+                # by the doubled band. No concave stem corner is eroded.
+                sx = (bowl_right - bowl_left) / (cb[2] - cb[0])
+                sy = (bowl_top - bowl_bottom) / (cb[3] - cb[1])
+                bowl = c.transformed(counter, (sx, 0, 0, sy,
+                                     bowl_left - sx * cb[0], bowl_bottom - sy * cb[1]))
+                outline = ring(bowl)
+                parts = [outline]
                 band = rect(xc - doubled / 2, y0, xc + doubled / 2, y1)
                 cut = rect(xc - gap / 2, y0 + t, xc + gap / 2, y1 - t)
                 x = bounds[2] - depth if left else bounds[0] + depth - t
