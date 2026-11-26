@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'o', 'p', 'q')):
-    """Six lowercase prototypes using style contours, a fitted light-master c, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'l', 'o', 'p', 'q')):
+    """Eight lowercase forms using style contours, a fitted light-master c, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'o', 'p', 'q')):
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'o', 'p', 'q')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'i', 'l', 'o', 'p', 'q')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,32 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'o', 'p', 'q')):
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base == 'c':
+        if base in ('i', 'l'):
+            cs = contours(p)
+            stem_path = min(cs, key=lambda q: q.bounds[1])
+            sb = stem_path.bounds
+            rows = c.hspans(stem_path, (sb[1] + sb[3]) / 2)
+            if len(rows) != 1:
+                raise ValueError(f'double-struck lowercase {base}: ambiguous stem')
+            xc = mid(rows[0])
+            result = diff(rect(xc - doubled / 2, sb[1], xc + doubled / 2, sb[3]),
+                          rect(xc - gap / 2, sb[1] + t, xc + gap / 2, sb[3] - t))
+            if base == 'i':
+                if len(cs) != 2:
+                    raise ValueError('double-struck lowercase i: expected stem and dot')
+                dot = max(cs, key=lambda q: q.bounds[1]); db = dot.bounds
+                dx, dy = (db[0] + db[2]) / 2, (db[1] + db[3]) / 2
+                # Noto's dot/stem envelope ratio is 176/173. Grow the source dot
+                # around its own centre so its opening follows the stem gap.
+                diameter = max(db[2] - db[0], db[3] - db[1], doubled * 176 / 173)
+                inside = diameter - 2 * t
+                if inside < gap or dy - diameter / 2 <= sb[3] + t:
+                    raise ValueError('double-struck lowercase i: dot clearance exhausted')
+                def dot_profile(size):
+                    sx, sy = size / (db[2] - db[0]), size / (db[3] - db[1])
+                    return c.transformed(dot, (sx, 0, 0, sy, dx - sx * dx, dy - sy * dy))
+                result = union(result, diff(dot_profile(diameter), dot_profile(inside)))
+        elif base == 'c':
             # Fit the designer's lightest c, preserving its open terminals.
             q = _master(c)['path']('c'); qb = q.bounds
             sx, sy = (bounds[2] - bounds[0]) / (qb[2] - qb[0]), (bounds[3] - bounds[1]) / (qb[3] - qb[1])
@@ -1618,7 +1643,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'o', 'p', 'q')):
                 parts.extend((band, rail(outline, x, ym))); cuts.append(cut)
             result = diff(union(*parts), union(*cuts)) if cuts else union(*parts)
         rb = result.bounds
-        if abs(rb[1] - bounds[1]) > 0.1 or abs(rb[3] - bounds[3]) > 0.1:
+        if abs(rb[1] - bounds[1]) > 0.1 or (base != 'i' and abs(rb[3] - bounds[3]) > 0.1):
             raise ValueError(f'double-struck lowercase {base}: vertical bounds changed')
         result = c.mv(result, bounds[0] - rb[0])
         out[base] = (result, c.W(base) + (rb[2] - rb[0]) - (bounds[2] - bounds[0]))
