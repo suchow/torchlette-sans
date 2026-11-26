@@ -1561,10 +1561,10 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'i', 'j', 'l', 'o', 'p', 'q'
                 if not hook_spans:
                     raise ValueError('double-struck lowercase j: rail misses hook')
                 hook = max(hook_spans, key=lambda v: v[1])
-                rail = rect(rail_x, mid(hook), rail_x + t, sb[3])
-                if not intersect(rail, body).area:
+                j_rail = rect(rail_x, mid(hook), rail_x + t, sb[3])
+                if not intersect(j_rail, body).area:
                     raise ValueError('double-struck lowercase j: rail has no hook overlap')
-                result = union(body, rail, rect(rail_x, sb[3] - t, xr, sb[3]))
+                result = union(body, j_rail, rect(rail_x, sb[3] - t, xr, sb[3]))
                 slot_spans = c.hspans(result, straight_y)
                 if len(slot_spans) != 2 or slot_spans[1][0] - slot_spans[0][1] <= 0:
                     raise ValueError('double-struck lowercase j: slot is not open')
