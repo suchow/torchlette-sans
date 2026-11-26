@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'x', 'z')):
-    """Seventeen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'x', 'y', 'z')):
+    """Eighteen lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'x', 'z')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'u', 'v', 'w', 'x', 'y', 'z')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,115 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'l', 'm', 'n'
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base == 'x':
+        if base == 'y':
+            from fontTools.pens.basePen import BasePen
+
+            class TailPen(BasePen):
+                def __init__(self):
+                    super().__init__(None)
+                    self.segments = []
+                    self.point = self.start = None
+
+                def _moveTo(self, point):
+                    self.point = self.start = point
+
+                def _lineTo(self, point):
+                    self.segments.append(('L', self.point, point)); self.point = point
+
+                def _qCurveToOne(self, control, point):
+                    self.segments.append(('Q', self.point, control, point)); self.point = point
+
+                def _curveToOne(self, a, b, point):
+                    raise ValueError('double-struck lowercase y: expected quadratic descender')
+
+                def _closePath(self):
+                    if self.point != self.start:
+                        self._lineTo(self.start)
+
+            canonical = pathops.Path(p); canonical.simplify(fix_winding=True)
+            pen = TailPen(); canonical.draw(pen)
+            segs = pen.segments; chains = []
+            for j, seg in enumerate(segs):
+                if seg[0] != 'Q' or segs[(j - 1) % len(segs)][0] == 'Q':
+                    continue
+                chain = []; k = j
+                while segs[k % len(segs)][0] == 'Q':
+                    chain.append(segs[k % len(segs)]); k += 1
+                    if k - j > len(segs):
+                        raise ValueError('double-struck lowercase y: cyclic curve chain')
+                chains.append(chain)
+            if sorted(len(chain) for chain in chains) != [3, 4] or len(list(canonical.contours)) != 1:
+                raise ValueError('double-struck lowercase y: unexpected descender chains')
+            outer = next(chain for chain in chains if len(chain) == 4)
+            if outer[0][1][1] > outer[-1][-1][1]:
+                outer = [('Q', q[-1], q[2], q[1]) for q in reversed(outer)]
+            tail_tip, attachment = outer[0][1], outer[-1][-1]
+            if abs(tail_tip[1] - bounds[1]) > .1 or attachment[1] >= 0 or bounds[1] >= 0:
+                raise ValueError('double-struck lowercase y: invalid outer descender roles')
+            continuations = []
+            for seg in segs:
+                if seg[0] != 'L': continue
+                if math.dist(seg[1], attachment) < .01: continuations.append(seg[-1])
+                elif math.dist(seg[-1], attachment) < .01: continuations.append(seg[1])
+            if len(continuations) != 1 or abs(continuations[0][1] - bounds[3]) > .1:
+                raise ValueError('double-struck lowercase y: missing right terminal edge')
+            right_tip = continuations[0]
+            boundary = pathops.Path(); bp = boundary.getPen(); bp.moveTo(tail_tip)
+            for q in outer: bp.qCurveTo(q[2], q[-1])
+            bp.lineTo(right_tip); bp.endPath()
+            # Only this outside boundary is stroked. Intersecting the
+            # source selects its inward half without eroding concave junctions.
+            stroke = pathops.Path(boundary)
+            stroke.stroke(2 * t, pathops.LineCap.BUTT_CAP, pathops.LineJoin.ROUND_JOIN, 4)
+            stroke.convertConicsToQuads(); stroke.simplify()
+            hairline = intersect(stroke, p)
+            if len(list(hairline.contours)) != 1:
+                raise ValueError('double-struck lowercase y: discontinuous right hairline')
+            # Verify that the source supplies the inward thickness along every
+            # extracted quadratic, not merely at its bounding box.
+            for j, q in enumerate(outer):
+                a, control, b = q[1:]
+                for u in (.25, .5, .75):
+                    v = 1 - u
+                    pt = (v*v*a[0] + 2*v*u*control[0] + u*u*b[0],
+                          v*v*a[1] + 2*v*u*control[1] + u*u*b[1])
+                    tangent = (2*(v*(control[0]-a[0])+u*(b[0]-control[0])),
+                               2*(v*(control[1]-a[1])+u*(b[1]-control[1])))
+                    length = math.hypot(*tangent)
+                    if length <= 0:
+                        raise ValueError('double-struck lowercase y: degenerate tail tangent')
+                    nx, ny = -tangent[1]/length, tangent[0]/length
+                    if not any(p.contains((pt[0]+sign*t*nx, pt[1]+sign*t*ny)) for sign in (-1, 1)):
+                        raise ValueError(f'double-struck lowercase y: exhausted source tail thickness at curve {j}')
+            height = bounds[3]
+            upper_join = max(seg[1][1] for seg in segs if seg[0] == 'L' and 0 < seg[1][1] < height)
+            ys = [upper_join + f*(height-upper_join) for f in (.25, .5, .75)]
+            rows = [c.hspans(p,y) for y in ys]
+            if any(len(row) != 2 for row in rows):
+                raise ValueError('double-struck lowercase y: ambiguous upper arms')
+            right_slope = (right_tip[0] - attachment[0]) / (right_tip[1] - attachment[1])
+            if any(width(row[-1]) / math.hypot(1, right_slope) < t for row in rows):
+                raise ValueError('double-struck lowercase y: exhausted right-arm thickness')
+            k = (mid(rows[-1][0])-mid(rows[0][0]))/(ys[-1]-ys[0])
+            xzero = mid(rows[0][0])-k*ys[0]
+            if k >= 0 or abs(xzero+k*ys[1]-mid(rows[1][0])) > 1:
+                raise ValueError('double-struck lowercase y: invalid left diagonal')
+            def diagonal(normal_width, y0, y1):
+                xa, xb = xzero+k*y0, xzero+k*y1
+                dx = normal_width*math.hypot(1,k)/2
+                q = pathops.Path(); qp=q.getPen(); qp.moveTo((xa-dx,y0)); qp.lineTo((xa+dx,y0))
+                qp.lineTo((xb+dx,y1)); qp.lineTo((xb-dx,y1)); qp.closePath(); return q
+            band = diagonal(doubled,0,height)
+            slot = diagonal(gap,t,height-t)
+            if not intersect(band,hairline).area:
+                raise ValueError('double-struck lowercase y: disconnected arm/descender junction')
+            ink = union(band,hairline)
+            if not slot.area or abs(diff(slot,ink).area) > .01:
+                raise ValueError('double-struck lowercase y: unenclosed left slot')
+            result = diff(ink,slot)
+            if len(list(result.contours)) != 2 or not intersect(diff(band,slot),diff(hairline,slot)).area:
+                raise ValueError('double-struck lowercase y: slot or junction is not closed')
+        elif base == 'x':
             from fontTools.pens.recordingPen import RecordingPen
             p = pathops.Path(p); p.simplify(fix_winding=True)
             if any(abs(p.bounds[j] - bounds[j]) > .1 for j in (1, 3)):
