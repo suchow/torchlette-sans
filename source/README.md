@@ -225,7 +225,7 @@ and the copyright notices above are the attribution it asks for.
 
 ## Double-struck lowercase
 
-The initial lowercase set contains b, c, d, e, f, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, and z.
+The initial lowercase set contains a, b, c, d, e, f, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, and z.
 The b, d, o, p, and q outlines use each style's lowercase contours. The c outline
 uses the lightest Mulish master fitted to the target style's ink bounds. Hairline weight is measured
 from the straight ascenders of b and d. Bowls and doubled stems preserve the
@@ -299,6 +299,11 @@ The e form follows each style's outside bowl curve as a hairline. An upright
 inline joins the upper and lower curves. The hairline crossbar begins at the
 inline's right edge below the source eye floor. The left slot continues through
 the crossbar level. Construction preserves the source vertical bounds.
+
+The a form retains the single-storey design. Its bowl follows the style's source
+counter profile, fitted to the original bowl height and the doubled right stem.
+The stem has a closed slot and ends at its source cap height. Noto Sans Math's
+two-storey a supplies the right-stem doubling reference.
 
 ## Mathematical script sources
 
