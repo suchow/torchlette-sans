@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')):
-    """Twenty-three lowercase forms using style contours, fitted light-master c, j, and s outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')):
+    """Twenty-four lowercase forms using style contours, fitted light-master c, j, and s outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,100 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l'
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base == 'f':
+        if base == 'e':
+            from fontTools.pens.basePen import BasePen
+
+            class ECurvePen(BasePen):
+                def __init__(self):
+                    super().__init__(None); self.segments=[]; self.point=self.start=None
+                def _moveTo(self, point): self.point=self.start=point
+                def _lineTo(self, point):
+                    self.segments.append(('L',self.point,point)); self.point=point
+                def _qCurveToOne(self, control, point):
+                    self.segments.append(('Q',self.point,control,point)); self.point=point
+                def _curveToOne(self, a, b, point):
+                    raise ValueError('double-struck lowercase e: unexpected cubic curve')
+                def _closePath(self):
+                    if math.dist(self.point,self.start)>.01: self._lineTo(self.start)
+
+            cs=contours(p)
+            if len(cs)!=2:
+                raise ValueError('double-struck lowercase e: expected one source eye')
+            record=ECurvePen(); cs[0].draw(record); segs=record.segments
+            height=bounds[3]-bounds[1]; ink_width=bounds[2]-bounds[0]
+            bar_lines=[i for i,seg in enumerate(segs) if seg[0]=='L'
+                       and abs(seg[1][1]-seg[-1][1])<.01
+                       and seg[-1][0]-seg[1][0]>.5*ink_width]
+            if len(bar_lines)!=1:
+                raise ValueError('double-struck lowercase e: ambiguous crossbar underside')
+            i=(bar_lines[0]+1)%len(segs)
+            for _ in range(3):
+                if segs[i][0]=='Q': break
+                i=(i+1)%len(segs)
+            if segs[i][0]!='Q':
+                raise ValueError('double-struck lowercase e: missing outside bowl start')
+            outer=[]
+            while segs[i][0]=='Q' and len(outer)<len(segs):
+                outer.append(segs[i]); i=(i+1)%len(segs)
+            if not outer or len(outer)==len(segs):
+                raise ValueError('double-struck lowercase e: missing terminal cut')
+            cap=segs[i]; tip=outer[-1][-1]
+            if cap[0]!='L' or math.dist(cap[1],tip)>.01 or tip[0]<bounds[0]+.5*ink_width:
+                raise ValueError('double-struck lowercase e: invalid lower terminal')
+            boundary=pathops.Path(); pen=boundary.getPen(); pen.moveTo(outer[0][1])
+            for seg in outer: pen.qCurveTo(seg[2],seg[-1])
+            tangent=(tip[0]-outer[-1][2][0],tip[1]-outer[-1][2][1]); length=math.hypot(*tangent)
+            if length<=0:
+                raise ValueError('double-struck lowercase e: degenerate terminal tangent')
+            pen.lineTo((tip[0]+2*t*tangent[0]/length,tip[1]+2*t*tangent[1]/length)); pen.endPath()
+            stroke=pathops.Path(boundary)
+            stroke.stroke(2*t,pathops.LineCap.BUTT_CAP,pathops.LineJoin.ROUND_JOIN,4)
+            stroke.convertConicsToQuads(); stroke.simplify()
+            outline=intersect(stroke,p)
+            if len(list(outline.contours))!=1:
+                raise ValueError('double-struck lowercase e: discontinuous outside bowl')
+            eye=cs[1].bounds; floor=eye[1]; top_probe=(eye[0]+eye[2])/2
+            bars=[span for span in c.vspans(p,top_probe) if abs(span[1]-floor)<1.5]
+            if len(bars)!=1:
+                raise ValueError('double-struck lowercase e: ambiguous source crossbar')
+            bar_lo,bar_hi=bars[0]; source_thickness=bar_hi-bar_lo
+            if outer[0][1][1]<floor-t:
+                raise ValueError('double-struck lowercase e: outside bowl hangs below rebuilt bar')
+            probe_delta=min(15,source_thickness-2)
+            if probe_delta<=1:
+                raise ValueError('double-struck lowercase e: crossbar too thin to measure')
+            right0=c.hspans(p,bar_lo+1)[-1][1]
+            right1=c.hspans(p,bar_lo+probe_delta)[-1][1]
+            lean=(right1-right0)/(probe_delta-1)
+            right_at=lambda y:right0+(y-bar_lo-1)*lean
+            x=bounds[0]+depth-t
+            spans=c.vspans(outline,x+t/2)
+            below=[span for span in spans if span[1]<floor-t]
+            above=[span for span in spans if span[0]>floor]
+            if not below or not above:
+                raise ValueError('double-struck lowercase e: inline does not span both bowls')
+            lo,hi=max(below,key=lambda span:span[1]),min(above,key=lambda span:span[0])
+            if floor-t-lo[1]<=t or hi[0]-floor<=t or eye[2]-(x+t)<=t:
+                raise ValueError('double-struck lowercase e: exhausted bowl or right-eye clearance')
+            chord=rect(x,mid(lo),x+t,mid(hi))
+            for edge in (lo,hi):
+                if not all(outline.contains((x+fraction*t,mid(edge))) for fraction in (.05,.95)):
+                    raise ValueError('double-struck lowercase e: inline endpoint exceeds curved stroke')
+            bar=pathops.Path(); bp=bar.getPen()
+            bp.moveTo((x+t,floor-t)); bp.lineTo((right_at(floor-t),floor-t))
+            bp.lineTo((right_at(floor),floor)); bp.lineTo((x+t,floor)); bp.closePath()
+            if not intersect(outline,bar).area:
+                raise ValueError('double-struck lowercase e: crossbar misses outside bowl')
+            result=union(outline,chord,bar)
+            pieces=sorted(result.contours,key=lambda piece:-abs(piece.area))
+            if len(pieces)!=3 or any(piece.clockwise==pieces[0].clockwise for piece in pieces[1:]):
+                raise ValueError('double-struck lowercase e: expected one outer contour and two counters')
+            for y in (floor-1.5*t,floor-.5*t,floor+.5*t):
+                spans=c.hspans(result,y)
+                left=[span for span in spans if span[1]<x+.1*t]
+                if not left or x-max(span[1] for span in left)<=t:
+                    raise ValueError('double-struck lowercase e: left slot closes at crossbar')
+        elif base == 'f':
             from fontTools.pens.basePen import BasePen
 
             class HeadPen(BasePen):
