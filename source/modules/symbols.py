@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 't', 'u', 'v', 'w', 'x', 'y', 'z')):
-    """Twenty-two lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')):
+    """Twenty-three lowercase forms using style contours, fitted light-master c, j, and s outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 't', 'u', 'v', 'w', 'x', 'y', 'z')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -2532,6 +2532,64 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l'
                     sx, sy = size / (db[2] - db[0]), size / (db[3] - db[1])
                     return c.transformed(dot, (sx, 0, 0, sy, dx - sx * dx, dy - sy * dy))
                 result = union(result, diff(dot_profile(diameter), dot_profile(inside)))
+        elif base == 's':
+            # The lowercase designer's light master supplies the waist and both
+            # terminal cuts. The two added chords follow Noto's opposite bowls.
+            q = _master(c)['path']('s'); qb = q.bounds
+            sx, sy = (bounds[2] - bounds[0]) / (qb[2] - qb[0]), (bounds[3] - bounds[1]) / (qb[3] - qb[1])
+            q = c.transformed(q, (sx, 0, 0, sy, bounds[0] - sx * qb[0], bounds[1] - sy * qb[1]))
+            height = bounds[3] - bounds[1]
+            samples = []
+            for side, fractions in ((0, (.62, .68, .74, .80)), (-1, (.20, .26, .32, .38))):
+                for fraction in fractions:
+                    spans = c.hspans(q, bounds[1] + fraction * height)
+                    if not spans:
+                        raise ValueError('double-struck lowercase s: missing curved stroke')
+                    samples.append(width(spans[side]))
+            delta = (t - median(samples)) / 2
+            if delta < 0:
+                q = eroded(q, -delta)
+            elif delta > 0:
+                stroke = pathops.Path(q)
+                stroke.stroke(2 * delta, pathops.LineCap.ROUND_CAP, pathops.LineJoin.ROUND_JOIN, 4)
+                stroke.convertConicsToQuads(); stroke.simplify(); q = union(q, stroke)
+            qb = q.bounds
+            sx, sy = (bounds[2] - bounds[0]) / (qb[2] - qb[0]), (bounds[3] - bounds[1]) / (qb[3] - qb[1])
+            outline = c.transformed(q, (sx, 0, 0, sy, bounds[0] - sx * qb[0], bounds[1] - sy * qb[1]))
+            parts = [outline]
+            for upper in (True, False):
+                low, high = ((.55, .90) if upper else (.10, .45))
+                edges = []
+                for i in range(25):
+                    y = bounds[1] + height * (low + (high - low) * i / 24)
+                    spans = c.hspans(outline, y)
+                    if spans:
+                        edges.append(spans[0][0] if upper else spans[-1][1])
+                if not edges:
+                    raise ValueError('double-struck lowercase s: missing bowl side')
+                x = min(edges) + depth - t if upper else max(edges) - depth
+                target = bounds[1] + height * (.73 if upper else .27)
+                spans = c.vspans(outline, x + t / 2)
+                below = [span for span in spans if span[1] < target]
+                above = [span for span in spans if span[0] > target]
+                if not below or not above:
+                    raise ValueError('double-struck lowercase s: chord does not cross its bowl')
+                lo, hi = max(below, key=lambda span: span[1]), min(above, key=lambda span: span[0])
+                if (upper and lo[1] <= bounds[1] + .5 * height) or (not upper and hi[0] >= bounds[1] + .5 * height):
+                    raise ValueError('double-struck lowercase s: chord opening crosses the waist')
+                if hi[0] - lo[1] <= t:
+                    raise ValueError('double-struck lowercase s: exhausted bowl opening')
+                chord = rect(x, mid(lo), x + t, mid(hi))
+                for edge in (lo, hi):
+                    if not all(outline.contains((x + fraction * t, mid(edge))) for fraction in (.05, .95)):
+                        raise ValueError('double-struck lowercase s: chord endpoint exceeds its curved stroke')
+                    if not intersect(c.clip(chord, (-3000, edge[0], 3000, edge[1])), outline).area:
+                        raise ValueError('double-struck lowercase s: disconnected chord')
+                parts.append(chord)
+            result = union(*parts)
+            pieces = sorted(result.contours, key=lambda piece: -abs(piece.area))
+            if len(pieces) != 3 or any(piece.clockwise == pieces[0].clockwise for piece in pieces[1:]):
+                raise ValueError('double-struck lowercase s: expected one outer contour and two closed slots')
         elif base == 'c':
             # Fit the designer's lightest c, preserving its open terminals.
             q = _master(c)['path']('c'); qb = q.bounds
