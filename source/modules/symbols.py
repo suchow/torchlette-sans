@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 't', 'u', 'v', 'w', 'x', 'y', 'z')):
-    """Twenty-one lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 't', 'u', 'v', 'w', 'x', 'y', 'z')):
+    """Twenty-two lowercase forms using style contours, fitted light-master c and j outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'k', 'l', 'm'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 't', 'u', 'v', 'w', 'x', 'y', 'z')}
+    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 't', 'u', 'v', 'w', 'x', 'y', 'z')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,98 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'h', 'i', 'j', 'k', 'l', 'm'
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base == 't':
+        if base == 'f':
+            from fontTools.pens.basePen import BasePen
+
+            class HeadPen(BasePen):
+                def __init__(self):
+                    super().__init__(None); self.segments=[]; self.point=self.start=None
+                def _moveTo(self,point): self.point=self.start=point
+                def _lineTo(self,point):
+                    self.segments.append(('L',self.point,point)); self.point=point
+                def _qCurveToOne(self,control,point):
+                    self.segments.append(('Q',self.point,control,point)); self.point=point
+                def _curveToOne(self,a,b,point):
+                    raise ValueError('double-struck lowercase f: expected quadratic head')
+                def _closePath(self):
+                    if self.point!=self.start: self._lineTo(self.start)
+
+            canonical=pathops.Path(p); canonical.simplify(fix_winding=True)
+            pen=HeadPen(); canonical.draw(pen); segs=pen.segments; chains=[]
+            for j,seg in enumerate(segs):
+                if seg[0]!='Q' or segs[(j-1)%len(segs)][0]=='Q': continue
+                chain=[]; k=j
+                while segs[k%len(segs)][0]=='Q':
+                    chain.append(segs[k%len(segs)]); k+=1
+                    if k-j>len(segs): raise ValueError('double-struck lowercase f: cyclic head')
+                chains.append(chain)
+            if len(list(canonical.contours))!=1 or sorted(len(chain) for chain in chains)!=[4,5]:
+                raise ValueError('double-struck lowercase f: unexpected upper curve contract')
+            outer=next(chain for chain in chains if len(chain)==4)
+            inner=next(chain for chain in chains if chain is not outer)
+            if outer[0][1][0]>outer[-1][-1][0]:
+                outer=[('Q',q[-1],q[2],q[1]) for q in reversed(outer)]
+            root,tip=outer[0][1],outer[-1][-1]
+            if abs(max(pt[1] for q in outer for pt in q[1:])-bounds[3])>.1:
+                raise ValueError('double-struck lowercase f: missing source upper overshoot')
+            horizontals=[seg for seg in segs if seg[0]=='L' and abs(seg[1][1]-seg[-1][1])<.01 and seg[1][1]>.1]
+            levels=sorted(set(round(seg[1][1],5) for seg in horizontals))
+            if len(horizontals)!=4 or len(levels)!=2:
+                raise ValueError('double-struck lowercase f: ambiguous crossbar')
+            barbottom,bartop=levels
+            barleft=min(pt[0] for seg in horizontals for pt in seg[1:])
+            barright=max(pt[0] for seg in horizontals for pt in seg[1:])
+            if not 0<barbottom<bartop<root[1]<bounds[3] or bounds[1]!=0:
+                raise ValueError('double-struck lowercase f: invalid stem/crossbar roles')
+            rows=[c.hspans(p,barbottom*f) for f in (.25,.5,.75)]
+            if any(len(row)!=1 for row in rows):
+                raise ValueError('double-struck lowercase f: ambiguous straight stem')
+            xc=median([mid(row[0]) for row in rows]); left,right=xc-doubled/2,xc+doubled/2
+            if max(mid(row[0]) for row in rows)-min(mid(row[0]) for row in rows)>1:
+                raise ValueError('double-struck lowercase f: nonstraight stem')
+            sx=(tip[0]-left)/(tip[0]-root[0])
+            if sx<=0 or right+t>=tip[0] or barleft>=left or barright<=right:
+                raise ValueError('double-struck lowercase f: exhausted head/crossbar clearance')
+            fit=lambda pt:(left+sx*(pt[0]-root[0]),pt[1])
+            fitted=c.transformed(p,(sx,0,0,1,left-sx*root[0],0))
+            boundary=pathops.Path(); bp=boundary.getPen(); bp.moveTo(fit(root))
+            for q in outer: bp.qCurveTo(fit(q[2]),fit(q[-1]))
+            tangent=(sx*(tip[0]-outer[-1][2][0]),tip[1]-outer[-1][2][1]); length=math.hypot(*tangent)
+            if length<=0: raise ValueError('double-struck lowercase f: degenerate terminal tangent')
+            end=fit(tip); bp.lineTo((end[0]+2*t*tangent[0]/length,end[1]+2*t*tangent[1]/length)); bp.endPath()
+            stroke=pathops.Path(boundary); stroke.stroke(2*t,pathops.LineCap.BUTT_CAP,pathops.LineJoin.ROUND_JOIN,4)
+            stroke.convertConicsToQuads(); stroke.simplify()
+            head=c.clip(intersect(stroke,fitted),(left,bartop,3000,bounds[3]))
+            if len(list(head.contours))!=1:
+                raise ValueError('double-struck lowercase f: discontinuous head hairline')
+            for j,q in enumerate(outer):
+                a,control,b=map(fit,q[1:])
+                for u in (.25,.5,.75):
+                    v=1-u; pt=(v*v*a[0]+2*v*u*control[0]+u*u*b[0],v*v*a[1]+2*v*u*control[1]+u*u*b[1])
+                    dx=2*(v*(control[0]-a[0])+u*(b[0]-control[0])); dy=2*(v*(control[1]-a[1])+u*(b[1]-control[1]))
+                    length=math.hypot(dx,dy)
+                    if length<=0 or not any(fitted.contains((pt[0]-sign*t*dy/length,pt[1]+sign*t*dx/length)) for sign in (-1,1)):
+                        raise ValueError(f'double-struck lowercase f: exhausted fitted head thickness at curve {j}')
+            silhouette=pathops.Path(); qp=silhouette.getPen(); qp.moveTo((left,0)); qp.lineTo(fit(root))
+            for q in outer: qp.qCurveTo(fit(q[2]),fit(q[-1]))
+            qp.lineTo((end[0],0)); qp.closePath()
+            left_rail=intersect(rect(left,0,left+t,bounds[3]),silhouette)
+            right_rail=intersect(rect(right-t,0,right,bounds[3]),silhouette)
+            baseline_cap=rect(left,0,right,t)
+            # Separate bar arms preserve the stem opening through the crossbar.
+            bar_left=rect(barleft,bartop-t,left+t,bartop)
+            bar_right=rect(right-t,bartop-t,barright,bartop)
+            parts=(head,left_rail,right_rail,baseline_cap,bar_left,bar_right)
+            for j,rail in enumerate((left_rail,right_rail)):
+                if not intersect(rail,head).area or not intersect(rail,baseline_cap).area:
+                    raise ValueError(f'double-struck lowercase f: disconnected rail {j}')
+            if not intersect(bar_left,left_rail).area or not intersect(bar_right,right_rail).area:
+                raise ValueError('double-struck lowercase f: disconnected crossbar')
+            result=union(*parts)
+            barspans=c.hspans(result,bartop-t/2)
+            if len(list(result.contours))!=2 or len(barspans)!=2 or barspans[1][0]-barspans[0][1]<gap-.1:
+                raise ValueError('double-struck lowercase f: slot closure or crossbar opening failed')
+        elif base == 't':
             from fontTools.pens.basePen import BasePen
 
             class FootPen(BasePen):
