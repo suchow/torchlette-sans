@@ -1606,8 +1606,8 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l'
             bar_left=rect(barleft,bartop-t,left+t,bartop)
             bar_right=rect(right-t,bartop-t,barright,bartop)
             parts=(head,left_rail,right_rail,baseline_cap,bar_left,bar_right)
-            for j,rail in enumerate((left_rail,right_rail)):
-                if not intersect(rail,head).area or not intersect(rail,baseline_cap).area:
+            for j,stem_rail in enumerate((left_rail,right_rail)):
+                if not intersect(stem_rail,head).area or not intersect(stem_rail,baseline_cap).area:
                     raise ValueError(f'double-struck lowercase f: disconnected rail {j}')
             if not intersect(bar_left,left_rail).area or not intersect(bar_right,right_rail).area:
                 raise ValueError('double-struck lowercase f: disconnected crossbar')
@@ -1708,8 +1708,8 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'f', 'h', 'i', 'j', 'k', 'l'
             bar_left=rect(barleft,bartop-t,left+t,bartop)
             bar_right=rect(right-t,bartop-t,barright,bartop)
             parts=(foot,left_rail,right_rail,top_cap,bar_left,bar_right)
-            for j,rail in enumerate((left_rail,right_rail)):
-                if not intersect(rail,foot).area or not intersect(rail,top_cap).area:
+            for j,stem_rail in enumerate((left_rail,right_rail)):
+                if not intersect(stem_rail,foot).area or not intersect(stem_rail,top_cap).area:
                     raise ValueError(f'double-struck lowercase t: disconnected rail {j}')
             if not intersect(bar_left,left_rail).area or not intersect(bar_right,right_rail).area:
                 raise ValueError('double-struck lowercase t: disconnected crossbar')
