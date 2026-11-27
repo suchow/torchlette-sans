@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('a', 'b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')):
-    """Twenty-five lowercase forms using style contours, fitted light-master c, j, and s outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')):
+    """Twenty-six lowercase forms using style contours, fitted light-master c, j, and s outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('a', 'b', 'c', 'd', 'e', 'f', 'h', 'i', 'j'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('a', 'b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')}
+    paths = {base: c.path_of(base) for base in ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1671,6 +1671,102 @@ def doublestruck_lowercase(c, which=('a', 'b', 'c', 'd', 'e', 'f', 'h', 'i', 'j'
                 left=[span for span in spans if span[1]<x+.1*t]
                 if not left or x-max(span[1] for span in left)<=t:
                     raise ValueError('double-struck lowercase e: left slot closes at crossbar')
+        elif base == 'g':
+            from fontTools.pens.basePen import BasePen
+
+            class GHookPen(BasePen):
+                def __init__(self):
+                    super().__init__(None); self.segments=[]; self.point=self.start=None
+                def _moveTo(self, point): self.point=self.start=point
+                def _lineTo(self, point): self.segments.append(('L',self.point,point)); self.point=point
+                def _qCurveToOne(self, control, point):
+                    self.segments.append(('Q',self.point,control,point)); self.point=point
+                def _curveToOne(self, a, b, point):
+                    raise ValueError('double-struck lowercase g: unexpected cubic curve')
+                def _closePath(self):
+                    if math.dist(self.point,self.start)>.01: self._lineTo(self.start)
+
+            canonical=pathops.Path(p); canonical.simplify(fix_winding=True)
+            cs=contours(canonical)
+            if len(cs)!=2:
+                raise ValueError('double-struck lowercase g: expected one source counter')
+            outer,counter=cs; cb=counter.bounds
+            record=GHookPen(); outer.draw(record); segs=record.segments; chains=[]
+            for j,seg in enumerate(segs):
+                if seg[0]!='Q' or segs[(j-1)%len(segs)][0]=='Q': continue
+                chain=[]; k=j
+                while segs[k%len(segs)][0]=='Q':
+                    chain.append(segs[k%len(segs)]); k+=1
+                    if k-j>len(segs): raise ValueError('double-struck lowercase g: cyclic source curve')
+                chains.append(chain)
+            hook=min(chains,key=lambda chain:min(pt[1] for seg in chain for pt in seg[1:]))
+            if hook[0][1][0]<hook[-1][-1][0]:
+                hook=[('Q',seg[-1],seg[2],seg[1]) for seg in reversed(hook)]
+            root,tip=hook[0][1],hook[-1][-1]
+            if abs(min(pt[1] for seg in hook for pt in seg[1:])-bounds[1])>.1 or root[1]>=cb[1]:
+                raise ValueError('double-struck lowercase g: invalid outside descender curve')
+            caps=[seg for seg in segs if seg[0]=='L' and abs(seg[1][1]-seg[-1][1])<.01
+                  and seg[1][1]>.8*c.XH and min(pt[0] for pt in seg[1:])>(cb[0]+cb[2])/2]
+            if len(caps)!=1:
+                raise ValueError('double-struck lowercase g: ambiguous source cap')
+            cap=caps[0]; cap_y=cap[1][1]; xc=(cap[1][0]+cap[-1][0])/2
+            left,right=xc-doubled/2,xc+doubled/2
+            sx=(right-tip[0])/(root[0]-tip[0])
+            if sx<=0 or left<=tip[0]+t or cap_y<=cb[3]:
+                raise ValueError('double-struck lowercase g: exhausted hook or cap clearance')
+            fit=lambda pt:(tip[0]+sx*(pt[0]-tip[0]),pt[1])
+            fitted=c.transformed(p,(sx,0,0,1,tip[0]*(1-sx),0))
+            boundary=pathops.Path(); pen=boundary.getPen(); pen.moveTo(fit(root))
+            for seg in hook: pen.qCurveTo(fit(seg[2]),fit(seg[-1]))
+            tangent=(sx*(tip[0]-hook[-1][2][0]),tip[1]-hook[-1][2][1]); length=math.hypot(*tangent)
+            if length<=0: raise ValueError('double-struck lowercase g: degenerate terminal tangent')
+            end=fit(tip); pen.lineTo((end[0]+2*t*tangent[0]/length,end[1]+2*t*tangent[1]/length)); pen.endPath()
+            stroke=pathops.Path(boundary); stroke.stroke(2*t,pathops.LineCap.BUTT_CAP,pathops.LineJoin.ROUND_JOIN,4)
+            stroke.convertConicsToQuads(); stroke.simplify()
+            hook_top=min(cb[1]-t,max(0,root[1])+t)
+            foot=c.clip(intersect(stroke,fitted),(-3000,bounds[1],right,hook_top))
+            if len(list(foot.contours))!=1:
+                raise ValueError('double-struck lowercase g: discontinuous fitted hook')
+            silhouette=pathops.Path(); pen=silhouette.getPen(); pen.moveTo((right,cap_y)); pen.lineTo(fit(root))
+            for seg in hook: pen.qCurveTo(fit(seg[2]),fit(seg[-1]))
+            pen.lineTo((end[0],cap_y)); pen.closePath()
+            stem_parts=[]
+            for j,rail_x in enumerate((left,right-t)):
+                stem_rail=intersect(rect(rail_x,bounds[1],rail_x+t,cap_y),silhouette)
+                if not intersect(stem_rail,foot).area:
+                    raise ValueError(f'double-struck lowercase g: disconnected hook rail {j}')
+                stem_parts.append(stem_rail)
+            top_cap=rect(left,cap_y-t,right,cap_y)
+            crowns=[chain for chain in chains if abs(max(pt[1] for seg in chain for pt in seg[1:])-bounds[3])<.1]
+            if len(crowns)!=1:
+                raise ValueError('double-struck lowercase g: ambiguous source bowl curve')
+            crown=crowns[0]; bowl_shape=pathops.Path(); pen=bowl_shape.getPen(); pen.moveTo(crown[0][1])
+            for seg in crown: pen.qCurveTo(seg[2],seg[-1])
+            pen.closePath(); bb=bowl_shape.bounds
+            sx_b=(xc-bounds[0])/(cb[2]-cb[0]); sy_b=(bb[3]-bb[1])/(cb[3]-cb[1])
+            bowl=c.transformed(counter,(sx_b,0,0,sy_b,bounds[0]-sx_b*cb[0],bb[1]-sy_b*cb[1]))
+            if bowl.clockwise!=outer.clockwise: bowl.reverse()
+            bb=bowl.bounds; bw,bh=bb[2]-bb[0],bb[3]-bb[1]
+            if min(bw,bh)<=2*t:
+                raise ValueError('double-struck lowercase g: exhausted bowl opening')
+            ix,iy=(bw-2*t)/bw,(bh-2*t)/bh
+            inner=c.transformed(bowl,(ix,0,0,iy,bb[0]+t-ix*bb[0],bb[1]+t-iy*bb[1]))
+            outline=diff(bowl,inner); inline_x=bounds[0]+depth-t
+            if left-(inline_x+t)<=t:
+                raise ValueError('double-struck lowercase g: insufficient bowl-inline clearance')
+            bowl_inline=rail(outline,inline_x,(bb[1]+bb[3])/2)
+            # The bowl meets the left rail; no bowl material crosses the stem slot.
+            bowl_parts=c.clip(union(outline,bowl_inline),(-3000,-3000,left+t,3000))
+            if not intersect(bowl_parts,stem_parts[0]).area:
+                raise ValueError('double-struck lowercase g: disconnected bowl/stem join')
+            result=union(foot,*stem_parts,top_cap,bowl_parts)
+            pieces=sorted(result.contours,key=lambda piece:-abs(piece.area))
+            if len(pieces)!=4 or any(piece.clockwise==pieces[0].clockwise for piece in pieces[1:]):
+                raise ValueError('double-struck lowercase g: expected one outer contour and three counters')
+            for y in (0,(cb[1]+cb[3])/2,cap_y-1.5*t):
+                spans=c.hspans(result,y)
+                if not any(span[0]<=left+t and span[1]>=left+t-.1 for span in spans) or result.contains((xc,y)):
+                    raise ValueError('double-struck lowercase g: stem slot closes above hook')
         elif base == 'f':
             from fontTools.pens.basePen import BasePen
 
