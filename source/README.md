@@ -225,7 +225,7 @@ and the copyright notices above are the attribution it asks for.
 
 ## Double-struck lowercase
 
-The initial lowercase set contains a, b, c, d, e, f, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, and z.
+The lowercase set contains all 26 letters.
 The b, d, o, p, and q outlines use each style's lowercase contours. The c outline
 uses the lightest Mulish master fitted to the target style's ink bounds. Hairline weight is measured
 from the straight ascenders of b and d. Bowls and doubled stems preserve the
@@ -304,6 +304,12 @@ The a form retains the single-storey design. Its bowl follows the style's source
 counter profile, fitted to the original bowl height and the doubled right stem.
 The stem has a closed slot and ends at its source cap height. Noto Sans Math's
 two-storey a supplies the right-stem doubling reference.
+
+The g form has a doubled right stem and a left bowl inline. Its bowl follows the
+style's source counter profile. The descender follows the source outside hook,
+fitted horizontally to the doubled stem. Both stem rails meet that curve across
+their full widths. The stem slot has a curved lower closure. Construction preserves
+the source descender depth and cap height.
 
 ## Mathematical script sources
 
