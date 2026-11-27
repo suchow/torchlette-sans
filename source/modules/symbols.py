@@ -1540,7 +1540,8 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k'
                 def _closePath(self):
                     if math.dist(self.point,self.start)>.01: self._lineTo(self.start)
 
-            cs=contours(p)
+            canonical=pathops.Path(p); canonical.simplify(fix_winding=True)
+            cs=contours(canonical)
             if len(cs)!=2:
                 raise ValueError('double-struck lowercase e: expected one source eye')
             record=ECurvePen(); cs[0].draw(record); segs=record.segments
