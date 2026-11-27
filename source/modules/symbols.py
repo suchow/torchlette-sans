@@ -1458,8 +1458,8 @@ def doublestruck(c, which=None):
     return out
 
 
-def doublestruck_lowercase(c, which=('b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')):
-    """Twenty-four lowercase forms using style contours, fitted light-master c, j, and s outlines, and lowercase stem measurements.
+def doublestruck_lowercase(c, which=('a', 'b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')):
+    """Twenty-five lowercase forms using style contours, fitted light-master c, j, and s outlines, and lowercase stem measurements.
 
     The capital/digit builder and its ds_strokes record are independent of this path.
     Bowls use hairline rings with straight inlines; straight stems use closed doubled bands.
@@ -1469,7 +1469,7 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k'
     median = lambda values: sorted(values)[len(values) // 2]
     rect, union, diff = c.rect, c.union, c.diff
     intersect = lambda a, b: pathops.op(a, b, pathops.PathOp.INTERSECTION)
-    paths = {base: c.path_of(base) for base in ('b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')}
+    paths = {base: c.path_of(base) for base in ('a', 'b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')}
     # Straight ascender rows avoid both the bowl and the shoulder join.
     stems = []
     for base in ('b', 'd'):
@@ -1524,7 +1524,60 @@ def doublestruck_lowercase(c, which=('b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k'
         if base not in paths:
             raise ValueError(f'double-struck lowercase: unsupported {base}')
         p = paths[base]; bounds = p.bounds
-        if base == 'e':
+        if base == 'a':
+            from fontTools.pens.basePen import BasePen
+
+            class ACapPen(BasePen):
+                def __init__(self):
+                    super().__init__(None); self.lines=[]; self.point=self.start=None
+                def _moveTo(self, point): self.point=self.start=point
+                def _lineTo(self, point): self.lines.append((self.point,point)); self.point=point
+                def _qCurveToOne(self, control, point): self.point=point
+                def _curveToOne(self, a, b, point):
+                    raise ValueError('double-struck lowercase a: unexpected cubic curve')
+                def _closePath(self):
+                    if math.dist(self.point,self.start)>.01: self._lineTo(self.start)
+
+            canonical=pathops.Path(p); canonical.simplify(fix_winding=True)
+            cs=contours(canonical)
+            if len(cs)!=2:
+                raise ValueError('double-struck lowercase a: expected one source counter')
+            outer,counter=cs; cb=counter.bounds
+            record=ACapPen(); outer.draw(record)
+            caps=[line for line in record.lines if abs(line[0][1]-line[1][1])<.01
+                  and line[0][1]>.8*c.XH and min(pt[0] for pt in line)>cb[0]+.5*(cb[2]-cb[0])]
+            if len(caps)!=1:
+                raise ValueError('double-struck lowercase a: ambiguous right-stem cap')
+            cap=caps[0]; cap_y=cap[0][1]; xc=(cap[0][0]+cap[1][0])/2
+            if not cb[3]<cap_y<=bounds[3] or not cb[0]<xc<bounds[2]:
+                raise ValueError('double-struck lowercase a: invalid stem/counter roles')
+            remote=c.clip(outer,(-3000,-3000,(cb[0]+cb[2])/2,3000))
+            if not remote.area:
+                raise ValueError('double-struck lowercase a: missing left bowl')
+            bowl_bottom,bowl_top=remote.bounds[1],remote.bounds[3]
+            sx=(xc-bounds[0])/(cb[2]-cb[0]); sy=(bowl_top-bowl_bottom)/(cb[3]-cb[1])
+            bowl=c.transformed(counter,(sx,0,0,sy,bounds[0]-sx*cb[0],bowl_bottom-sy*cb[1]))
+            if bowl.clockwise!=outer.clockwise: bowl.reverse()
+            bb=bowl.bounds; bw,bh=bb[2]-bb[0],bb[3]-bb[1]
+            if min(bw,bh)<=2*t or cap_y<=2*t:
+                raise ValueError('double-struck lowercase a: exhausted bowl or stem opening')
+            ix,iy=(bw-2*t)/bw,(bh-2*t)/bh
+            inner=c.transformed(bowl,(ix,0,0,iy,bb[0]+t-ix*bb[0],bb[1]+t-iy*bb[1]))
+            outline=diff(bowl,inner)
+            band=rect(xc-doubled/2,0,xc+doubled/2,cap_y)
+            slot=rect(xc-gap/2,t,xc+gap/2,cap_y-t)
+            if xc-doubled/2-(bounds[0]+t)<=t:
+                raise ValueError('double-struck lowercase a: exhausted left counter clearance')
+            ink=union(outline,band)
+            if not intersect(outline,band).area or abs(diff(slot,ink).area)>.01:
+                raise ValueError('double-struck lowercase a: invalid bowl/stem attachment')
+            result=diff(ink,slot)
+            pieces=sorted(result.contours,key=lambda piece:-abs(piece.area))
+            if len(pieces)!=3 or any(piece.clockwise==pieces[0].clockwise for piece in pieces[1:]):
+                raise ValueError('double-struck lowercase a: expected one outer contour and two counters')
+            if not intersect(diff(outline,slot),diff(band,slot)).area:
+                raise ValueError('double-struck lowercase a: disconnected bowl after slot cut')
+        elif base == 'e':
             from fontTools.pens.basePen import BasePen
 
             class ECurvePen(BasePen):
