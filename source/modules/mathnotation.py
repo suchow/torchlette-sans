@@ -287,7 +287,7 @@ def _braket(c, put):
     put(None, c.clip(bar, (-1000, br[1], 3000, br[3])), c.W('bar'), name=f'bar.braket.{SUF}')
 
 
-DS_LOWER_SET = [(0x1D553, 'b'), (0x1D554, 'c'), (0x1D555, 'd'), (0x1D557, 'f'),
+DS_LOWER_SET = [(0x1D553, 'b'), (0x1D554, 'c'), (0x1D555, 'd'), (0x1D556, 'e'), (0x1D557, 'f'),
                 (0x1D559, 'h'), (0x1D55A, 'i'), (0x1D55B, 'j'), (0x1D55C, 'k'), (0x1D55D, 'l'),
                 (0x1D55E, 'm'), (0x1D55F, 'n'),
                 (0x1D560, 'o'), (0x1D561, 'p'), (0x1D562, 'q'), (0x1D563, 'r'), (0x1D564, 's'), (0x1D565, 't'), (0x1D566, 'u'), (0x1D567, 'v'), (0x1D568, 'w'), (0x1D569, 'x'), (0x1D56A, 'y'), (0x1D56B, 'z')]
