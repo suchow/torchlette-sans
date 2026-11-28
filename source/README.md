@@ -48,10 +48,15 @@ docstring lists what it changes):
   zeros in `0`, `x[0]`, and `(0)` are slashed, and those in `10` and `0.05` are plain.
 
   Of the other registered features, these are not in the font: clig (there are no
-  contextual ligatures beyond those of liga, calt and ss16), pcap and c2pc (petite
-  capitals would be a new alphabet drawn at the x-height, with its accented forms,
-  Cyrillic, marks and kerning), unic (it needs those x-height capitals too), and titl
-  (no titling forms are drawn).
+  contextual ligatures beyond those of liga, calt and ss16), unic, and titl.
+- `petitecaps`: Latin A–Z at the lowercase x-height, separate from the existing
+  small capitals. Enable `pcap` for lowercase input and `c2pc` for uppercase input;
+  enable both for runs at one height. The construction uses a heavier Mulish donor,
+  targets the small-cap stem weight, and preserves rounded overshoots. The donor
+  weight is capped at Mulish’s maximum of 1000. The ordinary
+  italic transform applies once. This initial slice includes no accented or non-Latin
+  petite capitals, matching figures, or dedicated kerning. Unsupported letters and
+  figures retain their ordinary forms. Built forms across styles await specimen review.
 - `sigmoid`: the first i of "sigmoid" drawn as a small sigmoid curve, in ss16.
 - `vector`: ten more forms of ss16's "vector"/"vectors" word mark, in each of which a stroke
   of the word grows into the arrow (Jordan's picks from the vector-ligature lab: v01 v02 v06

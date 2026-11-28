@@ -2566,16 +2566,17 @@ if MODULE_GPOS:
     _reorder_lookups(gold, _order)
     print('modules: GPOS lookups', {f'{w} {a}': len(v) for (w, a), v in _slots.items()})
 
-# --- small caps run first ------------------------------------------------------
+# --- small and petite caps run first ------------------------------------------------------
 # Lookups apply in LookupList order. Mulish's liga (fi, fl) and our ligatures come
 # before smcp/c2sc in the list, so "office" in small caps would keep an fi ligature
 # and "MNIST" next to a Th would miss. Move the smcp and c2sc lookups to the front
 # and renumber every reference: feature records and nested lookup records alike.
+# Petite-capital substitutions precede ligatures for the same reason.
 lookups = old.LookupList.Lookup
 def maps_figures(i):
     return any('zero' in (getattr(st, 'mapping', None) or {}) or 'slash' in (getattr(st, 'mapping', None) or {})
                for st in lookups[i].SubTable)
-first = sorted({i for r in old.FeatureList.FeatureRecord if r.FeatureTag in ('smcp', 'c2sc')
+first = sorted({i for r in old.FeatureList.FeatureRecord if r.FeatureTag in ('smcp', 'c2sc', 'pcap', 'c2pc')
                 for i in r.Feature.LookupListIndex if not maps_figures(i)})   # SC_FIG stays late
 order = first + [i for i in range(len(lookups)) if i not in first]
 pos = {o: n for n, o in enumerate(order)}

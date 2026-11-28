@@ -72,7 +72,7 @@ LEVELS     := $(wildcard $(LEVELS_DIR))
 # Greek and mathitalic are explicitly included in the approved release default.
 MODULES_OFF  :=
 # Approved release default modules.
-MODULES_DEFAULT := african boxdrawing codekeys currency cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures punctuation sigmoid supsub symbols tensordiagram ui vector
+MODULES_DEFAULT := african boxdrawing codekeys currency cyrillic fleurons fraktur games graphnodes greek kern kern_apos latin_gaps lnum logic math_table mathglyphs mathitalic mathletters mathnotation meta otfeatures petitecaps punctuation sigmoid supsub symbols tensordiagram ui vector
 comma        := ,
 empty        :=
 space        := $(empty) $(empty)

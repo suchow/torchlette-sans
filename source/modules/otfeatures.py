@@ -280,15 +280,19 @@ def _from_source(ctx, n, src, A):
 
 
 def _from_capital(ctx, sc, cap, A):
-    """A small cap's anchors: the capital's, mapped as build.py maps the capitals' marks
-    onto the small caps (x about the ink middle times SC_SCALE); above marks are the
-    lowercase ones, set SC_H - XH higher than on the x-height."""
+    """Small and petite caps use capital anchors scaled about the ink centre.
+
+    Above marks use lowercase forms, raised by the cap height minus XH.
+    """
     cx0, cx1 = ctx.ink(cap); sx0, sx1 = ctx.ink(sc)
-    S = ctx.SC_SCALE; out = {}
+    petite = sc.endswith('.pc')
+    S = ctx.XH / 705 if petite else ctx.SC_SCALE
+    height = ctx.XH if petite else ctx.SC_H
+    out = {}
     for c, (x, y) in A[cap].items():
         x2 = round((sx0 + sx1) / 2 + (x - (cx0 + cx1) / 2) * S)
-        if c == TOP: y2 = 454 + (ctx.SC_H - ctx.XH) + round((y - 705) * S)
-        elif c == TOPR: y2 = ctx.SC_H + round((y - 705) * S)
+        if c == TOP: y2 = 454 + (height - ctx.XH) + round((y - 705) * S)
+        elif c == TOPR: y2 = height + round((y - 705) * S)
         else: y2 = round(y * S)
         out[c] = (x2, y2)
     for c, a in _geometric(ctx, sc).items(): out.setdefault(c, a)
@@ -644,7 +648,7 @@ def anchors_for(ctx):
         if g in A or g in want: continue
         stem = g.split('.')[0]
         letter = stem in rev and unicodedata.category(chr(rev[stem])).startswith('L')
-        if g.endswith('.sc'):
+        if g.endswith(('.sc', '.pc')):
             if FIG_RE.match(g) or letter: want.append(g)
         elif FIG_RE.match(g) or g in zeros: want.append(g)
         elif re.search(r'\.ss0[4-7]$', g) and '_' not in stem: want.append(g)
@@ -676,7 +680,7 @@ def anchors_for(ctx):
             r = _composite(ctx, n, A, marks, mk2, delta, resolve)
         elif g.isComposite() and len(g.components) > 1:
             r = _geometric(ctx, n)
-        elif n.endswith('.sc') and not FIG_RE.match(n):
+        elif n.endswith(('.sc', '.pc')) and not FIG_RE.match(n):
             u = rev.get(stem)
             cap = stem if (u and unicodedata.category(chr(u)) == 'Lu' and stem in A) else None
             r = _from_capital(ctx, n, cap, A) if cap else _geometric(ctx, n)
