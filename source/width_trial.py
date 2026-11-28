@@ -1,8 +1,8 @@
 """Disposable Regular condensed-width study; not a release-font build step.
 
 Compress Latin letters, figures, and punctuation horizontally. A horizontal
-outline expansion compensates vertical-stem weight. A 256-fold vertical stretch
-before stroking limits vertical expansion to less than 0.05 font units. This is
+outline expansion compensates vertical-stem weight. A 16-fold vertical stretch
+before stroking limits vertical expansion to less than 0.5 font units. This is
 a geometric trial; counter shapes, corners, and spacing require visual review.
 Both output fonts are unhinted for a consistent comparison. No width axis is added.
 """
@@ -18,7 +18,7 @@ from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.pens.cu2quPen import Cu2QuPen
 
 SCALE = 0.85
-Y_STRETCH = 256
+Y_STRETCH = 16
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 FIGURES = '0123456789'
 PUNCTUATION = '.,:;!?-–—()[]{}“”‘’"\'…/\\%&@#*+=<>'
@@ -84,7 +84,7 @@ def main(source, output):
     zero = sorted((c.bounds for c in path_of(control, cmap[ord('0')]).contours),
                   key=lambda b: b[0])
     digit_stem = zero[1][0] - zero[0][0]
-    report = {'scale': SCALE, 'stems': {'capital': cap_stem,
+    report = {'scale': SCALE, 'vertical_stretch': Y_STRETCH, 'stems': {'capital': cap_stem,
               'lowercase': lower_stem, 'figure': digit_stem}, 'glyphs': []}
     seen = set()
     for char in LETTERS + FIGURES + PUNCTUATION:
@@ -102,6 +102,11 @@ def main(source, output):
         glyph = pen.glyph(dropImpliedOnCurves=True)
         trial['glyf'][name] = glyph
         glyph.recalcBounds(trial['glyf'])
+        original = control['glyf'][name]
+        if glyph.numberOfContours != len(list(p.contours)):
+            raise ValueError(f'{name}: expansion changed contour count')
+        if (glyph.yMin, glyph.yMax) != (original.yMin, original.yMax):
+            raise ValueError(f'{name}: expansion changed integer vertical bounds')
         advance = round(control['hmtx'][name][0] * SCALE + correction)
         trial['hmtx'][name] = (advance, glyph.xMin)
         report['glyphs'].append({'character': char, 'glyph': name,
