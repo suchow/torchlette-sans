@@ -1,103 +1,30 @@
-# Torchlette Sans: the checks of source/Makefile, run here and not on a laptop.
-#
-# check   a clean rebuild of the release (the fourteen .ttf, their woff2, and the variable
-#         font), uploaded as release-rebuild. Pull requests that do not touch fonts/
-#         run make release-rebuild; runs that touch fonts/, manual
-#         workflow_dispatch runs, and runs with missing, unfetchable, or ambiguous base
-#         refs run the full byte comparison (make check).
-# verify  manual diagnostics only: CI decision-logic tests
-#         (source/verify_ci_check_mode.py), the HarfBuzz checks of all fourteen styles
-#         and their web subsets, and the fontbakery gate
-#         (make verify); the fontbakery report is kept as an artifact
-#
-# The Makefile pins Python 3.12 and every tool through uv, so the jobs need only uv.
-# make check-web and the lesson prose that make verify shapes need the torchlette
-# repository beside this one; it is private, so neither runs here, and verify_ss16.py
-# shapes its own test strings only (the Makefile drops LEVELS_DIR when it is absent).
-
-name: ci
-
+# Disposable Regular-only condensed-width trial. Do not merge this workflow.
+name: condensed-width-trial
 on:
   pull_request:
     branches: [main]
-  workflow_dispatch:
-
 permissions:
   contents: read
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   check:
-    # The release is built on an Apple silicon Mac, with the universal2 wheels of
-    # skia-pathops and ttfautohint-py and macOS's libm. A Linux build uses other
-    # binaries, compiled by another compiler for another processor, and a floating-point
-    # difference of one ulp can move a rounded coordinate; so the rebuild runs on
-    # an arm64 Mac too. The variable font alone takes about 9 minutes.
     runs-on: macos-latest
-    timeout-minutes: 120
+    timeout-minutes: 30
     steps:
-      # Fetch depth 2 on pull_request brings HEAD^1 locally without cloning
-      # binary history. Manual runs use the full comparison decision.
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 1 }}
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
           cache-dependency-glob: source/Makefile
-      - name: Decide whether to compare rebuilt release against fonts/
-        id: compare
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          CHECKOUT_REF: ${{ github.ref }}
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          PUSH_BEFORE_SHA: ${{ github.event.before }}
-          PUSH_AFTER_SHA: ${{ github.event.after }}
-          PUSH_FORCED: ${{ github.event.forced }}
-        run: python3 source/ci_check_mode.py --github-output "$GITHUB_OUTPUT"
-      - name: Rebuild release and compare when required
-        env:
-          COMPARE: ${{ steps.compare.outputs.compare }}
+      - name: Build Regular control and condensed-width trial
         run: |
           cd source
-          if [ "$COMPARE" = "false" ]; then
-            make -j"$(sysctl -n hw.ncpu)" release-rebuild
-          else
-            make -j"$(sysctl -n hw.ncpu)" check
-          fi
-      # The rebuilt release, kept whether or not it matches fonts/: when the sources
-      # have changed, these are the files to look at and the next release's files.
+          make MODULES=none build/TorchletteSans-Regular.ttf
+          uv run -q --no-project --python 3.12 --with fonttools==4.68.0 --with skia-pathops==0.9.2 python width_trial.py build/TorchletteSans-Regular.ttf build/width-trial
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: release-rebuild
-          path: source/build/release
-          if-no-files-found: ignore
-
-  verify:
-    if: github.event_name == 'workflow_dispatch'
-    # The checks test what the fonts do, not their bytes, so Linux will do; the old
-    # fonts job in the torchlette repository ran them there on four styles.
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    steps:
-      - uses: actions/checkout@v4
-      - name: Verify CI release-check decision logic
-        run: python3 source/verify_ci_check_mode.py
-      - uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          cache-dependency-glob: source/Makefile
-      - run: cd source && make -j"$(nproc)" verify
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: fontbakery-report
-          path: |
-            source/build/fontbakery.md
-            source/build/fontbakery.json
-          if-no-files-found: ignore
+          name: condensed-width-trial
+          path: source/build/width-trial/
+          if-no-files-found: error
