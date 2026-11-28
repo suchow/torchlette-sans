@@ -1,5 +1,5 @@
-# Disposable Regular-only condensed-width trial. Do not merge this workflow.
-name: condensed-width-trial
+# Disposable Regular-only intermediate-width trial. Do not merge this workflow.
+name: regular-width-range
 on:
   pull_request:
     branches: [main]
@@ -18,13 +18,13 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: source/Makefile
-      - name: Build Regular control and condensed-width trial
+      - name: Build Regular control and intermediate-width trial
         run: |
           cd source
           make MODULES=none build/TorchletteSans-Regular.ttf
-          uv run -q --no-project --python 3.12 --with fonttools==4.68.0 --with skia-pathops==0.9.2 python width_trial.py build/TorchletteSans-Regular.ttf build/width-trial
+          uv run -q --no-project --python 3.12 --with fonttools==4.68.0 --with skia-pathops==0.9.2 python width_trial.py build/TorchletteSans-Regular.ttf build/width-range
       - uses: actions/upload-artifact@v4
         with:
-          name: condensed-width-trial
-          path: source/build/width-trial/
+          name: regular-width-range
+          path: source/build/width-range/
           if-no-files-found: error

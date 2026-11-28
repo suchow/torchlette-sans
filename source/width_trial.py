@@ -1,7 +1,7 @@
-"""Disposable Regular condensed-width study; not a release-font build step.
+"""Disposable Regular intermediate-width study; not a release-font build step.
 
 Compress Latin letters, figures, and punctuation horizontally. A horizontal
-outline expansion compensates vertical-stem weight. A 16-fold vertical stretch
+outline expansion compensates vertical-stem weight. A scale-dependent vertical stretch
 before stroking limits vertical expansion to less than 0.5 font units. This is
 a geometric trial; counter shapes, corners, and spacing require visual review.
 Both output fonts are unhinted for a consistent comparison. No width axis is added.
@@ -17,7 +17,7 @@ from fontTools.pens.transformPen import TransformPen
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.pens.cu2quPen import Cu2QuPen
 
-SCALE = 0.85
+SCALES = (0.975, 0.95, 0.925, 0.90, 0.875, 0.85)
 Y_STRETCH = 16
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 FIGURES = '0123456789'
@@ -40,11 +40,12 @@ def stem_at_baseline(font, name):
     return xs[1] - xs[0]
 
 
-def condensed_path(p, stem):
-    correction = (1 - SCALE) * stem
+def condensed_path(p, stem, scale):
+    correction = (1 - scale) * stem
+    stretch = max(1, Y_STRETCH * (1 - scale) / 0.15)
     q = pathops.Path()
     p.draw(TransformPen(q.getPen(),
-                        (SCALE, 0, 0, Y_STRETCH, correction / 2, 0)))
+                        (scale, 0, 0, stretch, correction / 2, 0)))
     edge = pathops.Path()
     q.draw(edge.getPen())
     edge.stroke(correction, pathops.LineCap.BUTT_CAP,
@@ -52,7 +53,7 @@ def condensed_path(p, stem):
     edge.convertConicsToQuads(0.1)
     expanded = pathops.op(q, edge, pathops.PathOp.UNION)
     out = pathops.Path()
-    expanded.draw(TransformPen(out.getPen(), (1, 0, 0, 1 / Y_STRETCH, 0, 0)))
+    expanded.draw(TransformPen(out.getPen(), (1, 0, 0, 1 / stretch, 0, 0)))
     return out, correction
 
 
@@ -72,20 +73,11 @@ def label(font, family, postscript):
             record.string = value.encode(record.getEncoding())
 
 
-def main(source, output):
-    output = Path(output)
-    output.mkdir(parents=True, exist_ok=False)
-    control = TTFont(source)
-    unhint(control)
+def build_trial(control, scale, stems):
     trial = copy.deepcopy(control)
     cmap = trial.getBestCmap()
-    cap_stem = stem_at_baseline(control, cmap[ord('H')])
-    lower_stem = stem_at_baseline(control, cmap[ord('l')])
-    zero = sorted((c.bounds for c in path_of(control, cmap[ord('0')]).contours),
-                  key=lambda b: b[0])
-    digit_stem = zero[1][0] - zero[0][0]
-    report = {'scale': SCALE, 'vertical_stretch': Y_STRETCH, 'stems': {'capital': cap_stem,
-              'lowercase': lower_stem, 'figure': digit_stem}, 'glyphs': []}
+    report = {'scale': scale, 'vertical_stretch': max(1, Y_STRETCH * (1 - scale) / 0.15),
+              'stems': stems, 'glyphs': []}
     seen = set()
     for char in LETTERS + FIGURES + PUNCTUATION:
         name = cmap.get(ord(char))
@@ -94,9 +86,9 @@ def main(source, output):
         if name in seen:
             continue
         seen.add(name)
-        stem = cap_stem if char.isupper() else digit_stem if char in FIGURES else lower_stem
+        stem = stems['capital'] if char.isupper() else stems['figure'] if char in FIGURES else stems['lowercase']
         p = path_of(control, name)
-        q, correction = condensed_path(p, stem)
+        q, correction = condensed_path(p, stem, scale)
         pen = TTGlyphPen(None)
         q.draw(Cu2QuPen(pen, 1.0, reverse_direction=True))
         glyph = pen.glyph(dropImpliedOnCurves=True)
@@ -104,21 +96,43 @@ def main(source, output):
         glyph.recalcBounds(trial['glyf'])
         original = control['glyf'][name]
         if glyph.numberOfContours != len(list(p.contours)):
-            raise ValueError(f'{name}: expansion changed contour count')
+            raise ValueError(f'{scale} {name}: expansion changed contour count')
         if (glyph.yMin, glyph.yMax) != (original.yMin, original.yMax):
-            raise ValueError(f'{name}: expansion changed integer vertical bounds')
-        advance = round(control['hmtx'][name][0] * SCALE + correction)
+            raise ValueError(f'{scale} {name}: expansion changed integer vertical bounds')
+        advance = round(control['hmtx'][name][0] * scale + correction)
         trial['hmtx'][name] = (advance, glyph.xMin)
         report['glyphs'].append({'character': char, 'glyph': name,
                                 'advance_before': control['hmtx'][name][0],
                                 'advance_after': advance})
-    trial['OS/2'].usWidthClass = 3
+    trial['OS/2'].usWidthClass = 5 if scale >= 0.95 else 4 if scale >= 0.875 else 3
+    code = round(scale * 1000)
+    label(trial, f'Torchlette Sans Width {code} Trial', f'TorchletteSans-Width{code}Trial')
+    return trial, report
+
+
+def main(source, output):
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=False)
+    control = TTFont(source)
+    unhint(control)
+    cmap = control.getBestCmap()
+    zero = sorted((c.bounds for c in path_of(control, cmap[ord('0')]).contours),
+                  key=lambda b: b[0])
+    stems = {'capital': stem_at_baseline(control, cmap[ord('H')]),
+             'lowercase': stem_at_baseline(control, cmap[ord('l')]),
+             'figure': zero[1][0] - zero[0][0]}
     label(control, 'Torchlette Sans Width Control', 'TorchletteSans-WidthControl')
-    label(trial, 'Torchlette Sans Condensed Trial', 'TorchletteSans-CondensedTrial')
     control.save(output / 'TorchletteSans-Regular-Control.ttf')
-    trial.save(output / 'TorchletteSans-Regular-CondensedTrial.ttf')
-    (output / 'construction.json').write_text(json.dumps(report, indent=2) + '\n')
-    print(json.dumps(report['stems']), len(report['glyphs']), 'trial glyphs')
+    manifest = [{'scale': 1.0, 'file': 'TorchletteSans-Regular-Control.ttf'}]
+    for scale in SCALES:
+        trial, report = build_trial(control, scale, stems)
+        code = round(scale * 1000)
+        name = f'TorchletteSans-Regular-Width{code}.ttf'
+        trial.save(output / name)
+        (output / f'width{code}.json').write_text(json.dumps(report, indent=2) + '\n')
+        manifest.append({'scale': scale, 'file': name})
+        print(code, json.dumps(stems), len(report['glyphs']), 'trial glyphs')
+    (output / 'range.json').write_text(json.dumps(manifest, indent=2) + '\n')
 
 
 if __name__ == '__main__':
